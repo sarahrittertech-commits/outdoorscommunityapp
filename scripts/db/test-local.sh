@@ -16,7 +16,7 @@ cd "$(dirname "$0")/../.."
 DB="${TEST_DB:-community_board_test}"
 PSQL=(psql -v ON_ERROR_STOP=1 -q -X)
 
-"${PSQL[@]}" -d postgres -c "drop database if exists ${DB}" >/dev/null
+"${PSQL[@]}" -d postgres -c "drop database if exists ${DB} with (force)" >/dev/null
 "${PSQL[@]}" -d postgres -c "create database ${DB}" >/dev/null
 
 "${PSQL[@]}" -d "${DB}" -f scripts/db/supabase-shim.sql >/dev/null

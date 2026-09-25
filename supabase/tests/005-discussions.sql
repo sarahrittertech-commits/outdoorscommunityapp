@@ -1,6 +1,6 @@
 -- Discussions: PT-8, PT-9, PT-10, PT-11, FR-DS-*.
 begin;
-select plan(17);
+select plan(20);
 select tests.build_fixture();
 
 -- PT-8: posting outside your groups -------------------------------------------
@@ -63,6 +63,19 @@ select throws_ok(
 );
 
 -- Moderation ------------------------------------------------------------------
+select tests.as('admin');
+select lives_ok(
+  format($$ select public.set_thread_flags(%L, p_locked => true) $$, tests.id('t1')),
+  'Admins lock a thread without touching the pin'
+);
+select tests.as('member');
+select throws_ok(
+  format($$ insert into public.replies (thread_id, author_id, body) values (%L, %L, 'Late') $$, tests.id('t1'), tests.uid('member')),
+  '42501', null, 'PT-10 locking takes effect'
+);
+select tests.as('admin');
+select lives_ok(format($$ select public.set_thread_flags(%L, p_locked => false) $$, tests.id('t1')), 'unlock');
+select tests.as('member');
 select throws_ok(
   format($$ select public.remove_post('reply', %L) $$, tests.id('r1')),
   'P0001', null, 'Members cannot remove posts'

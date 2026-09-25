@@ -671,7 +671,8 @@ $$;
 
 -- Discussions ---------------------------------------------------------------
 
-create or replace function public.set_thread_flags(p_thread_id uuid, p_pinned boolean, p_locked boolean)
+-- Either flag can be left out (null) to keep its current value.
+create or replace function public.set_thread_flags(p_thread_id uuid, p_pinned boolean default null, p_locked boolean default null)
 returns void
 language plpgsql security definer set search_path = ''
 as $$
