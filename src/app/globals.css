@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+/*
+  Placeholder look, built to be replaced by the design (PRD "Design direction").
+  Text first, links look like links, visited links look visited. Every color
+  is a token here so the design pass (or a cloned deployment) can re-skin the
+  board without touching pages.
+*/
+
+:root {
+  --paper: #fffdf8;
+  --ink: #1f2328;
+  --muted: #5b6168;
+  --rule: #d9d5cc;
+  --panel: #f4f1ea;
+  --link: #1a4fa8;
+  --link-visited: #6b3fa0;
+  --accent: #2f6b3a;
+  --accent-ink: #ffffff;
+  --danger: #a3261b;
+  --notice: #e8f2e6;
+  --warning: #fbeed5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #16181b;
+    --ink: #e7e5e0;
+    --muted: #a3a8ae;
+    --rule: #3a3d42;
+    --panel: #202328;
+    --link: #8ab4f8;
+    --link-visited: #c4a4f0;
+    --accent: #7cc48a;
+    --accent-ink: #10231a;
+    --danger: #f28b82;
+    --notice: #1f3323;
+    --warning: #3a2f19;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-panel: var(--panel);
+  --color-link: var(--link);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-danger: var(--danger);
+  --color-notice: var(--notice);
+  --color-warning: var(--warning);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Base element styles sit in the base layer so utility classes can override them. */
+@layer base {
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  a:visited {
+    color: var(--link-visited);
+  }
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--link);
+    outline-offset: 2px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  /* Forms: plain, large enough to use on a phone. */
+  label {
+    display: block;
+    font-weight: 600;
+    margin-top: 0.9rem;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="datetime-local"],
+  input[type="search"],
+  select,
+  textarea {
+    display: block;
+    width: 100%;
+    max-width: 36rem;
+    margin-top: 0.25rem;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+  }
+  textarea {
+    min-height: 8rem;
+  }
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 1.05rem;
+    height: 1.05rem;
+    vertical-align: -0.15rem;
+    margin-right: 0.4rem;
+  }
+  .check {
+    font-weight: 400;
+  }
+  .hint {
+    color: var(--muted);
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+}
+
+@layer components {
+  .button {
+    display: inline-block;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .button:visited {
+    color: var(--accent-ink);
+  }
+  .button-plain {
+    background: transparent;
+    color: var(--accent);
+  }
+  .button-plain:visited {
+    color: var(--accent);
+  }
+  .button-danger {
+    border-color: var(--danger);
+    background: transparent;
+    color: var(--danger);
+  }
+  .link-button {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font: inherit;
+    cursor: pointer;
+  }
+}
