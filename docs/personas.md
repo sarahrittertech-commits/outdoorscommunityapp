@@ -8,9 +8,10 @@ title: Personas
 Four people this board is built for — three who use it and one who keeps it
 running. Deliberately few.
 
-:::note Audience not yet decided
-These are written audience-neutral. If the board is women-focused (see the
-PRD's open questions), revise them before design work goes further.
+:::note Audience
+This is the general, all-adventure board for Western North Carolina. The
+women's outdoor community app will be a clone with its own personas (see
+[Cloning](./cloning)).
 :::
 
 ## 1. The newcomer

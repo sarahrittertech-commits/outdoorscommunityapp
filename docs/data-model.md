@@ -10,9 +10,9 @@ The board's data lives in one Postgres database on Supabase (see
 the tables in plain terms. The SQL migrations, when they exist, are the
 source of truth; a change to them updates this page in the same commit.
 
-:::note Draft
-Written before any migration exists. Field names are proposals and will be
-settled in phase 1.
+:::note Source of truth
+The migrations in `supabase/migrations/` are authoritative. This page was
+brought in line with them on 25 September 2026.
 :::
 
 ## How the pieces relate
@@ -25,7 +25,7 @@ settled in phase 1.
        group_members     events   threads       reports      moderation_actions
        (role, status)       │       │
              │              │       └──< replies
-          profiles ─────────┤
+          profiles ─────────┤        (accounts: private twin of profiles)
        (one per user)       ├──< event_rsvps
                             └─── event_private_details (1:1)
 ```
@@ -67,20 +67,31 @@ The Craigslist-style directory. Managed by migration, not UI (FR-AD-1).
 
 ### profiles
 
-One per signed-in user, created on first sign-in. The email address is
-**not** here: it stays in Supabase's private `auth.users` table, which the
-public API cannot read (FR-AC-5).
+The public face of a user, readable by everyone, created automatically on
+first sign-in. The email address is **not** here: it stays in Supabase's
+private `auth.users` table, which the public API cannot read (FR-AC-5).
 
 | Field | Type | Notes |
 | --- | --- | --- |
 | `id` | uuid | same as the auth user id |
-| `display_name` | text | 2–40 characters |
+| `display_name` | text, optional | 2–40 characters; null until onboarding, and after deletion ("deleted user") |
 | `bio` | text, optional | 280 characters |
 | `area` | text, optional | free text, e.g. "Brevard" |
+| `created_at`, `updated_at` | timestamp | |
+
+### accounts
+
+Account state, split from `profiles` during the build so it is **not**
+public: only the user and the site admin can read it, and nobody can change
+it except through the database functions (onboarding, suspend, delete).
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | same as the auth user id |
 | `accepted_terms_at` | timestamp, optional | null until FR-AC-2 is done; null means no writes |
 | `is_site_admin` | boolean | set by hand in the database only |
 | `suspended_at` | timestamp, optional | set means read-only |
-| `deleted_at` | timestamp, optional | set means "deleted user" |
+| `deleted_at` | timestamp, optional | set means the account is gone |
 | `created_at` | timestamp | |
 
 ## Groups
@@ -231,6 +242,7 @@ site admin.
 | `target_type`, `target_id` | | what it was done to |
 | `group_id` | uuid, optional | |
 | `reason` | text | |
+| `content_snapshot` | json, optional | the removed text, kept for the site admin only |
 | `created_at` | timestamp | |
 
 ## Notifications (Should)
@@ -247,13 +259,21 @@ event even if the job runs twice.
 
 ## Views for the browse pages
 
-Listing pages read from a view, `group_listings`, that joins each active group
-to its subcategory, member count and next upcoming event. One query per
-listing page keeps pages fast (TR-PERF).
+Three read-only views, each running with the reader's own permissions:
 
-## Seed categories (proposed)
+- `group_listings` — each group with its category, subcategory, member count
+  and next event. Every listing page is one query against it.
+- `subcategory_group_counts` — the home page directory with counts.
+- `event_listings` — events with their group, category and number going.
 
-A starting list to edit, not a decision. Order is display order.
+Member and RSVP counts come from small functions that reveal the *number*
+without revealing the rows, so visitors see "12 members" but not who.
+
+## Seed categories
+
+Seeded by `supabase/migrations/20260925000005_seed_directory.sql`, the one
+migration that differs per deployment (see [Cloning](./cloning)). Order is
+display order.
 
 | Category | Subcategories |
 | --- | --- |
@@ -261,14 +281,13 @@ A starting list to edit, not a decision. Order is display order.
 | Cycling | Road · Gravel · Mountain biking · Family & casual rides · Bikepacking |
 | Paddling | Kayaking · Whitewater · Stand-up paddleboard · Canoeing · Tubing |
 | Climbing | Bouldering · Sport · Trad · Indoor climbing |
-| Running | Trail running · Road running · Walking groups |
+| Running & Walking | Trail running · Road running · Walking groups |
 | Camping | Car camping · Family camping · Overlanding |
 | Snow & Winter | Skiing & snowboarding · Snowshoeing · Winter hiking |
 | Water & Fishing | Fly fishing · Swimming holes · Open-water swimming |
 | Nature & Wildlife | Birding · Foraging & plants · Photography · Stargazing |
 | Stewardship | Trail work · Clean-ups · Conservation volunteering |
 | Skills & Learning | Navigation · Wilderness first aid · Leave No Trace · Beginners welcome |
-| Families & Kids | Family outings · Kids' nature clubs |
 
-The last row sits awkwardly with "no users under 18": families can organize,
-but only adults hold accounts. Confirm before seeding.
+*Families & Kids* was left out: it sits awkwardly with "no users under 18".
+Family outings are covered by *Family & casual rides* and *Family camping*.

@@ -48,8 +48,8 @@ Consequences that should shape every suggestion made in this repo:
 
 ## Stack
 
-All decisions are **Proposed**, not Accepted. Confirm with Sarah before
-building on them.
+All five decisions were **Accepted** on 25 September 2026, when Sarah
+directed the build on them.
 
 | Area | Decision | Record |
 | --- | --- | --- |
@@ -61,10 +61,54 @@ building on them.
 
 ## Current state
 
-Requirements and architecture only (25 September 2026). No application code,
-no Supabase project, no Railway service yet. Visual design starts next in
-Magic Patterns, following the same design-repo-then-build pattern as the bike
-map.
+Built and working locally (25 September 2026): the full database with every
+permission rule and its tests, and a Next.js app covering every Must
+requirement plus most Shoulds. See the PRD's "Build status" for what is not
+built yet. No Supabase project or Railway service exists yet; the
+[runbook](docs/runbook.md) has the setup steps.
+
+The look is a deliberately plain placeholder. Visual design is next, in
+Magic Patterns, following the bike map's design-repo-then-build pattern. All
+colors are tokens at the top of `src/app/globals.css`.
+
+**This board will be cloned for the women's outdoor community app.** Keep
+anything deployment-specific in the four places listed in
+[docs/cloning.md](docs/cloning.md), and build any women's-app feature here,
+behind a setting in `src/config/site.ts`.
+
+```bash
+npm install
+npx supabase start            # local Postgres/Auth/Storage + seed data (needs Docker)
+cp .env.example .env.local    # paste the URL and anon key it prints
+npm run dev
+
+npm run lint && npm run typecheck && npm test   # app checks
+npm run db:test               # permission tests (needs `supabase start`)
+npm run db:test:local         # same tests on plain Postgres, no Docker
+```
+
+Next.js here is version 16, which renamed middleware to `proxy.ts` and
+changed several APIs. Read `AGENTS.md` and the bundled docs in
+`node_modules/next/dist/docs/` before writing Next.js code.
+
+### Layout
+
+```
+supabase/migrations/   schema, helper checks, RLS policies, views, directory seed (in that order)
+supabase/tests/        pgTAP permission tests; 000-setup.sql builds the fixture cast
+supabase/seed.sql      local demo groups, events and threads (never production)
+scripts/db/            run the permission tests without Docker
+src/config/site.ts     everything deployment-specific
+src/proxy.ts           session refresh + Content Security Policy
+src/lib/               auth, validation (Zod), time zones, plain-text rendering, .ics
+src/app/actions/       every form's server action, grouped by area
+src/app/               pages: / c/ g/ e/ events search me u/ admin report signin welcome
+src/components/        listings, forms, notices, plain text
+```
+
+Forms are plain HTML posting to server actions and redirect back with a
+message code (`?m=` or `?e=`, see `src/lib/messages.ts`). They must keep
+working with JavaScript off.
 
 ## Rules that will apply once code exists
 
@@ -98,5 +142,5 @@ These are drawn from the technical requirements; the full list is in
 ## Full documentation
 
 `docs/` — PRD, personas, use cases, functional and technical requirements,
-roles and permissions, data model, ADRs and test cases. Docusaurus front
+roles and permissions, data model, ADRs, test cases, runbook and cloning. Docusaurus front
 matter matches the bike map so the PushPopDev docs site can render it.

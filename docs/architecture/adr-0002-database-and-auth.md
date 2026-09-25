@@ -5,7 +5,7 @@ title: ADR-0002 Database and auth
 
 # ADR-0002 — Use Supabase for database, sign-in and files, with permissions in the database
 
-**Status:** Proposed · **Date:** 25 September 2026
+**Status:** Accepted · **Date:** 25 September 2026
 
 ## Context
 

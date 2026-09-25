@@ -22,16 +22,17 @@ Each record has a status:
 
 | # | Decision | Status |
 | --- | --- | --- |
-| [0001](./adr-0001-web-platform) | Build a server-rendered web app with Next.js | Proposed |
-| [0002](./adr-0002-database-and-auth) | Use Supabase for database, sign-in and files, with permissions in the database | Proposed |
-| [0003](./adr-0003-hosting) | Host on Railway | Proposed |
-| [0004](./adr-0004-background-jobs-and-email) | No n8n: scheduled Edge Functions and Resend for email | Proposed |
-| [0005](./adr-0005-discussions) | Forum-style discussion threads, not real-time chat | Proposed |
+| [0001](./adr-0001-web-platform) | Build a server-rendered web app with Next.js | Accepted |
+| [0002](./adr-0002-database-and-auth) | Use Supabase for database, sign-in and files, with permissions in the database | Accepted |
+| [0003](./adr-0003-hosting) | Host on Railway | Accepted |
+| [0004](./adr-0004-background-jobs-and-email) | No n8n: scheduled Edge Functions and Resend for email | Accepted |
+| [0005](./adr-0005-discussions) | Forum-style discussion threads, not real-time chat | Accepted |
 
-:::note All five are Proposed
-Drafted on 25 September 2026 before any code. Nothing has been built on them
-yet, so this is the cheapest moment to change any of them. 0002 is the one
-with the most money attached; 0001 is the one with the most rework attached.
+:::note Accepted 25 September 2026
+Drafted as Proposed in the morning; accepted the same day when Sarah
+directed the build on them. The board is now built on all five. Reversing
+0002 (Supabase) or 0001 (Next.js) now means rework; the others are cheap
+to change.
 :::
 
 ## How this differs from the bike map

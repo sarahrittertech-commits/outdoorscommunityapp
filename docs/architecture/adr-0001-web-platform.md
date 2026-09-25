@@ -5,7 +5,7 @@ title: ADR-0001 Web platform
 
 # ADR-0001 — Build a server-rendered web app with Next.js
 
-**Status:** Proposed · **Date:** 25 September 2026
+**Status:** Accepted · **Date:** 25 September 2026
 
 ## Context
 

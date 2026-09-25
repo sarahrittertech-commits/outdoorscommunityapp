@@ -5,7 +5,7 @@ title: ADR-0004 Background jobs and email
 
 # ADR-0004 — No n8n: scheduled Edge Functions and Resend for email
 
-**Status:** Proposed · **Date:** 25 September 2026
+**Status:** Accepted · **Date:** 25 September 2026
 
 ## Context
 
