@@ -160,8 +160,7 @@ These need Sarah's decision before or during build:
   finished.
 - **Name and domain.** Needed before phase 5 for email sending (a verified
   domain is required).
-- **Railway account.** Confirm the Railway Hobby subscription is active on
-  Sarah's own account (the dashboard's production Railway service may belong
-  to a client).
+- ~~**Railway account.**~~ Settled 25 September 2026: the Railway Hobby
+  subscription is on Sarah's own account, so this project deploys there.
 - **n8n subscription.** This project does not use n8n ([ADR-0004](./architecture/adr-0004-background-jobs-and-email)).
   Whether to keep paying for it depends only on the dashboard.

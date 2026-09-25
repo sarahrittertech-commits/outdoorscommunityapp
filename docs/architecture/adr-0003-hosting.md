@@ -60,11 +60,11 @@ standalone mode for a small container.
 CI blocks deploys that fail tests (TR-TEST-5). Set a Railway usage limit and
 alert (TR-OPS-3).
 
-## Open question
+## Account
 
-Confirm the Railway Hobby subscription is on Sarah's own account. The
-dashboard's setup guide gives each client their own Railway deployment, so
-the existing paid service may not be the one this project would use.
+Confirmed 25 September 2026: the Railway Hobby subscription is on Sarah's
+own account, so this project runs as a new service there and adds no new
+subscription.
 
 ## Revisit if
 

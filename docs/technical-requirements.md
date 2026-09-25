@@ -175,7 +175,7 @@ committing, because these change.
 | --- | --- | --- | --- |
 | Supabase — during build | Free | $0 | **Pauses after 7 days without activity.** Both existing PushPopDev projects are paused right now. No backups. 500 MB database, 1 GB storage, 50,000 monthly active users. |
 | Supabase — from launch | Pro | $25 | Does not pause. Daily backups. Spend cap on by default, which means usage stops at the included limits rather than billing overage. |
-| Railway | Hobby (existing) | $5, includes $5 of usage | Usage over $5 is billed. A small Next.js service is expected to fit, or add a few dollars. Set a usage limit (TR-OPS-3). |
+| Railway | Hobby (existing, Sarah's own account) | $5, includes $5 of usage | Usage over $5 is billed. A small Next.js service is expected to fit, or add a few dollars. Set a usage limit (TR-OPS-3). |
 | Resend | Free | $0 | 3,000 emails/month, **100/day**, 1 domain. Sending stops at the cap rather than billing. The daily cap is the one to watch: a 24-hour reminder run for a busy weekend could hit it. Next tier $20/month. |
 | Domain | — | ~$1–2 (≈$12–20/year) | — |
 | GitHub | Free | $0 | Actions minutes are free for public repositories. |
