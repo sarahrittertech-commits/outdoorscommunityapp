@@ -63,7 +63,7 @@ language plpgsql as $$
 declare
   v_id uuid;
 begin
-  insert into auth.users (email) values (p_name || '@example.test') returning id into v_id;
+  insert into auth.users (id, email) values (gen_random_uuid(), p_name || '@example.test') returning id into v_id;
   update public.profiles set display_name = initcap(p_name) where id = v_id;
   update public.accounts set accepted_terms_at = now() where id = v_id;
   insert into tests.fixture_ids values ('user:' || p_name, v_id);
