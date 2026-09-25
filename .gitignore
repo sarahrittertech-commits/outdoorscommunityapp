@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Supabase local
+supabase/.branches/
+supabase/.temp/
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Logs
+npm-debug.log*
+*.log
+
+# macOS
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+
+*.pem
+*.tsbuildinfo
