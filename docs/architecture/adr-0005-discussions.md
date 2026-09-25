@@ -5,7 +5,7 @@ title: ADR-0005 Discussions
 
 # ADR-0005 — Forum-style discussion threads, not real-time chat
 
-**Status:** Proposed · **Date:** 25 September 2026
+**Status:** Accepted · **Date:** 25 September 2026
 
 ## Context
 

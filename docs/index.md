@@ -41,7 +41,7 @@ That framing drives the scope:
 
 | | |
 | --- | --- |
-| Phase | Requirements and architecture |
+| Phase | Built locally; next: design, then launch setup |
 | Target ship date | Not set |
 | Owner | Sarah Ritter |
 | Repository | [sarahrittertech-commits/outdoorscommunityapp](https://github.com/sarahrittertech-commits/outdoorscommunityapp) |
@@ -60,6 +60,8 @@ That framing drives the scope:
 | [Data model](./data-model) | Tables, relationships and the seed category list |
 | [Architecture decisions](./architecture/) | Why each part of the stack was chosen |
 | [Test cases](./test-cases) | What "working" means before launch |
+| [Runbook](./runbook) | Running locally, testing, deploying, operating |
+| [Cloning](./cloning) | Making the women's outdoor community app from this codebase |
 
-Still to come, once there is something to release: release notes, runbook,
-privacy policy, terms and community guidelines.
+Still to come, at launch: release notes. Drafts of the privacy policy,
+terms and community guidelines are pages in the app.

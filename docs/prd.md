@@ -128,31 +128,49 @@ These are decisions, not a backlog:
 
 Phases, not dates. Each ends with something deployed.
 
-| Phase | Delivers | Requirements |
-| --- | --- | --- |
-| 0 — Decide | ADRs accepted, open questions answered, design mock | — |
-| 1 — Skeleton | Next.js on Railway, Supabase schema + RLS + permission tests, seeded categories, read-only browse pages over seed groups | FR-BR-1, 2, 6, 7, 8 |
-| 2 — People | Magic-link sign-in, profiles, create group, join/leave, roles | FR-AC-*, FR-GR-*, FR-MB-* (Must) |
-| 3 — Events | Create/edit/cancel events, RSVP, my stuff | FR-EV-* (Must) |
-| 4 — Talk and safety | Discussions, reporting, admin queues, rate limits | FR-DS-*, FR-MD-* (Must) |
-| 5 — Launch | Supabase Pro, custom domain, email sending, legal pages, seed real groups | TR-OPS-*, FR-MD-5 |
-| After launch | Shoulds, in order of the persona they serve most | — |
+| Phase | Delivers | Requirements | Status |
+| --- | --- | --- | --- |
+| 0 — Decide | ADRs accepted, open questions answered, design mock | — | ADRs accepted 25 Sep; design next |
+| 1 — Skeleton | Supabase schema + RLS + permission tests, seeded categories, browse pages | FR-BR-1, 2, 6, 7, 8 | **Built** |
+| 2 — People | Magic-link sign-in, profiles, create group, join/leave, roles | FR-AC-*, FR-GR-*, FR-MB-* (Must) | **Built** |
+| 3 — Events | Create/edit/cancel events, RSVP, my stuff | FR-EV-* (Must) | **Built** |
+| 4 — Talk and safety | Discussions, reporting, admin queues, rate limits | FR-DS-*, FR-MD-* (Must) | **Built** |
+| 5 — Launch | Supabase Pro, Railway, custom domain, email sending, reviewed legal pages, real groups | TR-OPS-*, FR-MD-5 | Not started — see [Runbook](./runbook) |
+| After launch | Remaining Shoulds, in order of the persona they serve most | — | — |
 
 Build the permission tests in phase 1, before any feature that depends on
 them. They are the part of this project most likely to be wrong silently.
+
+### Build status — 25 September 2026
+
+Every **Must** is built, tested and working end to end against a local
+database, plus these Shoulds, because they fell out of the Musts almost for
+free: category listings (FR-BR-3), upcoming events (FR-BR-4), search
+(FR-BR-5), public profiles (FR-AC-4), group rules (FR-GR-5), archiving
+(FR-GR-6), the group limit (FR-GR-7), ownership transfer (FR-MB-6), the join
+question (FR-MB-9), capacity (FR-EV-5), attendee lists (FR-EV-6), calendar
+files (FR-EV-7), past events (FR-EV-8) and the moderation log (FR-MD-6).
+
+Not built yet:
+
+| Item | Requirement | Why it waits |
+| --- | --- | --- |
+| Cover image upload | FR-GR-1 (optional field), TR-PERF-6, TR-SEC-9 | Storage bucket and permissions exist; the upload form needs image re-encoding, which adds a dependency. Groups work without images. |
+| All notification emails and unsubscribe | FR-NT-1 to FR-NT-6 | Needs Resend and a domain (phase 5). Sign-in emails don't depend on this. |
+| Deleting sign-in records of deleted accounts | TR-PRIV-4 | A small scheduled job; manual step documented in the runbook until then. |
+| Short caching of listing pages | TR-PERF-5 | Pages are fast without it at this size. Revisit with real traffic. |
+| Browser tests and accessibility checks in CI | TR-TEST-3, TR-A11Y-5 | The use cases were walked in a real browser (43 checks); turning that into a CI job needs the Docker-based local stack. |
+| Coulds | FR-AC-8, FR-GR-8, FR-EV-9, FR-EV-10, FR-DS-8, FR-MD-7, FR-AD-3 | By definition. |
 
 ## Open questions
 
 These need Sarah's decision before or during build:
 
-- **Audience.** The bike map's docs refer to "the women's outdoor community
-  app". Is this that app? A women-focused board changes the personas, the
-  moderation policy and possibly who can join groups. Everything here is
-  written audience-neutral until that is answered.
-- **Geography.** One region at launch (Western North Carolina, around
-  Brevard/Asheville) or open to anywhere? The data model supports regions
-  either way; the recommendation is one region, because an empty board in
-  fifty cities looks abandoned and a full board in one looks alive.
+- ~~**Audience.**~~ Settled 25 September 2026: this is the **general,
+  all-adventure** local board. The women's outdoor community app comes
+  later as a clone of it — see [Cloning](./cloning).
+- ~~**Geography.**~~ Settled 25 September 2026: **one region**, Western North
+  Carolina. The data model supports more regions later.
 - **Who can create groups.** Anyone signed in (Meetup/Facebook model), or
   approved organizers only? Open is the default here with a per-user limit
   (FR-GR-7); approval is FR-GR-8 at Could.

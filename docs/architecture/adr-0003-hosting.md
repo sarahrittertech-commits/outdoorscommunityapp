@@ -5,7 +5,7 @@ title: ADR-0003 Hosting
 
 # ADR-0003 — Host on Railway
 
-**Status:** Proposed · **Date:** 25 September 2026
+**Status:** Accepted · **Date:** 25 September 2026
 
 ## Context
 
