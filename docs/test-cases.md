@@ -10,7 +10,7 @@ weighted toward the thing most likely to go wrong silently in this project:
 **someone seeing or changing something they shouldn't.**
 
 :::note Status — 26 September 2026
-PT-1 to PT-22 are implemented in `supabase/tests/` (127 assertions) and pass.
+PT-1 to PT-22 are implemented in `supabase/tests/` (128 assertions) and pass.
 UT-1 to UT-5 are implemented in `src/lib/*.test.ts` (24 tests) and pass.
 E2E-1 to E2E-3 were walked in a real browser against a local database (43
 checks, all passing) but are not yet a CI job.

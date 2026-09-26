@@ -28,3 +28,9 @@ npm-debug.log*
 
 *.pem
 *.tsbuildinfo
+
+# Research data: contact details and internal notes (scripts/research/load.mjs)
+/research/
+research.sql
+*.xlsx
+*.csv

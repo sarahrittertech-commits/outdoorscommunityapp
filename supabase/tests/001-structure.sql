@@ -1,6 +1,6 @@
 -- Structural guarantees: PT-1, PT-2, PT-13, PT-20, PT-22.
 begin;
-select plan(9);
+select plan(10);
 
 -- PT-1
 select is_empty(
@@ -28,6 +28,13 @@ select is_empty(
      where n.nspname = 'public'
        and not exists (select 1 from unnest(coalesce(p.proconfig, '{}')) c where c like 'search_path=%') $$,
   'Every function in public pins its search_path'
+);
+
+-- The research workspace is invisible to the app's roles.
+select ok(
+  not has_schema_privilege('anon', 'research', 'usage')
+  and not has_schema_privilege('authenticated', 'research', 'usage'),
+  'The research schema is not reachable by anon or authenticated'
 );
 
 -- PT-2: no policy, and no privilege, lets the anonymous role write.
