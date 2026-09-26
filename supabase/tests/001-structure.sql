@@ -1,12 +1,33 @@
--- Structural guarantees: PT-1, PT-2, PT-13, PT-20.
+-- Structural guarantees: PT-1, PT-2, PT-13, PT-20, PT-22.
 begin;
-select plan(7);
+select plan(9);
 
 -- PT-1
 select is_empty(
   $$ select c.relname from pg_class c join pg_namespace n on n.oid = c.relnamespace
      where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity $$,
   'PT-1 every table in public has row-level security enabled'
+);
+
+-- PT-22: internal helpers are not callable through the API. Only the helper
+-- checks, the counts and the action functions are.
+select is_empty(
+  $$ select p.proname || ' (' || r.rolname || ')'
+     from pg_proc p
+     join pg_namespace n on n.oid = p.pronamespace
+     cross join (values ('anon'), ('authenticated')) as r (rolname)
+     where n.nspname = 'public'
+       and has_function_privilege(r.rolname, p.oid, 'execute')
+       and (p.prorettype = 'trigger'::regtype
+            or p.proname in ('log_moderation', 'require_writer', 'check_post_rate_limit')) $$,
+  'PT-22 no trigger function or internal helper is executable by anon or authenticated'
+);
+
+select is_empty(
+  $$ select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public'
+       and not exists (select 1 from unnest(coalesce(p.proconfig, '{}')) c where c like 'search_path=%') $$,
+  'Every function in public pins its search_path'
 );
 
 -- PT-2: no policy, and no privilege, lets the anonymous role write.

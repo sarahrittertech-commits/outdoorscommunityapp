@@ -9,8 +9,8 @@ A solo build has no code review, so the tests are the safety net. They are
 weighted toward the thing most likely to go wrong silently in this project:
 **someone seeing or changing something they shouldn't.**
 
-:::note Status — 25 September 2026
-PT-1 to PT-21 are implemented in `supabase/tests/` (125 assertions) and pass.
+:::note Status — 26 September 2026
+PT-1 to PT-22 are implemented in `supabase/tests/` (127 assertions) and pass.
 UT-1 to UT-5 are implemented in `src/lib/*.test.ts` (24 tests) and pass.
 E2E-1 to E2E-3 were walked in a real browser against a local database (43
 checks, all passing) but are not yet a CI job.
@@ -46,6 +46,7 @@ web app is not the thing enforcing the rule.
 | PT-19 | Nobody can update or delete a moderation log row | Log isn't append-only |
 | PT-20 | No table readable by other users contains an email address | FR-AC-5 broken |
 | PT-21 | The rate limits in TR-SEC-8 refuse the request over the limit | Limits missing or wrong |
+| PT-22 | No trigger function or internal helper (moderation log writer, rate limiter) can be called through the API, and every function pins its search path | Fake moderation log entries; functions hijackable |
 
 ## Automated — unit
 
