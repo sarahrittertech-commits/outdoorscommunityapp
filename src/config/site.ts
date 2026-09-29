@@ -6,7 +6,7 @@
 
 export const site = {
   /** Shown in the header, page titles and emails. */
-  name: "Outdoors Community Board",
+  name: "Branch Outdoors",
   /** One line under the name on the home page. */
   tagline: "Find people to get outside with in Western North Carolina.",
   /** Used for search engines and link previews. */

@@ -176,8 +176,9 @@ These need Sarah's decision before or during build:
   (FR-GR-7); approval is FR-GR-8 at Could.
 - **Ship date.** None is set. The bike map showed a date is what gets a thing
   finished.
-- **Name and domain.** Needed before phase 5 for email sending (a verified
-  domain is required).
+- **Name and domain.** Name settled 29 September 2026: **Branch Outdoors**.
+  The domain is still open, and is needed before phase 5 for email sending (a
+  verified domain is required).
 - ~~**Railway account.**~~ Settled 25 September 2026: the Railway Hobby
   subscription is on Sarah's own account, so this project deploys there.
 - **n8n subscription.** This project does not use n8n ([ADR-0004](./architecture/adr-0004-background-jobs-and-email)).

@@ -3,7 +3,7 @@ sidebar_position: 1
 title: Overview
 ---
 
-# Outdoors Community Board
+# Branch Outdoors
 
 A community board for outdoor groups that answers one question: **who around
 here does the outdoor thing I want to do, and when are they doing it next?**
