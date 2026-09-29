@@ -68,12 +68,14 @@ requirement plus most Shoulds. See the PRD's "Build status" for what is not
 built yet. No Supabase project or Railway service exists yet; the
 [runbook](docs/runbook.md) has the setup steps.
 
-The look is a deliberately plain placeholder. Visual design is next, in
-Magic Patterns, following the bike map's design-repo-then-build pattern. All
-colors are tokens at the top of `src/app/globals.css`.
+The look follows the branch outdoors brand guide (v2, Claude Design),
+summarized in [docs/brand.md](docs/brand.md): plum, paper and autumn leaf
+colors, Young Serif headings, Atkinson Hyperlegible text. One deliberate
+difference: the home page keeps a ridgeline band. All colors are tokens at the
+top of `src/app/globals.css`.
 
 **This board will be cloned for the women's outdoor community app.** Keep
-anything deployment-specific in the four places listed in
+anything deployment-specific in the places listed in
 [docs/cloning.md](docs/cloning.md), and build any women's-app feature here,
 behind a setting in `src/config/site.ts`.
 

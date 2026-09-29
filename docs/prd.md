@@ -60,7 +60,9 @@ Craigslist's structure with a gentler, more modern finish. It should feel a
 little nostalgic: the web when it was a helpful directory.
 
 - The home page is one screen of categories and subcategories, text links in
-  columns, each with a count. No hero image, no carousel.
+  columns, each with a count. No hero image, no carousel. The one decoration
+  is a thin ridgeline band above the directory carrying the tagline (see
+  [Brand](./brand)).
 - Group and event pages are documents: a heading, the facts, a description.
 - One accent color, generous whitespace, a readable type size, clear link
   styling (links look like links).
@@ -78,8 +80,9 @@ Screens the design needs to cover, in priority order:
 8. Sign in (magic link) and profile
 9. Group admin: members, join requests, reports
 
-Design is done in Magic Patterns and kept in its own repository, as the bike
-map did. The build matches the design.
+The brand (logo, color, type, voice) is set by the branch outdoors brand
+guide, summarized in [Brand](./brand). Screen mock-ups are done in Magic
+Patterns and kept in their own repository, as the bike map did.
 
 ## Scope
 

@@ -7,35 +7,68 @@
   board without touching pages.
 */
 
+/*
+  branch outdoors brand (docs/brand.md). Plum does the work: headings, links,
+  buttons. Ember, Marigold and Rust live in the leaves and small highlights;
+  they are below 4.5:1 on paper, so never use Ember or Marigold for text.
+  Pages stay mostly paper. A cloned deployment re-skins the board here.
+*/
 :root {
-  --paper: #fffdf8;
-  --ink: #1f2328;
-  --muted: #5b6168;
-  --rule: #d9d5cc;
-  --panel: #f4f1ea;
-  --link: #1a4fa8;
-  --link-visited: #6b3fa0;
-  --accent: #2f6b3a;
-  --accent-ink: #ffffff;
-  --danger: #a3261b;
-  --notice: #e8f2e6;
-  --warning: #fbeed5;
+  /* Palette */
+  --plum: #39204d;
+  --ember: #dd7242;
+  --marigold: #e7a855;
+  --rust: #b43c34;
+  --lake: #50759f;
+
+  /* Roles */
+  --paper: #faf6ef;
+  --ink: #2a2230;
+  --muted: #6b6072;
+  --rule: #e4dacb;
+  --panel: #ffffff;
+  --heading: var(--plum);
+  --link: var(--plum);
+  --link-visited: #7a5a93;
+  --focus: var(--lake);
+  --accent: var(--plum);
+  --accent-ink: var(--paper);
+  --danger: var(--rust);
+  --notice: #e1e9f2;
+  --warning: #f6e3c2;
+  --tag-new: #f6e3c2;
+  --tag-cancelled: #f5dad6;
+
+  /* Home page name band (RidgeBand): dusk over the Blue Ridge. */
+  --ridge-sky: #2f2356;
+  --ridge-haze: #43306b;
+  --ridge-1: #3a2b62;
+  --ridge-2: #332655;
+  --ridge-3: #2b2049;
+  --ridge-4: #231a3e;
+  --ridge-ink: #faf6ef;
+  --ridge-ink-muted: #d8cfe6;
 }
 
+/* The guide has no dark palette; this one keeps plum as the ground and paper as ink. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #16181b;
-    --ink: #e7e5e0;
-    --muted: #a3a8ae;
-    --rule: #3a3d42;
-    --panel: #202328;
-    --link: #8ab4f8;
-    --link-visited: #c4a4f0;
-    --accent: #7cc48a;
-    --accent-ink: #10231a;
-    --danger: #f28b82;
-    --notice: #1f3323;
-    --warning: #3a2f19;
+    --paper: #1e1624;
+    --ink: #f1ebe1;
+    --muted: #a89daf;
+    --rule: #4a2e61;
+    --panel: #2a1f33;
+    --heading: #f1ebe1;
+    --link: #d9c3ea;
+    --link-visited: #b99ad0;
+    --focus: #8fb0d6;
+    --accent: #d9c3ea;
+    --accent-ink: #1e1624;
+    --danger: #ff8a80;
+    --notice: #1f2d3d;
+    --warning: #3a2c16;
+    --tag-new: #3a2c16;
+    --tag-cancelled: #2a1215;
   }
 }
 
@@ -51,7 +84,9 @@
   --color-danger: var(--danger);
   --color-notice: var(--notice);
   --color-warning: var(--warning);
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-heading: var(--heading);
+  --font-sans: var(--font-atkinson), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-serif: var(--font-young-serif), Georgia, serif;
 }
 
 /* Base element styles sit in the base layer so utility classes can override them. */
@@ -60,13 +95,15 @@
     background: var(--paper);
     color: var(--ink);
     font-family: var(--font-sans);
-    line-height: 1.5;
+    font-size: 1.125rem;
+    line-height: 1.55;
   }
 
   a {
     color: var(--link);
     text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
   }
   a:visited {
     color: var(--link-visited);
@@ -76,29 +113,43 @@
   }
 
   :focus-visible {
-    outline: 3px solid var(--link);
+    outline: 3px solid var(--focus);
     outline-offset: 2px;
   }
 
+  /* Young Serif for H1 and H2 (one weight only); Atkinson bold for H3. */
+  h1,
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--heading);
+  }
   h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    line-height: 1.25;
+    font-size: 2.25rem;
+    line-height: 1.15;
   }
   h2 {
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: 1.625rem;
+    line-height: 1.2;
     margin-top: 1.5rem;
   }
   h3 {
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 700;
+  }
+  @media (max-width: 640px) {
+    h1 {
+      font-size: 1.875rem;
+    }
+    h2 {
+      font-size: 1.375rem;
+    }
   }
 
   /* Forms: plain, large enough to use on a phone. */
   label {
     display: block;
-    font-weight: 600;
+    font-weight: 700;
     margin-top: 0.9rem;
   }
   input[type="text"],
@@ -115,7 +166,7 @@
     padding: 0.45rem 0.55rem;
     border: 1px solid var(--rule);
     border-radius: 4px;
-    background: var(--paper);
+    background: var(--panel);
     color: var(--ink);
     font: inherit;
   }
@@ -134,7 +185,7 @@
   }
   .hint {
     color: var(--muted);
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     font-weight: 400;
   }
 }
@@ -144,19 +195,20 @@
     display: inline-block;
     padding: 0.45rem 0.9rem;
     border: 1px solid var(--accent);
-    border-radius: 4px;
+    border-radius: 6px;
     background: var(--accent);
     color: var(--accent-ink);
     font: inherit;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     cursor: pointer;
   }
   .button:visited {
     color: var(--accent-ink);
   }
+  /* Secondary: outlined. Primary is one per page. */
   .button-plain {
-    background: transparent;
+    background: var(--panel);
     color: var(--accent);
   }
   .button-plain:visited {
@@ -164,8 +216,35 @@
   }
   .button-danger {
     border-color: var(--danger);
-    background: transparent;
+    background: var(--panel);
     color: var(--danger);
+  }
+  .button:hover {
+    filter: brightness(1.1);
+  }
+
+  /* Small tags: "New group", "Cancelled". */
+  .tag {
+    display: inline-block;
+    padding: 0 0.45rem;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--tag-new);
+  }
+  .tag-cancelled {
+    color: var(--danger);
+    background: var(--tag-cancelled);
+  }
+
+  .branch-stem {
+    stroke: var(--heading);
+  }
+  /* The wordmark: lowercase Young Serif in plum. */
+  .wordmark {
+    font-family: var(--font-serif);
+    color: var(--heading);
   }
   .link-button {
     background: none;
@@ -177,4 +256,24 @@
     font: inherit;
     cursor: pointer;
   }
+}
+
+/* Home page name band (kept by Sarah's choice over the guide's no-image home). Styled here, not inline, so the CSP stays nonce-only. */
+@layer components {
+  .ridge-band {
+    background: linear-gradient(to bottom, var(--ridge-sky), var(--ridge-haze));
+  }
+  .ridge-haze {
+    fill: var(--ridge-haze);
+    opacity: 0.6;
+  }
+  .ridge-1 { fill: var(--ridge-1); }
+  .ridge-2 { fill: var(--ridge-2); }
+  .ridge-3 { fill: var(--ridge-3); }
+  .ridge-4 { fill: var(--ridge-4); }
+  .ridge-title {
+    color: var(--ridge-ink);
+    font-family: var(--font-serif);
+  }
+  .ridge-tagline { color: var(--ridge-ink-muted); }
 }

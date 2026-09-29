@@ -5,10 +5,12 @@
 // legal pages' wording, and nothing else. See docs/cloning.md.
 
 export const site = {
-  /** Shown in the header, page titles and emails. */
-  name: "Branch Outdoors",
+  /** Shown in the header, page titles and emails. Lowercase is the wordmark (docs/brand.md). */
+  name: "branch outdoors",
   /** One line under the name on the home page. */
-  tagline: "Find people to get outside with in Western North Carolina.",
+  tagline: "A plain, friendly board for finding people to go outside with.",
+  /** The region the directory covers, shown above the categories. */
+  regionName: "Western North Carolina",
   /** Used for search engines and link previews. */
   description:
     "A plain, ad-free board of local outdoor groups: hiking, paddling, cycling, climbing and more. Browse by activity, join a group, show up.",
