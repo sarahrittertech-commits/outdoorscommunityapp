@@ -95,7 +95,7 @@ registrar), then create the SMTP credentials used in step 1.5.
    | --- | --- |
    | `NEXT_PUBLIC_SUPABASE_URL` | the project's API URL |
    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | the project's anon (publishable) key |
-   | `NEXT_PUBLIC_SITE_URL` | `https://<domain>` |
+   | `NEXT_PUBLIC_SITE_URL` | `https://<domain>`. Required: sign-in links and the redirect after sign-in are built from it, because behind Railway's proxy the server only sees itself as `0.0.0.0:8080`. |
 
    Never add the service-role key to Railway (TR-SEC-3).
 3. Add the custom domain. Set a usage limit and alert (TR-OPS-3).
