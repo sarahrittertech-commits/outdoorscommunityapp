@@ -9,11 +9,13 @@ A solo build has no code review, so the tests are the safety net. They are
 weighted toward the thing most likely to go wrong silently in this project:
 **someone seeing or changing something they shouldn't.**
 
-:::note Status — 26 September 2026
+:::note Status — 29 September 2026
 PT-1 to PT-22 are implemented in `supabase/tests/` (128 assertions) and pass.
 UT-1 to UT-5 are implemented in `src/lib/*.test.ts` (24 tests) and pass.
 E2E-1 to E2E-3 were walked in a real browser against a local database (43
 checks, all passing) but are not yet a CI job.
+MT-8 passed on 29 September 2026: all 26 pages at 390px wide, as a visitor,
+a group owner and the site admin, with no sideways scrolling.
 :::
 
 ## Automated — permissions (database)
@@ -81,3 +83,4 @@ Playwright in CI against the local stack with seed data.
 | MT-5 | Supabase security advisor reports no errors (TR-SEC-10) |
 | MT-6 | Supabase project is on Pro and backups are listed (TR-OPS-2) |
 | MT-7 | Shared group and event links show correct previews in iMessage and Slack |
+| MT-8 | Every page at phone width (390px): no sideways scrolling, and buttons and links meet the 24px minimum tap size (WCAG 2.2) |

@@ -40,7 +40,7 @@ export function EventList({ events, showGroup = true }: { events: EventListing[]
     <ul className="divide-y divide-rule border-y border-rule">
       {events.map((e) => (
         <li key={e.id} className="flex flex-wrap items-baseline gap-x-3 py-2">
-          <span className="w-28 shrink-0 font-mono text-sm">{formatShortDate(e.starts_at!, e.timezone!)}</span>
+          <span className="w-full font-mono text-sm sm:w-28 sm:shrink-0">{formatShortDate(e.starts_at!, e.timezone!)}</span>
           <span className="min-w-0 flex-1">
             <Link href={`/e/${e.id}`}>{e.title}</Link>
             {e.status === "cancelled" && <strong className="ml-2 text-danger">cancelled</strong>}
