@@ -60,7 +60,9 @@ Craigslist's structure with a gentler, more modern finish. It should feel a
 little nostalgic: the web when it was a helpful directory.
 
 - The home page is one screen of categories and subcategories, text links in
-  columns, each with a count. No hero image, no carousel.
+  columns, each with a count. No hero image, no carousel. The one decoration
+  is a thin ridgeline band above the directory carrying the tagline (see
+  [Brand](./brand)).
 - Group and event pages are documents: a heading, the facts, a description.
 - One accent color, generous whitespace, a readable type size, clear link
   styling (links look like links).
@@ -78,8 +80,9 @@ Screens the design needs to cover, in priority order:
 8. Sign in (magic link) and profile
 9. Group admin: members, join requests, reports
 
-Design is done in Magic Patterns and kept in its own repository, as the bike
-map did. The build matches the design.
+The brand (logo, color, type, voice) is set by the branch outdoors brand
+guide, summarized in [Brand](./brand). Screen mock-ups are done in Magic
+Patterns and kept in their own repository, as the bike map did.
 
 ## Scope
 
@@ -176,8 +179,9 @@ These need Sarah's decision before or during build:
   (FR-GR-7); approval is FR-GR-8 at Could.
 - **Ship date.** None is set. The bike map showed a date is what gets a thing
   finished.
-- **Name and domain.** Needed before phase 5 for email sending (a verified
-  domain is required).
+- **Name and domain.** Name settled 29 September 2026: **Branch Outdoors**.
+  The domain is still open, and is needed before phase 5 for email sending (a
+  verified domain is required).
 - ~~**Railway account.**~~ Settled 25 September 2026: the Railway Hobby
   subscription is on Sarah's own account, so this project deploys there.
 - **n8n subscription.** This project does not use n8n ([ADR-0004](./architecture/adr-0004-background-jobs-and-email)).

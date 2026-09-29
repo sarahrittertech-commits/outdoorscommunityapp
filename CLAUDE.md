@@ -1,4 +1,4 @@
-# Outdoors Community Board — project context
+# Branch Outdoors — project context
 
 This file is read automatically at the start of a session. It exists so a
 development window starts with full project context without re-explaining it.
@@ -13,8 +13,9 @@ Think Meetup's groups and events, a Facebook group's membership and roles,
 and an old forum's discussion threads, presented with the plainness of
 Craigslist.
 
-Owner: Sarah Ritter (PushPopDev). Working name — the product name is not
-decided. Ship date: **not set** (see the PRD's open questions).
+Owner: Sarah Ritter (PushPopDev). Product name: **Branch Outdoors** (chosen
+29 September 2026; the women's clone would be *Branch Outdoors Women*). The
+domain is not chosen yet. Ship date: **not set** (see the PRD's open questions).
 
 ## Why it exists — read this before suggesting anything
 
@@ -67,12 +68,14 @@ requirement plus most Shoulds. See the PRD's "Build status" for what is not
 built yet. No Supabase project or Railway service exists yet; the
 [runbook](docs/runbook.md) has the setup steps.
 
-The look is a deliberately plain placeholder. Visual design is next, in
-Magic Patterns, following the bike map's design-repo-then-build pattern. All
-colors are tokens at the top of `src/app/globals.css`.
+The look follows the branch outdoors brand guide (v2, Claude Design),
+summarized in [docs/brand.md](docs/brand.md): plum, paper and autumn leaf
+colors, Young Serif headings, Atkinson Hyperlegible text. One deliberate
+difference: the home page keeps a ridgeline band. All colors are tokens at the
+top of `src/app/globals.css`.
 
 **This board will be cloned for the women's outdoor community app.** Keep
-anything deployment-specific in the four places listed in
+anything deployment-specific in the places listed in
 [docs/cloning.md](docs/cloning.md), and build any women's-app feature here,
 behind a setting in `src/config/site.ts`.
 

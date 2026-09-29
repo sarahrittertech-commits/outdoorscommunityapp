@@ -269,6 +269,15 @@ Three read-only views, each running with the reader's own permissions:
 Member and RSVP counts come from small functions that reveal the *number*
 without revealing the rows, so visitors see "12 members" but not who.
 
+## Research workspace (not part of the app)
+
+A separate `research` schema holds the source research used to seed real
+groups: `activities`, `organizations`, `places` and `events`, plus an
+`organization_fit` view that sorts organizations by whether they could be a
+group. It is invisible to the app's roles (no schema access, row-level
+security on with no policies) and its data is never committed. See the
+[runbook](./runbook), "Seeding real groups".
+
 ## Seed categories
 
 Seeded by `supabase/migrations/20260925000005_seed_directory.sql`, the one

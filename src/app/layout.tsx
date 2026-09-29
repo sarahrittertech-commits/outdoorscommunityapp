@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
+import { Atkinson_Hyperlegible, Young_Serif } from "next/font/google";
 import Link from "next/link";
 
 import { signOut } from "@/app/actions/auth";
+import { BranchMark } from "@/components/BranchMark";
 import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
 
 import "./globals.css";
+
+// Self-hosted at build time, so pages make no requests to Google (CSP: font-src 'self').
+const atkinson = Atkinson_Hyperlegible({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-atkinson",
+  display: "swap",
+});
+const youngSerif = Young_Serif({ subsets: ["latin"], weight: "400", variable: "--font-young-serif", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -18,13 +30,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const viewer = await getViewer();
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${atkinson.variable} ${youngSerif.variable}`}>
       <body className="mx-auto max-w-5xl px-4 pb-16">
         <a href="#main" className="sr-only focus:not-sr-only">
           Skip to content
         </a>
         <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule py-3">
-          <Link href="/" className="text-lg font-bold text-ink no-underline visited:text-ink">
+          <Link href="/" className="wordmark flex items-center gap-2 text-2xl no-underline">
+            <BranchMark className="h-7 w-7" />
             {site.name}
           </Link>
           <nav aria-label="Main" className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">

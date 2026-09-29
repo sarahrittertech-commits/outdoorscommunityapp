@@ -12,16 +12,17 @@ community app**. This page is how to do that cheaply, and what it costs.
 ## The short version
 
 The codebase was built so that a second board is mostly configuration. Only
-four things are deployment-specific:
+five things are deployment-specific:
 
 | What | Where | For the women's app |
 | --- | --- | --- |
 | Name, tagline, description, audience, region, contact | `src/config/site.ts` | New name and wording |
 | Region and category list | `supabase/migrations/20260925000005_seed_directory.sql` | Replace the file's contents |
 | Legal and community wording | `src/app/{about,guidelines,terms,privacy}/page.tsx` | Rewrite for the audience |
-| Colors | the tokens at the top of `src/app/globals.css` | The women's app design |
+| Colors | the tokens at the top of `src/app/globals.css` (including the `--ridge-*` band colors) | The women's app design |
+| Logo | `src/components/BranchMark.tsx` and `src/app/icon.svg` | The women's app mark, if it differs |
 
-Everything else — the database schema, every permission rule, the 125
+Everything else — the database schema, every permission rule, the 128
 permission tests, the pages and forms — is shared and should not change.
 
 ## Recommended: fork with an upstream, not copy-paste
@@ -32,7 +33,7 @@ costs:
 | Approach | What it means | Consequence |
 | --- | --- | --- |
 | **Copy** | Duplicate the files into a new repo and carry on separately | Every bug fix and security fix has to be made twice, by hand. The two drift apart within weeks. |
-| **Fork with upstream** (recommended) | New repo created from this one, keeping this one as `upstream` | Fixes made here are pulled into the women's app with one `git merge`. Its own changes stay in the four places above, so merges stay clean. |
+| **Fork with upstream** (recommended) | New repo created from this one, keeping this one as `upstream` | Fixes made here are pulled into the women's app with one `git merge`. Its own changes stay in the five places above, so merges stay clean. |
 
 Both give two separate public repositories for the portfolio. Only the
 second keeps them in sync.
@@ -51,7 +52,7 @@ second keeps them in sync.
    git push -u origin main
    ```
 
-3. Change the four deployment-specific places listed above, in one commit.
+3. Change the five deployment-specific places listed above, in one commit.
 4. Update `CLAUDE.md`, `README.md` and `docs/` for the new product. The PRD,
    personas and guidelines will differ; the ADRs, data model and permission
    matrix carry over.

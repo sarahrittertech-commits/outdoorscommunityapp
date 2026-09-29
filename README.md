@@ -1,4 +1,4 @@
-# Outdoors Community Board
+# Branch Outdoors
 
 A plain, fast community board for outdoor groups: find a hiking, paddling or
 riding group by category, join it, show up to its events, and talk with the
@@ -7,7 +7,7 @@ people in it.
 No feed. No ads. No algorithm deciding what you see. Lists are alphabetical
 or by date, and they are the same for everyone.
 
-*Working name.*
+*Branch Outdoors is the product name, chosen 29 September 2026. The domain is not chosen yet.*
 
 ## Status
 

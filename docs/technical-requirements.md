@@ -102,7 +102,7 @@ the dashboard.
 | TR-SEC-7 | A Content Security Policy header allows scripts only from the site itself. |
 | TR-SEC-8 | Rate limits, enforced in the database so they can't be bypassed: 10 posts per user per 10 minutes; 20 joins or join requests per user per day; 10 reports per user per day; 3 groups created per user per week. Supabase Auth's own limits cover sign-in emails. |
 | TR-SEC-9 | Cover image uploads: images only (JPEG, PNG, WebP), 2 MB maximum, re-encoded on upload so no original file is ever served. |
-| TR-SEC-10 | Supabase's security advisor reports no errors before each release. |
+| TR-SEC-10 | Supabase's security advisor reports no errors before each release. Its remaining warnings are deliberate: the helper checks that the permission rules call ("is this person a member?") must be callable by visitors, and the action functions (join, RSVP, moderate) are the intended way in and check permissions themselves. Hosted Supabase lets signed-in users call any new function by default, so internal functions are revoked explicitly (PT-22). |
 
 ## Privacy — TR-PRIV
 

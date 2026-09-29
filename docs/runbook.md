@@ -100,6 +100,35 @@ registrar), then create the SMTP credentials used in step 1.5.
    Never add the service-role key to Railway (TR-SEC-3).
 3. Add the custom domain. Set a usage limit and alert (TR-OPS-3).
 
+## Seeding real groups
+
+The board launches with real local groups rather than an empty directory.
+The source research (organizations, places, events and an activity list)
+lives in a private `research` schema in the production database: the API
+doesn't expose it, visitors and signed-in users can't see it, and the data
+is never committed to this public repository because it holds contact
+details and internal notes.
+
+1. Export the research spreadsheet as CSVs (`activities.csv`,
+   `organizations.csv`, `places.csv`, `events.csv`) into a folder outside
+   the repository.
+2. Turn them into SQL and run it in the Supabase SQL editor (or with psql):
+
+   ```bash
+   node scripts/research/load.mjs ~/research-export > ~/research.sql
+   ```
+
+   It replaces the research tables' contents, so re-running with a newer
+   export is safe.
+3. Review candidates with `select * from research.organization_fit`. Its
+   `board_fit` column is a first sort by organization type — *community
+   group*, *business*, *venue*, *not a listing*, *closed* — not a decision.
+   Only community groups belong on the board as groups.
+4. Create each real group through the app, signed in as its owner (or as
+   Sarah, handing ownership over later), so it has an owner and goes
+   through the same rules as any other group. Nothing is copied from the
+   research schema into the app's tables automatically.
+
 ## Operations
 
 ### Deleted accounts
