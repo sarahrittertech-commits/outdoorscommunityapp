@@ -46,9 +46,8 @@ leaves and small highlights. Pages stay mostly paper (about 70% paper, 14% ink,
 | White | `#FFFFFF` | Cards, form fields | — |
 
 Ember and Marigold never carry text or links. Every color is a token at the top
-of `src/app/globals.css`. The guide has no dark palette; the app's dark mode
-keeps plum as the ground and paper as the text color, and should be reviewed
-when the guide adds one.
+of `src/app/globals.css`. The page itself is white (see below), and there is no
+dark mode.
 
 ## Type
 
@@ -84,11 +83,16 @@ first, no pressure. Plain, calm, local, welcoming.
 
 ## Where the app differs from the guide
 
-- **The home page has a ridgeline band.** The guide keeps images off the home
-  page. Sarah chose to keep a thin band of layered Blue Ridge silhouettes
-  (drawn as SVG, colors from the `--ridge-*` tokens) carrying the tagline and
-  region, with the category directory directly below it
-  (`src/components/RidgeBand.tsx`).
+- **The home page has a ridgeline hero.** The guide keeps images off the home
+  page. Sarah chose the Magic Patterns layout: a full-width band of layered
+  Blue Ridge silhouettes (drawn as SVG, colors from the `--ridge-*` tokens)
+  behind the heading and search (`src/components/RidgeBand.tsx`). The hero's
+  Search button is ink on Marigold, an approved pairing, so it stands out on
+  plum.
+- **Activities are line drawings** (`src/components/ActivityIcon.tsx`), in
+  the heading color, always beside their name.
+- **Pages are white, not paper.** Paper (`#FAF6EF`) is used for panels, and
+  there is no dark mode: the board looks the same in every setting.
 
 ## Alternate names
 

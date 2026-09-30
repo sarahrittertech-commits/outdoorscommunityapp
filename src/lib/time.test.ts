@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatEventTime, isValidTimeZone, utcToZonedLocal, zonedLocalToUtc } from "./time";
+import { dateParts, formatEventTime, isValidTimeZone, utcToZonedLocal, zonedLocalToUtc } from "./time";
 
 // UT-2: event times are stored in UTC and shown in the event's own zone.
 describe("time zones", () => {
@@ -30,5 +30,12 @@ describe("time zones", () => {
   it("rejects unknown zones", () => {
     expect(isValidTimeZone("America/New_York")).toBe(true);
     expect(isValidTimeZone("Mars/Olympus")).toBe(false);
+  });
+});
+
+describe("dateParts", () => {
+  it("splits a date into card pieces in the event's own time zone", () => {
+    // 01:30 UTC on 4 Oct is still 3 Oct, 9:30 PM in North Carolina.
+    expect(dateParts("2026-10-04T01:30:00Z", "America/New_York")).toEqual({ day: "3", weekday: "Sat", month: "Oct", time: "9:30 PM" });
   });
 });

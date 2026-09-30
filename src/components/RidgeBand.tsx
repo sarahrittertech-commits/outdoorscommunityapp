@@ -1,14 +1,12 @@
-import { site } from "@/config/site";
-
 /**
- * The home page band: layered Blue Ridge silhouettes drawn as SVG, with the
- * tagline and region as real text on top (the header already carries the
- * name). Colors come from the --ridge-* tokens in globals.css, so a cloned
- * deployment re-colors it without a new image. Decorative only; screen readers get the heading and tagline.
+ * The home page hero: layered Blue Ridge silhouettes drawn as SVG behind the
+ * heading and search. Colors come from the --ridge-* tokens in globals.css,
+ * so a cloned deployment re-colors it without a new image. The drawing is
+ * decorative; everything readable is real text on top.
  */
-export function RidgeBand() {
+export function RidgeBand({ children }: { children: React.ReactNode }) {
   return (
-    <div className="ridge-band relative overflow-hidden rounded">
+    <div className="ridge-band full-bleed relative overflow-hidden">
       <svg
         className="absolute inset-0 h-full w-full"
         viewBox="0 0 1200 240"
@@ -34,12 +32,7 @@ export function RidgeBand() {
           d="M0 204 C120 196 220 210 340 206 C460 202 560 194 680 200 C800 206 900 214 1020 208 C1100 204 1160 200 1200 198 V240 H0 Z"
         />
       </svg>
-      <div className="relative px-5 pt-5 pb-16 sm:px-7 sm:pt-7 sm:pb-20">
-        <h1 className="ridge-title m-0 max-w-xl text-2xl sm:text-3xl">{site.tagline}</h1>
-        <p className="ridge-tagline m-0 mt-2">
-          {site.regionName} · <span className="whitespace-nowrap">categories A–Z</span>
-        </p>
-      </div>
+      <div className="relative mx-auto max-w-6xl px-4 pt-12 pb-24 sm:pt-16 sm:pb-32">{children}</div>
     </div>
   );
 }
