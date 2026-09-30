@@ -104,4 +104,9 @@ export const reportSchema = z.object({
   next: z.string().optional(),
 });
 
+/** FR-GR-10: how the claimant is connected to an unclaimed listing. */
+export const claimSchema = z.object({
+  note: requiredText(10, 1000),
+});
+
 export const idSchema = id;

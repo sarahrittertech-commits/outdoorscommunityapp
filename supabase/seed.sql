@@ -161,3 +161,17 @@ update public.threads set is_pinned = true where id = '44444444-4444-4444-8444-0
 insert into public.replies (thread_id, author_id, body) values
   ('44444444-4444-4444-8444-000000000001', '11111111-1111-4111-8111-000000000002', 'I can drive. Room for one boat.'),
   ('44444444-4444-4444-8444-000000000001', '11111111-1111-4111-8111-000000000001', 'Thanks both. That covers it.');
+
+-- An unclaimed listing (FR-GR-9): a made-up club, as the data import adds real ones.
+
+insert into public.groups (id, slug, name, description, subcategory_id, region_id, area, discussions_enabled, is_unclaimed, source_url)
+select '22222222-2222-4222-8222-000000000099', 'example-hiking-club', 'Example Hiking Club',
+       'A volunteer hiking club with weekly group hikes. Listed from its public website.',
+       s.id, r.id, 'Hendersonville', false, true, 'https://example.org/hiking-club'
+from public.subcategories s join public.categories c on c.id = s.category_id, public.regions r
+where c.slug = 'hiking' order by s.sort_order limit 1;
+
+insert into public.events (group_id, title, starts_at, ends_at, timezone, location_name, address_visibility, source_url)
+values ('22222222-2222-4222-8222-000000000099', 'Saturday group hike',
+        date_trunc('day', now()) + interval '6 days 13 hours', date_trunc('day', now()) + interval '6 days 17 hours',
+        'America/New_York', 'Jones Gap trailhead', 'public', 'https://example.org/hiking-club/events');

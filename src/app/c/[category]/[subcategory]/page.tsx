@@ -42,7 +42,7 @@ export default async function SubcategoryPage({ params, searchParams }: Props) {
 
   const { data: groups, count } = await supabase
     .from("group_listings")
-    .select("slug, name, area, member_count, next_event_at, join_policy", { count: "exact" })
+    .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed", { count: "exact" })
     .eq("subcategory_id", subcategory.id)
     .eq("status", "active")
     .order("name")

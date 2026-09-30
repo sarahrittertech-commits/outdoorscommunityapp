@@ -34,7 +34,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     supabase.from("subcategories").select("slug, name").eq("category_id", category.id).order("sort_order"),
     supabase
       .from("group_listings")
-      .select("slug, name, area, member_count, next_event_at, join_policy", { count: "exact" })
+      .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed", { count: "exact" })
       .eq("category_id", category.id)
       .eq("status", "active")
       .order("name")

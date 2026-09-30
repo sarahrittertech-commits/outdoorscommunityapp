@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { approveClaim, declineClaim } from "@/app/actions/claims";
 import { removeGroup, resolveReport, suspendUser, unsuspendUser } from "@/app/actions/moderation";
 import { Notice } from "@/components/Notice";
 import { ReportTarget } from "@/components/ReportTarget";
@@ -18,7 +19,7 @@ export default async function AdminPage({ searchParams }: Props) {
   await requireSiteAdmin();
   const supabase = await createClient();
 
-  const [{ data: reports }, { data: log }, { data: suspended }] = await Promise.all([
+  const [{ data: reports }, { data: log }, { data: suspended }, { data: claims }] = await Promise.all([
     supabase
       .from("reports")
       .select("id, target_type, target_id, reason, note, group_id, created_at, groups(slug, name)")
@@ -31,6 +32,12 @@ export default async function AdminPage({ searchParams }: Props) {
       .order("created_at", { ascending: false })
       .limit(50),
     supabase.from("accounts").select("id").not("suspended_at", "is", null),
+    supabase
+      .from("group_claims")
+      .select("id, user_id, note, created_at, groups(slug, name, source_url), profiles!group_claims_user_id_fkey(display_name)")
+      .eq("status", "pending")
+      .order("created_at")
+      .limit(100),
   ]);
 
   const tz = site.defaultTimezone;
@@ -80,6 +87,39 @@ export default async function AdminPage({ searchParams }: Props) {
           </li>
         ))}
         {!reports?.length && <li className="py-2 text-muted">Nothing to review.</li>}
+      </ul>
+
+      <h2>Claim requests ({claims?.length ?? 0})</h2>
+      <p className="mt-1 text-sm text-muted">
+        People asking to run an unclaimed listing. Check them against the group&apos;s own website before approving: the claimant becomes its
+        owner.
+      </p>
+      <ul className="mt-2 divide-y divide-rule border-y border-rule">
+        {claims?.map((c) => (
+          <li key={c.id} className="py-3">
+            <p>
+              <Link href={`/u/${c.user_id}`}>{c.profiles?.display_name ?? "deleted user"}</Link> wants to claim{" "}
+              {c.groups && <Link href={`/g/${c.groups.slug}`}>{c.groups.name}</Link>}
+              {c.groups?.source_url && (
+                <span className="text-sm">
+                  {" "}
+                  (<a href={c.groups.source_url} rel="nofollow noopener">their website</a>)
+                </span>
+              )}
+              <span className="ml-2 text-sm text-muted">{formatPostDate(c.created_at, tz)}</span>
+            </p>
+            <p className="mt-1 text-sm">&ldquo;{c.note}&rdquo;</p>
+            <div className="mt-2 flex flex-wrap gap-3 text-sm">
+              <form action={approveClaim.bind(null, c.id)}>
+                <button className="button">Approve</button>
+              </form>
+              <form action={declineClaim.bind(null, c.id)}>
+                <button className="button button-plain">Decline</button>
+              </form>
+            </div>
+          </li>
+        ))}
+        {!claims?.length && <li className="py-2 text-muted">No claims waiting.</li>}
       </ul>
 
       <h2>Suspended accounts ({suspended?.length ?? 0})</h2>

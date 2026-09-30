@@ -105,13 +105,13 @@ create type public.claim_status as enum ('pending', 'approved', 'declined');
 create table public.group_claims (
   id uuid primary key default gen_random_uuid(),
   group_id uuid not null references public.groups (id) on delete cascade,
-  user_id uuid not null references auth.users (id) on delete cascade,
+  user_id uuid not null references public.profiles (id) on delete cascade,
   -- How the claimant is connected to the group, for the site admin to check.
   note text not null check (char_length(btrim(note)) between 10 and 1000),
   status public.claim_status not null default 'pending',
   created_at timestamptz not null default now(),
   decided_at timestamptz,
-  decided_by uuid references auth.users (id) on delete set null,
+  decided_by uuid references public.profiles (id) on delete set null,
   unique (group_id, user_id)
 );
 
