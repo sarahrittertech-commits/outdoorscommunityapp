@@ -32,7 +32,7 @@ Who is allowed to do each action is defined once, in
 | FR-BR-6 | A group page shows name, description, subcategory, area, organizers (owner and admins), member count, join policy, upcoming events, count of past events and the join button. Readable signed out. | Must | Signed out, all of those are visible; discussions and the member list are not. |
 | FR-BR-7 | An event page shows title, host group, date and time with time zone, location name, address (subject to FR-EV-1 visibility), description and the number going. Readable signed out. | Must | Signed out, a members-only address is replaced by "address shown to group members". |
 | FR-BR-8 | No personalization in listings. Every list is in a stated, fixed order and is the same for every viewer. | Must | Two different signed-in users see identical listing pages. |
-| FR-BR-9 | Filter listings by region. | Could | Only needed if more than one region launches. |
+| FR-BR-11 | Filter listings by region. | Could | Only needed if more than one region launches. |
 
 ## Accounts — FR-AC
 

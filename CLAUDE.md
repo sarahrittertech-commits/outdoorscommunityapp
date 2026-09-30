@@ -143,9 +143,18 @@ These are drawn from the technical requirements; the full list is in
   architectural tradeoffs in terms of consequences and cost, not internals.
 - Documentation is versioned with the code: a change that invalidates a
   document updates it in the same commit.
+- **No build without a reviewed use case and user flow.** Before any
+  feature or page change is built, it has a use case in
+  `docs/use-cases.md` (actor, trigger, the main path only) and a user flow
+  in `docs/user-flows.md` (the screens and decisions along that path).
+  Sarah reviews both and says go. The functional requirements then cover
+  the alternative paths and edge cases, and only then does code start. If
+  a request arrives without them, draft them and stop for review first.
+  Small fixes to something already built (a bug, an alignment issue) don't
+  need a new use case.
 
 ## Full documentation
 
-`docs/` — PRD, personas, use cases, functional and technical requirements,
+`docs/` — PRD, personas, use cases, user flows, functional and technical requirements,
 roles and permissions, data model, ADRs, test cases, runbook and cloning. Docusaurus front
 matter matches the bike map so the PushPopDev docs site can render it.
