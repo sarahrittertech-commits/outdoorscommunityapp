@@ -102,7 +102,8 @@ registrar), then create the SMTP credentials used in step 1.5.
 
 ## Seeding real groups
 
-The board launches with real local groups rather than an empty directory.
+The board launches with real local groups rather than an empty directory:
+they are listed from public information until their organizers claim them.
 The source research (organizations, places, events and an activity list)
 lives in a private `research` schema in the production database: the API
 doesn't expose it, visitors and signed-in users can't see it, and the data
@@ -124,10 +125,17 @@ details and internal notes.
    `board_fit` column is a first sort by organization type — *community
    group*, *business*, *venue*, *not a listing*, *closed* — not a decision.
    Only community groups belong on the board as groups.
-4. Create each real group through the app, signed in as its owner (or as
-   Sarah, handing ownership over later), so it has an owner and goes
-   through the same rules as any other group. Nothing is copied from the
-   research schema into the app's tables automatically.
+4. Add the chosen community groups as **unclaimed listings** (FR-GR-9) by
+   running `scripts/research/listings.sql` in the SQL editor. The script
+   holds the curated list (research ids, names, activities and short
+   neutral descriptions written for the board) and copies only public
+   facts from the research: each group's web page, and its upcoming events
+   that have a published start time. No contact details, prices or notes.
+   It skips anything already there, so it is safe to re-run after loading
+   a newer export; events that have passed simply drop out of the listings.
+5. When an organizer claims a listing, check their note against the
+   group's own page and approve or decline it on the site admin page. The
+   claimant becomes the owner and the listing becomes an ordinary group.
 
 ## Operations
 

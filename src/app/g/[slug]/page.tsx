@@ -114,10 +114,10 @@ export default async function GroupPage({ params, searchParams }: Props) {
             yet, so there&apos;s no joining or RSVPs here.
           </p>
           <p className="m-0 mt-2">
+            Find them at{" "}
             <a href={group.source_url} rel="nofollow noopener" className="font-bold">
-              Visit their website
-            </a>{" "}
-            <span className="text-sm text-muted">({hostOf(group.source_url)})</span>
+              {hostOf(group.source_url)}
+            </a>
           </p>
           <h2 className="mt-4 font-sans text-base font-bold text-ink">Are you the organizer?</h2>
           {myClaim?.status === "pending" ? (
