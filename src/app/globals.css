@@ -22,11 +22,11 @@
   --lake: #50759f;
 
   /* Roles */
-  --paper: #faf6ef;
+  --paper: #ffffff;
   --ink: #2a2230;
   --muted: #6b6072;
   --rule: #e4dacb;
-  --panel: #ffffff;
+  --panel: #faf6ef;
   --heading: var(--plum);
   --link: var(--plum);
   --link-visited: #7a5a93;
@@ -50,26 +50,12 @@
   --ridge-ink-muted: #d8cfe6;
 }
 
-/* The guide has no dark palette; this one keeps plum as the ground and paper as ink. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #1e1624;
-    --ink: #f1ebe1;
-    --muted: #a89daf;
-    --rule: #4a2e61;
-    --panel: #2a1f33;
-    --heading: #f1ebe1;
-    --link: #d9c3ea;
-    --link-visited: #b99ad0;
-    --focus: #8fb0d6;
-    --accent: #d9c3ea;
-    --accent-ink: #1e1624;
-    --danger: #ff8a80;
-    --notice: #1f2d3d;
-    --warning: #3a2c16;
-    --tag-new: #3a2c16;
-    --tag-cancelled: #2a1215;
-  }
+/*
+  No dark mode: the board is white paper in every setting (Sarah's call,
+  30 September 2026), so it looks the same on every phone and laptop.
+*/
+:root {
+  color-scheme: light;
 }
 
 @theme inline {
@@ -166,7 +152,7 @@
     padding: 0.45rem 0.55rem;
     border: 1px solid var(--rule);
     border-radius: 4px;
-    background: var(--panel);
+    background: var(--paper);
     color: var(--ink);
     font: inherit;
   }
@@ -208,7 +194,7 @@
   }
   /* Secondary: outlined. Primary is one per page. */
   .button-plain {
-    background: var(--panel);
+    background: var(--paper);
     color: var(--accent);
   }
   .button-plain:visited {
@@ -216,11 +202,18 @@
   }
   .button-danger {
     border-color: var(--danger);
-    background: var(--panel);
+    background: var(--paper);
     color: var(--danger);
   }
   .button:hover {
     filter: brightness(1.1);
+  }
+
+  /* The hero's Search button: ink on Marigold, an approved pairing (7.4:1), so it stands out on plum. */
+  .button-hero {
+    border-color: var(--marigold);
+    background: var(--marigold);
+    color: var(--ink);
   }
 
   /* Small tags: "New group", "Cancelled". */
@@ -279,4 +272,34 @@
     font-family: var(--font-serif);
   }
   .ridge-tagline { color: var(--ridge-ink-muted); }
+}
+
+/* Home page sections that run edge to edge inside the centered page column. */
+@layer components {
+  .full-bleed {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+  /* Horizontal card row: scrolls sideways on its own, never the page. */
+  .card-row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(15rem, 1fr);
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.5rem;
+  }
+  .card-row > * {
+    scroll-snap-align: start;
+  }
+  .card {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--paper);
+    padding: 1rem;
+  }
+  .activity-icon {
+    color: var(--heading);
+  }
 }
