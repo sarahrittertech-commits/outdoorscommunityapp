@@ -70,9 +70,11 @@ built yet. No Supabase project or Railway service exists yet; the
 
 The look follows the branch outdoors brand guide (v2, Claude Design),
 summarized in [docs/brand.md](docs/brand.md): plum, paper and autumn leaf
-colors, Young Serif headings, Atkinson Hyperlegible text. One deliberate
-difference: the home page keeps a ridgeline band. All colors are tokens at the
-top of `src/app/globals.css`.
+colors, Young Serif headings, Atkinson Hyperlegible text, on white. The page
+structure follows the Magic Patterns design (home with search, activity line
+drawings and event cards; Events and Communities with side filters); the
+directory lives at /browse. All colors are tokens at the top of
+`src/app/globals.css`.
 
 **This board will be cloned for the women's outdoor community app.** Keep
 anything deployment-specific in the places listed in
@@ -105,7 +107,7 @@ src/config/site.ts     everything deployment-specific
 src/proxy.ts           session refresh + Content Security Policy
 src/lib/               auth, validation (Zod), time zones, plain-text rendering, .ics
 src/app/actions/       every form's server action, grouped by area
-src/app/               pages: / c/ g/ e/ events search me u/ admin report signin welcome
+src/app/               pages: / browse c/ g/ e/ events communities search post me u/ admin report signin welcome
 src/components/        listings, forms, notices, plain text
 ```
 

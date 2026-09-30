@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ActivityIcon } from "@/components/ActivityIcon";
 import { site } from "@/config/site";
 import type { Views } from "@/lib/supabase/database.types";
 import { formatShortDate } from "@/lib/time";
@@ -8,7 +9,7 @@ type GroupListing = Pick<Views<"group_listings">, "slug" | "name" | "area" | "me
 type EventListing = Pick<
   Views<"event_listings">,
   "id" | "title" | "starts_at" | "timezone" | "group_name" | "group_slug" | "location_name" | "status" | "going_count"
->;
+> & { category_slug?: string | null };
 
 /** One row per group: the facts a newcomer needs to judge it (FR-BR-2). */
 export function GroupList({ groups }: { groups: GroupListing[] }) {
@@ -42,6 +43,7 @@ export function EventList({ events, showGroup = true }: { events: EventListing[]
         <li key={e.id} className="flex flex-wrap items-baseline gap-x-3 py-2">
           <span className="w-full font-mono text-sm sm:w-28 sm:shrink-0">{formatShortDate(e.starts_at!, e.timezone!)}</span>
           <span className="min-w-0 flex-1">
+            {e.category_slug && <ActivityIcon slug={e.category_slug} className="mr-1.5 inline h-4 w-4 align-[-2px]" />}
             <Link href={`/e/${e.id}`}>{e.title}</Link>
             {e.status === "cancelled" && <strong className="ml-2 text-danger">cancelled</strong>}
             <span className="block text-sm text-muted">

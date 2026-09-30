@@ -1,60 +1,135 @@
 import Link from "next/link";
 
+import { ActivityIcon } from "@/components/ActivityIcon";
 import { Notice } from "@/components/Notice";
 import { RidgeBand } from "@/components/RidgeBand";
+import { site } from "@/config/site";
 import { createClient } from "@/lib/supabase/server";
+import { dateParts } from "@/lib/time";
 
-type Subcategory = { slug: string; name: string; count: number };
-type Category = { slug: string; name: string; subcategories: Subcategory[] };
-
-/** FR-BR-1: the whole directory on one page, Craigslist-style. */
+/**
+ * The front door: search, the activities as line drawings, and what's coming
+ * up. The full Craigslist-style directory is one click away at /browse.
+ */
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const supabase = await createClient();
-  const { data: rows } = await supabase
-    .from("subcategory_group_counts")
-    .select("*")
-    .order("category_sort_order")
-    .order("subcategory_sort_order");
-
-  const categories: Category[] = [];
-  for (const row of rows ?? []) {
-    let category = categories.find((c) => c.slug === row.category_slug);
-    if (!category) {
-      category = { slug: row.category_slug!, name: row.category_name!, subcategories: [] };
-      categories.push(category);
-    }
-    category.subcategories.push({ slug: row.subcategory_slug!, name: row.subcategory_name!, count: row.group_count ?? 0 });
-  }
-  const total = categories.flatMap((c) => c.subcategories).reduce((sum, s) => sum + s.count, 0);
+  const [{ data: categories }, { data: events }] = await Promise.all([
+    supabase.from("categories").select("slug, name").order("sort_order"),
+    supabase
+      .from("event_listings")
+      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count")
+      .eq("status", "scheduled")
+      .gt("starts_at", new Date().toISOString())
+      .order("starts_at")
+      .limit(8),
+  ]);
 
   return (
     <>
       <Notice params={await searchParams} />
-      <RidgeBand />
-      <p className="mt-3 text-sm text-muted">
-        {total} {total === 1 ? "group" : "groups"} · <Link href="/events">upcoming events</Link> ·{" "}
-        <Link href="/groups/new">start a group</Link>
-      </p>
 
-      <div className="mt-6 gap-8 sm:columns-2 lg:columns-3">
-        {categories.map((category) => (
-          <section key={category.slug} className="mb-6 break-inside-avoid" aria-labelledby={`cat-${category.slug}`}>
-            <h2 id={`cat-${category.slug}`} className="mt-0 border-b border-rule pb-1 text-xl">
-              <Link href={`/c/${category.slug}`} className="text-heading no-underline visited:text-heading hover:underline">
-                {category.name}
-              </Link>
-            </h2>
-            <ul className="mt-2 space-y-0.5">
-              {category.subcategories.map((sub) => (
-                <li key={sub.slug}>
-                  <Link href={`/c/${category.slug}/${sub.slug}`}>{sub.name}</Link>{" "}
-                  <span className="text-sm text-muted">({sub.count})</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
+      <div className="-mt-6">
+        <RidgeBand>
+          <h1 className="ridge-title m-0 text-4xl sm:text-5xl">Find your people outside.</h1>
+          <p className="ridge-tagline m-0 mt-3 max-w-xl text-lg">
+            Groups, meetups and events for getting outside in {site.regionName}. Join a group, show up, try something new.
+          </p>
+
+          <form action="/search" role="search" className="mt-8 grid gap-3 sm:grid-cols-[14rem_1fr_auto] sm:gap-0">
+            <div>
+              <label htmlFor="hero-category" className="ridge-tagline mt-0 text-sm font-normal">
+                Activity
+              </label>
+              <select id="hero-category" name="category" defaultValue="" className="max-w-none sm:rounded-r-none">
+                <option value="">All activities</option>
+                {categories?.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="hero-q" className="ridge-tagline mt-0 text-sm font-normal">
+                Looking for
+              </label>
+              <input
+                id="hero-q"
+                name="q"
+                type="search"
+                placeholder="waterfall hike, beginner climbing, Brevard…"
+                className="max-w-none sm:rounded-none sm:border-l-0"
+              />
+            </div>
+            <div className="flex items-end">
+              <button className="button button-hero w-full py-[0.55rem] sm:rounded-l-none">Search</button>
+            </div>
+          </form>
+        </RidgeBand>
       </div>
+
+      <section aria-labelledby="by-activity" className="border-b border-rule py-10">
+        <h2 id="by-activity" className="mt-0 text-center">
+          Browse by activity
+        </h2>
+        <ul className="mt-6 grid grid-cols-3 gap-y-6 sm:grid-cols-4 lg:grid-cols-6">
+          {categories?.map((c) => (
+            <li key={c.slug}>
+              <Link href={`/c/${c.slug}`} prefetch={false} className="flex flex-col items-center gap-2 text-center text-ink no-underline hover:underline">
+                <ActivityIcon slug={c.slug} />
+                <span className="text-sm">{c.name}</span>
+              </Link>
+            </li>
+          ))}
+          <li>
+            <Link href="/browse" className="flex h-full flex-col items-center justify-center gap-2 text-center">
+              <span className="text-sm font-bold">Browse all →</span>
+            </Link>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="coming-up" className="py-10">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="coming-up" className="mt-0">
+            Coming up in {site.regionName}
+          </h2>
+          <Link href="/events">all events</Link>
+        </div>
+        {events && events.length ? (
+          <ul className="card-row mt-4">
+            {events.map((e) => {
+              const when = dateParts(e.starts_at!, e.timezone!);
+              return (
+                <li key={e.id} className="card flex flex-col">
+                  <div className="flex items-start justify-between">
+                    <p className="m-0 leading-tight">
+                      <span className="font-serif text-3xl text-heading">{when.day}</span>
+                      <br />
+                      <span className="text-sm text-muted">
+                        {when.weekday}, {when.month} · {when.time}
+                      </span>
+                    </p>
+                    {e.category_slug && <ActivityIcon slug={e.category_slug} className="h-7 w-7" />}
+                  </div>
+                  <Link href={`/e/${e.id}`} className="mt-3 font-bold">
+                    {e.title}
+                  </Link>
+                  <p className="m-0 mt-1 text-sm text-muted">{e.location_name}</p>
+                  <p className="m-0 mt-auto flex justify-between border-t border-rule pt-2 text-sm text-muted">
+                    <Link href={`/g/${e.group_slug}`}>{e.group_name}</Link>
+                    <span>{e.going_count} going</span>
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="mt-4 text-muted">
+            Nothing posted yet. <Link href="/groups/new">Start a group</Link> and post the first event.
+          </p>
+        )}
+      </section>
     </>
   );
 }

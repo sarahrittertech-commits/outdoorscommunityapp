@@ -86,3 +86,15 @@ export function formatPostDate(iso: string, timeZone: string): string {
     new Date(iso),
   );
 }
+
+/** The pieces of a date card: { day: "4", weekday: "Sat", month: "Oct", time: "9:00 AM" }. */
+export function dateParts(iso: string, timeZone: string): { day: string; weekday: string; month: string; time: string } {
+  const date = new Date(iso);
+  const part = (options: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("en-US", { timeZone, ...options }).format(date);
+  return {
+    day: part({ day: "numeric" }),
+    weekday: part({ weekday: "short" }),
+    month: part({ month: "short" }),
+    time: part({ hour: "numeric", minute: "2-digit" }),
+  };
+}

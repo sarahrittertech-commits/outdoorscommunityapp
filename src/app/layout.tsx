@@ -31,49 +31,70 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
   return (
     <html lang="en" className={`${atkinson.variable} ${youngSerif.variable}`}>
-      <body className="mx-auto max-w-5xl px-4 pb-16">
+      <body className="pb-16">
         <a href="#main" className="sr-only focus:not-sr-only">
           Skip to content
         </a>
-        <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule py-3">
-          <Link href="/" className="wordmark flex items-center gap-2 text-2xl no-underline">
-            <BranchMark className="h-7 w-7" />
-            {site.name}
-          </Link>
-          <nav aria-label="Main" className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
-            <Link href="/">groups</Link>
-            <Link href="/events">events</Link>
-            <Link href="/search">search</Link>
-            {viewer ? (
-              <>
-                <Link href="/me">my stuff</Link>
-                <Link href="/groups/new">start a group</Link>
-                {viewer.isSiteAdmin && <Link href="/admin">admin</Link>}
-                <form action={signOut} className="inline">
-                  <button className="link-button">sign out</button>
-                </form>
-              </>
-            ) : (
-              <Link href="/signin">sign in</Link>
-            )}
-          </nav>
+        <header className="border-b border-rule">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
+            <Link href="/" className="wordmark flex items-center gap-2 text-2xl no-underline">
+              <BranchMark className="h-7 w-7" />
+              {site.name}
+            </Link>
+            <nav aria-label="Main" className="flex items-baseline gap-x-4">
+              <Link href="/">explore</Link>
+              <Link href="/events">events</Link>
+              <Link href="/communities">communities</Link>
+            </nav>
+            <div className="ml-auto flex flex-wrap items-center gap-x-4 gap-y-2">
+              <form action="/search" role="search" className="hidden md:block">
+                <label htmlFor="site-search" className="sr-only">
+                  Search events, places, groups
+                </label>
+                <input
+                  id="site-search"
+                  name="q"
+                  type="search"
+                  placeholder="search events, places, groups"
+                  className="mt-0 w-64 py-1.5 text-base"
+                />
+              </form>
+              <Link href="/post" className="button py-1.5">
+                + post
+              </Link>
+              {viewer ? (
+                <>
+                  <Link href="/me">my stuff</Link>
+                  {viewer.isSiteAdmin && <Link href="/admin">admin</Link>}
+                  <form action={signOut} className="inline">
+                    <button className="link-button">sign out</button>
+                  </form>
+                </>
+              ) : (
+                <Link href="/signin">sign in</Link>
+              )}
+            </div>
+          </div>
         </header>
 
         {viewer?.suspended && (
-          <p role="status" className="mt-3 rounded bg-warning px-3 py-2 text-sm">
+          <p role="status" className="mx-auto mt-3 max-w-6xl rounded bg-warning px-3 py-2 text-sm">
             Your account is suspended. You can read, but not post, join or RSVP.
           </p>
         )}
 
-        <main id="main" className="pt-4">
+        <main id="main" className="mx-auto max-w-6xl px-4 pt-6">
           {children}
         </main>
 
-        <footer className="mt-16 border-t border-rule pt-4 text-sm text-muted">
+        <footer className="mx-auto mt-16 max-w-6xl border-t border-rule px-4 pt-4 text-sm text-muted">
           <p>
             No ads. No feed. No tracking. Lists are sorted by name or date, the same for everyone.
           </p>
           <p className="mt-2 flex flex-wrap gap-x-4">
+            <Link href="/browse">browse all</Link>
+            <Link href="/events">all events</Link>
+            <Link href="/communities">communities</Link>
             <Link href="/about">about</Link>
             <Link href="/guidelines">community guidelines</Link>
             <Link href="/terms">terms</Link>
