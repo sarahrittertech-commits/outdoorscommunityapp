@@ -35,35 +35,23 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             Groups, meetups and events for getting outside in {site.regionName}. Join a group, show up, try something new.
           </p>
 
-          <form action="/search" role="search" className="mt-8 grid gap-3 sm:grid-cols-[14rem_1fr_auto] sm:gap-0">
-            <div>
-              <label htmlFor="hero-category" className="ridge-tagline mt-0 text-sm font-normal">
-                Activity
-              </label>
-              <select id="hero-category" name="category" defaultValue="" className="max-w-none sm:rounded-r-none">
-                <option value="">All activities</option>
-                {categories?.map((c) => (
-                  <option key={c.slug} value={c.slug}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="hero-q" className="ridge-tagline mt-0 text-sm font-normal">
-                Looking for
-              </label>
-              <input
-                id="hero-q"
-                name="q"
-                type="search"
-                placeholder="waterfall hike, beginner climbing, Brevard…"
-                className="max-w-none sm:rounded-none sm:border-l-0"
-              />
-            </div>
-            <div className="flex items-end">
-              <button className="button button-hero w-full py-[0.55rem] sm:rounded-l-none">Search</button>
-            </div>
+          <form action="/search" role="search" className="hero-search mt-8">
+            <label htmlFor="hero-category" className="sr-only">
+              Activity
+            </label>
+            <select id="hero-category" name="category" defaultValue="">
+              <option value="">All activities</option>
+              {categories?.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <label htmlFor="hero-q" className="sr-only">
+              Looking for
+            </label>
+            <input id="hero-q" name="q" type="search" placeholder="waterfall hike, beginner climbing, Brevard…" />
+            <button className="button button-hero">Search</button>
           </form>
         </RidgeBand>
       </div>

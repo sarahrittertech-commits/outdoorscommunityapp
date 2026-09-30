@@ -216,6 +216,45 @@
     color: var(--ink);
   }
 
+  /*
+   * The hero search: one white bar holding the activity menu, the keyword box
+   * and the button, all the same height. On phones the three stack.
+   */
+  .hero-search {
+    display: grid;
+    gap: 0.5rem;
+    max-width: 48rem;
+  }
+  .hero-search select,
+  .hero-search input,
+  .hero-search .button {
+    height: 3rem;
+    max-width: none;
+    margin: 0;
+    border-radius: 6px;
+  }
+  .hero-search .button {
+    padding: 0 1.5rem;
+  }
+  @media (min-width: 40rem) {
+    .hero-search {
+      grid-template-columns: 13rem 1fr auto;
+      gap: 0;
+      padding: 0.3rem;
+      border-radius: 10px;
+      background: var(--paper);
+    }
+    .hero-search select,
+    .hero-search input {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+    .hero-search select {
+      border-right: 1px solid var(--rule);
+    }
+  }
+
   /* Small tags: "New group", "Cancelled". */
   .tag {
     display: inline-block;
