@@ -103,6 +103,19 @@ Existing threads stay readable to members.
 | See reports for a group's content | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | See all reports, suspend accounts, view moderation log | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
+### Unclaimed listings (FR-GR-9, FR-GR-10)
+
+A listing has no owner, admins or members, so only these columns apply.
+
+| Action | Visitor | User | Site admin |
+| --- | --- | --- | --- |
+| See a listing, its events and its website link | ✅ | ✅ | ✅ |
+| Join it, RSVP to its events, post in it | ❌ | ❌ | ❌ |
+| Ask to claim it | ❌ | ✅ once | ✅ |
+| See a claim | ❌ | **own** | ✅ all |
+| Approve or decline a claim | ❌ | ❌ | ✅ |
+| Add a listing or set a source link | ❌ | ❌ | ❌ operator SQL only |
+
 ## Cross-cutting rules
 
 - **Suspended users** keep the read access their group roles give them and

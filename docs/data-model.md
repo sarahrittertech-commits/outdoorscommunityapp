@@ -115,6 +115,25 @@ it except through the database functions (onboarding, suspend, delete).
 | `status` | enum | `active`, `archived`, `removed` |
 | `created_by` | uuid | |
 | `created_at`, `updated_at` | timestamp | |
+| `is_unclaimed` | boolean | FR-GR-9: an unclaimed listing, added from public information. Only SQL run by the operator sets it. |
+| `source_url` | text, optional | The organization's own website. Required for a listing. |
+
+### group_claims
+
+FR-GR-10. A request to take over an unclaimed listing.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `group_id` | uuid | must be an active, unclaimed listing |
+| `user_id` | uuid | the claimant; one claim per person per group |
+| `note` | text | 10–1000 characters: how they're connected, for the site admin to check |
+| `status` | enum | `pending`, `approved`, `declined` |
+| `created_at`, `decided_at` | timestamp | |
+| `decided_by` | uuid, optional | the site admin who decided |
+
+The claimant and the site admin can read a claim; nobody else can. Only the
+site admin decides, through `approve_claim()` and `decline_claim()`.
 
 ### group_members
 
@@ -157,6 +176,7 @@ Constraints:
 | `status` | enum | `scheduled`, `cancelled` |
 | `created_by` | uuid | |
 | `created_at`, `updated_at` | timestamp | |
+| `source_url` | text, optional | FR-GR-9: the organizer's own page for a listed event. Only SQL run by the operator sets it. |
 
 ### event_private_details
 
