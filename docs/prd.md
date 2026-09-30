@@ -59,10 +59,16 @@ each one rules features out.
 Craigslist's structure with a gentler, more modern finish. It should feel a
 little nostalgic: the web when it was a helpful directory.
 
-- The home page is one screen of categories and subcategories, text links in
-  columns, each with a count. No hero image, no carousel. The one decoration
-  is a thin ridgeline band above the directory carrying the tagline (see
-  [Brand](./brand)).
+- The site keeps the structure of the Magic Patterns design (30 September
+  2026, Sarah's call): a header with *explore · events · communities*, a
+  search box and *+ post*; a home page that leads with search over a
+  ridgeline hero, then the activities as line drawings, then the next events
+  as cards; *Events* and *Communities* pages with filters down the left.
+- The Craigslist-style directory of every category and subcategory with
+  counts is one click away, at *Browse all*.
+- Still no feed, carousel of promotions, prices on listings or urgency
+  nudges. The event cards are a fixed list of the next eight events, soonest
+  first, the same for everyone.
 - Group and event pages are documents: a heading, the facts, a description.
 - One accent color, generous whitespace, a readable type size, clear link
   styling (links look like links).

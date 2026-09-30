@@ -22,10 +22,12 @@ Who is allowed to do each action is defined once, in
 
 | ID | Requirement | Priority | Accepted when |
 | --- | --- | --- | --- |
-| FR-BR-1 | The home page lists every category with its subcategories and the number of active groups in each, on one page. | Must | Signed out, the home page shows all categories and subcategories with correct counts, without scrolling past anything else first. |
+| FR-BR-1 | A *Browse all* page (`/browse`) lists every category with its subcategories and the number of active groups in each, on one page. The home page links to it from its row of activities. | Must | Signed out, `/browse` shows all categories and subcategories with correct counts. |
+| FR-BR-9 | The home page leads with search (activity and keyword), then every activity as a line drawing linking to its category, then the next upcoming events. | Should | Signed out, the home page shows the search, all eleven activities plus *Browse all*, and the next eight events soonest first. |
+| FR-BR-10 | A *Communities* page lists every active group A to Z in one table (name, activity, area, members, next event), filterable by activity. | Should | Filtering by an activity shows only its groups, still A to Z. |
 | FR-BR-2 | A subcategory page lists its groups alphabetically. Each row shows name, area, member count and next event date (or "no upcoming events"). 50 per page, numbered pages. | Must | A subcategory with 60 groups shows two pages; order is A→Z; the sort order is stated on the page. |
 | FR-BR-3 | A category page lists all groups across its subcategories, same format as FR-BR-2. | Should | Groups from every subcategory appear, alphabetically. |
-| FR-BR-4 | An *Upcoming events* page lists public events across all groups in date order for the next 30 days, filterable by category. | Should | Events appear soonest first; cancelled and past events do not appear. |
+| FR-BR-4 | An *Upcoming events* page lists public events across all groups in date order, grouped by month, filterable by category and by window (next 7 days, 30 days or 3 months; 30 by default). | Should | Events appear soonest first; cancelled and past events do not appear. |
 | FR-BR-5 | Keyword search over group names and descriptions and event titles. | Should | Searching "kayak" finds a group with "kayaking" in its description. |
 | FR-BR-6 | A group page shows name, description, subcategory, area, organizers (owner and admins), member count, join policy, upcoming events, count of past events and the join button. Readable signed out. | Must | Signed out, all of those are visible; discussions and the member list are not. |
 | FR-BR-7 | An event page shows title, host group, date and time with time zone, location name, address (subject to FR-EV-1 visibility), description and the number going. Readable signed out. | Must | Signed out, a members-only address is replaced by "address shown to group members". |
