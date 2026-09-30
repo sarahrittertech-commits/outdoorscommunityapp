@@ -53,7 +53,8 @@ That framing drives the scope:
 | --- | --- |
 | [Product requirements](./prd) | Problem, goals, principles, scope, delivery plan, open questions |
 | [Personas](./personas) | Who uses it, and what they need |
-| [Use cases](./use-cases) | The specific journeys it supports |
+| [Use cases](./use-cases) | The specific journeys it supports, main path only |
+| [User flows](./user-flows) | The screens and decisions along each use case |
 | [Functional requirements](./functional-requirements) | Every feature, numbered and prioritized, with acceptance criteria |
 | [Technical requirements](./technical-requirements) | Stack, performance, security, privacy, tooling and cost |
 | [Roles and permissions](./roles-and-permissions) | Owner, admin, member, visitor: who can do what |

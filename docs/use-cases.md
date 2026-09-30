@@ -7,7 +7,23 @@ title: Use cases
 
 Each use case maps to requirements in
 [Functional requirements](./functional-requirements) and to test cases in
-[Test cases](./test-cases).
+[Test cases](./test-cases). Each has a screen-by-screen diagram in
+[User flows](./user-flows).
+
+## How a feature gets from idea to build
+
+1. **Use case (here).** Who, what starts it, and the main path only: the
+   steps when everything goes right.
+2. **User flow.** The screens and decisions along that path, as a diagram.
+3. **Review.** Sarah reads both and says go, or changes them.
+4. **Functional requirements.** The alternative paths and edge cases
+   (signed out, full, banned, archived, unclaimed…), each with an
+   *accepted when*.
+5. **Build,** with a test for every permission rule.
+
+No build starts before step 3. UC-1 to UC-6 were written before this
+process; UC-7 and UC-8 were written after the features were built, to
+close that gap.
 
 ## UC-1 — What's out there?
 
@@ -17,16 +33,16 @@ Each use case maps to requirements in
 
 **Flow:**
 
-1. Opens the home page. Sees every category with its subcategories and a
-   group count beside each. No sign-in prompt.
-2. Clicks *Hiking → Day hikes*.
-3. Reads an alphabetical list of groups: name, area, member count, next
-   event date.
+1. Opens the home page. Sees a search box, the activities as line drawings
+   and the next few events. No sign-in prompt.
+2. Clicks the *Hiking & Backpacking* drawing.
+3. Reads an alphabetical list of hiking groups: name, area, member count,
+   next event date. Narrows it to *Day hikes*.
 4. Opens a group. Reads the description, the organizers and the list of
    upcoming events.
 5. Opens the next event and reads the details.
 
-**Requirements:** FR-BR-1, FR-BR-2, FR-BR-6, FR-BR-7, FR-BR-8
+**Requirements:** FR-BR-9, FR-BR-3, FR-BR-2, FR-BR-6, FR-BR-7, FR-BR-8
 
 **Succeeds when:** they reach a specific upcoming event in three clicks from
 the home page, never having been asked to sign in.
@@ -128,6 +144,52 @@ one outside the group can read the thread.
 **Succeeds when:** the content is gone within the group's own moderation, and
 the site admin can act across groups when needed.
 
+## UC-7 — Something to do this weekend
+
+**Actor:** The newcomer
+
+**Trigger:** Has a free Saturday and wants to try something outdoors.
+
+**Flow:**
+
+1. Opens *Events* from the header. Sees upcoming events for the next 30
+   days, soonest first, grouped by month.
+2. Picks *next 7 days*, then an activity in the side filter.
+3. Opens an event and reads when, where and who hosts it.
+4. Adds it to their calendar.
+
+**Requirements:** FR-BR-4, FR-BR-7, FR-EV-7, FR-BR-8
+
+**Succeeds when:** they find a specific event this weekend in their
+activity without signing in.
+
+*Written after the Events page was built.*
+
+## UC-8 — This is my club
+
+**Actor:** The organizer, then the site admin
+
+**Trigger:** Finds their club already on the board as an *unclaimed
+listing*, added from its public web page.
+
+**Flow:**
+
+1. Opens the group page. Reads that it is an unclaimed listing and that
+   nobody runs it on the board yet.
+2. Signs in, and writes a short note on how they're connected to the club
+   and how to check (their role on the club's website).
+3. The site admin sees the claim in the admin queue, checks the note
+   against the club's own page and approves it.
+4. The organizer opens the group page and is now its owner: they can edit
+   it, post events and open the discussion board.
+
+**Requirements:** FR-GR-9, FR-GR-10, FR-AC-1, FR-AC-2
+
+**Succeeds when:** a real organizer takes over their listing in one visit
+plus one admin review, and nobody else can take it over.
+
+*Written after the claim feature was built.*
+
 ---
 
 ## Journeys the seed data must cover
@@ -140,3 +202,5 @@ Launch data should let a reviewer walk every use case above on the live site:
 - A group with discussions off
 - Upcoming events and past events
 - A group with an owner and two admins
+- Unclaimed listings with upcoming events (UC-8), from the
+  [listings import](./runbook#seeding-real-groups)

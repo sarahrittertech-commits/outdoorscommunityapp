@@ -42,6 +42,7 @@ Start with [`docs/index.md`](docs/index.md).
 | [Product requirements](docs/prd.md) | Problem, goals, scope, principles, delivery plan |
 | [Personas](docs/personas.md) | Who this is for |
 | [Use cases](docs/use-cases.md) | The journeys it supports |
+| [User flows](docs/user-flows.md) | The screens along each journey |
 | [Functional requirements](docs/functional-requirements.md) | What it does, requirement by requirement |
 | [Technical requirements](docs/technical-requirements.md) | How it must be built, and what it costs |
 | [Roles and permissions](docs/roles-and-permissions.md) | Who can do what |
