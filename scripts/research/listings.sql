@@ -11,12 +11,15 @@
 --
 -- Nothing else crosses over: no contact details, prices or research notes.
 --
--- Curation: Western North Carolina community groups (clubs, friends groups,
--- trail and conservation nonprofits), marked active, with a public page.
--- Left out: businesses (guides, shops, breweries, gyms), groups outside the
--- region, youth and women-only groups (pending the audience decision in the
--- PRD) and anything unverified. Events: only those with a published start
--- time, from today on, not marked "expected".
+-- Curation: community groups (clubs, friends groups, trail and conservation
+-- nonprofits), marked active, with a public page. Most are in Western North
+-- Carolina; the rest (Piedmont, eastern NC and a few out of state) are kept
+-- on purpose so the region and zip code filters have something to filter.
+-- Until those regions exist they share the one region, and `area` holds the
+-- real town. Left out: businesses (guides, shops, breweries, gyms, venues),
+-- youth and women-only groups (pending the audience decision in the PRD) and
+-- anything unverified. Events: only those with a published start time, from
+-- today on, not marked "expected".
 --
 -- Safe to run again: existing slugs and events are skipped.
 
@@ -101,7 +104,54 @@ insert into listing_picks (org_id, slug, name, subcategory, area, description, s
   ('ORG-221', 'catalyst-sports-asheville', 'Catalyst Sports Asheville', 'mountain-biking', 'Asheville',
    'Asheville chapter of an adaptive adventure sports nonprofit, open to adaptive athletes and volunteers.', null),
   ('ORG-184', 'mountaintrue', 'MountainTrue', 'conservation', 'Western North Carolina',
-   'Environmental nonprofit for Western North Carolina, home of the French Broad Riverkeeper.', null);
+   'Environmental nonprofit for Western North Carolina, home of the French Broad Riverkeeper.', null),
+  -- Outside Western North Carolina.
+  ('ORG-106', 'granite-quarry-athletic-club', 'Granite Quarry Athletic Club', 'mountain-biking', 'Granite Quarry',
+   'Athletic club in Granite Quarry for mountain biking, road cycling and trail running.', null),
+  ('ORG-094', 'bear-creek-cycle-club', 'Bear Creek Cycle Club', 'mountain-biking', 'Robbins',
+   'Cycling club in Robbins, in the Sandhills, for mountain and road riders.', null),
+  ('ORG-096', 'brushy-mountain-cyclists-club', 'Brushy Mountain Cyclists Club', 'road', 'North Wilkesboro',
+   'Cycling club in North Wilkesboro, in the foothills, for road and mountain riders.', null),
+  ('ORG-097', 'cross-creek-cycling-club', 'Cross Creek Cycling Club', 'road', 'Fayetteville',
+   'Cycling club in Fayetteville for road and mountain riders.', null),
+  ('ORG-099', 'down-east-cyclists', 'Down East Cyclists', 'mountain-biking', 'Piney Green',
+   'Mountain bike club in Piney Green, in eastern North Carolina.', null),
+  ('ORG-100', 'east-carolina-velo-club', 'East Carolina Velo Club', 'road', 'Greenville',
+   'Road cycling club in Greenville.', null),
+  ('ORG-107', 'kernersville-cycling-club', 'Kernersville Cycling Club', 'road', 'Kernersville',
+   'Cycling club in Kernersville for road and mountain riders.', null),
+  ('ORG-113', 'roadies-and-dirties', 'Roadies & Dirties', 'mountain-biking', 'Lexington',
+   'Cycling club in Lexington for road and mountain riders, with trail stewardship.', null),
+  ('ORG-104', 'friends-of-greene-tract-forest', 'Friends of Greene Tract Forest', 'conservation', 'Carrboro',
+   'Friends group for the Greene Tract forest in Carrboro.', null),
+  ('ORG-121', 'triangle-land-conservancy', 'Triangle Land Conservancy', 'conservation', 'Hillsborough',
+   'Land trust for the Triangle, with public nature preserves and volunteer days.', null),
+  ('ORG-103', 'fort-bragg-mountain-bike-riders', 'Fort Bragg Mountain Bike Riders', 'mountain-biking', 'Fort Bragg',
+   'Mountain bike riding group at Fort Bragg.', null),
+  ('ORG-102', 'forsyth-off-road-bicycle-association', 'Forsyth Off Road Bicycle Association', 'mountain-biking', 'Winston-Salem',
+   'Mountain bike trail club in Winston-Salem.', null),
+  ('ORG-110', 'piedmont-area-singletrack-alliance', 'Piedmont Area Singletrack Alliance', 'mountain-biking', 'Charlotte',
+   'Mountain bike trail club in the Charlotte area.', null),
+  ('ORG-111', 'piedmont-fat-tire-society', 'Piedmont Fat Tire Society', 'mountain-biking', 'Greensboro',
+   'Mountain bike trail club in Greensboro.', null),
+  ('ORG-118', 'tarheel-trailblazers', 'Tarheel Trailblazers', 'mountain-biking', 'Mooresville',
+   'Mountain bike trail club and SORBA chapter in the Charlotte area.', null),
+  ('ORG-122', 'triangle-off-road-cyclists', 'Triangle Off-Road Cyclists', 'mountain-biking', 'Cary',
+   'Mountain bike trail club for the Triangle: trail work, skills sessions and races.', null),
+  ('ORG-109', 'person-county-friends-of-the-parks', 'Person County Friends of the Parks', 'trail-work', 'Roxboro',
+   'Friends group for the parks of Person County.', null),
+  ('ORG-115', 'sorba-cape-fear', 'SORBA Cape Fear', 'mountain-biking', 'Sea Breeze',
+   'SORBA chapter caring for mountain bike trails on the coast.', null),
+  ('ORG-101', 'elkin-valley-trails-association', 'Elkin Valley Trails Association', 'trail-work', 'Elkin',
+   'Nonprofit trail association in Elkin, in the foothills.', null),
+  ('ORG-078', 'access-fund', 'Access Fund', 'conservation', 'National',
+   'National climbing conservation nonprofit.', null),
+  ('ORG-232', 'red-river-gorge-climbers-coalition', 'Red River Gorge Climbers'' Coalition', 'conservation', 'Red River Gorge, Kentucky',
+   'Climbing access nonprofit for the Red River Gorge in Kentucky.', null),
+  ('ORG-230', 'new-river-valley-bicycle-association', 'New River Valley Bicycle Association', 'road', 'New River Valley, Virginia',
+   'Regional cycling club and advocacy group in Virginia''s New River Valley.', null),
+  ('ORG-205', 'copper-harbor-trails-club', 'Copper Harbor Trails Club', 'trail-work', 'Copper Harbor, Michigan',
+   'Trail nonprofit in Copper Harbor, Michigan.', null);
 
 insert into public.groups (slug, name, description, subcategory_id, region_id, area, discussions_enabled, is_unclaimed, source_url)
 select p.slug, p.name, p.description, s.id, r.id, p.area, false, true,
@@ -125,7 +175,8 @@ with candidates as (
     substring(e.start_time from '(\d{1,2}:\d{2}\s*[AaPp][Mm])') as start_t,
     substring(e.end_time from '(\d{1,2}:\d{2}\s*[AaPp][Mm])') as end_t,
     -- Drop the research's internal codes and reminders ("(PLC-043)", "(confirm location)").
-    btrim(regexp_replace(coalesce(e.venue, ''), '\s*\(((PLC|ORG)-\d+|confirm[^)]*|verify[^)]*)\)', '', 'gi')) as venue,
+    btrim(regexp_replace(regexp_replace(coalesce(e.venue, ''), '\s*\(((PLC|ORG)-\d+|confirm[^)]*|verify[^)]*|out of region[^)]*)\)', '', 'gi'),
+      ';\s*~[^)]*', '', 'g')) as venue,
     (select g.id from unnest(e.organizer_ids) with ordinality as u(org_id, n)
        join listing_picks p on p.org_id = u.org_id
        join public.groups g on g.slug = p.slug and g.is_unclaimed
@@ -143,7 +194,6 @@ timed as (
     end as listed_end
   from candidates c
   where c.start_t is not null and c.group_id is not null
-    and c.venue !~* 'out of region'
 )
 insert into public.events (group_id, title, description, starts_at, ends_at, timezone, location_name, address_visibility, source_url)
 select
