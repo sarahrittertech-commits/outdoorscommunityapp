@@ -160,6 +160,13 @@ free: category listings (FR-BR-3), upcoming events (FR-BR-4), search
 question (FR-MB-9), capacity (FR-EV-5), attendee lists (FR-EV-6), calendar
 files (FR-EV-7), past events (FR-EV-8) and the moderation log (FR-MD-6).
 
+Added 30 September 2026: **unclaimed listings and claims** (FR-GR-9,
+FR-GR-10). Production launched empty, so real Western NC groups are listed
+from public information (name, neutral description, website link, upcoming
+events) until their organizers claim them. It's the honest version of a
+seeded board: every listing says it is unclaimed and sends people to the
+organizer's own site.
+
 Not built yet:
 
 | Item | Requirement | Why it waits |

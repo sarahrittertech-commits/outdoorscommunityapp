@@ -36,6 +36,9 @@ export const notices = {
   user_suspended: "Account suspended.",
   user_unsuspended: "Account unsuspended.",
   group_removed: "Group removed.",
+  claim_sent: "Thanks. The site admin will check your claim; the result will show on this page.",
+  claim_approved: "Claim approved. They now own the group.",
+  claim_declined: "Claim declined.",
 } as const;
 
 export const errors = {
@@ -57,6 +60,7 @@ export const errors = {
   link_failed: "That sign-in link didn't work. It may have expired; request a new one.",
   email_failed: "We couldn't send a sign-in email. Please try again shortly.",
   suspended: "Your account is suspended. You can read but not post.",
+  claim_exists: "You've already asked to claim this group.",
 } as const;
 
 export type NoticeCode = keyof typeof notices;

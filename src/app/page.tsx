@@ -17,7 +17,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     supabase.from("categories").select("slug, name").order("sort_order"),
     supabase
       .from("event_listings")
-      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count")
+      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count, is_unclaimed")
       .eq("status", "scheduled")
       .gt("starts_at", new Date().toISOString())
       .order("starts_at")
@@ -35,35 +35,23 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             Groups, meetups and events for getting outside in {site.regionName}. Join a group, show up, try something new.
           </p>
 
-          <form action="/search" role="search" className="mt-8 grid gap-3 sm:grid-cols-[14rem_1fr_auto] sm:gap-0">
-            <div>
-              <label htmlFor="hero-category" className="ridge-tagline mt-0 text-sm font-normal">
-                Activity
-              </label>
-              <select id="hero-category" name="category" defaultValue="" className="max-w-none sm:rounded-r-none">
-                <option value="">All activities</option>
-                {categories?.map((c) => (
-                  <option key={c.slug} value={c.slug}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="hero-q" className="ridge-tagline mt-0 text-sm font-normal">
-                Looking for
-              </label>
-              <input
-                id="hero-q"
-                name="q"
-                type="search"
-                placeholder="waterfall hike, beginner climbing, Brevard…"
-                className="max-w-none sm:rounded-none sm:border-l-0"
-              />
-            </div>
-            <div className="flex items-end">
-              <button className="button button-hero w-full py-[0.55rem] sm:rounded-l-none">Search</button>
-            </div>
+          <form action="/search" role="search" className="hero-search mt-8">
+            <label htmlFor="hero-category" className="sr-only">
+              Activity
+            </label>
+            <select id="hero-category" name="category" defaultValue="">
+              <option value="">All activities</option>
+              {categories?.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <label htmlFor="hero-q" className="sr-only">
+              Looking for
+            </label>
+            <input id="hero-q" name="q" type="search" placeholder="waterfall hike, beginner climbing, Brevard…" />
+            <button className="button button-hero">Search</button>
           </form>
         </RidgeBand>
       </div>
@@ -118,7 +106,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
                   <p className="m-0 mt-1 text-sm text-muted">{e.location_name}</p>
                   <p className="m-0 mt-auto flex justify-between border-t border-rule pt-2 text-sm text-muted">
                     <Link href={`/g/${e.group_slug}`}>{e.group_name}</Link>
-                    <span>{e.going_count} going</span>
+                    <span>{e.is_unclaimed ? "via organizer" : `${e.going_count} going`}</span>
                   </p>
                 </li>
               );

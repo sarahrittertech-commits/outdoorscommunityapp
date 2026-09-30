@@ -10,7 +10,7 @@ weighted toward the thing most likely to go wrong silently in this project:
 **someone seeing or changing something they shouldn't.**
 
 :::note Status — 29 September 2026
-PT-1 to PT-22 are implemented in `supabase/tests/` (128 assertions) and pass.
+PT-1 to PT-24 are implemented in `supabase/tests/` (157 assertions) and pass.
 UT-1 to UT-5 are implemented in `src/lib/*.test.ts` (24 tests) and pass.
 E2E-1 to E2E-3 were walked in a real browser against a local database (43
 checks, all passing) but are not yet a CI job.
@@ -49,6 +49,8 @@ web app is not the thing enforcing the rule.
 | PT-20 | No table readable by other users contains an email address | FR-AC-5 broken |
 | PT-21 | The rate limits in TR-SEC-8 refuse the request over the limit | Limits missing or wrong |
 | PT-22 | No trigger function or internal helper (moderation log writer, rate limiter) can be called through the API, and every function pins its search path | Fake moderation log entries; functions hijackable |
+| PT-23 | Nobody can join, RSVP to or post events in an unclaimed listing, and nobody signed in can make one or set a source link | Listings behave like ownerless groups anyone can take over |
+| PT-24 | Only the site admin approves a claim; approval makes the claimant owner and declines the other claims; claimants see only their own | Anyone can seize a listed group |
 
 ## Automated — unit
 

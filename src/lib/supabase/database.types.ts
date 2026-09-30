@@ -111,6 +111,8 @@ export type Database = {
           created_at: string;
           updated_at: string;
           search: unknown;
+          is_unclaimed: boolean;
+          source_url: string | null;
         };
         Insert: {
           id?: string;
@@ -129,6 +131,8 @@ export type Database = {
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          is_unclaimed?: boolean;
+          source_url?: string | null;
         };
         Update: {
           id?: string;
@@ -147,6 +151,8 @@ export type Database = {
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          is_unclaimed?: boolean;
+          source_url?: string | null;
         };
         Relationships: [
           Fk<"groups_subcategory_id_fkey", "subcategory_id", "subcategories">,
@@ -204,6 +210,7 @@ export type Database = {
           created_at: string;
           updated_at: string;
           search: unknown;
+          source_url: string | null;
         };
         Insert: {
           id?: string;
@@ -220,6 +227,7 @@ export type Database = {
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          source_url?: string | null;
         };
         Update: {
           id?: string;
@@ -236,10 +244,48 @@ export type Database = {
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          source_url?: string | null;
         };
         Relationships: [
           Fk<"events_group_id_fkey", "group_id", "groups">,
           Fk<"events_created_by_fkey", "created_by", "profiles">,
+        ];
+      };
+      group_claims: {
+        Row: {
+          id: string;
+          group_id: string;
+          user_id: string;
+          note: string;
+          status: Database["public"]["Enums"]["claim_status"];
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          group_id: string;
+          user_id: string;
+          note: string;
+          status?: Database["public"]["Enums"]["claim_status"];
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+        };
+        Update: {
+          id?: string;
+          group_id?: string;
+          user_id?: string;
+          note?: string;
+          status?: Database["public"]["Enums"]["claim_status"];
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+        };
+        Relationships: [
+          Fk<"group_claims_group_id_fkey", "group_id", "groups">,
+          Fk<"group_claims_user_id_fkey", "user_id", "profiles">,
+          Fk<"group_claims_decided_by_fkey", "decided_by", "profiles">,
         ];
       };
       event_private_details: {
@@ -492,6 +538,8 @@ export type Database = {
           member_count: number | null;
           next_event_at: string | null;
           search: unknown;
+          is_unclaimed: boolean | null;
+          source_url: string | null;
         };
         Relationships: [];
       };
@@ -526,6 +574,8 @@ export type Database = {
           status: Database["public"]["Enums"]["event_status"] | null;
           going_count: number | null;
           search: unknown;
+          is_unclaimed: boolean | null;
+          source_url: string | null;
         };
         Relationships: [];
       };
@@ -586,6 +636,8 @@ export type Database = {
         Args: { p_report_id: string; p_status: Database["public"]["Enums"]["report_status"] };
         Returns: undefined;
       };
+      approve_claim: { Args: { p_claim_id: string }; Returns: undefined };
+      decline_claim: { Args: { p_claim_id: string }; Returns: undefined };
       suspend_user: { Args: { p_user_id: string; p_reason: string }; Returns: undefined };
       unsuspend_user: { Args: { p_user_id: string }; Returns: undefined };
       delete_my_account: { Args: never; Returns: undefined };
@@ -602,6 +654,7 @@ export type Database = {
       report_target: "group" | "event" | "thread" | "reply" | "profile";
       report_reason: "spam" | "harassment" | "unsafe" | "off_topic" | "other";
       report_status: "open" | "actioned" | "dismissed";
+      claim_status: "pending" | "approved" | "declined";
       moderation_action_type:
         | "remove_content"
         | "ban_member"

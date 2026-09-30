@@ -25,7 +25,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
   const supabase = await createClient();
   let query = supabase
     .from("group_listings")
-    .select("slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy", { count: "exact" })
+    .select("slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed", { count: "exact" })
     .eq("status", "active")
     .order("name")
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
@@ -102,7 +102,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
                     <p className="m-0 text-sm text-muted sm:hidden">{g.area}</p>
                   </td>
                   <td className="hidden py-3 pr-4 sm:table-cell">{g.area}</td>
-                  <td className="py-3 text-right">{g.member_count}</td>
+                  <td className="py-3 text-right">{g.is_unclaimed ? <span className="text-sm text-muted">listing</span> : g.member_count}</td>
                   <td className="hidden py-3 pl-6 text-right whitespace-nowrap md:table-cell">
                     {g.next_event_at ? formatShortDate(g.next_event_at, site.defaultTimezone) : <span className="text-muted">none yet</span>}
                   </td>

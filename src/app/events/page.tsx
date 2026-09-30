@@ -32,7 +32,7 @@ export default async function EventsPage({ searchParams }: Props) {
   const inWindow = () =>
     supabase
       .from("event_listings")
-      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count")
+      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed")
       .eq("status", "scheduled")
       .gt("starts_at", now.toISOString())
       .lt("starts_at", until.toISOString())

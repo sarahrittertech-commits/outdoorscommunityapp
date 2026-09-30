@@ -59,6 +59,8 @@ Who is allowed to do each action is defined once, in
 | FR-GR-6 | The owner can archive a group: it leaves the listings, becomes read-only, and can be restored. | Should | An archived group's URL still works and says it is archived. |
 | FR-GR-7 | A user can own at most 3 active groups. | Should | Creating a fourth is refused with an explanation. |
 | FR-GR-8 | A user's first group is held for site-admin approval before it is listed. | Could | — |
+| FR-GR-9 | **Unclaimed listings.** Real local groups can be listed from public information before their organizers join, so the board isn't empty at launch. A listing holds only a name, a neutral description, an area and a link to the organization's own website, plus upcoming events that link to the organizer's own page. Nobody runs it here, so it has no owner and nobody can join it, RSVP to its events or post in it. Listings are added by the operator in SQL, never through the app. | Must | A listing's page says it is unclaimed and links to the source; no Join or RSVP is offered and the database refuses both. |
+| FR-GR-10 | **Claiming a listing.** A signed-in user can ask to claim a listing with a short note on how they're connected. The site admin checks it against the organization's website and approves (the claimant becomes owner, discussions open, other claims are declined) or declines. | Must | Only the site admin can approve; an approved claimant owns the group and it becomes an ordinary group. |
 
 ## Membership and roles — FR-MB
 

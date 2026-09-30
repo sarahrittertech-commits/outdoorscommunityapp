@@ -5,11 +5,13 @@ import { site } from "@/config/site";
 import type { Views } from "@/lib/supabase/database.types";
 import { formatShortDate } from "@/lib/time";
 
-type GroupListing = Pick<Views<"group_listings">, "slug" | "name" | "area" | "member_count" | "next_event_at" | "join_policy">;
+type GroupListing = Pick<Views<"group_listings">, "slug" | "name" | "area" | "member_count" | "next_event_at" | "join_policy"> & {
+  is_unclaimed?: boolean | null;
+};
 type EventListing = Pick<
   Views<"event_listings">,
   "id" | "title" | "starts_at" | "timezone" | "group_name" | "group_slug" | "location_name" | "status" | "going_count"
-> & { category_slug?: string | null };
+> & { category_slug?: string | null; is_unclaimed?: boolean | null };
 
 /** One row per group: the facts a newcomer needs to judge it (FR-BR-2). */
 export function GroupList({ groups }: { groups: GroupListing[] }) {
@@ -25,7 +27,7 @@ export function GroupList({ groups }: { groups: GroupListing[] }) {
             <span className="text-sm text-muted">({g.area})</span>
           </span>
           <span className="text-sm text-muted">
-            {g.member_count} {g.member_count === 1 ? "member" : "members"} ·{" "}
+            {g.is_unclaimed ? "unclaimed listing" : `${g.member_count} ${g.member_count === 1 ? "member" : "members"}`} ·{" "}
             {g.next_event_at ? `next event ${formatShortDate(g.next_event_at, site.defaultTimezone)}` : "no upcoming events"}
             {g.join_policy === "approval" && " · approval to join"}
           </span>
@@ -52,7 +54,7 @@ export function EventList({ events, showGroup = true }: { events: EventListing[]
                   <Link href={`/g/${e.group_slug}`}>{e.group_name}</Link> ·{" "}
                 </>
               )}
-              {e.location_name} · {e.going_count} going
+              {e.location_name} · {e.is_unclaimed ? "sign up with the organizer" : `${e.going_count} going`}
             </span>
           </span>
         </li>

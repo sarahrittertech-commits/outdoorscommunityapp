@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { requestClaim } from "@/app/actions/claims";
 import { restoreGroup } from "@/app/actions/groups";
 import { joinGroup, leaveGroup } from "@/app/actions/membership";
 import { EventList } from "@/components/Listings";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
+import { site } from "@/config/site";
 import { loadGroup } from "@/lib/groups";
 
 type Props = {
@@ -18,9 +20,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: group.name,
     description: group.description.slice(0, 160),
-    openGraph: { title: group.name, description: group.description.slice(0, 160) },
+    openGraph: {
+      title: group.name,
+      description: group.description.slice(0, 160),
+    },
     robots: group.status === "archived" ? { index: false } : undefined,
   };
+}
+
+function hostOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
 }
 
 /** FR-BR-6: readable signed out; discussions and the member list are not. */
@@ -30,9 +43,13 @@ export default async function GroupPage({ params, searchParams }: Props) {
   const { supabase, group, viewer, membership, isMember, isAdmin, isOwner, isActive, canManage } = loaded;
   const now = new Date().toISOString();
 
-  const [{ data: listing }, { data: organizers }, { data: upcoming }, { count: pastCount }, { count: pendingCount }] =
+  const [{ data: listing }, { data: organizers }, { data: upcoming }, { count: pastCount }, { count: pendingCount }, { data: myClaim }] =
     await Promise.all([
-      supabase.from("group_listings").select("category_slug, category_name, subcategory_slug, subcategory_name, member_count").eq("id", group.id).single(),
+      supabase
+        .from("group_listings")
+        .select("category_slug, category_name, subcategory_slug, subcategory_name, member_count")
+        .eq("id", group.id)
+        .single(),
       supabase
         .from("group_members")
         .select("role, user_id, profiles(display_name)")
@@ -42,7 +59,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
         .order("role"),
       supabase
         .from("event_listings")
-        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count")
+        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed")
         .eq("group_id", group.id)
         .gt("ends_at", now)
         .order("starts_at")
@@ -51,6 +68,9 @@ export default async function GroupPage({ params, searchParams }: Props) {
       isAdmin
         ? supabase.from("group_members").select("user_id", { count: "exact", head: true }).eq("group_id", group.id).eq("status", "pending")
         : Promise.resolve({ count: 0 }),
+      group.is_unclaimed && viewer
+        ? supabase.from("group_claims").select("status").eq("group_id", group.id).eq("user_id", viewer.id).maybeSingle()
+        : Promise.resolve({ data: null }),
     ]);
 
   return (
@@ -64,8 +84,15 @@ export default async function GroupPage({ params, searchParams }: Props) {
       )}
       <h1>{group.name}</h1>
       <p className="text-sm text-muted">
-        {group.area} · {listing?.member_count ?? 0} {listing?.member_count === 1 ? "member" : "members"} ·{" "}
-        {group.join_policy === "open" ? "anyone can join" : "approval to join"}
+        {group.area} ·{" "}
+        {group.is_unclaimed ? (
+          <>unclaimed listing</>
+        ) : (
+          <>
+            {listing?.member_count ?? 0} {listing?.member_count === 1 ? "member" : "members"} ·{" "}
+            {group.join_policy === "open" ? "anyone can join" : "approval to join"}
+          </>
+        )}
       </p>
 
       {group.status === "archived" && (
@@ -79,42 +106,80 @@ export default async function GroupPage({ params, searchParams }: Props) {
         </div>
       )}
 
-      {/* Membership ------------------------------------------------------------ */}
-      <section aria-label="Membership" className="mt-4">
-        {!viewer ? (
-          <Link href={`/signin?next=/g/${group.slug}`} className="button">
-            Sign in to join
-          </Link>
-        ) : isMember ? (
-          <div className="text-sm">
-            You&apos;re {isOwner ? "the owner" : isAdmin ? "an admin" : "a member"}.{" "}
-            {!isOwner && (
-              <form action={leaveGroup.bind(null, group.id, group.slug)} className="inline">
-                <button className="link-button">Leave group</button>
-              </form>
-            )}
-          </div>
-        ) : membership?.status === "pending" ? (
-          <div className="text-sm">
-            Your request to join is waiting for an organizer.{" "}
-            <form action={leaveGroup.bind(null, group.id, group.slug)} className="inline">
-              <button className="link-button">Cancel request</button>
+      {/* FR-GR-9 / FR-GR-10: a listing added from public information. ---------- */}
+      {group.is_unclaimed && group.source_url && (
+        <section aria-label="Unclaimed listing" className="mt-4 rounded border border-rule bg-panel px-4 py-3">
+          <p className="m-0">
+            <strong>Unclaimed listing.</strong> Added from public information so people can find this group. Nobody runs it on {site.name}{" "}
+            yet, so there&apos;s no joining or RSVPs here.
+          </p>
+          <p className="m-0 mt-2">
+            Find them at{" "}
+            <a href={group.source_url} rel="nofollow noopener" className="font-bold">
+              {hostOf(group.source_url)}
+            </a>
+          </p>
+          <h2 className="mt-4 font-sans text-base font-bold text-ink">Are you the organizer?</h2>
+          {myClaim?.status === "pending" ? (
+            <p className="m-0 mt-1 text-sm">Your claim is waiting for the site admin to check it.</p>
+          ) : myClaim?.status === "declined" ? (
+            <p className="m-0 mt-1 text-sm text-muted">Your claim wasn&apos;t approved.</p>
+          ) : !viewer ? (
+            <p className="m-0 mt-1 text-sm">
+              <Link href={`/signin?next=/g/${group.slug}`}>Sign in</Link> to claim it. Once approved you&apos;ll run it here: post events,
+              take RSVPs and open a discussion board.
+            </p>
+          ) : (
+            <form action={requestClaim.bind(null, group.id, group.slug)}>
+              <label htmlFor="claim-note" className="mt-1 text-sm font-normal">
+                Claim it: tell the site admin how you&apos;re connected to {group.name}, and how we can check (a club email address, your
+                role on their website).
+              </label>
+              <textarea id="claim-note" name="note" required minLength={10} maxLength={1000} className="min-h-20" />
+              <button className="button mt-2">Ask to claim</button>
             </form>
-          </div>
-        ) : membership?.status === "banned" ? (
-          <p className="text-sm text-muted">You can&apos;t join this group.</p>
-        ) : isActive ? (
-          <form action={joinGroup.bind(null, group.id, group.slug)}>
-            {group.join_policy === "approval" && group.join_question && (
-              <>
-                <label htmlFor="answer">{group.join_question}</label>
-                <textarea id="answer" name="answer" maxLength={1000} className="min-h-20" />
-              </>
-            )}
-            <button className="button mt-2">{group.join_policy === "open" ? "Join group" : "Ask to join"}</button>
-          </form>
-        ) : null}
-      </section>
+          )}
+        </section>
+      )}
+
+      {/* Membership ------------------------------------------------------------ */}
+      {!group.is_unclaimed && (
+        <section aria-label="Membership" className="mt-4">
+          {!viewer ? (
+            <Link href={`/signin?next=/g/${group.slug}`} className="button">
+              Sign in to join
+            </Link>
+          ) : isMember ? (
+            <div className="text-sm">
+              You&apos;re {isOwner ? "the owner" : isAdmin ? "an admin" : "a member"}.{" "}
+              {!isOwner && (
+                <form action={leaveGroup.bind(null, group.id, group.slug)} className="inline">
+                  <button className="link-button">Leave group</button>
+                </form>
+              )}
+            </div>
+          ) : membership?.status === "pending" ? (
+            <div className="text-sm">
+              Your request to join is waiting for an organizer.{" "}
+              <form action={leaveGroup.bind(null, group.id, group.slug)} className="inline">
+                <button className="link-button">Cancel request</button>
+              </form>
+            </div>
+          ) : membership?.status === "banned" ? (
+            <p className="text-sm text-muted">You can&apos;t join this group.</p>
+          ) : isActive ? (
+            <form action={joinGroup.bind(null, group.id, group.slug)}>
+              {group.join_policy === "approval" && group.join_question && (
+                <>
+                  <label htmlFor="answer">{group.join_question}</label>
+                  <textarea id="answer" name="answer" maxLength={1000} className="min-h-20" />
+                </>
+              )}
+              <button className="button mt-2">{group.join_policy === "open" ? "Join group" : "Ask to join"}</button>
+            </form>
+          ) : null}
+        </section>
+      )}
 
       {canManage && (
         <nav aria-label="Organizer tools" className="mt-4 flex flex-wrap gap-x-4 rounded bg-panel px-3 py-2 text-sm">
@@ -159,7 +224,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
         </>
       )}
 
-      <h2>Organizers</h2>
+      {!group.is_unclaimed && <h2>Organizers</h2>}
       <ul className="mt-2">
         {organizers?.map((o) => (
           <li key={o.user_id}>

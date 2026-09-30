@@ -47,6 +47,8 @@ export default async function EventPage({ params, searchParams }: Props) {
   const full = event.capacity !== null && going >= event.capacity && mine?.status !== "going";
   const when = formatEventTime(event.starts_at, event.ends_at, event.timezone);
   const url = `${site.url}/e/${event.id}`;
+  // FR-GR-9: a listed group's event points to the organizer's own page.
+  const organizerUrl = group.is_unclaimed ? (event.source_url ?? group.source_url) : null;
 
   // TR-SEO-3: schema.org Event data for search engines.
   const jsonLd = {
@@ -90,16 +92,28 @@ export default async function EventPage({ params, searchParams }: Props) {
             <span className="block text-sm text-muted">Address shown to group members.</span>
           ) : null}
         </dd>
-        <dt className="font-semibold">Going</dt>
-        <dd>
-          {going}
-          {event.capacity !== null && ` of ${event.capacity}`}
-        </dd>
+        {!group.is_unclaimed && (
+          <>
+            <dt className="font-semibold">Going</dt>
+            <dd>
+              {going}
+              {event.capacity !== null && ` of ${event.capacity}`}
+            </dd>
+          </>
+        )}
       </dl>
 
       {/* RSVP ------------------------------------------------------------------ */}
       <section aria-label="RSVP" className="mt-4">
-        {cancelled ? null : started ? (
+        {organizerUrl ? (
+          <p className="rounded border border-rule bg-panel px-4 py-3">
+            From an <Link href={`/g/${group.slug}`}>unclaimed listing</Link>, added from public information. Check the details and sign up
+            on the organizer&apos;s own page:{" "}
+            <a href={organizerUrl} rel="nofollow noopener" className="font-bold">
+              {group.name} event page
+            </a>
+          </p>
+        ) : cancelled ? null : started ? (
           <p className="text-muted">This event has started.</p>
         ) : !viewer ? (
           <Link href={`/signin?next=/e/${event.id}`} className="button">
