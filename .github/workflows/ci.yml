@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
 
+# Read-only token, stated here rather than left to the repository default:
+# repositories created after 2023 default to a token that cannot read pull
+# requests, which the secret scan needs to list a PR's commits.
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   app:
     name: Lint, types, unit tests, build
