@@ -5,13 +5,15 @@
 // drawings, the legal pages' wording, colors and logo, and nothing else. See
 // docs/cloning.md.
 
+const regionName = "Western North Carolina";
+
 export const site = {
   /** Shown in the header, page titles and emails. Lowercase is the wordmark (docs/brand.md). */
   name: "branch outdoors",
   /** One line under the name on the home page. */
   tagline: "A plain, friendly board for finding people to go outside with.",
   /** The region the directory covers, shown above the categories. */
-  regionName: "Western North Carolina",
+  regionName,
   /** Used for search engines and link previews. */
   description:
     "A plain, ad-free board of local outdoor groups: hiking, paddling, cycling, climbing and more. Browse by activity, join a group, show up.",
@@ -24,8 +26,7 @@ export const site = {
   /** The home page headline, over the search box. */
   heroTitle: "Find your people outside.",
   /** One or two sentences under the headline. */
-  heroIntro:
-    "Groups, meetups and events for getting outside in Western North Carolina. Join a group, show up, try something new.",
+  heroIntro: `Groups, meetups and events for getting outside in ${regionName}. Join a group, show up, try something new.`,
   /**
    * Optional image behind the home page band, a path under public/ (e.g.
    * "/hero.svg"). When set it replaces the ridge drawing; keep it dark on the
