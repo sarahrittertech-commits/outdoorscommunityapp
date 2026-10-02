@@ -50,7 +50,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             <label htmlFor="hero-q" className="sr-only">
               Looking for
             </label>
-            <input id="hero-q" name="q" type="search" placeholder="waterfall hike, beginner climbing, Brevard…" />
+            <input id="hero-q" name="q" type="search" placeholder={site.searchPlaceholder} />
             <button className="button button-hero">Search</button>
           </form>
         </RidgeBand>

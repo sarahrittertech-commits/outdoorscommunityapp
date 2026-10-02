@@ -1,8 +1,9 @@
 // Everything that makes this deployment *this* board rather than another one.
 //
 // A copy of the board for a different audience or region (the women's app,
-// for example) changes this file, the directory seed migration and the
-// legal pages' wording, and nothing else. See docs/cloning.md.
+// for example) changes this file, the directory seed migration, the activity
+// drawings, the legal pages' wording, colors and logo, and nothing else. See
+// docs/cloning.md.
 
 export const site = {
   /** Shown in the header, page titles and emails. Lowercase is the wordmark (docs/brand.md). */
@@ -20,6 +21,10 @@ export const site = {
   defaultTimezone: "America/New_York",
   /** Who the board is for, shown on the about and guidelines pages. */
   audience: "Adults (18+) who want to find outdoor groups near them.",
+  /** Example searches shown in the home page search box. */
+  searchPlaceholder: "waterfall hike, beginner climbing, Brevard…",
+  /** Whether the create-group form starts on "anyone can join" or "approval". */
+  defaultJoinPolicy: "open" as "open" | "approval",
   /** Public contact for the site admin. */
   contactEmail: "hello@example.com",
   /** Canonical origin, used for sitemaps, link previews and sign-in links. */
