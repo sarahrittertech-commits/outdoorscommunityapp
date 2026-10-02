@@ -26,6 +26,12 @@ export const site = {
   /** One or two sentences under the headline. */
   heroIntro:
     "Groups, meetups and events for getting outside in Western North Carolina. Join a group, show up, try something new.",
+  /**
+   * Optional image behind the home page band, a path under public/ (e.g.
+   * "/hero.svg"). When set it replaces the ridge drawing; keep it dark on the
+   * left so the headline stays readable. null keeps the ridges.
+   */
+  heroImage: null as string | null,
   /** Example searches shown in the home page search box. */
   searchPlaceholder: "waterfall hike, beginner climbing, Brevard…",
   /** Whether the create-group form starts on "anyone can join" or "approval". */
