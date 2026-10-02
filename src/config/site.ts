@@ -21,6 +21,11 @@ export const site = {
   defaultTimezone: "America/New_York",
   /** Who the board is for, shown on the about and guidelines pages. */
   audience: "Adults (18+) who want to find outdoor groups near them.",
+  /** The home page headline, over the search box. */
+  heroTitle: "Find your people outside.",
+  /** One or two sentences under the headline. */
+  heroIntro:
+    "Groups, meetups and events for getting outside in Western North Carolina. Join a group, show up, try something new.",
   /** Example searches shown in the home page search box. */
   searchPlaceholder: "waterfall hike, beginner climbing, Brevard…",
   /** Whether the create-group form starts on "anyone can join" or "approval". */

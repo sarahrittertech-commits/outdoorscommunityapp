@@ -16,7 +16,7 @@ six things are deployment-specific:
 
 | What | Where | For the women's app |
 | --- | --- | --- |
-| Name, tagline, description, audience, region, contact, search example, default join setting | `src/config/site.ts` | New name and wording; `defaultJoinPolicy: "approval"` if groups should start approval-only |
+| Name, tagline, description, audience, region, contact, home page headline and intro, search example, default join setting | `src/config/site.ts` | New name and wording; `defaultJoinPolicy: "approval"` if groups should start approval-only |
 | Region and category list | `supabase/migrations/20260925000005_seed_directory.sql` | Replace the file's contents |
 | Category drawings | `src/components/ActivityIcon.tsx` (keyed by category slug) | One drawing per new category; unknown slugs fall back to a plain circle |
 | Legal and community wording | `src/app/{about,guidelines,terms,privacy}/page.tsx` | Rewrite for the audience |
