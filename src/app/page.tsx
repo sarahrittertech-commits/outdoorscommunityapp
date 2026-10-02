@@ -30,10 +30,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
       <div className="-mt-6">
         <RidgeBand>
-          <h1 className="ridge-title m-0 text-4xl sm:text-5xl">Find your people outside.</h1>
-          <p className="ridge-tagline m-0 mt-3 max-w-xl text-lg">
-            Groups, meetups and events for getting outside in {site.regionName}. Join a group, show up, try something new.
-          </p>
+          <h1 className="ridge-title m-0 text-4xl sm:text-5xl">{site.heroTitle}</h1>
+          <p className="ridge-tagline m-0 mt-3 max-w-xl text-lg">{site.heroIntro}</p>
 
           <form action="/search" role="search" className="hero-search mt-8">
             <label htmlFor="hero-category" className="sr-only">
@@ -50,7 +48,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             <label htmlFor="hero-q" className="sr-only">
               Looking for
             </label>
-            <input id="hero-q" name="q" type="search" placeholder="waterfall hike, beginner climbing, Brevard…" />
+            <input id="hero-q" name="q" type="search" placeholder={site.searchPlaceholder} />
             <button className="button button-hero">Search</button>
           </form>
         </RidgeBand>
