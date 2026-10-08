@@ -95,7 +95,7 @@ Playwright in CI against the local stack with seed data.
 
 ## Planned — pending use case review
 
-Draft use cases UC-10 to UC-13 are not approved yet, so these have no
+Draft use cases UC-10 to UC-24 are not approved yet, so these have no
 requirement numbers. They show what each would have to prove; they become
 real tests, with requirements, once the use case is approved.
 
@@ -105,4 +105,15 @@ real tests, with requirements, once the use case is approved.
 | UC-11 Ask before you go | Only signed-in users ask; only the group's admins answer or move an answer to the FAQ; unanswered questions are not shown to others; questions follow the post rate limit |
 | UC-12 A bike shop on the board | Businesses are claimed like groups; only the business owner edits services, locations and places; a business never appears above groups in listings; no prices or booking |
 | UC-13 A local chapter of a national club | Only a chapter's owner links it to a national organization; the national page lists only chapters that linked themselves |
+| UC-14 What's near me? | A zip code finds results with no outside request; distance shown on each result; the *Near you* town is never stored on the server; filtered links reopen the same list |
+| UC-15 Explore destinations | Every place is reachable from the list with the map off; place pages list only that place's groups and upcoming events |
+| UC-16 Keep our member list private | With *organizers only*, a member gets no other members' names from the database, on the members tab or on *who's going* |
+| UC-17 Approve who comes | A member can't approve their own RSVP; going never exceeds places with two admins acting at once; only admins open Manage RSVPs |
+| UC-18 My calendar | Shows only the user's going and saved events; works without JavaScript |
+| UC-19 Reply to a reply | Never more than one level of indent; role labels only on owner and admin posts |
+| UC-20 Message another member | A second message before acceptance is refused; a blocked user's message is refused; a third user, group admins included, reads nothing; the 11th request in a day is refused |
+| UC-21 Share trip photos | A non-member gets no photo from a members-only gallery, from the database or storage; uploads are re-encoded and stripped of location data; only the uploader and organizers remove photos |
+| UC-22 Save it for later | No other user, organizer included, can read someone's saved events |
+| UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |
+| UC-24 Tell groups apart | A type outside the list is refused; only the owner sets type and photo; the type filter matches the type shown |
 

@@ -150,6 +150,24 @@ Runs on GitHub Actions on every push and pull request, like the bike map.
 | TR-OPS-5 | Errors are visible in Railway's and Supabase's logs. No separate error-tracking service at MVP. |
 | TR-OPS-6 | A runbook (written at phase 5) covers deploying, restoring from backup, rotating keys and handling a report of illegal content. |
 
+## Proposed with the 8 October design (drafts)
+
+These apply when the draft use cases UC-10 to UC-24 are approved and
+built. They extend the rules above rather than replacing them.
+
+| ID | Draft requirement |
+| --- | --- |
+| TR-SEC-12 | **All images follow TR-SEC-9,** extended to event photos, group cover photos, gallery photos and sponsor logos: JPEG, PNG or WebP only; 5 MB maximum (1 MB for logos); re-encoded and stripped of location and camera data on upload; required alt text; served from storage with the same permissions as the group or event they belong to. |
+| TR-SEC-13 | **Direct messages** ([ADR-0006](./architecture/adr-0006-direct-messages)): readable only by the two people in a conversation, enforced by the database; requests, blocks and the daily request limit enforced by the database; reported conversations visible to the site admin only. |
+| TR-SEC-14 | **Sponsor links** use `rel="sponsored noopener"`; sponsors never change the order of any list (FR-EV-14). |
+| TR-PRIV-7 | **No device location.** Location search uses a town or zip the person types or picks, matched against a list of places bundled with the app. The *Near you* town is remembered in the browser only, never on the server. |
+| TR-PRIV-8 | **Private by default:** saved events, reminders and messages are visible only to their owner; group admins see none of them. |
+| TR-PRIV-9 | **Photos:** location and camera data are removed from every uploaded image before it is stored. |
+| TR-PERF-7 | **Images are resized** on upload to at most 1,600 px for full size and 400 px for list thumbnails; lists use thumbnails only. Pages with photos still meet TR-PERF-3. |
+| TR-PE-4 | **The calendar, reminders, inbox and filters work without JavaScript.** The destinations map is the one exception, and its list carries the same information (ADR-0007). |
+| TR-DATA-7 | **Places and towns have coordinates.** The places list (FR-BR-16) and a bundled list of US towns and zip codes with coordinates; distance is calculated in the database. |
+| TR-DATA-8 | **Group type** and **event price** are stored as plain fields; prices are text, never amounts the board calculates with. |
+
 ## Existing subscriptions — what this project uses
 
 An audit of the tools already in PushPopDev's stack (from the bike map and
@@ -181,6 +199,9 @@ committing, because these change.
 | Resend | Free | $0 | 3,000 emails/month, **100/day**, 1 domain. Sending stops at the cap rather than billing. The daily cap is the one to watch: a 24-hour reminder run for a busy weekend could hit it. Next tier $20/month. |
 | Domain | — | ~$1–2 (≈$12–20/year) | — |
 | GitHub | Free | $0 | Actions minutes are free for public repositories. |
+| Map tiles (proposed, ADR-0007) | Free tier | $0 to a few dollars | Only if the destinations map (UC-15) is approved. Check the provider's terms for tracking before choosing. |
+
+Photos (UC-10, UC-21, UC-24) count against Supabase storage: 1 GB on Free, 100 GB on Pro. Resized images keep a typical photo under 500 KB, so 1 GB holds roughly 2,000 photos.
 | **New spend during build** | | **$0** | Railway's $5 is already being paid |
 | **New spend from launch** | | **≈ $26–27** | Supabase Pro + domain, plus any Railway usage above the included $5 |
 

@@ -43,16 +43,32 @@ Requirements: FR-RS-1 to FR-RS-9 in `docs/functional-requirements.md`.
 2. **Pick this week's activities.** Search a third of the subcategories each
    week, in order, so every activity is covered every three weeks. Use the
    ISO week number: week mod 3 = 0 → the first third, 1 → the second, 2 →
-   the last. Keep to about 60 searches in a run.
+   the last. Keep to about 80 searches in a run: roughly half for the home
+   area, half for the wider area.
 
-3. **Search** for each chosen subcategory across these areas: Asheville,
-   Brevard, Hendersonville, Black Mountain, Waynesville, Sylva, Boone,
-   Burnsville, Marion and Old Fort, Bryson City, Franklin, Highlands and
-   Lake Lure. Useful searches:
-   - `<activity> club <area> NC`, `<activity> group <area>`
-   - `<activity> meetup Western North Carolina`
+3. **Search** for each chosen subcategory in two rings.
+
+   - **Home area, every week: Western North Carolina.** Asheville, Brevard,
+     Hendersonville, Black Mountain, Waynesville, Sylva, Boone, Burnsville,
+     Marion and Old Fort, Bryson City, Franklin, Highlands and Lake Lure.
+   - **Wider area, one group a week, in turn** (ISO week number mod 4):
+     - 0 → the rest of North Carolina: Charlotte, Raleigh and Durham,
+       Greensboro and Winston-Salem, Wilmington.
+     - 1 → South Carolina and Georgia: Greenville, Columbia, Charleston,
+       Atlanta, Blue Ridge (GA), Dahlonega.
+     - 2 → Tennessee: Knoxville, Chattanooga, Johnson City, the Smokies
+       gateway towns.
+     - 3 → Virginia and Kentucky: Roanoke, Blacksburg, Charlottesville,
+       Richmond, the Red River Gorge.
+
+   Useful searches:
+   - `<activity> club <area>`, `<activity> group <area>`
+   - `<activity> meetup <area>`
    - `<activity> events <area> <month> <year>`
-   Finds outside Western North Carolina are welcome: set `out_of_region`.
+
+   Set `out_of_region` to true for anything outside Western North Carolina.
+   Finds from farther away that turn up in results are welcome too, with
+   `out_of_region` set.
 
 4. **For each find, decide its kind:**
    - `group`: a club, team, friends group, volunteer or advocacy group, or

@@ -49,8 +49,8 @@ each one rules features out.
 | P1 | **Browse first, sign up later.** Everything public is readable without an account. | Login walls, "sign up to see more" |
 | P2 | **Lists, not feeds.** Every list is sorted alphabetically or by date, says so, and is the same for everyone. | Personalized feeds, "recommended for you", ranking algorithms |
 | P3 | **No ads, no tracking.** | Promoted groups, ad slots, third-party pixels, selling data |
-| P4 | **Quiet by default.** Email only, opt-in beyond the essentials, one-click unsubscribe. | Push notifications, red badges, "you have 12 new…", streaks |
-| P5 | **Text first.** Words and links do the work; images are optional. | Photo walls, infinite media scroll |
+| P4 | **Quiet by default.** Email only, opt-in beyond the essentials, one-click unsubscribe. In-app reminders sit in one list you open yourself; the header shows only a count of conversations with unread messages *(amended 8 October 2026)*. | Push notifications, red dots, "you have 12 new…", streaks, engagement prompts |
+| P5 | **Text first.** Words and links do the work; images are optional. One photo per event, and members-only photo galleries inside groups *(amended 8 October 2026)*. | Photo walls on browse pages, infinite media scroll |
 | P6 | **Light and fast.** Pages are plain HTML from the server and work on a weak phone signal. | Heavy client apps, spinners on every page, infinite scroll |
 | P7 | **People over metrics.** Show useful facts (member count, next event), never vanity counts. | Likes, reactions, follower counts, leaderboards |
 
@@ -110,19 +110,22 @@ Anything at **Could** gets cut without discussion if the MVP is at risk.
 
 ## Explicitly out of scope
 
-These are decisions, not a backlog:
+These are decisions, not a backlog. Several were narrowed on 8 October
+2026 (see *Decisions — 8 October 2026* below); what remains out is listed
+here.
 
 - Feeds, timelines, "recommended" anything, ranking algorithms
 - Likes, reactions, follower counts
-- Ads, sponsored listings, paid tiers, payments, ticketing. *(Under
-  review: UC-10 and UC-12 propose sponsor credits on events and business
-  pages; see the open questions.)*
-- Real-time chat and direct messages between users (see [ADR-0005](./architecture/adr-0005-discussions))
-- Push notifications and in-app notification badges
+- Ads, sponsored listings or sponsored placement, paid tiers. (A small
+  *Sponsored by* credit on an event page is in, under review: FR-EV-14.)
+- Taking payments, checkout and ticketing. (Showing a price is in.)
+- Real-time chat, typing indicators, read receipts and online status.
+  (Direct messages that arrive as requests are in: [ADR-0006](./architecture/adr-0006-direct-messages).)
+- Push notifications to phones, and red-dot badges. (An in-app reminders
+  list and an unread-message count are in.)
 - Native mobile apps (the web app is responsive)
-- Photo galleries, image uploads in posts. *(Under review: UC-10 proposes
-  one picture per event.)*
-- Recurring event series. *(Under review: UC-10 proposes them.)*
+- Image uploads in discussion posts, and photo walls on browse pages.
+  (Event photos and members-only group galleries are in.)
 - AI features for users. (The weekly research agent, UC-9, is an operator
   tool: it only suggests candidates to the site admin.)
 - Users under 18
@@ -188,6 +191,39 @@ Not built yet:
 | Short caching of listing pages | TR-PERF-5 | Pages are fast without it at this size. Revisit with real traffic. |
 | Browser tests and accessibility checks in CI | TR-TEST-3, TR-A11Y-5 | The use cases were walked in a real browser (43 checks); turning that into a CI job needs the Docker-based local stack. |
 | Coulds | FR-AC-8, FR-GR-8, FR-EV-9, FR-EV-10, FR-DS-8, FR-MD-7, FR-AD-3 | By definition. |
+
+## Decisions — 8 October 2026
+
+Sarah reviewed the Magic Patterns prototype of 8 October and brought these
+into scope. Each still goes through its use case, user flow and review
+before it is built. The guardrails are proposals that keep each one
+inside the principles; they are written into the draft requirements and
+can be changed at review.
+
+| Now in scope | Was | Use case | Proposed guardrails |
+| --- | --- | --- | --- |
+| **Direct messages** | Out (ADR-0005) | UC-20 | First message is a request the other person accepts; decline and block; report; plain pages, no live updates, read receipts or online status; only the two people can read it. See [ADR-0006](./architecture/adr-0006-direct-messages). |
+| **Group photo galleries** | Out (P5) | UC-21 | Inside a group only, members-only by default; images re-encoded; uploader and organizers can remove; reportable. |
+| **Event prices** | Out ("no prices") | UC-10 | Plain text only (*Free*, *$10 trail fee*); the board never takes payment. |
+| **Save for later** | Out ("RSVP is the save") | UC-22 | Private to the user; separate from *going*. |
+| **Reminders with an unread count** | Out (P4) | UC-23 | One list on the signed-in home page; only things that need the user; the header count covers unread messages only; no email or push without opt-in. |
+| **Waitlists and RSVP opening times** | Could / not planned | UC-17, UC-10 | Admins move people from the waitlist, nothing automatic; the opening time is stated plainly, no ticking countdown. |
+
+From the same review, these fit the product and are drafted as use cases:
+location and distance search with *Near you* (UC-14), a destinations map
+(UC-15), member list privacy (UC-16), RSVP approval (UC-17), a calendar
+(UC-18), replies to replies (UC-19), and group types with cover photos
+(UC-24). Event photos, series and sponsors were already drafted as UC-10.
+
+The [feature map](./feature-map) separates what is live in the branded app
+from every new feature, with its use case, requirements and status.
+
+**Cost of these decisions.** Together they roughly double the remaining
+build. Direct messages and galleries also add moderation work for the
+site admin, and storage for photos. The map needs an outside map provider
+or a static image ([ADR-0007](./architecture/adr-0007-destinations-map)).
+The visual refresh from the same design (logo, colors, type) is a small
+fix and doesn't wait on any of this.
 
 ## Open questions
 

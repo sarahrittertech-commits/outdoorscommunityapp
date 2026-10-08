@@ -125,6 +125,40 @@ A listing has no owner, admins or members, so only these columns apply.
 | Skip a candidate | ❌ | ❌ | ✅ |
 | Add a candidate | ❌ | ❌ | ❌ research agent only |
 
+### Proposed with the 8 October design (drafts, not built)
+
+These follow the draft requirements for UC-10 to UC-24. Each becomes part
+of the matrix above, with a permission test, once its use case is
+approved.
+
+| Action | Visitor | User (not a member) | Member | Admin | Owner | Site admin |
+| --- | --- | --- | --- | --- | --- | --- |
+| Search by town or zip and distance, see *Near you* | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See the destinations map and place pages | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Manage the places list | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| See a group's type and photo | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Set the group's type, photo and member list privacy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| See the member list and names on *who's going* | ❌ | per setting | per setting | ✅ | ✅ | ✅ |
+| Post an event series, photo, price, sponsors, FAQ, RSVP opening time | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Ask an event a question | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Read and answer questions, move answers to the FAQ | ❌ | ❌ own only | ❌ own only | ✅ | ✅ | ✅ |
+| RSVP to an approval event (request) or join a waitlist | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Approve, decline, waitlist or remove RSVPs | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Save an event; see own saved events and calendar | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See someone else's saved events | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| See own reminders | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Reply to a reply | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Upload photos to the group gallery | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| See a members-only gallery | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Remove a gallery photo | ❌ | ❌ | **own** | ✅ | ✅ | ✅ |
+| Send a message request | ❌ | ✅ (10 a day) | ✅ | ✅ | ✅ | ✅ |
+| Accept, decline or block a request | ❌ | **own** | **own** | **own** | **own** | **own** |
+| Read a conversation | ❌ | **own** | **own** | **own** | **own** | reported only |
+| Link a group to a national organization | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| Edit a business page | ❌ | business owner only | — | — | — | ✅ |
+
+Group admins never read members' private messages or saved events.
+
 ## Cross-cutting rules
 
 - **Suspended users** keep the read access their group roles give them and

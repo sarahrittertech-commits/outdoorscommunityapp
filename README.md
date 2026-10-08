@@ -42,6 +42,7 @@ Start with [`docs/index.md`](docs/index.md).
 | --- | --- |
 | [Product requirements](docs/prd.md) | Problem, goals, scope, principles, delivery plan |
 | [Personas](docs/personas.md) | Who this is for |
+| [Feature map](docs/feature-map.md) | What's live versus what's being designed |
 | [Use cases](docs/use-cases.md) | The journeys it supports |
 | [User flows](docs/user-flows.md) | The screens along each journey |
 | [Functional requirements](docs/functional-requirements.md) | What it does, requirement by requirement |
