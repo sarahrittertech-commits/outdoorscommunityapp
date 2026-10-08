@@ -26,7 +26,10 @@ export default async function CommunitiesPage({ searchParams }: Props) {
   const supabase = await createClient();
   let query = supabase
     .from("group_listings")
-    .select("slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags", { count: "exact" })
+    .select(
+      "slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags",
+      { count: "exact" },
+    )
     .eq("status", "active")
     .order("name")
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
@@ -43,30 +46,41 @@ export default async function CommunitiesPage({ searchParams }: Props) {
   const total = [...perCategory.values()].reduce((a, b) => a + b, 0);
   const current = categories?.find((c) => c.slug === category);
 
+  const filters = (
+    <>
+      <h2 className="filter-heading mt-0">activity</h2>
+      <ul className="mt-1 space-y-0.5">
+        <li>
+          {category ? <Link href="/communities">all</Link> : <strong>all</strong>} <span className="text-muted">({total})</span>
+        </li>
+        {categories?.map((c) => (
+          <li key={c.slug}>
+            {c.slug === category ? (
+              <strong>{c.name}</strong>
+            ) : (
+              <Link href={`/communities?category=${c.slug}`} prefetch={false}>
+                {c.name}
+              </Link>
+            )}{" "}
+            <span className="text-muted">({perCategory.get(c.slug) ?? 0})</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-6">
+        <Link href="/groups/new">Start a group</Link>
+      </p>
+    </>
+  );
+
   return (
     <div className="grid gap-8 md:grid-cols-[14rem_1fr]">
-      <aside aria-label="Filters" className="text-sm">
-        <h2 className="mt-0 font-sans text-base font-bold text-ink">activity</h2>
-        <ul className="mt-1 space-y-0.5">
-          <li>
-            {category ? <Link href="/communities">all</Link> : <strong>all</strong>} <span className="text-muted">({total})</span>
-          </li>
-          {categories?.map((c) => (
-            <li key={c.slug}>
-              {c.slug === category ? (
-                <strong>{c.name}</strong>
-              ) : (
-                <Link href={`/communities?category=${c.slug}`} prefetch={false}>
-                  {c.name}
-                </Link>
-              )}{" "}
-              <span className="text-muted">({perCategory.get(c.slug) ?? 0})</span>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-6">
-          <Link href="/groups/new">Start a group</Link>
-        </p>
+      {/* Phones: the filters fold into a card, open until a filter is picked. Computers: a side column. */}
+      <details className="filter-card text-sm md:hidden" open={!category}>
+        <summary>{!category ? "Browse by activity" : "Change activity"}</summary>
+        <div>{filters}</div>
+      </details>
+      <aside aria-label="Filters" className="hidden text-sm md:block">
+        {filters}
       </aside>
 
       <div className="min-w-0">
@@ -74,7 +88,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
           {current && <ActivityIcon slug={current.slug} />}
           {current ? `${current.name} communities` : "Communities"}
         </h1>
-        <p className="mt-1 border-b border-ink pb-3 text-sm text-muted">
+        <p className="mt-2 border-b border-rule pb-3 text-subtle">
           Local groups and clubs in {site.regionName}, A to Z. Anyone can look; sign in to join.
         </p>
 
@@ -104,9 +118,15 @@ export default async function CommunitiesPage({ searchParams }: Props) {
                     <p className="m-0 text-sm text-muted sm:hidden">{g.area}</p>
                   </td>
                   <td className="hidden py-3 pr-4 sm:table-cell">{g.area}</td>
-                  <td className="py-3 text-right">{g.is_unclaimed ? <span className="text-sm text-muted">listing</span> : g.member_count}</td>
+                  <td className="py-3 text-right">
+                    {g.is_unclaimed ? <span className="text-sm text-muted">listing</span> : g.member_count}
+                  </td>
                   <td className="hidden py-3 pl-6 text-right whitespace-nowrap md:table-cell">
-                    {g.next_event_at ? formatShortDate(g.next_event_at, site.defaultTimezone) : <span className="text-muted">none yet</span>}
+                    {g.next_event_at ? (
+                      formatShortDate(g.next_event_at, site.defaultTimezone)
+                    ) : (
+                      <span className="text-muted">none yet</span>
+                    )}
                   </td>
                 </tr>
               ))}

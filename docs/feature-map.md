@@ -33,15 +33,16 @@ permission enforced and tested in the database.
 | Affinity tags | Women, Youth, BIPOC, LGBTQIA+ on group pages and lists, set by owners | UC-9 | FR-GR-11 |
 | Research agent | Weekly search for new groups and events; *Candidates* on the admin page with *List it* and *Skip* | UC-9 | FR-RS-1 to FR-RS-9 |
 
-## From the design, ready to build: visual refresh
+## From the design: visual refresh (built)
 
-A small fix to pages that already exist, so no new use case is needed.
+A small fix to pages that already exist, so no new use case was needed.
+See [Brand](./brand) for the colors.
 
 - The twig-and-text logo in header and footer, smaller on phones; the
   twig as the favicon.
-- The slightly bluer plum; the Search button color (orange, marigold or
-  plum, to be chosen from screenshots).
-- Larger, bolder page titles; light purple section bars in long lists;
+- The slightly bluer UI plum; the Search button in the design's deep
+  orange with white text.
+- Larger page titles; light purple section bars for months on Events;
   plum underlined filter headings.
 - Filters that fold into a card on phones, on Communities and Events.
 

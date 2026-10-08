@@ -37,8 +37,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         </a>
         <header className="border-b border-rule">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-            <Link href="/" className="wordmark flex items-center gap-2 text-2xl no-underline">
-              <BranchMark className="h-7 w-7" />
+            <Link href="/" className="wordmark flex items-center gap-1.5 text-xl no-underline sm:text-2xl">
+              <BranchMark className="h-[1.5em] w-[0.94em] shrink-0" />
               {site.name}
             </Link>
             <nav aria-label="Main" className="flex items-baseline gap-x-4">
@@ -87,7 +87,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           {children}
         </main>
 
-        <footer className="mx-auto mt-16 max-w-6xl border-t border-rule px-4 pt-4 text-sm text-muted">
+        <footer className="mx-auto mt-16 max-w-6xl border-t border-rule px-4 pt-6 text-sm text-muted">
+          <Link href="/" className="wordmark mb-3 inline-flex items-center gap-1.5 text-lg no-underline">
+            <BranchMark className="h-[1.5em] w-[0.94em] shrink-0" />
+            {site.name}
+          </Link>
           <p>
             No ads. No feed. No tracking. Lists are sorted by name or date, the same for everyone.
           </p>
