@@ -63,7 +63,7 @@ $$;
 
 create or replace function public.moderation_actions_immutable()
 returns trigger
-language plpgsql
+language plpgsql set search_path = ''
 as $$
 begin
   if tg_op = 'UPDATE'
