@@ -109,17 +109,17 @@ list for the map is maintained by the site admin (UC-15).
 **Wants:** people looking for canoe rental, repairs or a climbing guide
 near a place to find them, and credit for sponsoring local groups.
 
-**Design question:** the board was built for community groups (see below).
-Adding businesses is under review; until it's decided this persona has no
-requirements.
+**In scope since 8 October 2026:** the business claims its page with its
+own email, adds staff as admins, and runs events through a group it
+links (FR-BZ-1 to FR-BZ-7). It never sells, books or ranks above groups.
 
 ---
 
 ## Who this board is not for
 
 - Commercial outfitters and guide services selling trips. No payments, no
-  ticketing, no promotion. *(Under review: UC-12 proposes business pages
-  without payments or booking.)*
+  ticketing, no promotion. (Business pages without payments or booking
+  are in: UC-12.)
 - People looking for trail conditions, maps or route beta. AllTrails, Strava
   and the bike map serve that.
 - Large clubs that need membership dues, waivers or rosters. Out of scope.

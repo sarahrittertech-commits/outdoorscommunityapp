@@ -299,7 +299,7 @@ written when each is approved, with its migration and permission tests.
 | --- | --- | --- |
 | `events`: `series_id`, `photo_path`, `price_text`, `rsvp_opens_at`, `requires_approval`, `place_id` | UC-10, UC-17, UC-15 | A series row holds the repeat rule; each date stays its own event |
 | `event_series` | UC-10 | Repeat rule and end date; edits apply to later dates |
-| `event_sponsors` | UC-10 | Name, logo path, website, optional business |
+| `event_sponsors` | UC-10 | Name, logo path, website, optional business or group it links to |
 | `event_faq` | UC-10, UC-11 | Question, answer, order |
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
 | `event_rsvps.status` gains `requested`, `waitlisted`, `declined` | UC-17 | Places counted on `going` only |
@@ -310,7 +310,7 @@ written when each is approved, with its migration and permission tests.
 | `towns` | UC-14 | Bundled US towns and zip codes with coordinates |
 | `organizations` | UC-13 | National organizations that chapters link to |
 | `conversations`, `messages` | UC-20 | Two participants; request status; blocks |
-| `businesses`, `business_places` | UC-12 | Role *its location* or *operates at* |
+| `businesses`, `business_admins`, `business_places`, `business_groups` | UC-12 | Owner is the account that claimed it with the business email; admins are people's own accounts; places have role *its location* or *operates at*; linked groups keep their own roles. No events table of its own |
 
 Reminders (UC-23) and the calendar (UC-18) need no tables: they are read
 from the tables above.

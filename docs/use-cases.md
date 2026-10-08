@@ -249,13 +249,14 @@ December and wants it on the board.
 4. Adds a picture, and the price if there is one (*free*, or *$10 trail
    fee*). The board shows the price; it never takes payment.
 5. Adds the shop that sponsors the rides: its name, logo and website
-   (a business on the board, UC-12, when it has a page), so its logo shows
-   on the event and links to the shop.
+   (a business or group on the board, when it has a page), so its logo
+   shows in a *Sponsored by* section below the event details and links
+   to the sponsor.
 6. Adds a few questions and answers (*Do I need lights? Is there a no-drop
    pace?*).
 7. Publishes. Each Thursday is its own event in the series, and the page
-   shows the picture, dates, time, place, sponsor logo, FAQ, an RSVP button
-   and how many places are left.
+   shows the picture, dates, time, place, details, then the *Sponsored
+   by* logos, the FAQ, an RSVP button and how many places are left.
 8. Later, edits the series once to change the meeting place for every
    date still to come. Only the group's owner and admins can edit.
 
@@ -295,8 +296,11 @@ event without having to join the group first.
 
 ## UC-12 — A bike shop on the board
 
-> **Draft, awaiting review.** This adds businesses to a board that today
-> lists only community groups; see the review notes in the PR.
+> **Draft, awaiting review.** Sarah decided on 8 October 2026 that
+> businesses are on the board: a business page is owned by an account
+> signed in with the business's email, has its own admins, and can run a
+> group whose admins are separate. Businesses host events only through
+> their group.
 
 **Actor:** A business owner (an outfitter, a shop, a guide company), then
 the site admin
@@ -306,20 +310,28 @@ fly-tying demonstrations; it sponsors a local group's paddles.
 
 **Flow:**
 
-1. Finds its business already listed (from the research agent) or asks
-   to add it, and claims it the way a group is claimed (UC-8).
+1. Signs in with the business's own email (*info@headwatersoutfitters.com*),
+   finds the business already listed (from the research agent) or asks to
+   add it, and claims it the way a group is claimed (UC-8). The site admin
+   checks the email matches the business's website and approves.
 2. Fills in what it offers: services (canoe rental, shuttles, repairs),
-   the activities they fit (canoeing, fly fishing), and its locations
-   (both shops).
-3. Adds the places it operates (for a guide company: Looking Glass Rock,
-   Linville Gorge).
-4. Hosts an event of its own: a fly-tying demonstration at one of its
-   shops.
-5. Is added as a sponsor by a group admin on that group's event (UC-10).
-6. Its page shows what it offers, its locations, the places it operates,
-   its own events, and the events it sponsors.
+   the activities they fit (canoeing, fly fishing), its locations (both
+   shops) and the places it operates (for a guide company: Looking Glass
+   Rock, Linville Gorge).
+3. Adds two staff members, each signed in with their own email, as
+   admins of the business page.
+4. Starts a group, *Headwaters Fly-Tying Nights*, and links it to the
+   business page. The group's owner and admins are whoever runs it; they
+   don't have to be the business page's admins.
+5. The group posts a fly-tying demonstration at one of the shops, as any
+   group posts an event.
+6. Is added as a sponsor by another group's admin on that group's event
+   (UC-10); its logo shows in the *Sponsored by* section of that event
+   page.
+7. Its page shows what it offers, its locations, the places it operates,
+   its group and that group's upcoming events, and the events it sponsors.
 
-**Requirements:** to be written after review (drafts FR-BZ-1 to FR-BZ-5).
+**Requirements:** FR-BZ-1 to FR-BZ-7 (draft).
 
 **Succeeds when:** a person looking for canoe rental or a climbing guide
 near a place finds the business, and its listing never outranks or

@@ -103,7 +103,7 @@ real tests, with requirements, once the use case is approved.
 | --- | --- |
 | UC-10 Post a ride series | Only a group's owner and admins create or edit a series; editing the series changes only dates still to come; each date takes its own RSVPs and shows places left; pictures are images only and re-encoded; a sponsor must be a business on the board |
 | UC-11 Ask before you go | Only signed-in users ask; only the group's admins answer or move an answer to the FAQ; unanswered questions are not shown to others; questions follow the post rate limit |
-| UC-12 A bike shop on the board | Businesses are claimed like groups; only the business owner edits services, locations and places; a business never appears above groups in listings; no prices or booking |
+| UC-12 A bike shop on the board | Businesses are claimed like groups and only the site admin approves; only the business's owner and admins edit it; only the owner adds or removes admins; a business admin has no rights in its linked group and the reverse; a group link needs the group owner's acceptance; no event exists without a group; a business never appears in group listings or above groups; no prices or booking |
 | UC-13 A local chapter of a national club | Only a chapter's owner links it to a national organization; the national page lists only chapters that linked themselves |
 | UC-14 What's near me? | A zip code finds results with no outside request; distance shown on each result; the *Near you* town is never stored on the server; filtered links reopen the same list |
 | UC-15 Explore destinations | Every place is reachable from the list with the map off; place pages list only that place's groups and upcoming events |

@@ -142,7 +142,7 @@ flowchart TD
   form --> repeat{Repeats?}
   repeat -->|no| extras
   repeat -->|weekly on Thursdays until 17 Dec| extras["Picture · sponsors · FAQ"]
-  extras -->|Publish| page["Event page<br/>picture · dates · sponsor logo · FAQ · RSVP · places left"]
+  extras -->|Publish| page["Event page<br/>picture · dates · details · Sponsored by logos · FAQ · RSVP · places left"]
   page --> series["Series: one event per Thursday"]
   series -->|admin edits series| edited(["Every date still to come is updated"])
 ```
@@ -170,11 +170,16 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  listed["Business page<br/>unclaimed listing"] -->|claim, site admin approves| owner["Business page: you're the owner"]
+  signin["Sign in with the business email"] --> listed["Business page<br/>unclaimed listing"]
+  listed -->|claim, site admin checks email against website| owner["Business page: you're the owner"]
   owner -->|edit| form["Business form<br/>services · activities · locations · places it operates"]
-  form --> page["Business page<br/>offers · locations · places · events"]
-  page -->|post an event| event["Event hosted by the business<br/>at one of its locations"]
-  sponsor["A group's event (UC-10)"] -->|admin adds sponsor| page
+  owner -->|Admins| admins["Add staff by their own accounts"]
+  owner -->|Start a group, link it| group["Business's group<br/>its own owner and admins"]
+  group -->|Post an event| event["Event hosted by the group<br/>at one of the shops"]
+  form --> page["Business page<br/>offers · locations · places · group and its events · events it sponsors"]
+  event --> page
+  sponsor["Another group's event (UC-10)"] -->|admin adds sponsor| sponsored["Event page: Sponsored by logos<br/>below the details"]
+  sponsored --> page
   page --> done(["Found by people looking for rentals, repairs or guides near a place"])
 ```
 
