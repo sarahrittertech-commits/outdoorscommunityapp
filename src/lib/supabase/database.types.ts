@@ -113,6 +113,7 @@ export type Database = {
           search: unknown;
           is_unclaimed: boolean;
           source_url: string | null;
+          affinity_tags: string[];
         };
         Insert: {
           id?: string;
@@ -133,6 +134,7 @@ export type Database = {
           updated_at?: string;
           is_unclaimed?: boolean;
           source_url?: string | null;
+          affinity_tags?: string[];
         };
         Update: {
           id?: string;
@@ -153,6 +155,7 @@ export type Database = {
           updated_at?: string;
           is_unclaimed?: boolean;
           source_url?: string | null;
+          affinity_tags?: string[];
         };
         Relationships: [
           Fk<"groups_subcategory_id_fkey", "subcategory_id", "subcategories">,
@@ -540,6 +543,7 @@ export type Database = {
           search: unknown;
           is_unclaimed: boolean | null;
           source_url: string | null;
+          affinity_tags: string[] | null;
         };
         Relationships: [];
       };
@@ -636,6 +640,24 @@ export type Database = {
         Args: { p_report_id: string; p_status: Database["public"]["Enums"]["report_status"] };
         Returns: undefined;
       };
+      admin_candidates: {
+        Args: never;
+        Returns: {
+          id: string;
+          name: string;
+          subcategory_name: string;
+          area: string;
+          description: string;
+          source_url: string;
+          affinity_tags: string[];
+          out_of_region: boolean;
+          upcoming_events: number;
+          found_at: string;
+        }[];
+      };
+      admin_candidate_counts: { Args: never; Returns: { kind: string; kept: number }[] };
+      list_candidate: { Args: { p_candidate_id: string }; Returns: string };
+      skip_candidate: { Args: { p_candidate_id: string }; Returns: undefined };
       approve_claim: { Args: { p_claim_id: string }; Returns: undefined };
       decline_claim: { Args: { p_claim_id: string }; Returns: undefined };
       suspend_user: { Args: { p_user_id: string; p_reason: string }; Returns: undefined };

@@ -1,12 +1,14 @@
 import Link from "next/link";
 
 import { ActivityIcon } from "@/components/ActivityIcon";
+import { AffinityTags } from "@/components/AffinityTags";
 import { site } from "@/config/site";
 import type { Views } from "@/lib/supabase/database.types";
 import { formatShortDate } from "@/lib/time";
 
 type GroupListing = Pick<Views<"group_listings">, "slug" | "name" | "area" | "member_count" | "next_event_at" | "join_policy"> & {
   is_unclaimed?: boolean | null;
+  affinity_tags?: string[] | null;
 };
 type EventListing = Pick<
   Views<"event_listings">,
@@ -25,6 +27,7 @@ export function GroupList({ groups }: { groups: GroupListing[] }) {
               {g.name}
             </Link>{" "}
             <span className="text-sm text-muted">({g.area})</span>
+            <AffinityTags tags={g.affinity_tags} className="ml-2 align-middle" />
           </span>
           <span className="text-sm text-muted">
             {g.is_unclaimed ? "unclaimed listing" : `${g.member_count} ${g.member_count === 1 ? "member" : "members"}`} ·{" "}

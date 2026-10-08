@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ActivityIcon } from "@/components/ActivityIcon";
+import { AffinityTags } from "@/components/AffinityTags";
 import { pageFrom, Pagination } from "@/components/Pagination";
 import { site } from "@/config/site";
 import { createClient } from "@/lib/supabase/server";
@@ -25,7 +26,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
   const supabase = await createClient();
   let query = supabase
     .from("group_listings")
-    .select("slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed", { count: "exact" })
+    .select("slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags", { count: "exact" })
     .eq("status", "active")
     .order("name")
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
@@ -98,6 +99,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
                       {g.category_slug && <ActivityIcon slug={g.category_slug} className="h-4 w-4" />}
                       {g.subcategory_name}
                     </span>
+                    <AffinityTags tags={g.affinity_tags} className="ml-2 align-middle" />
                     {g.description && <p className="m-0 mt-1 line-clamp-2 max-w-prose text-sm text-muted">{g.description}</p>}
                     <p className="m-0 text-sm text-muted sm:hidden">{g.area}</p>
                   </td>

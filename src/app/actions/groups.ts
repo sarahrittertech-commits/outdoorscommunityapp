@@ -4,14 +4,15 @@ import { site } from "@/config/site";
 import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
 import { slugify, slugWithSuffix } from "@/lib/slug";
-import { formFields, groupSchema, idSchema } from "@/lib/validation";
+import { affinityTagsSchema, formFields, groupSchema, idSchema } from "@/lib/validation";
 
 /** FR-GR-1. The database makes the creator the owner. */
 export async function createGroup(formData: FormData) {
   const back = "/groups/new";
   const { viewer, supabase } = await actingUser(back);
   const parsed = groupSchema.safeParse(formFields(formData));
-  if (!parsed.success) fail(back, "invalid");
+  const tags = affinityTagsSchema.safeParse(formData.getAll("affinityTags"));
+  if (!parsed.success || !tags.success) fail(back, "invalid");
   const group = parsed.data;
 
   const { data: region } = await supabase.from("regions").select("id").eq("slug", site.defaultRegionSlug).single();
@@ -31,6 +32,7 @@ export async function createGroup(formData: FormData) {
       join_policy: group.joinPolicy,
       join_question: group.joinPolicy === "approval" ? group.joinQuestion : null,
       discussions_enabled: group.discussionsEnabled,
+      affinity_tags: tags.data,
       created_by: viewer.id,
     });
     if (!error) succeed(`/g/${slug}`, "group_created");
@@ -44,7 +46,8 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
   const back = `/g/${slug}/edit`;
   const { supabase } = await actingUser(back);
   const parsed = groupSchema.safeParse(formFields(formData));
-  if (!idSchema.safeParse(groupId).success || !parsed.success) fail(back, "invalid");
+  const tags = affinityTagsSchema.safeParse(formData.getAll("affinityTags"));
+  if (!idSchema.safeParse(groupId).success || !parsed.success || !tags.success) fail(back, "invalid");
   const group = parsed.data;
 
   const { data, error } = await supabase
@@ -58,6 +61,7 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
       join_policy: group.joinPolicy,
       join_question: group.joinPolicy === "approval" ? group.joinQuestion : null,
       discussions_enabled: group.discussionsEnabled,
+      affinity_tags: tags.data,
     })
     .eq("id", groupId)
     .select("id");

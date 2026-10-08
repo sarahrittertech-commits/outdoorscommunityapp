@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { listCandidate, skipCandidate } from "@/app/actions/candidates";
 import { approveClaim, declineClaim } from "@/app/actions/claims";
 import { removeGroup, resolveReport, suspendUser, unsuspendUser } from "@/app/actions/moderation";
+import { AffinityTags } from "@/components/AffinityTags";
 import { Notice } from "@/components/Notice";
 import { ReportTarget } from "@/components/ReportTarget";
 import { site } from "@/config/site";
@@ -19,7 +21,7 @@ export default async function AdminPage({ searchParams }: Props) {
   await requireSiteAdmin();
   const supabase = await createClient();
 
-  const [{ data: reports }, { data: log }, { data: suspended }, { data: claims }] = await Promise.all([
+  const [{ data: reports }, { data: log }, { data: suspended }, { data: claims }, { data: candidates }, { data: kept }] = await Promise.all([
     supabase
       .from("reports")
       .select("id, target_type, target_id, reason, note, group_id, created_at, groups(slug, name)")
@@ -38,6 +40,8 @@ export default async function AdminPage({ searchParams }: Props) {
       .eq("status", "pending")
       .order("created_at")
       .limit(100),
+    supabase.rpc("admin_candidates"),
+    supabase.rpc("admin_candidate_counts"),
   ]);
 
   const tz = site.defaultTimezone;
@@ -121,6 +125,44 @@ export default async function AdminPage({ searchParams }: Props) {
         ))}
         {!claims?.length && <li className="py-2 text-muted">No claims waiting.</li>}
       </ul>
+
+      <h2>Candidates ({candidates?.length ?? 0})</h2>
+      <p className="mt-1 text-sm text-muted">
+        Groups the weekly research agent found, oldest first. Check each against its source page. <em>List it</em> puts it on the board as
+        an unclaimed listing with its upcoming events; <em>Skip</em> means it won&apos;t be suggested again.
+      </p>
+      <ul className="mt-2 divide-y divide-rule border-y border-rule">
+        {candidates?.map((c) => (
+          <li key={c.id} className="py-3">
+            <p>
+              <strong>{c.name}</strong> <span className="text-sm text-muted">· {c.subcategory_name} · {c.area}</span>
+              <AffinityTags tags={c.affinity_tags} className="ml-2 align-middle" />
+              {c.out_of_region && <span className="tag ml-2">outside the region</span>}
+            </p>
+            <p className="mt-1 text-sm">{c.description}</p>
+            <p className="mt-1 text-sm text-muted">
+              <a href={c.source_url} rel="nofollow noopener">
+                {c.source_url}
+              </a>{" "}
+              · {c.upcoming_events} upcoming {c.upcoming_events === 1 ? "event" : "events"} · found {formatPostDate(c.found_at, tz)}
+            </p>
+            <div className="mt-2 flex flex-wrap gap-3 text-sm">
+              <form action={listCandidate.bind(null, c.id)}>
+                <button className="button">List it</button>
+              </form>
+              <form action={skipCandidate.bind(null, c.id)}>
+                <button className="button button-plain">Skip</button>
+              </form>
+            </div>
+          </li>
+        ))}
+        {!candidates?.length && <li className="py-2 text-muted">No new candidates.</li>}
+      </ul>
+      {Boolean(kept?.length) && (
+        <p className="mt-2 text-sm text-muted">
+          Kept in the research area for later: {kept!.map((k) => `${k.kept} ${k.kept === 1 ? k.kind : k.kind === "business" ? "businesses" : `${k.kind}s`}`).join(", ")}.
+        </p>
+      )}
 
       <h2>Suspended accounts ({suspended?.length ?? 0})</h2>
       <ul className="mt-2">
