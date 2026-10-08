@@ -10,13 +10,27 @@ Requirements: FR-RS-1 to FR-RS-9 in `docs/functional-requirements.md`.
 ## What you are allowed to do
 
 - Search the public web and read public pages that allow it.
-- Read the board's database (the Supabase project named in your prompt).
-- Write to the database **only** by calling
-  `select research.add_candidate('<json>'::jsonb);`, one call per find.
+- Call the board's research intake, and nothing else, to read what the
+  board already knows and to add candidates. You have no other way into
+  the database, and need none.
+
+The intake is a Supabase Edge Function. Every call is a POST with the
+token from the `RESEARCH_AGENT_TOKEN` environment variable:
+
+```bash
+curl -sS https://rxszqxwpgbrdytbkyxwp.supabase.co/functions/v1/research-intake \
+  -H "Authorization: Bearer $RESEARCH_AGENT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"action": "known"}'
+```
+
+Never print, echo or save the token. If `RESEARCH_AGENT_TOKEN` is empty or
+the intake answers `401`, stop and say so in your summary.
 
 ## What you must never do
 
-- Run any other insert, update, delete or schema change, on any table.
+- Try to reach the database any other way (a connector, SQL, the REST
+  API), even if a tool for it is available.
 - Sign in to Facebook, Meetup, Eventbrite or any other site, or read pages
   that need a sign-in. Facebook groups and Meetup or Eventbrite pages are
   fine only when a search result leads to a page anyone can read.
@@ -29,16 +43,10 @@ Requirements: FR-RS-1 to FR-RS-9 in `docs/functional-requirements.md`.
 ## Steps
 
 1. **Read what the board already knows**, so you don't search for it again:
-
-   ```sql
-   select c.slug as category, s.slug as subcategory, s.name
-   from public.subcategories s join public.categories c on c.id = s.category_id
-   order by c.sort_order, s.sort_order;
-
-   select lower(name) from research.candidates
-   union select lower(name) from research.organizations
-   union select lower(name) from public.groups;
-   ```
+   call the intake with `{"action": "known"}`. It answers with
+   `subcategories` (category slug, subcategory slug and name, in order) and
+   `names`: every candidate, research organization and group name the board
+   has, in lower case.
 
 2. **Pick this week's activities.** Search a third of the subcategories each
    week, in order, so every activity is covered every three weeks. Use the
@@ -77,7 +85,9 @@ Requirements: FR-RS-1 to FR-RS-9 in `docs/functional-requirements.md`.
    - `business`: a shop, outfitter, rental, brewery or other business.
    - `venue`: a place events happen (a park, a gym, a campground).
 
-5. **Save it** with `research.add_candidate`. The JSON:
+5. **Save it** by calling the intake with
+   `{"action": "add", "candidate": <the find>}`, one call per find. The
+   find:
 
    ```json
    {
@@ -115,9 +125,11 @@ Requirements: FR-RS-1 to FR-RS-9 in `docs/functional-requirements.md`.
      today on. Leave `ends_at` out if no end time is given. Times in the
      group's own time zone, with the offset.
 
-   The function answers `added`, `updated`, `events_added` or `duplicate`.
-   A duplicate is not an error: the board already knows it, or the site
-   admin skipped it.
+   The intake answers `{"result": ...}` with `added`, `updated`,
+   `events_added` or `duplicate`. A duplicate is not an error: the board
+   already knows it, or the site admin skipped it. A `422` means the
+   database rejected a field; its `detail` says which. Fix it and try once
+   more, or count it as failed.
 
 6. **Finish with a short summary** in the session: the week's activities,
    how many searches you ran, and how many finds came back added, updated,

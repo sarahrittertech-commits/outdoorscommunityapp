@@ -159,7 +159,7 @@ other, with affinity tags.)
 | FR-RS-5 | A *Candidates* section on the site admin page lists new group candidates, oldest first, each with its source link, activity, area, affinity tags, out-of-region flag and number of upcoming events, and counts the guides, businesses and venues kept for later. | Should | Only the site admin can see it; the database refuses everyone else. |
 | FR-RS-6 | *List it* turns a group candidate into an unclaimed listing (FR-GR-9) with its upcoming events and affinity tags, and marks the candidate listed. *Skip* marks it skipped. | Should | Only the site admin can do either; the database refuses everyone else. |
 | FR-RS-8 | New events found later for a group that is still an unclaimed listing are added to it automatically, because the group itself was already approved. Once a group is claimed, its owner runs its events and the agent adds none. | Should | — |
-| FR-RS-9 | The agent adds candidates only through one database function that validates every field; it is told never to change other tables. | Should | The function rejects a missing source link, a bad activity or an over-long field. |
+| FR-RS-9 | The agent adds candidates only through one database function that validates every field. It has no database access of its own: it calls an intake (an Edge Function) with a token, and the intake can only list what the board knows and add a candidate. | Should | The function rejects a missing source link, a bad activity or an over-long field. |
 
 ## Draft requirements — pending use case review
 
