@@ -137,6 +137,19 @@ details and internal notes.
    group's own page and approve or decline it on the site admin page. The
    claimant becomes the owner and the listing becomes an ordinary group.
 
+### Weekly research agent (UC-9)
+
+A scheduled Claude Code session runs once a week, follows
+`scripts/research/agent.md`, and saves what it finds as candidates through
+`research.add_candidate()`. Review them under *Candidates* on the site
+admin page: *List it* or *Skip*. To change what it looks for, edit
+`scripts/research/agent.md`; the next run picks it up.
+
+The session reads web pages, so its instructions treat page content as
+data and allow one kind of write only. The database backs that up: the
+function validates every field, and nothing reaches the board until the
+site admin lists it.
+
 ## Operations
 
 ### Deleted accounts
