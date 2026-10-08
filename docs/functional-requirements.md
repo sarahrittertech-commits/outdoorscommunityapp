@@ -160,3 +160,80 @@ other, with affinity tags.)
 | FR-RS-6 | *List it* turns a group candidate into an unclaimed listing (FR-GR-9) with its upcoming events and affinity tags, and marks the candidate listed. *Skip* marks it skipped. | Should | Only the site admin can do either; the database refuses everyone else. |
 | FR-RS-8 | New events found later for a group that is still an unclaimed listing are added to it automatically, because the group itself was already approved. Once a group is claimed, its owner runs its events and the agent adds none. | Should | — |
 | FR-RS-9 | The agent adds candidates only through one database function that validates every field; it is told never to change other tables. | Should | The function rejects a missing source link, a bad activity or an over-long field. |
+
+## Draft requirements — pending use case review
+
+:::note Drafts, 8 October 2026
+These cover the alternative paths and edge cases for draft use cases
+UC-10 to UC-23 (most from the 8 October Magic Patterns design). None is
+built. Each moves into its area's table above, with a priority, once Sarah
+approves its use case and user flow. Priorities here are proposals.
+:::
+
+### Events — series, photos, price, sponsors, FAQ (UC-10, UC-11, UC-17, UC-22)
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-EV-11 | **Series.** An event can repeat weekly or every two weeks, on chosen days, until an end date (at most a year). Each date is its own event with its own RSVPs and places left. Editing the series offers *this date only* or *this and every later date*; past dates never change. Cancelling one date leaves the rest. | Should | Editing "this and later" changes no date that has started. |
+| FR-EV-12 | **Event photo.** One photo per event or series: JPEG, PNG or WebP, at most 5 MB, re-encoded on upload (TR-SEC-9), with required alt text. Without one, the activity's drawing shows. | Should | No original upload is ever served. |
+| FR-EV-13 | **Price.** Optional plain text up to 60 characters (*Free*, *$10 trail fee*). The board never takes payment or links to checkout on its own behalf; a link to the organizer's page is allowed in the description. | Should | — |
+| FR-EV-14 | **Sponsors.** Up to 5 per event: name, logo (same rules as photos, at most 1 MB), website link with `rel="sponsored noopener"`. Shown in a small *Sponsored by* row on the event page only: never in lists, never affecting order or search. | Should | A sponsored event lists in exactly the same place as an unsponsored one. |
+| FR-EV-15 | **RSVP approval.** Owner and admins can set an event to *Approve RSVPs*. A member's RSVP is then a request; only admins approve or decline it. Approved RSVPs count against places; requests don't. | Should | The database refuses a member setting their own RSVP to approved. |
+| FR-EV-16 | **Waitlist.** When an event with places is full, members can join the waitlist, in order. An admin moves people from the waitlist to going; there is no automatic move. Replaces FR-EV-10. | Should | Going never exceeds places, even when two admins act at once. |
+| FR-EV-17 | **Manage RSVPs page.** Lists requests, going, waitlist and declined, with approve, decline, waitlist and remove. Removing someone is logged like other moderation. | Should | Only the group's owner and admins can open it. |
+| FR-EV-18 | **Save.** A signed-in user can save any event they can see, without RSVPing. Saved events are private to that user and listed under *Saved* in My stuff and on their calendar. | Should | No other user, organizer included, can read someone's saved events. |
+| FR-EV-19 | **FAQ.** Owner and admins add up to 15 questions and answers to an event or series, in their chosen order. Plain text. | Should | — |
+| FR-EV-20 | **RSVPs open at.** An optional date and time before which RSVPs are closed. The page states it plainly ("RSVPs open Tue 14 Oct, 9:00 am"); no ticking countdown. | Should | The database refuses an RSVP before the opening time. |
+| FR-EV-21 | **Ask a question.** A signed-in user (member or not) can ask the event's organizers a question, up to 1,000 characters, under the post rate limit. Only the asker and the group's admins see it until it's answered. | Should | A third user sees no unanswered question from anyone else. |
+| FR-EV-22 | **Answer and add to FAQ.** Admins answer a question privately, or answer and add it to the FAQ (with the asker's name removed). | Should | — |
+
+### Location, distance and destinations (UC-14, UC-15)
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-BR-12 | **Location search.** Search and the Events and Communities pages take a town or a US zip code, matched against a built-in list of places with coordinates. No device location is ever requested (TR-PRIV-1). An unknown place says so and suggests nearby matches. | Should | Typing a zip code finds results without any request to an outside service. |
+| FR-BR-13 | **Distance.** *Within 10, 25, 50 or 100 miles*, measured from the chosen place to each group's area and each event's location, as the crow flies, and shown on each result ("12 mi"). Items without a known location are listed after, marked "distance unknown". | Should | — |
+| FR-BR-14 | **Near you.** The home page's *Near you* row shows the next upcoming events within 50 miles of a chosen town, which the visitor can change. The choice is remembered in the browser only, never stored against an account. | Should | Clearing the browser's storage resets it; nothing about location is saved on the server. |
+| FR-BR-15 | **Shareable filters.** Every filter combination on Events and Communities is in the page address, so a copied link opens the same list. The page title states the filters ("Climbing events within 25 miles of Brevard"). | Should | — |
+| FR-BR-16 | **Places.** A list of places (crags, trailheads, put-ins, parks, a shop's storefront) with name, kind, activities, coordinates and a short description, managed by the site admin. Events can name a place; groups and businesses can list places they use. | Should | — |
+| FR-BR-17 | **Destinations map.** The home page shows places on a map with a list beside it, filterable by activity and searchable by town. The list alone gives the same information, keyboard- and screen-reader-friendly. | Could | With the map turned off, every place is still reachable from the list. |
+| FR-BR-18 | **Place page.** Shows the place, the groups that meet there and its upcoming events. | Should | — |
+
+### Members, calendar, reminders and discussions (UC-16, UC-18, UC-19, UC-23)
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-MB-10 | **Member list privacy.** The owner chooses who sees the member list: *organizers only*, *members* (default) or *anyone signed in*. The same rule applies to names on *who's going*; counts are always shown. | Should | The database returns no names the setting doesn't allow, through any route. |
+| FR-AC-9 | **Calendar.** The signed-in home page shows the user's going and saved events as a month (computer) or week (phone), switchable, filterable by group and by going or saved. Each entry links to the event. Plain pages: works without JavaScript. | Should | — |
+| FR-AC-10 | **Reminders.** A list on the signed-in home page of things that need the user, newest first: join and RSVP requests for groups they run, events they're going to in the next 48 hours, saved events nearly full or newly open for RSVPs, new threads in their groups since their last visit, and message requests and unread messages. Items drop off when handled or past. No email or push unless the user turns it on (FR-NT). | Should | The list contains only items that need this user; nothing is ranked or suggested. |
+| FR-DS-9 | **Reply to a reply.** A reply can answer another reply. It shows indented under it, one level only: replies to a nested reply join the same level and name who they answer. Posts by owners and admins carry a role label. Changes FR-DS-2. | Should | No thread ever shows more than one level of indent. |
+
+### Group photos and chapters (UC-13, UC-21)
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-GR-12 | **Photos tab.** Members upload up to 10 photos at a time (image rules as FR-EV-12, required alt text). The gallery shows newest first; any photo opens full size. Visible to members only, unless the owner makes it public. | Could | A non-member gets no photo from the database or storage when the gallery is members-only. |
+| FR-GR-13 | **Removing photos.** The uploader can delete their own photos; owner and admins can remove any, logged as moderation. Photos can be reported (FR-MD). | Could | — |
+| FR-GR-14 | **Group photo.** The owner picks the group's cover photo from the gallery or uploads one; otherwise the activity's drawing shows. | Could | — |
+| FR-GR-15 | **Chapters.** A group's owner can mark it as a chapter of a national organization from a site-admin-managed list. The organization's page lists its chapters A to Z. | Could | Only the group's owner can link it; the organization can't claim groups. |
+
+### Businesses (UC-12)
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-BZ-1 | **Business pages.** Name, description, services (plain list), activities, locations (FR-BR-16 places with role *its location*) and places it operates (role *operates at*), and a website link. No prices, booking or payments. | Could | — |
+| FR-BZ-2 | **Listing and claiming.** Businesses come from the research agent's kept candidates, listed by the site admin, and are claimed like groups (FR-GR-10). | Could | — |
+| FR-BZ-3 | **Business events.** A business owner can post events at its own locations, marked as hosted by the business. | Could | — |
+| FR-BZ-4 | **As sponsors.** A sponsor on an event (FR-EV-14) can link to a business page. | Could | — |
+| FR-BZ-5 | **Never above groups.** Businesses have their own directory page; they don't appear in group listings and never affect the order of anything. | Could | — |
+
+### Direct messages (UC-20, ADR-0006)
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-DM-1 | **Requests first.** A user's first message to someone arrives as a request. Until it's accepted, the sender can't send another. | Should | The database refuses a second message to someone who hasn't accepted. |
+| FR-DM-2 | **Accept, decline, block.** Declining stops that sender messaging again; blocking also hides each from the other in messages. Either side can block at any time. | Should | A blocked user's message is refused by the database. |
+| FR-DM-3 | **Inbox.** Conversations newest first, with a *Requests* tab. Plain pages, updated on load; no typing indicators, read receipts or online status. | Should | — |
+| FR-DM-4 | **Unread count.** The header shows the number of conversations with unread messages, and nothing else. | Should | — |
+| FR-DM-5 | **Report.** Any message can be reported to the site admin with the conversation attached; reports follow FR-MD. | Should | — |
+| FR-DM-6 | **Limits.** Plain text only, 2,000 characters; at most 10 new requests a day per user; suspended users can't message. Only the two people in a conversation can read it. | Should | A third user, including group admins, reads nothing; the site admin sees only reported conversations. |

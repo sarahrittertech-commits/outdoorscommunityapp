@@ -189,3 +189,133 @@ flowchart TD
   national -->|picks the nearby chapter| chapter
   chapter --> events(["Chapter's events, RSVP as usual"])
 ```
+
+## UC-14 — What's near me?
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  home["Home<br/>Activity · Location · Distance"] -->|Hendersonville, 25 miles| results["Results<br/>events soonest first · groups A–Z · distance on each"]
+  results -->|Events page, same filters| events["Events: filtered list"]
+  events -->|copies the link| shared(["Friend opens the same filtered list"])
+  home --> near["Near you row<br/>next events near the chosen town"]
+  near -->|Change| town["Pick another town or zip"] --> near
+```
+
+## UC-15 — Explore destinations
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  home["Home: Explore destinations<br/>map and list"] -->|Climbing| filtered["Map and list: climbing places"]
+  filtered -->|searches Brevard| moved["Map centred on Brevard"]
+  moved -->|opens Looking Glass Rock| place["Place page<br/>description · groups that meet there · upcoming events"]
+  place --> event(["Opens an event or a group"])
+```
+
+## UC-16 — Keep our member list private
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  settings["Group settings (owner)"] --> choice{Who can see the member list?}
+  choice -->|Organizers only| saved["Settings saved"]
+  choice -->|Members · default| saved
+  choice -->|Anyone signed in| saved
+  saved --> members["Members tab: shows what the setting allows"]
+  saved --> event(["Event page: who's going shows a count, names only if allowed"])
+```
+
+## UC-17 — Approve who comes
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  form["New event form<br/>Approve RSVPs on · 12 places"] -->|Publish| event["Event page: Ask to come"]
+  event -->|members ask| manage["Manage RSVPs<br/>requests · going · waitlist · declined"]
+  manage -->|approve| going["Going"]
+  manage -->|decline| declined["Declined"]
+  manage -->|waitlist| waitlist["Waitlist"]
+  going -->|someone cancels| opening{Place opens}
+  opening -->|admin moves them| fromwait(["Waitlisted rider is going"])
+```
+
+## UC-18 — My calendar
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  home["Signed-in home: calendar<br/>month on computer · week on phone"] -->|Week / Month| home
+  home -->|filter: one group, going only| filtered["Calendar: filtered"]
+  filtered -->|opens Thursday's ride| event["Event page"]
+  event -->|Add to calendar| ics(["Calendar file downloaded"])
+```
+
+## UC-19 — Reply to a reply
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  thread["Thread page"] -->|Reply under a reply| form["Reply form, quoting who it answers"]
+  form -->|Post| nested["Reply shown indented under the one it answers"]
+  nested --> deeper{Reply to that reply?}
+  deeper -->|yes| same(["Shown at the same indent: one level only"])
+```
+
+## UC-20 — Message another member
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  profile["Member's profile"] -->|Message| first["New message form"]
+  first -->|Send| request["Their inbox: Requests"]
+  request --> decide{Accept?}
+  decide -->|Accept| inbox["Conversation in both inboxes<br/>unread count in header"]
+  decide -->|Decline| declined(["Sender can't message again"])
+  decide -->|Block| blocked(["Blocked; can also report"])
+  inbox -->|replies, page by page| inbox
+```
+
+## UC-21 — Share trip photos
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  group["Group page: Photos tab"] -->|Upload| upload["Choose up to 10 photos"]
+  upload -->|Post| gallery["Gallery, newest first"]
+  gallery -->|open one| full["Photo full size"]
+  full -->|author removes| removed(["Gone from the gallery"])
+  full -->|organizer removes| modded(["Removed, logged as moderation"])
+```
+
+## UC-22 — Save it for later
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  event["Event page<br/>RSVPs open Tue 14 Oct, 9:00 am"] -->|Save| saved["My stuff: Saved"]
+  saved --> opens{RSVPs open}
+  opens --> reminder["Reminders: RSVPs are open"]
+  reminder -->|opens event| rsvp(["RSVPs, or unsaves"])
+```
+
+## UC-23 — What needs my attention
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  home["Signed-in home: Reminders<br/>join and RSVP requests · tomorrow · nearly full · RSVPs open · new thread · new message"] -->|opens an item| item["The page that needs them"]
+  item -->|handled| home
+  home --> mine["My communities<br/>next event · latest thread · manage links"]
+  mine --> done(["Nothing left needing them"])
+```

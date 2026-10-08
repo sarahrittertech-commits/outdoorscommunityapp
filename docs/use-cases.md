@@ -23,7 +23,8 @@ Each use case maps to requirements in
 
 No build starts before step 3. UC-1 to UC-6 were written before this
 process; UC-7 and UC-8 were written after the features were built, to
-close that gap.
+close that gap. UC-14 to UC-23 come from the 8 October Magic Patterns
+design.
 
 ## UC-1 — What's out there?
 
@@ -245,9 +246,11 @@ December and wants it on the board.
    the end date and time (an event can run over several days), the meeting
    place and how many places there are.
 3. Sets it to repeat: weekly, on Thursdays, until 17 December 2026.
-4. Adds a picture.
-5. Adds the shop that sponsors the rides (a business on the board,
-   UC-12), so its logo shows on the event.
+4. Adds a picture, and the price if there is one (*free*, or *$10 trail
+   fee*). The board shows the price; it never takes payment.
+5. Adds the shop that sponsors the rides: its name, logo and website
+   (a business on the board, UC-12, when it has a page), so its logo shows
+   on the event and links to the shop.
 6. Adds a few questions and answers (*Do I need lights? Is there a no-drop
    pace?*).
 7. Publishes. Each Thursday is its own event in the series, and the page
@@ -258,9 +261,12 @@ December and wants it on the board.
 
 **Already built:** steps 1 and 2, RSVP, places left, events belonging to a
 group, editing by group admins only.
-**New:** repeating series, pictures, sponsors, FAQ.
+**New:** repeating series, pictures, price, sponsors, FAQ. Optional
+*signup opens* time: until then the page says "RSVPs open Tue 14 Oct,
+9:00 am" and the RSVP button is closed.
 
-**Requirements:** to be written after review.
+**Requirements:** to be written after review (drafts FR-EV-11 to FR-EV-14,
+FR-EV-19, FR-EV-20).
 
 **Succeeds when:** a season of rides is posted in one go, people RSVP to
 the Thursday they're coming, and one edit changes every date still to come.
@@ -282,7 +288,7 @@ is fine.
 4. The admin ticks *Add to the FAQ*, so the next person finds the answer.
 5. The newcomer sees the answer on the event page and RSVPs.
 
-**Requirements:** to be written after review.
+**Requirements:** to be written after review (drafts FR-EV-21, FR-EV-22).
 
 **Succeeds when:** a newcomer gets an answer from the people running the
 event without having to join the group first.
@@ -313,7 +319,7 @@ fly-tying demonstrations; it sponsors a local group's paddles.
 6. Its page shows what it offers, its locations, the places it operates,
    its own events, and the events it sponsors.
 
-**Requirements:** to be written after review.
+**Requirements:** to be written after review (drafts FR-BZ-1 to FR-BZ-5).
 
 **Succeeds when:** a person looking for canoe rental or a climbing guide
 near a place finds the business, and its listing never outranks or
@@ -337,10 +343,235 @@ chapter runs local events.
 4. A visitor on the national organization's page sees every chapter, and
    picks the one near them.
 
-**Requirements:** to be written after review.
+**Requirements:** to be written after review (draft FR-GR-15).
 
 **Succeeds when:** someone who knows the national club finds their local
 chapter in one click.
+
+## UC-14 — What's near me?
+
+> **Draft, awaiting review.** From the 8 October design (bucket 2).
+
+**Actor:** The newcomer
+
+**Trigger:** Just moved to Hendersonville and wants something to do within
+half an hour.
+
+**Flow:**
+
+1. On the home page, picks an activity, types *Hendersonville* (or a zip
+   code) in *Location* and picks *Within 25 miles*.
+2. Sees the results: events soonest first and groups A to Z, each with its
+   distance.
+3. Narrows the Events page the same way, then shares the link with a
+   friend; the link opens the same filtered list.
+4. Back on the home page, the *Near you* row now shows the next few events
+   near Hendersonville, and *Change* switches the town.
+
+**Requirements:** to be written after review (drafts FR-BR-12 to FR-BR-15).
+
+**Succeeds when:** someone finds what's within reach of the town they
+choose, without the board ever asking for their device's location.
+
+## UC-15 — Explore destinations
+
+> **Draft, awaiting review.** Needs the places list proposed in UC-12.
+
+**Actor:** The regular
+
+**Trigger:** Wants a new place to climb this season.
+
+**Flow:**
+
+1. On the home page, opens *Explore destinations*: a map with a list
+   beside it.
+2. Picks *Climbing*. The map and list show climbing places: Looking Glass
+   Rock, Rumbling Bald, Linville Gorge.
+3. Searches *Brevard* to move the map there.
+4. Opens Looking Glass Rock: a short description, the groups that meet
+   there and the upcoming events held there.
+
+**Requirements:** to be written after review (drafts FR-BR-16 to FR-BR-18).
+
+**Succeeds when:** a place leads to the people and events there, and the
+list works on its own for anyone who can't use the map.
+
+## UC-16 — Keep our member list private
+
+> **Draft, awaiting review.**
+
+**Actor:** A group owner
+
+**Trigger:** A women's riding group wants members' names hidden from
+non-members.
+
+**Flow:**
+
+1. Opens the group's settings and finds *Who can see the member list*.
+2. Chooses *Organizers only* (the other choices: *Members*, the default,
+   and *Anyone signed in*).
+3. A member now sees only the organizers on the members tab; on event
+   pages, *who's going* shows a count but no names.
+
+**Requirements:** to be written after review (draft FR-MB-10).
+
+**Succeeds when:** the choice holds everywhere names could appear, enforced
+by the database, not just hidden on the page.
+
+## UC-17 — Approve who comes
+
+> **Draft, awaiting review.**
+
+**Actor:** A group admin
+
+**Trigger:** A technical trail day has 12 places and needs riders with the
+right experience.
+
+**Flow:**
+
+1. While posting the event, turns on *Approve RSVPs* and sets 12 places.
+2. Members ask to come; each request waits.
+3. On *Manage RSVPs*, sees requests, going, waitlist and declined. Approves
+   ten, declines one and waitlists one.
+4. When someone going cancels, the admin moves the waitlisted rider to
+   going.
+
+**Requirements:** to be written after review (drafts FR-EV-15 to FR-EV-17,
+replacing FR-EV-10).
+
+**Succeeds when:** the organizer decides who comes, and the place count is
+always right.
+
+## UC-18 — My calendar
+
+> **Draft, awaiting review.**
+
+**Actor:** The regular
+
+**Trigger:** Signs in on Monday to see the week ahead.
+
+**Flow:**
+
+1. The signed-in home page shows a calendar: the month on a computer, one
+   week on a phone, with a *Week / Month* switch.
+2. It shows the events they're going to and the ones they saved, and can
+   be filtered to one group or to *going only*.
+3. Opens Thursday's ride from the calendar.
+
+**Requirements:** to be written after review (draft FR-AC-9).
+
+**Succeeds when:** a member sees their outdoor week at a glance and can
+still add any event to their own calendar (FR-EV-7).
+
+## UC-19 — Reply to a reply
+
+> **Draft, awaiting review.** Changes FR-DS-2 (flat replies).
+
+**Actor:** The regular
+
+**Trigger:** In a carpool thread, wants to answer one person's question,
+not the whole thread.
+
+**Flow:**
+
+1. Chooses *Reply* under that person's reply.
+2. Writes the answer; it appears indented under the reply it answers.
+3. Anyone reading the thread sees the exchange together. Organizers' posts
+   carry an *Organizer* or *Admin* label.
+
+**Requirements:** to be written after review (draft FR-DS-9).
+
+**Succeeds when:** side conversations stay readable without becoming
+endless nesting.
+
+## UC-20 — Message another member
+
+> **Draft, awaiting review.** Brought into scope on 8 October 2026; see
+> the PRD's decisions and [ADR-0006](./architecture/adr-0006-direct-messages).
+
+**Actor:** The regular, then another member
+
+**Trigger:** Wants to ask the ride leader privately about borrowing a
+bike rack.
+
+**Flow:**
+
+1. From the ride leader's profile, chooses *Message*.
+2. Writes a first message. It arrives as a *request*.
+3. The ride leader sees it under *Requests* and chooses *Accept* (or
+   *Decline*, or *Block*).
+4. Once accepted, the two write back and forth in their inbox. The header
+   shows how many conversations have unread messages.
+
+**Requirements:** to be written after review (drafts FR-DM-1 to FR-DM-6).
+
+**Succeeds when:** members can arrange things privately, nobody can be
+messaged repeatedly without saying yes, and abuse can be blocked and
+reported.
+
+## UC-21 — Share trip photos
+
+> **Draft, awaiting review.** Brought into scope on 8 October 2026.
+
+**Actor:** A member
+
+**Trigger:** Back from Saturday's paddle with good photos.
+
+**Flow:**
+
+1. Opens the group's *Photos* tab and uploads three photos.
+2. Other members see them in the gallery and open one full size.
+3. The member removes one later; an organizer removes one that breaks the
+   group's rules.
+
+**Requirements:** to be written after review (drafts FR-GR-12 to FR-GR-14).
+
+**Succeeds when:** a group keeps a simple record of its trips, visible to
+members, with nothing algorithmic about it.
+
+## UC-22 — Save it for later
+
+> **Draft, awaiting review.** Brought into scope on 8 October 2026.
+
+**Actor:** The newcomer
+
+**Trigger:** Sees a clinic in November but signups haven't opened.
+
+**Flow:**
+
+1. On the event page, chooses *Save*.
+2. *My stuff* now lists it under *Saved*, separate from *Going*.
+3. The event page says when RSVPs open (UC-10). When they do, the saved
+   event appears in their reminders (UC-23).
+
+**Requirements:** to be written after review (draft FR-EV-18).
+
+**Succeeds when:** a member can keep track of an event without RSVPing,
+and nobody else can see what they saved.
+
+## UC-23 — What needs my attention
+
+> **Draft, awaiting review.** Brought into scope on 8 October 2026.
+
+**Actor:** A group organizer who is also a regular member
+
+**Trigger:** Signs in after a few days away.
+
+**Flow:**
+
+1. The signed-in home page shows *Reminders*: two join requests, one RSVP
+   request, an event they're going to tomorrow, a saved event that's nearly
+   full, a saved event whose RSVPs just opened, a new thread in their group
+   and one new message.
+2. Opens each item; handled items drop off the list.
+3. *My communities* below shows each group's next event and latest thread,
+   with management links for the groups they run.
+
+**Requirements:** to be written after review (draft FR-AC-10).
+
+**Succeeds when:** everything that needs the person is in one plain list
+when they choose to look, with no emails or phone alerts they didn't ask
+for.
 
 ---
 
