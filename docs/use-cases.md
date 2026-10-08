@@ -194,8 +194,9 @@ plus one admin review, and nobody else can take it over.
 ## UC-9 — Keep the listings fresh
 
 > **Approved 8 October 2026,** with these decisions:
-> - The agent is a weekly scheduled Claude Code session that writes to the
->   database directly. Nothing new to host.
+> - The agent is a weekly scheduled Claude Code session. Changed 8 October
+>   2026: it has no database access of its own and saves finds through a
+>   small Edge Function that can only add candidates.
 > - Review happens in a *Candidates* section on the admin page, with
 >   *List it* and *Skip*.
 > - Sources: public web search and public pages that allow reading. No

@@ -95,8 +95,8 @@ export default async function AdminPage({ searchParams }: Props) {
 
       <h2>Claim requests ({claims?.length ?? 0})</h2>
       <p className="mt-1 text-sm text-muted">
-        People asking to run an unclaimed listing. Check them against the group&apos;s own website before approving: the claimant becomes its
-        owner.
+        People asking to run an unclaimed listing, or a group whose owner deleted their account. Check them against the group&apos;s own
+        website or its members before approving: the claimant becomes its owner.
       </p>
       <ul className="mt-2 divide-y divide-rule border-y border-rule">
         {claims?.map((c) => (

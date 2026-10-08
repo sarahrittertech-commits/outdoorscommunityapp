@@ -42,7 +42,8 @@ export default async function ProfilePage({ searchParams }: Props) {
         <h2 className="mt-0">Delete account</h2>
         <p className="mt-1 max-w-prose text-sm text-muted">
           This removes your profile, memberships and RSVPs. Your posts stay so conversations still make sense, but they
-          will say &ldquo;deleted user&rdquo;. If you own a group, transfer or archive it first.
+          will say &ldquo;deleted user&rdquo;. If you own a group, transfer it to one of its admins first; otherwise it goes
+          read-only, its upcoming events are cancelled, and someone else can ask to take it over.
         </p>
         <form action={deleteAccount}>
           <label htmlFor="confirm">

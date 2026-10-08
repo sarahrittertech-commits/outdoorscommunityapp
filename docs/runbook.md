@@ -140,15 +140,31 @@ details and internal notes.
 ### Weekly research agent (UC-9)
 
 A scheduled Claude Code session runs once a week, follows
-`scripts/research/agent.md`, and saves what it finds as candidates through
+`scripts/research/agent.md`, and saves what it finds as candidates by
+calling the `research-intake` Edge Function, which runs
 `research.add_candidate()`. Review them under *Candidates* on the site
 admin page: *List it* or *Skip*. To change what it looks for, edit
 `scripts/research/agent.md`; the next run picks it up.
 
-The session reads web pages, so its instructions treat page content as
-data and allow one kind of write only. The database backs that up: the
-function validates every field, and nothing reaches the board until the
-site admin lists it.
+The session reads web pages, so it has no database access of its own. It
+holds one token (`RESEARCH_AGENT_TOKEN`) that opens the intake, and the
+intake can only list what the board knows and add a candidate. The
+routine must not have the Supabase connector attached.
+
+Setting it up or changing the token:
+
+1. Make a random token of at least 32 characters (a password manager's
+   generator, or `openssl rand -hex 32`).
+2. Supabase dashboard → Edge Functions → Secrets: set
+   `RESEARCH_AGENT_TOKEN` to it.
+3. claude.ai → Code → the cloud environment the routine uses → Edit:
+   add the environment variable `RESEARCH_AGENT_TOKEN` with the same value,
+   and allow `rxszqxwpgbrdytbkyxwp.supabase.co` under network access.
+4. Deploy the function: `npx supabase functions deploy research-intake`
+   (its JWT check is off in `supabase/config.toml`; it checks the token).
+
+If the token leaks, change it in both places; the old one stops working at
+once.
 
 ## Operations
 
@@ -162,6 +178,12 @@ by hand from the Supabase dashboard (Authentication → Users), or:
 ```sql
 delete from auth.users where id in (select id from public.accounts where deleted_at is not null);
 ```
+
+When an owner deletes their account, any group they still own is archived,
+its upcoming events are cancelled, and it shows *This group needs an
+organizer* with a claim form. Claims on it arrive under *Claim requests* on
+the site admin page; approving one makes the claimant the owner and the
+group active again. Restoring it any other way is refused.
 
 ### Restoring from backup
 

@@ -1,6 +1,6 @@
 -- Group lifecycle, account deletion and cover images: FR-GR-*, FR-AC-6.
 begin;
-select plan(20);
+select plan(34);
 select tests.build_fixture();
 
 -- Creating --------------------------------------------------------------------
@@ -16,6 +16,16 @@ select is(
   'A new group is always active, whatever the client sends'
 );
 select is(public.is_group_owner((select id from public.groups where slug = 'new-group')), true, 'FR-GR-1 the creator becomes the owner');
+select lives_ok(
+  format($$ insert into public.groups (slug, name, description, subcategory_id, region_id, area, created_by, needs_owner)
+            select 'orphan', 'Orphan Group', 'Pretending to need an owner.', s.id, r.id, 'Brevard', %L, true
+            from public.subcategories s, public.regions r limit 1 $$, tests.uid('outsider')),
+  'A group can be created with needs_owner sent'
+);
+select is(
+  (select needs_owner from public.groups where slug = 'orphan'), false,
+  'A new group never starts without an owner, whatever the client sends'
+);
 select throws_ok(
   format($$ insert into public.groups (slug, name, description, subcategory_id, region_id, area, created_by)
             select 'framed', 'Framed Group', 'Made in someone else''s name.', s.id, r.id, 'Brevard', %L
@@ -85,14 +95,75 @@ select tests.as_anon();
 select is((select count(*)::int from public.groups where id = tests.id('g2')), 0, 'A removed group disappears for visitors');
 
 -- Account deletion (FR-AC-6) --------------------------------------------------
-select tests.as('owner');
-select throws_ok($$ select public.delete_my_account() $$, 'P0001', null, 'FR-AC-6 owners must transfer or archive first');
 select tests.as('member');
 select lives_ok($$ select public.delete_my_account() $$, 'FR-AC-6 members can delete their account');
 select tests.as_admin();
 select is(
   (select count(*)::int from public.group_members where user_id = tests.uid('member')), 0,
   'FR-AC-6 deleting an account removes its memberships'
+);
+
+-- An owner who deletes their account without transferring: owner owns g1
+-- (archived above), g3 and 'third'.
+select tests.as('owner');
+select lives_ok($$ select public.delete_my_account() $$, 'FR-AC-6 owners can delete their account without transferring');
+select tests.as_admin();
+select is(
+  (select count(*)::int from public.groups where id in (tests.id('g1'), tests.id('g3'))
+     and status = 'archived' and needs_owner), 2,
+  'FR-AC-6 their groups go inactive and need an owner'
+);
+select is(
+  (select count(*)::int from public.events where group_id = tests.id('g1') and starts_at > now() and status = 'scheduled'), 0,
+  'FR-AC-6 their groups'' upcoming events are cancelled'
+);
+select is(
+  (select count(*)::int from public.events where group_id = tests.id('g1') and starts_at < now() and status = 'scheduled'), 1,
+  'FR-AC-6 past events are left as they were'
+);
+
+select tests.as('admin');
+select lives_ok(
+  format($$ insert into public.group_claims (group_id, user_id, note) values (%L, %L, 'I was an admin of this group.') $$,
+         tests.id('g1'), tests.uid('admin')),
+  'FR-GR-10 anyone signed in can ask to take over a group that needs an owner'
+);
+select throws_ok(
+  format($$ insert into public.group_claims (group_id, user_id, note)
+            select id, %L, 'This group is fine as it is.' from public.groups where slug = 'new-group' $$, tests.uid('admin')),
+  '42501', null, 'Ordinary groups cannot be claimed'
+);
+select tests.as('siteadmin');
+select throws_ok(
+  format($$ select public.restore_group(%L) $$, tests.id('g1')),
+  'P0001', null, 'A group that needs an owner comes back only through a claim'
+);
+select lives_ok(
+  format($$ select public.approve_claim((select id from public.group_claims where group_id = %L and status = 'pending')) $$, tests.id('g1')),
+  'FR-GR-10 the site admin approves the claim'
+);
+select tests.as_admin();
+select is(
+  (select status::text || ' ' || needs_owner::text from public.groups where id = tests.id('g1')), 'active false',
+  'FR-GR-10 the group is active again'
+);
+select is(
+  (select role::text from public.group_members where group_id = tests.id('g1') and user_id = tests.uid('admin')), 'owner',
+  'FR-GR-10 the claimant owns the group'
+);
+
+-- The moderation log keeps its rows when the person in it is deleted (PT-19).
+select lives_ok(
+  format($$ delete from auth.users where id = %L $$, tests.uid('owner')),
+  'An organizer who appears in the moderation log can be deleted'
+);
+select is(
+  (select count(*)::int from public.moderation_actions where action = 'archive_group' and target_id = tests.id('g1') and actor_id is null), 1,
+  'Their moderation log rows stay, without the actor'
+);
+select throws_ok(
+  $$ update public.moderation_actions set actor_id = null $$,
+  'P0001', null, 'The moderation log still cannot be edited directly'
 );
 
 select * from finish();

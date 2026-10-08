@@ -43,7 +43,7 @@ Who is allowed to do each action is defined once, in
 | FR-AC-3 | Profile: display name (required, 2–40 characters), short bio (optional, 280 characters), general area (optional). No profile photos. | Must | Display name is required at first sign-in and editable later. |
 | FR-AC-4 | A public profile page shows display name, bio and area. | Should | Reachable from any post author's name. |
 | FR-AC-5 | A user's email address is never shown to any other user, including group admins. | Must | No page or API response available to another user contains it. |
-| FR-AC-6 | A user can delete their account. Profile and memberships are removed; their posts remain as "deleted user" so threads still make sense. An owner must transfer or archive their groups first. | Must | After deletion the user cannot sign in, and their name appears nowhere. |
+| FR-AC-6 | A user can delete their account. Profile and memberships are removed; their posts remain as "deleted user" so threads still make sense. An owner can transfer a group to one of its admins first (FR-MB-6). Any group they still own goes inactive: archived (read-only, hidden from listings, still viewable), its upcoming events cancelled, members and posts kept, and open to claims (FR-GR-10). | Must | After deletion the user cannot sign in, and their name appears nowhere. |
 | FR-AC-7 | *My stuff* page: the user's groups (alphabetical) and upcoming RSVPs (by date). | Must | Shows only the signed-in user's own groups and RSVPs. |
 | FR-AC-8 | Sign in with Google. | Could | — |
 
@@ -61,7 +61,7 @@ Who is allowed to do each action is defined once, in
 | FR-GR-8 | A user's first group is held for site-admin approval before it is listed. | Could | — |
 | FR-GR-9 | **Unclaimed listings.** Real local groups can be listed from public information before their organizers join, so the board isn't empty at launch. A listing holds only a name, a neutral description, an area and a link to the organization's own website, plus upcoming events that link to the organizer's own page. Nobody runs it here, so it has no owner and nobody can join it, RSVP to its events or post in it. Listings are added by the operator in SQL, never through the app. | Must | A listing's page says it is unclaimed and links to the source; no Join or RSVP is offered and the database refuses both. |
 | FR-GR-11 | **Affinity tags.** A group can carry any of these tags: *Women*, *Youth*, *BIPOC*, *LGBTQIA+*. They show on the group page and in group lists. The owner and admins can change them on the group's edit form; listings get them from the import or the research agent. | Should | A tag outside the list is refused by the database. |
-| FR-GR-10 | **Claiming a listing.** A signed-in user can ask to claim a listing with a short note on how they're connected. The site admin checks it against the organization's website and approves (the claimant becomes owner, discussions open, other claims are declined) or declines. | Must | Only the site admin can approve; an approved claimant owns the group and it becomes an ordinary group. |
+| FR-GR-10 | **Claiming a listing.** A signed-in user can ask to claim a listing, or a group whose owner deleted their account (FR-AC-6), with a short note on how they're connected. The site admin checks it against the organization's website or the group's members and approves (the claimant becomes owner, the group is active again, a listing's discussions open, other claims are declined) or declines. A group without an owner comes back only through a claim. | Must | Only the site admin can approve; an approved claimant owns the group and it becomes an ordinary group. |
 
 ## Membership and roles — FR-MB
 
@@ -159,7 +159,7 @@ other, with affinity tags.)
 | FR-RS-5 | A *Candidates* section on the site admin page lists new group candidates, oldest first, each with its source link, activity, area, affinity tags, out-of-region flag and number of upcoming events, and counts the guides, businesses and venues kept for later. | Should | Only the site admin can see it; the database refuses everyone else. |
 | FR-RS-6 | *List it* turns a group candidate into an unclaimed listing (FR-GR-9) with its upcoming events and affinity tags, and marks the candidate listed. *Skip* marks it skipped. | Should | Only the site admin can do either; the database refuses everyone else. |
 | FR-RS-8 | New events found later for a group that is still an unclaimed listing are added to it automatically, because the group itself was already approved. Once a group is claimed, its owner runs its events and the agent adds none. | Should | — |
-| FR-RS-9 | The agent adds candidates only through one database function that validates every field; it is told never to change other tables. | Should | The function rejects a missing source link, a bad activity or an over-long field. |
+| FR-RS-9 | The agent adds candidates only through one database function that validates every field. It has no database access of its own: it calls an intake (an Edge Function) with a token, and the intake can only list what the board knows and add a candidate. | Should | The function rejects a missing source link, a bad activity or an over-long field. |
 
 ## Draft requirements — pending use case review
 
