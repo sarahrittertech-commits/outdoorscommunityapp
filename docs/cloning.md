@@ -12,7 +12,7 @@ community app**. This page is how to do that cheaply, and what it costs.
 ## The short version
 
 The codebase was built so that a second board is mostly configuration. Only
-six things are deployment-specific:
+seven things are deployment-specific:
 
 | What | Where | For the women's app |
 | --- | --- | --- |
