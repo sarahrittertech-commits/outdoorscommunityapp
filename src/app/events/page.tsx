@@ -71,44 +71,56 @@ export default async function EventsPage({ searchParams }: Props) {
 
   const current = categories?.find((c) => c.slug === category);
 
+  const filters = (where: string) => (
+    <>
+      <form action="/search" role="search">
+        <label htmlFor={`events-q-${where}`} className="mt-0">
+          keyword
+        </label>
+        <div className="flex gap-1">
+          <input id={`events-q-${where}`} name="q" type="search" placeholder="waterfall, beginner…" className="mt-1 min-w-0 flex-1 py-1 text-sm" />
+          <button className="button mt-1 px-2 py-1 text-sm">go</button>
+        </div>
+      </form>
+
+      <h2 className="filter-heading">activity</h2>
+      <ul className="mt-1 space-y-0.5">
+        <li>
+          {category ? <Link href={href({ category: undefined })}>all</Link> : <strong>all</strong>}{" "}
+          <span className="text-muted">({all?.length ?? 0})</span>
+        </li>
+        {categories?.map((c) => (
+          <li key={c.slug}>
+            {c.slug === category ? (
+              <strong>{c.name}</strong>
+            ) : (
+              <Link href={href({ category: c.slug })} prefetch={false}>
+                {c.name}
+              </Link>
+            )}{" "}
+            <span className="text-muted">({counts.get(c.slug) ?? 0})</span>
+          </li>
+        ))}
+      </ul>
+
+      <h2 className="filter-heading">when</h2>
+      <ul className="mt-1 space-y-0.5">
+        {WINDOWS.map((w) => (
+          <li key={w.days}>{w.days === days ? <strong>{w.label}</strong> : <Link href={href({ days: w.days })}>{w.label}</Link>}</li>
+        ))}
+      </ul>
+    </>
+  );
+
   return (
     <div className="grid gap-8 md:grid-cols-[14rem_1fr]">
-      <aside aria-label="Filters" className="text-sm">
-        <form action="/search" role="search">
-          <label htmlFor="events-q" className="mt-0">
-            keyword
-          </label>
-          <div className="flex gap-1">
-            <input id="events-q" name="q" type="search" placeholder="waterfall, beginner…" className="mt-1 min-w-0 flex-1 py-1 text-sm" />
-            <button className="button mt-1 px-2 py-1 text-sm">go</button>
-          </div>
-        </form>
-
-        <h2 className="mt-6 font-sans text-base font-bold text-ink">activity</h2>
-        <ul className="mt-1 space-y-0.5">
-          <li>{category ? <Link href={href({ category: undefined })}>all</Link> : <strong>all</strong>} <span className="text-muted">({all?.length ?? 0})</span></li>
-          {categories?.map((c) => (
-            <li key={c.slug}>
-              {c.slug === category ? (
-                <strong>{c.name}</strong>
-              ) : (
-                <Link href={href({ category: c.slug })} prefetch={false}>
-                  {c.name}
-                </Link>
-              )}{" "}
-              <span className="text-muted">({counts.get(c.slug) ?? 0})</span>
-            </li>
-          ))}
-        </ul>
-
-        <h2 className="mt-6 font-sans text-base font-bold text-ink">when</h2>
-        <ul className="mt-1 space-y-0.5">
-          {WINDOWS.map((w) => (
-            <li key={w.days}>
-              {w.days === days ? <strong>{w.label}</strong> : <Link href={href({ days: w.days })}>{w.label}</Link>}
-            </li>
-          ))}
-        </ul>
+      {/* Phones: the filters fold into a card, open until a filter is picked. Computers: a side column. */}
+      <details className="filter-card text-sm md:hidden" open={!category}>
+        <summary>{!category ? "Browse by activity and date" : "Change activity or date"}</summary>
+        <div>{filters("card")}</div>
+      </details>
+      <aside aria-label="Filters" className="hidden text-sm md:block">
+        {filters("side")}
       </aside>
 
       <div>
@@ -116,13 +128,13 @@ export default async function EventsPage({ searchParams }: Props) {
           {current && <ActivityIcon slug={current.slug} />}
           {current ? `${current.name} events` : "Events"}
         </h1>
-        <p className="mt-1 border-b border-ink pb-3 text-sm text-muted">
+        <p className="mt-2 border-b border-rule pb-3 text-subtle">
           {events.length} upcoming in the {WINDOWS.find((w) => w.days === days)!.label}, soonest first
         </p>
         {months.length ? (
           months.map((m) => (
             <section key={m.label} aria-label={m.label}>
-              <h2 className="mb-2 font-sans text-base font-bold text-muted">{m.label}</h2>
+              <h2 className="section-bar">{m.label}</h2>
               <EventList events={m.events} />
             </section>
           ))

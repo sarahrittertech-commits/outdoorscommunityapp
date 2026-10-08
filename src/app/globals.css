@@ -15,7 +15,8 @@
 */
 :root {
   /* Palette */
-  --plum: #39204d;
+  --plum: #39204d; /* the logo's plum */
+  --plum-ui: #382a63; /* links, buttons, headings (8 October design) */
   --ember: #dd7242;
   --marigold: #e7a855;
   --rust: #b43c34;
@@ -27,11 +28,15 @@
   --muted: #6b6072;
   --rule: #e4dacb;
   --panel: #faf6ef;
-  --heading: var(--plum);
-  --link: var(--plum);
-  --link-visited: #7a5a93;
+  --subtle: #464b5e; /* readable secondary text under page titles */
+  --band: #efedf7; /* light purple section bars */
+  --heading: var(--plum-ui);
+  --link: var(--plum-ui);
+  --link-visited: #6a4c93;
   --focus: var(--lake);
-  --accent: var(--plum);
+  --accent: var(--plum-ui);
+  --search: #b94f1c; /* deep orange Search button, white text 5.0:1 (AA) */
+  --search-hover: #a2441a;
   --accent-ink: var(--paper);
   --danger: var(--rust);
   --notice: #e1e9f2;
@@ -62,6 +67,8 @@
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-band: var(--band);
   --color-rule: var(--rule);
   --color-panel: var(--panel);
   --color-link: var(--link);
@@ -111,8 +118,9 @@
     color: var(--heading);
   }
   h1 {
-    font-size: 2.25rem;
-    line-height: 1.15;
+    font-size: 2.625rem;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
   }
   h2 {
     font-size: 1.625rem;
@@ -125,7 +133,7 @@
   }
   @media (max-width: 640px) {
     h1 {
-      font-size: 1.875rem;
+      font-size: 2rem;
     }
     h2 {
       font-size: 1.375rem;
@@ -209,11 +217,58 @@
     filter: brightness(1.1);
   }
 
-  /* The hero's Search button: ink on Marigold, an approved pairing (7.4:1), so it stands out on plum. */
+  /* The hero's Search button: deep orange with white text, 5.0:1 (8 October design). */
   .button-hero {
-    border-color: var(--marigold);
-    background: var(--marigold);
-    color: var(--ink);
+    border-color: var(--search);
+    background: var(--search);
+    color: #ffffff;
+  }
+  .button-hero:visited {
+    color: #ffffff;
+  }
+  .button-hero:hover {
+    filter: none;
+    background: var(--search-hover);
+  }
+
+  /* Light purple bar for headings inside long lists (months on Events). */
+  .section-bar {
+    margin: 1.5rem 0 0.5rem;
+    border-radius: 6px;
+    background: var(--band);
+    padding: 0.4rem 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--heading);
+  }
+
+  /* Filter headings in side filters: plum, underlined. */
+  .filter-heading {
+    margin-top: 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--heading);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  /* Phones: side filters fold into a card (the design's filter card). */
+  .filter-card {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--paper);
+  }
+  .filter-card > summary {
+    cursor: pointer;
+    padding: 0.6rem 0.75rem;
+    font-weight: 700;
+    color: var(--heading);
+  }
+  .filter-card > div {
+    padding: 0 0.75rem 0.75rem;
   }
 
   /*
@@ -278,12 +333,12 @@
   }
 
   .branch-stem {
-    stroke: var(--heading);
+    stroke: var(--plum);
   }
-  /* The wordmark: lowercase Young Serif in plum. */
+  /* The wordmark: lowercase Young Serif in the logo's plum. */
   .wordmark {
     font-family: var(--font-serif);
-    color: var(--heading);
+    color: var(--plum);
   }
   /* Text-styled button. min-height keeps the tap target at the WCAG 2.2 24px minimum. */
   .link-button {
