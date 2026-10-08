@@ -116,8 +116,8 @@ here.
 
 - Feeds, timelines, "recommended" anything, ranking algorithms
 - Likes, reactions, follower counts
-- Ads, sponsored listings or sponsored placement, paid tiers. (A small
-  *Sponsored by* credit on an event page is in, under review: FR-EV-14.)
+- Ads, sponsored listings or sponsored placement, paid tiers. (A
+  *Sponsored by* section with logos on an event page is in: FR-EV-14.)
 - Taking payments, checkout and ticketing. (Showing a price is in.)
 - Real-time chat, typing indicators, read receipts and online status.
   (Direct messages that arrive as requests are in: [ADR-0006](./architecture/adr-0006-direct-messages).)
@@ -208,6 +208,8 @@ can be changed at review.
 | **Save for later** | Out ("RSVP is the save") | UC-22 | Private to the user; separate from *going*. |
 | **Reminders with an unread count** | Out (P4) | UC-23 | One list on the signed-in home page; only things that need the user; the header count covers unread messages only; no email or push without opt-in. |
 | **Waitlists and RSVP opening times** | Could / not planned | UC-17, UC-10 | Admins move people from the waitlist, nothing automatic; the opening time is stated plainly, no ticking countdown. |
+| **Business pages** | Out ("who this board is not for") | UC-12 | Owned by an account signed in with the business's email, which the site admin checks against its website; admins are people's own accounts, no shared login; a business runs events only through a group it links, whose admins are separate; own directory page, never in group listings or above groups. |
+| **Sponsors on events** | Under review | UC-10, UC-12 | A *Sponsored by* section with logos below the event details, on the event page only; a sponsor can link to a business or group page; never in lists, order or search. |
 
 From the same review, these fit the product and are drafted as use cases:
 location and distance search with *Near you* (UC-14), a destinations map
@@ -229,15 +231,13 @@ fix and doesn't wait on any of this.
 
 These need Sarah's decision before or during build:
 
-- **Businesses on the board (UC-12).** The board was scoped to community
-  groups, with outfitters and guide services listed under "who this board
-  is not for". UC-12 would add business pages: services, locations, the
-  places they operate, their own events. Decide whether that is in, and if
-  so whether businesses can host events or only sponsor them.
-- **Sponsors (UC-10, UC-12).** A sponsor's name and logo on an event is
-  close to advertising, which is out of scope. A middle path: a small, plain
-  "Sponsored by" credit on the event page only, never in lists, never
-  affecting order.
+- ~~**Businesses on the board (UC-12).**~~ Settled 8 October 2026:
+  businesses are in. A business page is owned by an account signed in
+  with the business's email and has its own admins; it can link a group
+  with separate admins, and hosts events only through that group.
+- ~~**Sponsors (UC-10, UC-12).**~~ Settled 8 October 2026: a *Sponsored
+  by* section with sponsors' logos below the event details, on the event
+  page only, never in lists or affecting order.
 - **Event series, pictures and questions (UC-10, UC-11).** Each reverses
   or extends an out-of-scope decision: recurring series and image uploads
   are listed as out of scope, and event questions need either notification

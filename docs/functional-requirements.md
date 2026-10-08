@@ -177,7 +177,7 @@ approves its use case and user flow. Priorities here are proposals.
 | FR-EV-11 | **Series.** An event can repeat weekly or every two weeks, on chosen days, until an end date (at most a year). Each date is its own event with its own RSVPs and places left. Editing the series offers *this date only* or *this and every later date*; past dates never change. Cancelling one date leaves the rest. | Should | Editing "this and later" changes no date that has started. |
 | FR-EV-12 | **Event photo.** One photo per event or series: JPEG, PNG or WebP, at most 5 MB, re-encoded on upload (TR-SEC-9), with required alt text. Without one, the activity's drawing shows. | Should | No original upload is ever served. |
 | FR-EV-13 | **Price.** Optional plain text up to 60 characters (*Free*, *$10 trail fee*). The board never takes payment or links to checkout on its own behalf; a link to the organizer's page is allowed in the description. | Should | — |
-| FR-EV-14 | **Sponsors.** Up to 5 per event: name, logo (same rules as photos, at most 1 MB), website link with `rel="sponsored noopener"`. Shown in a small *Sponsored by* row on the event page only: never in lists, never affecting order or search. | Should | A sponsored event lists in exactly the same place as an unsponsored one. |
+| FR-EV-14 | **Sponsors.** Up to 5 per event: name, logo (same rules as photos, at most 1 MB), website link with `rel="sponsored noopener"`. Shown in a *Sponsored by* section with the sponsors' logos, below the event details, on the event page only: never in lists, never affecting order or search. A sponsor can link to a business or group page on the board. | Should | A sponsored event lists in exactly the same place as an unsponsored one. |
 | FR-EV-15 | **RSVP approval.** Owner and admins can set an event to *Approve RSVPs*. A member's RSVP is then a request; only admins approve or decline it. Approved RSVPs count against places; requests don't. | Should | The database refuses a member setting their own RSVP to approved. |
 | FR-EV-16 | **Waitlist.** When an event with places is full, members can join the waitlist, in order. An admin moves people from the waitlist to going; there is no automatic move. Replaces FR-EV-10. | Should | Going never exceeds places, even when two admins act at once. |
 | FR-EV-17 | **Manage RSVPs page.** Lists requests, going, waitlist and declined, with approve, decline, waitlist and remove. Removing someone is logged like other moderation. | Should | Only the group's owner and admins can open it. |
@@ -221,13 +221,18 @@ approves its use case and user flow. Priorities here are proposals.
 
 ### Businesses (UC-12)
 
+Businesses are on the board (decided 8 October 2026). They host events
+only through a group, so events stay one feature with one set of rules.
+
 | ID | Draft requirement | Proposed | Accepted when |
 | --- | --- | --- | --- |
-| FR-BZ-1 | **Business pages.** Name, description, services (plain list), activities, locations (FR-BR-16 places with role *its location*) and places it operates (role *operates at*), and a website link. No prices, booking or payments. | Could | — |
-| FR-BZ-2 | **Listing and claiming.** Businesses come from the research agent's kept candidates, listed by the site admin, and are claimed like groups (FR-GR-10). | Could | — |
-| FR-BZ-3 | **Business events.** A business owner can post events at its own locations, marked as hosted by the business. | Could | — |
-| FR-BZ-4 | **As sponsors.** A sponsor on an event (FR-EV-14) can link to a business page. | Could | — |
-| FR-BZ-5 | **Never above groups.** Businesses have their own directory page; they don't appear in group listings and never affect the order of anything. | Could | — |
+| FR-BZ-1 | **Business pages.** Name, description, services (plain list), activities, locations (FR-BR-16 places with role *its location*) and places it operates (role *operates at*), and a website link. No prices, booking or payments. | Should | — |
+| FR-BZ-2 | **Listing and claiming.** Businesses come from the research agent's kept candidates, listed by the site admin, and are claimed like groups (FR-GR-10), by an account signed in with the business's own email. The site admin checks that the email matches the business's website before approving. | Should | Only the site admin can approve a business claim. |
+| FR-BZ-3 | **Business admins.** The claiming account owns the page. The owner adds and removes admins, each a person's own account; admins edit the page. Ownership transfers like a group's (FR-MB-6). There is no shared login. | Should | A non-admin can't change a business page, and a removed admin loses access at once. |
+| FR-BZ-4 | **The business's group.** A business owner can link one or more groups to the business page; the group's owner must accept the link. The group keeps its own owner, admins and members, separate from the business page's admins. The business page lists its groups and their upcoming events. | Should | Being a business admin gives no rights in its group, and the reverse. |
+| FR-BZ-5 | **Events through groups only.** A business page has no events of its own; its events are its group's events, posted and managed as any group's. | Should | The database has no way to post an event without a group. |
+| FR-BZ-6 | **As sponsors.** A sponsor on an event (FR-EV-14) can link to a business page; the business page lists the upcoming events it sponsors. | Should | — |
+| FR-BZ-7 | **Never above groups.** Businesses have their own directory page; they don't appear in group listings and never affect the order of anything. | Should | A business never appears in the Communities list or changes any list's order. |
 
 ### Direct messages (UC-20, ADR-0006)
 

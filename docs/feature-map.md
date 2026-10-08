@@ -77,7 +77,7 @@ and awaits review; **Decision needed** means a product question is open
 | --- | --- | --- | --- |
 | **Repeating series** | Decision needed | UC-10 | FR-EV-11 |
 | **Price** shown as text, never payment | In scope | UC-10 | FR-EV-13 |
-| **Sponsors** with logos and links, event page only | Decision needed | UC-10 | FR-EV-14 |
+| **Sponsors**: a *Sponsored by* section with logos below the event details, event page only | In scope | UC-10 | FR-EV-14 |
 | **FAQ** and **RSVPs open at** | Fits / In scope | UC-10 | FR-EV-19, FR-EV-20 |
 | **Ask a question** and answer into the FAQ | Fits | UC-11 | FR-EV-21, FR-EV-22 |
 | **Approve RSVPs**, **waitlist**, **Manage RSVPs** page | Fits / In scope | UC-17 | FR-EV-15 to FR-EV-17 |
@@ -97,7 +97,7 @@ and awaits review; **Decision needed** means a product question is open
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Business pages** with services, locations and places they operate, their own events, and sponsor links | Decision needed | UC-12 | FR-BZ-1 to FR-BZ-5 |
+| **Business pages** owned by the business email account, with their own admins; services, locations and places they operate; a linked group (separate admins) that hosts their events; events they sponsor | In scope | UC-12 | FR-BZ-1 to FR-BZ-7 |
 
 ## Still out of scope
 

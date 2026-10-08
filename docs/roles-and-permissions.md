@@ -155,7 +155,9 @@ approved.
 | Accept, decline or block a request | ❌ | **own** | **own** | **own** | **own** | **own** |
 | Read a conversation | ❌ | **own** | **own** | **own** | **own** | reported only |
 | Link a group to a national organization | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Edit a business page | ❌ | business owner only | — | — | — | ✅ |
+| Edit a business page | ❌ | business owner and admins only | — | — | — | ✅ |
+| Add or remove a business page's admins | ❌ | business owner only | — | — | — | ✅ |
+| Link a group to a business page | ❌ | business owner, with the group owner's acceptance | — | — | ✅ accepts | ✅ |
 
 Group admins never read members' private messages or saved events.
 
