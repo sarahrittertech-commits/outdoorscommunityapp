@@ -165,7 +165,7 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 to UC-23 (most from the 8 October Magic Patterns design). None is
+UC-10 to UC-24 (most from the 8 October Magic Patterns design). None is
 built. Each moves into its area's table above, with a priority, once Sarah
 approves its use case and user flow. Priorities here are proposals.
 :::
@@ -208,13 +208,15 @@ approves its use case and user flow. Priorities here are proposals.
 | FR-AC-10 | **Reminders.** A list on the signed-in home page of things that need the user, newest first: join and RSVP requests for groups they run, events they're going to in the next 48 hours, saved events nearly full or newly open for RSVPs, new threads in their groups since their last visit, and message requests and unread messages. Items drop off when handled or past. No email or push unless the user turns it on (FR-NT). | Should | The list contains only items that need this user; nothing is ranked or suggested. |
 | FR-DS-9 | **Reply to a reply.** A reply can answer another reply. It shows indented under it, one level only: replies to a nested reply join the same level and name who they answer. Posts by owners and admins carry a role label. Changes FR-DS-2. | Should | No thread ever shows more than one level of indent. |
 
-### Group photos and chapters (UC-13, UC-21)
+### Group photos, types and chapters (UC-13, UC-21, UC-24)
 
 | ID | Draft requirement | Proposed | Accepted when |
 | --- | --- | --- | --- |
 | FR-GR-12 | **Photos tab.** Members upload up to 10 photos at a time (image rules as FR-EV-12, required alt text). The gallery shows newest first; any photo opens full size. Visible to members only, unless the owner makes it public. | Could | A non-member gets no photo from the database or storage when the gallery is members-only. |
 | FR-GR-13 | **Removing photos.** The uploader can delete their own photos; owner and admins can remove any, logged as moderation. Photos can be reported (FR-MD). | Could | — |
-| FR-GR-14 | **Group photo.** The owner picks the group's cover photo from the gallery or uploads one; otherwise the activity's drawing shows. | Could | — |
+| FR-GR-14 | **Group photo.** The owner picks the group's cover photo from the gallery or uploads one (image rules as FR-EV-12); otherwise the activity's drawing shows. The photo appears on the group page and in the Communities list. | Should | — |
+| FR-GR-16 | **Group type.** Every group has one type: *Club*, *Meetup*, *Volunteer group*, *Nonprofit* or *Chapter*, set by the owner (listings get theirs from the import or research agent). It shows as an icon and label on the group page and in lists. | Should | A type outside the list is refused by the database. |
+| FR-GR-17 | **Filter by type.** Communities and Events filter by group type, alongside activity, location and audience (affinity tags, FR-GR-11). | Should | — |
 | FR-GR-15 | **Chapters.** A group's owner can mark it as a chapter of a national organization from a site-admin-managed list. The organization's page lists its chapters A to Z. | Could | Only the group's owner can link it; the organization can't claim groups. |
 
 ### Businesses (UC-12)

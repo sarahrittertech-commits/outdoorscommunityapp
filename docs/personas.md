@@ -31,6 +31,13 @@ group listing row has to show the signals that matter: area, member count and
 the date of the next event. A group with no upcoming events should look like
 it, rather than hiding that.
 
+**Proposed with the 8 October design (drafts):** search by town or zip
+and distance, with *Near you* on the home page (UC-14); places to explore
+on a map (UC-15); telling clubs, volunteer groups and informal meetups
+apart at a glance (UC-24); saving an event before committing (UC-22);
+asking organizers a question without joining (UC-11). All without device
+location: they pick the town.
+
 ## 2. The organizer
 
 **Wants:** to run a group — a Saturday paddling crew, a trail-running club,
@@ -47,6 +54,12 @@ quickly, see who is coming, share admin duties and moderate without drama.
 everything an organizer does is on the group page, not in a separate
 dashboard. "Duplicate event" (Could) exists because organizers post the same
 ride every week.
+
+**Proposed with the 8 October design (drafts):** post a season of rides
+as one series with a photo, price, sponsors and FAQ (UC-10); approve who
+comes and keep a waitlist (UC-17); keep the member list private (UC-16);
+answer questions and move answers into the FAQ (UC-11); see join and RSVP
+requests in one reminders list (UC-23).
 
 ## 3. The regular
 
@@ -65,6 +78,11 @@ on.
 threads sort by latest reply, the way forums always did, and replies read
 top to bottom, oldest first.
 
+**Proposed with the 8 October design (drafts):** a calendar of what
+they're going to and saved (UC-18); one reminders list when they sign in
+(UC-23); replying to one person in a thread (UC-19); private messages
+that start as requests (UC-20); sharing trip photos in the group (UC-21).
+
 ## 4. The site admin (Sarah)
 
 **Wants:** the board to stay pleasant and legal without becoming a job.
@@ -77,6 +95,12 @@ groups, and a record of what was done.
 
 **Design implication:** moderation is built in from the start (FR-MD-*).
 Group admins handle their own groups first; the site admin is the backstop.
+
+**Added since launch:** reviewing the research agent's candidates each
+week (UC-9) and claims on unclaimed listings (UC-8). **Proposed with the 8
+October design:** reported private messages (UC-20) and reported photos
+(UC-21) join the queue, which makes moderation a bigger job; the places
+list for the map is maintained by the site admin (UC-15).
 
 ---
 

@@ -573,6 +573,32 @@ and nobody else can see what they saved.
 when they choose to look, with no emails or phone alerts they didn't ask
 for.
 
+## UC-24 — Tell groups apart
+
+> **Draft, awaiting review.** From the 8 October design (grouping
+> differentiation and photos).
+
+**Actor:** The newcomer
+
+**Trigger:** Browsing Communities, can't tell a dues-paying club from a
+free Saturday meetup or a volunteer trail crew.
+
+**Flow:**
+
+1. On Communities, each group shows its photo, a type icon and label
+   (*Club*, *Meetup*, *Volunteer group*, *Nonprofit*, *Chapter*) and its
+   activity icons.
+2. Filters to *Volunteer group* to find trail work they can just show up
+   to.
+3. Opens a group: its page shows the same photo and type under the name.
+4. The group's owner set the type and photo in group settings.
+
+**Requirements:** to be written after review (drafts FR-GR-14, FR-GR-16,
+FR-GR-17).
+
+**Succeeds when:** a newcomer can tell what kind of group it is, and
+whether it's active, before opening it.
+
 ---
 
 ## Journeys the seed data must cover

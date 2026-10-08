@@ -27,6 +27,8 @@ Each record has a status:
 | [0003](./adr-0003-hosting) | Host on Railway | Accepted |
 | [0004](./adr-0004-background-jobs-and-email) | No n8n: scheduled Edge Functions and Resend for email | Accepted |
 | [0005](./adr-0005-discussions) | Forum-style discussion threads, not real-time chat | Accepted |
+| [0006](./adr-0006-direct-messages) | Direct messages as requests, on plain pages | Proposed |
+| [0007](./adr-0007-destinations-map) | How to draw the destinations map | Proposed |
 
 :::note Accepted 25 September 2026
 Drafted as Proposed in the morning; accepted the same day when Sarah

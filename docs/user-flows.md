@@ -308,6 +308,18 @@ flowchart TD
   reminder -->|opens event| rsvp(["RSVPs, or unsaves"])
 ```
 
+## UC-24 — Tell groups apart
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  list["Communities<br/>photo · type icon and label · activity icons"] -->|filter: Volunteer group| filtered["Communities: volunteer groups"]
+  filtered -->|opens one| group["Group page<br/>photo · type · area · members"]
+  owner["Group settings (owner)"] -->|sets type and photo| group
+  group --> done(["Knows what kind of group it is"])
+```
+
 ## UC-23 — What needs my attention
 
 *Draft, awaiting review.*

@@ -53,6 +53,7 @@ That framing drives the scope:
 | --- | --- |
 | [Product requirements](./prd) | Problem, goals, principles, scope, delivery plan, open questions |
 | [Personas](./personas) | Who uses it, and what they need |
+| [Feature map](./feature-map) | What's live in the app versus the new features being designed |
 | [Use cases](./use-cases) | The specific journeys it supports, main path only |
 | [User flows](./user-flows) | The screens and decisions along each use case |
 | [Functional requirements](./functional-requirements) | Every feature, numbered and prioritized, with acceptance criteria |

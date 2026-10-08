@@ -71,7 +71,11 @@ a weekly research agent (UC-9, `scripts/research/agent.md`) suggests new
 ones for the site admin to list or skip; groups carry affinity tags
 (FR-GR-11). See the PRD's "Build status" for what is not built yet and the
 [runbook](docs/runbook.md) for operations. Draft use cases awaiting review:
-UC-10 to UC-13.
+UC-10 to UC-24, mostly from the 8 October Magic Patterns design; on that
+date Sarah brought direct messages, group photo galleries, event prices,
+saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
+2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live
+from what's new.
 
 The look follows the branch outdoors brand guide (v2, Claude Design),
 summarized in [docs/brand.md](docs/brand.md): plum, paper and autumn leaf
