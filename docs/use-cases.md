@@ -190,6 +190,38 @@ plus one admin review, and nobody else can take it over.
 
 *Written after the claim feature was built.*
 
+## UC-9 — Keep the listings fresh
+
+> **Draft, awaiting review.** Nothing is built until Sarah approves this
+> use case and its [user flow](./user-flows#uc-9--keep-the-listings-fresh).
+
+**Actor:** The site admin, helped by a scheduled research agent
+
+**Trigger:** Once a week, on a schedule.
+
+**Flow:**
+
+1. The research agent runs. For each activity and subcategory on the
+   board, and each area, it searches the public web for local groups and
+   their upcoming events, plus guides, businesses and venues.
+2. It saves each new find as a *candidate* in the private research area:
+   name, type, activity, area, the public page it came from, and its
+   upcoming events with dates and times. It skips anything already known.
+3. The site admin opens *Candidates* on the admin page and sees the
+   week's new finds, grouped by type, each with its source link.
+4. For each community group, they check the source page and choose
+   *List it* or *Skip*. Listed groups and their upcoming events appear on
+   the board as unclaimed listings (UC-8). Guides, businesses and venues
+   stay in the research area for later decisions.
+
+**Requirements:** to be written after review (alternative paths and edge
+cases: duplicates, closed groups, past events, out-of-region finds,
+women-only and youth groups, pages the agent can't read).
+
+**Succeeds when:** new local groups and events reach the board every week,
+nothing reaches the board without the site admin's yes, and no contact
+details or private notes are ever shown.
+
 ---
 
 ## Journeys the seed data must cover
