@@ -51,6 +51,9 @@ web app is not the thing enforcing the rule.
 | PT-22 | No trigger function or internal helper (moderation log writer, rate limiter) can be called through the API, and every function pins its search path | Fake moderation log entries; functions hijackable |
 | PT-23 | Nobody can join, RSVP to or post events in an unclaimed listing, and nobody signed in can make one or set a source link | Listings behave like ownerless groups anyone can take over |
 | PT-24 | Only the site admin approves a claim; approval makes the claimant owner and declines the other claims; claimants see only their own | Anyone can seize a listed group |
+| PT-25 | Only the site admin can see, list or skip candidates; listing makes an unclaimed group with its events and affinity tags | Anyone can push research finds onto the board |
+| PT-26 | Adding a candidate validates every field and skips duplicates of candidates and board groups | Bad or repeated agent output lands in the review queue |
+| PT-27 | Only owners and admins change a group's affinity tags, and only to tags on the list | Anyone can relabel a group |
 
 ## Automated — unit
 

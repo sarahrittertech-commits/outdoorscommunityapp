@@ -116,6 +116,15 @@ A listing has no owner, admins or members, so only these columns apply.
 | Approve or decline a claim | ❌ | ❌ | ✅ |
 | Add a listing or set a source link | ❌ | ❌ | ❌ operator SQL only |
 
+### Research candidates (FR-RS-5, FR-RS-6)
+
+| Action | Visitor | User | Site admin |
+| --- | --- | --- | --- |
+| See candidates | ❌ | ❌ | ✅ |
+| List a group candidate | ❌ | ❌ | ✅ |
+| Skip a candidate | ❌ | ❌ | ✅ |
+| Add a candidate | ❌ | ❌ | ❌ research agent only |
+
 ## Cross-cutting rules
 
 - **Suspended users** keep the read access their group roles give them and

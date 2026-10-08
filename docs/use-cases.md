@@ -192,8 +192,15 @@ plus one admin review, and nobody else can take it over.
 
 ## UC-9 — Keep the listings fresh
 
-> **Draft, awaiting review.** Nothing is built until Sarah approves this
-> use case and its [user flow](./user-flows#uc-9--keep-the-listings-fresh).
+> **Approved 8 October 2026,** with these decisions:
+> - The agent is a weekly scheduled Claude Code session that writes to the
+>   database directly. Nothing new to host.
+> - Review happens in a *Candidates* section on the admin page, with
+>   *List it* and *Skip*.
+> - Sources: public web search and public pages that allow reading. No
+>   signing in to Facebook or anywhere else, no scraping behind sign-ins.
+> - Everything is listed on this board, women-only and youth groups
+>   included, with *affinity tags*: Women, Youth, BIPOC, LGBTQIA+.
 
 **Actor:** The site admin, helped by a scheduled research agent
 
@@ -214,13 +221,11 @@ plus one admin review, and nobody else can take it over.
    the board as unclaimed listings (UC-8). Guides, businesses and venues
    stay in the research area for later decisions.
 
-**Requirements:** to be written after review (alternative paths and edge
-cases: duplicates, closed groups, past events, out-of-region finds,
-women-only and youth groups, pages the agent can't read).
+**Requirements:** FR-RS-1 to FR-RS-6, FR-RS-8, FR-RS-9, FR-GR-9, FR-GR-11
 
 **Succeeds when:** new local groups and events reach the board every week,
-nothing reaches the board without the site admin's yes, and no contact
-details or private notes are ever shown.
+no new group reaches the board without the site admin's yes, and no contact
+details or private notes are ever stored or shown.
 
 ---
 

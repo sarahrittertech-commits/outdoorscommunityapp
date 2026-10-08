@@ -115,7 +115,7 @@ flowchart TD
 
 ## UC-9 — Keep the listings fresh
 
-*Draft, awaiting review.*
+*Approved 8 October 2026.*
 
 ```mermaid
 flowchart TD
