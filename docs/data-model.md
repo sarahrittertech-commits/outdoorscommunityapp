@@ -117,6 +117,7 @@ it except through the database functions (onboarding, suspend, delete).
 | `created_at`, `updated_at` | timestamp | |
 | `is_unclaimed` | boolean | FR-GR-9: an unclaimed listing, added from public information. Only SQL run by the operator sets it. |
 | `source_url` | text, optional | The organization's own website. Required for a listing. |
+| `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia`; empty by default |
 
 ### group_claims
 
@@ -290,6 +291,32 @@ Member and RSVP counts come from small functions that reveal the *number*
 without revealing the rows, so visitors see "12 members" but not who.
 
 ## Research workspace (not part of the app)
+
+### research.candidates and research.candidate_events
+
+FR-RS-2 to FR-RS-8. What the weekly research agent finds, waiting for the
+site admin. Private like the rest of the research schema; the admin page
+reads it only through site-admin functions.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `kind` | text | `group`, `guide`, `business`, `venue` |
+| `name` | text | 3–80 characters; unique, ignoring case |
+| `subcategory_id` | uuid | the board activity it fits |
+| `area` | text | town or area |
+| `description` | text | short, neutral, written by the agent |
+| `source_url` | text | the public page it came from |
+| `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia` |
+| `out_of_region` | boolean | |
+| `status` | text | `new`, `listed`, `skipped`, `kept` |
+| `group_id` | uuid, optional | the listing it became |
+| `found_at`, `decided_at` | timestamp | |
+
+Each candidate event has a title, start and end, time zone, place and
+link, unique per candidate, title and start. There is deliberately no
+column for contact details.
+
 
 A separate `research` schema holds the source research used to seed real
 groups: `activities`, `organizations`, `places` and `events`, plus an

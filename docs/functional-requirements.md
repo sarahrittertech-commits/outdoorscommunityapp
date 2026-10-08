@@ -60,6 +60,7 @@ Who is allowed to do each action is defined once, in
 | FR-GR-7 | A user can own at most 3 active groups. | Should | Creating a fourth is refused with an explanation. |
 | FR-GR-8 | A user's first group is held for site-admin approval before it is listed. | Could | — |
 | FR-GR-9 | **Unclaimed listings.** Real local groups can be listed from public information before their organizers join, so the board isn't empty at launch. A listing holds only a name, a neutral description, an area and a link to the organization's own website, plus upcoming events that link to the organizer's own page. Nobody runs it here, so it has no owner and nobody can join it, RSVP to its events or post in it. Listings are added by the operator in SQL, never through the app. | Must | A listing's page says it is unclaimed and links to the source; no Join or RSVP is offered and the database refuses both. |
+| FR-GR-11 | **Affinity tags.** A group can carry any of these tags: *Women*, *Youth*, *BIPOC*, *LGBTQIA+*. They show on the group page and in group lists. The owner and admins can change them on the group's edit form; listings get them from the import or the research agent. | Should | A tag outside the list is refused by the database. |
 | FR-GR-10 | **Claiming a listing.** A signed-in user can ask to claim a listing with a short note on how they're connected. The site admin checks it against the organization's website and approves (the claimant becomes owner, discussions open, other claims are declined) or declines. | Must | Only the site admin can approve; an approved claimant owns the group and it becomes an ordinary group. |
 
 ## Membership and roles — FR-MB
@@ -141,3 +142,21 @@ are not notifications and are always sent.
 | FR-AD-1 | Categories and subcategories are managed as seed data in a migration, not through a UI. | Must | Changing the list is a reviewed commit. |
 | FR-AD-2 | A site-admin report queue shows open reports across the board, oldest first. | Must | — |
 | FR-AD-3 | A site-admin stats page shows counts of users, groups, events and RSVPs, read from the database. | Could | — |
+
+## Research agent — FR-RS
+
+Supports [UC-9](./use-cases#uc-9--keep-the-listings-fresh). The agent is
+an operator tool: it suggests, the site admin decides. (FR-RS-7 was
+retired before build: women-only and youth groups are listed like any
+other, with affinity tags.)
+
+| ID | Requirement | Priority | Accepted when |
+| --- | --- | --- | --- |
+| FR-RS-1 | Once a week a scheduled research session searches the public web for each activity and area on the board: groups, their upcoming events, guides, businesses and venues. It reads only public pages that allow it: no signing in, no scraping behind sign-ins. | Should | A week's run leaves new candidates, or none, without touching the public site. |
+| FR-RS-2 | Each find is saved as a *candidate* in the private research area: kind (group, guide, business, venue), name, activity, area, the public page it came from, a short neutral description, its affinity tags (FR-GR-11) and an out-of-region flag. No contact details, prices, addresses of people or personal names are stored. | Should | The candidate tables have no column for contact details; every field is length- and format-checked by the database. |
+| FR-RS-3 | A find that matches an existing candidate, research organization or board group by name is not saved again. A skipped candidate is never suggested again. | Should | Running the same search twice adds nothing the second time. |
+| FR-RS-4 | A group candidate carries its upcoming events: title, date, start time, place, time zone and link. Events without a published start time, or already past, are not saved. If no end time is published, the event lasts three hours and says "End time not listed." | Should | — |
+| FR-RS-5 | A *Candidates* section on the site admin page lists new group candidates, oldest first, each with its source link, activity, area, affinity tags, out-of-region flag and number of upcoming events, and counts the guides, businesses and venues kept for later. | Should | Only the site admin can see it; the database refuses everyone else. |
+| FR-RS-6 | *List it* turns a group candidate into an unclaimed listing (FR-GR-9) with its upcoming events and affinity tags, and marks the candidate listed. *Skip* marks it skipped. | Should | Only the site admin can do either; the database refuses everyone else. |
+| FR-RS-8 | New events found later for a group that is still an unclaimed listing are added to it automatically, because the group itself was already approved. Once a group is claimed, its owner runs its events and the agent adds none. | Should | — |
+| FR-RS-9 | The agent adds candidates only through one database function that validates every field; it is told never to change other tables. | Should | The function rejects a missing source link, a bad activity or an over-long field. |

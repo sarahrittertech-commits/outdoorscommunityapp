@@ -39,6 +39,8 @@ export const notices = {
   claim_sent: "Thanks. The site admin will check your claim; the result will show on this page.",
   claim_approved: "Claim approved. They now own the group.",
   claim_declined: "Claim declined.",
+  candidate_listed: "Listed. It's on the board as an unclaimed listing.",
+  candidate_skipped: "Skipped. It won't be suggested again.",
 } as const;
 
 export const errors = {

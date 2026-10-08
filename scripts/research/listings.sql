@@ -16,9 +16,9 @@
 -- Carolina; the rest (Piedmont, eastern NC and a few out of state) are kept
 -- on purpose so the region and zip code filters have something to filter.
 -- Until those regions exist they share the one region, and `area` holds the
--- real town. Left out: businesses (guides, shops, breweries, gyms, venues),
--- youth and women-only groups (pending the audience decision in the PRD) and
--- anything unverified. Events: only those with a published start time, from
+-- real town. Women-only, youth and other affinity groups are listed like
+-- any other and carry affinity tags (FR-GR-11). Left out: businesses
+-- (guides, shops, breweries, gyms, venues, camps) and anything unverified. Events: only those with a published start time, from
 -- today on, not marked "expected".
 --
 -- Safe to run again: existing slugs and events are skipped.
@@ -151,17 +151,53 @@ insert into listing_picks (org_id, slug, name, subcategory, area, description, s
   ('ORG-230', 'new-river-valley-bicycle-association', 'New River Valley Bicycle Association', 'road', 'New River Valley, Virginia',
    'Regional cycling club and advocacy group in Virginia''s New River Valley.', null),
   ('ORG-205', 'copper-harbor-trails-club', 'Copper Harbor Trails Club', 'trail-work', 'Copper Harbor, Michigan',
-   'Trail nonprofit in Copper Harbor, Michigan.', null);
+   'Trail nonprofit in Copper Harbor, Michigan.', null),
+  -- Women-only and youth groups (tagged below).
+  ('ORG-048', 'blue-ridge-dirt-skrrts', 'Blue Ridge Dirt Skrrts', 'mountain-biking', 'Western North Carolina',
+   'Women''s mountain bike club with group rides by skill level, clinics and socials across Western North Carolina.', null),
+  ('ORG-074', 'ladies-climbing-coalition-asheville', 'Ladies Climbing Coalition (Asheville)', 'indoor', 'Asheville',
+   'Asheville chapter of a women''s climbing community, meeting at a local climbing gym.', null),
+  ('ORG-162', 'trail-sisters-wnc', 'Trail Sisters: Western North Carolina', 'trail-running', 'Asheville',
+   'Local group of a women''s trail running community, with group runs around Asheville.', null),
+  ('ORG-151', 'asheville-womens-run-club', 'Asheville Women''s Run Club', 'road-running', 'Asheville',
+   'Women''s run club in downtown Asheville.', null),
+  ('ORG-175', 'radical-adventure-riders-asheville', 'Radical Adventure Riders: Asheville', 'bikepacking', 'Asheville',
+   'Asheville chapter of an inclusive cycling community centering women, trans and non-binary riders.', null),
+  ('ORG-226', 'girls-go-shred', 'Girls Go Shred', 'ski-snowboard', 'Banner Elk',
+   'Women''s ski and snowboard community in the North Carolina High Country.', null),
+  ('ORG-052', 'pisgah-rage-mtb-team', 'Pisgah Rage MTB Team', 'mountain-biking', 'Buncombe County',
+   'Youth mountain bike team in Buncombe County, part of the NICA league.', null),
+  ('ORG-098', 'dirt-divas', 'Dirt Divas', 'mountain-biking', 'Charlotte',
+   'Women''s mountain bike club in the Charlotte area.', null),
+  ('ORG-129', 'cranksisters', 'Cranksisters', 'mountain-biking', 'Charlotte',
+   'Women''s mountain bike group in the Charlotte area.', null),
+  ('ORG-130', 'evergreen-crank-sisters', 'Evergreen Crank Sisters', 'mountain-biking', 'Seattle, Washington',
+   'Women''s riding community within a regional mountain bike alliance in the Seattle area.', null);
 
-insert into public.groups (slug, name, description, subcategory_id, region_id, area, discussions_enabled, is_unclaimed, source_url)
+-- Affinity tags (FR-GR-11), only where the group says so plainly.
+create temporary table listing_tags (org_id text primary key, tags text[] not null) on commit drop;
+insert into listing_tags values
+  ('ORG-075', '{bipoc}'), ('ORG-154', '{bipoc}'), ('ORG-159', '{lgbtqia}'),
+  ('ORG-048', '{women}'), ('ORG-074', '{women}'), ('ORG-162', '{women}'), ('ORG-151', '{women}'),
+  ('ORG-175', '{women,lgbtqia}'), ('ORG-226', '{women}'), ('ORG-052', '{youth}'),
+  ('ORG-098', '{women}'), ('ORG-129', '{women}'), ('ORG-130', '{women}');
+
+insert into public.groups (slug, name, description, subcategory_id, region_id, area, discussions_enabled, is_unclaimed, source_url, affinity_tags)
 select p.slug, p.name, p.description, s.id, r.id, p.area, false, true,
-       coalesce(p.source_override, o.website, o.source_listing_url)
+       coalesce(p.source_override, o.website, o.source_listing_url),
+       coalesce(t.tags, '{}')
 from listing_picks p
 join research.organizations o on o.org_id = p.org_id
+left join listing_tags t on t.org_id = p.org_id
 join public.subcategories s on s.slug = p.subcategory
 cross join (select id from public.regions where slug = 'western-nc') r
 where coalesce(p.source_override, o.website, o.source_listing_url) ~ '^https?://'
 on conflict (slug) do nothing;
+
+-- Listings imported before tags existed get theirs, unless already set.
+update public.groups g set affinity_tags = t.tags
+from listing_picks p join listing_tags t on t.org_id = p.org_id
+where g.slug = p.slug and g.is_unclaimed and g.affinity_tags = '{}';
 
 -- Events: the first picked group among each event's organizers hosts it.
 with candidates as (

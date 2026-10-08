@@ -4,6 +4,7 @@ import Link from "next/link";
 import { requestClaim } from "@/app/actions/claims";
 import { restoreGroup } from "@/app/actions/groups";
 import { joinGroup, leaveGroup } from "@/app/actions/membership";
+import { AffinityTags } from "@/components/AffinityTags";
 import { EventList } from "@/components/Listings";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
@@ -83,6 +84,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
         </p>
       )}
       <h1>{group.name}</h1>
+      <AffinityTags tags={group.affinity_tags} className="mb-1" />
       <p className="text-sm text-muted">
         {group.area} ·{" "}
         {group.is_unclaimed ? (

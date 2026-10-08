@@ -269,6 +269,13 @@
     color: var(--danger);
     background: var(--tag-cancelled);
   }
+  /* FR-GR-11: affinity tags (Women, Youth, BIPOC, LGBTQIA+). Plum text on panel, outlined. */
+  .tag-affinity {
+    color: var(--heading);
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    font-weight: 400;
+  }
 
   .branch-stem {
     stroke: var(--heading);

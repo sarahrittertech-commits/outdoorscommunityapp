@@ -3,6 +3,7 @@
 
 import { z } from "zod";
 
+import { AFFINITY_TAGS } from "./affinity";
 import { isValidTimeZone, zonedLocalToUtc } from "./time";
 
 const requiredText = (min: number, max: number) => z.string().trim().min(min).max(max);
@@ -108,5 +109,11 @@ export const reportSchema = z.object({
 export const claimSchema = z.object({
   note: requiredText(10, 1000),
 });
+
+/** FR-GR-11: the ticked affinity tag checkboxes (formData.getAll), deduplicated. */
+export const affinityTagsSchema = z
+  .array(z.enum(AFFINITY_TAGS.map((t) => t.value) as [string, ...string[]]))
+  .max(AFFINITY_TAGS.length)
+  .transform((tags) => [...new Set(tags)]);
 
 export const idSchema = id;

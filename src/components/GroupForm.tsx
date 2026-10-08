@@ -1,10 +1,11 @@
 import { site } from "@/config/site";
+import { AFFINITY_TAGS } from "@/lib/affinity";
 import type { Tables } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 
 type Group = Pick<
   Tables<"groups">,
-  "name" | "description" | "rules" | "subcategory_id" | "area" | "join_policy" | "join_question" | "discussions_enabled"
+  "name" | "description" | "rules" | "subcategory_id" | "area" | "join_policy" | "join_question" | "discussions_enabled" | "affinity_tags"
 >;
 
 /** The fields shared by "start a group" and "edit group". Works without JavaScript. */
@@ -77,6 +78,20 @@ export async function GroupForm({
         Question for people asking to join <span className="hint">Optional, approval groups only</span>
       </label>
       <input id="joinQuestion" name="joinQuestion" type="text" maxLength={280} defaultValue={group?.join_question ?? ""} />
+
+      <fieldset className="mt-4">
+        <legend className="font-semibold">
+          Affinity <span className="hint">Optional. Tick any that describe who the group is for.</span>
+        </legend>
+        <div className="flex flex-wrap gap-x-5">
+          {AFFINITY_TAGS.map((t) => (
+            <label key={t.value} className="check">
+              <input type="checkbox" name="affinityTags" value={t.value} defaultChecked={group?.affinity_tags?.includes(t.value)} />
+              {t.label}
+            </label>
+          ))}
+        </div>
+      </fieldset>
 
       <label className="check mt-4">
         <input type="checkbox" name="discussionsEnabled" defaultChecked={group?.discussions_enabled ?? true} />

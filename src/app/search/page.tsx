@@ -29,7 +29,7 @@ export default async function SearchPage({ searchParams }: Props) {
   if (words || category) {
     let groupQuery = supabase
       .from("group_listings")
-      .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed")
+      .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags")
       .eq("status", "active");
     let eventQuery = supabase
       .from("event_listings")

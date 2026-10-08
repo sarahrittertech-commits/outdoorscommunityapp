@@ -115,7 +115,7 @@ flowchart TD
 
 ## UC-9 — Keep the listings fresh
 
-*Draft, awaiting review.*
+*Approved 8 October 2026.*
 
 ```mermaid
 flowchart TD
@@ -130,4 +130,62 @@ flowchart TD
   check -->|no, Skip| skip2(["Marked skipped; not suggested again"])
   check -->|yes, List it| listed["Group page: unclaimed listing<br/>with its upcoming events"]
   listed --> done(["Visible on the board; organizer can claim it (UC-8)"])
+```
+
+## UC-10 — Post a ride series
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  group["Group page (admin)"] -->|post an event| form["New event form<br/>title · details · start and end dates and times · place · places"]
+  form --> repeat{Repeats?}
+  repeat -->|no| extras
+  repeat -->|weekly on Thursdays until 17 Dec| extras["Picture · sponsors · FAQ"]
+  extras -->|Publish| page["Event page<br/>picture · dates · sponsor logo · FAQ · RSVP · places left"]
+  page --> series["Series: one event per Thursday"]
+  series -->|admin edits series| edited(["Every date still to come is updated"])
+```
+
+## UC-11 — Ask before you go
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  event["Event page<br/>FAQ"] --> found{Answer in the FAQ?}
+  found -->|yes| rsvp(["RSVPs"])
+  found -->|no| signed{Signed in?}
+  signed -->|no| signin["Sign in → Welcome"] --> ask
+  signed -->|yes| ask["Ask a question form"]
+  ask -->|Send| waiting["Event page: question waiting"]
+  waiting --> admin["Group admin answers on the event page"]
+  admin -->|Add to the FAQ| faq["Event page: answer in the FAQ"]
+  faq --> rsvp
+```
+
+## UC-12 — A bike shop on the board
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  listed["Business page<br/>unclaimed listing"] -->|claim, site admin approves| owner["Business page: you're the owner"]
+  owner -->|edit| form["Business form<br/>services · activities · locations · places it operates"]
+  form --> page["Business page<br/>offers · locations · places · events"]
+  page -->|post an event| event["Event hosted by the business<br/>at one of its locations"]
+  sponsor["A group's event (UC-10)"] -->|admin adds sponsor| page
+  page --> done(["Found by people looking for rentals, repairs or guides near a place"])
+```
+
+## UC-13 — A local chapter of a national club
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  chapter["Chapter's group page"] -->|edit group: part of| national["National organization page<br/>American Alpine Club · its chapters"]
+  visitor(["Visitor who knows the national club"]) --> national
+  national -->|picks the nearby chapter| chapter
+  chapter --> events(["Chapter's events, RSVP as usual"])
 ```

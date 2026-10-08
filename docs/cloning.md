@@ -12,7 +12,7 @@ community app**. This page is how to do that cheaply, and what it costs.
 ## The short version
 
 The codebase was built so that a second board is mostly configuration. Only
-six things are deployment-specific:
+seven things are deployment-specific:
 
 | What | Where | For the women's app |
 | --- | --- | --- |
@@ -22,8 +22,9 @@ six things are deployment-specific:
 | Legal and community wording | `src/app/{about,guidelines,terms,privacy}/page.tsx` | Rewrite for the audience |
 | Colors | the tokens at the top of `src/app/globals.css` (including the `--ridge-*` band colors) | The women's app design |
 | Logo | `src/components/BranchMark.tsx` and `src/app/icon.svg` | The women's app mark, if it differs |
+| Seed listings and the research agent's areas | `scripts/research/listings.sql` (the curated groups) and the area list in `scripts/research/agent.md` | Its own research, its own areas |
 
-Everything else — the database schema, every permission rule, the 128
+Everything else — the database schema, every permission rule, the
 permission tests, the pages and forms — is shared and should not change.
 
 ## Recommended: fork with an upstream, not copy-paste

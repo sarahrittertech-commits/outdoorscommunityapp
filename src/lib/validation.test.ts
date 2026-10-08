@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { eventSchema, groupSchema, onboardingSchema, replySchema } from "./validation";
+import { affinityTagsSchema, eventSchema, groupSchema, onboardingSchema, replySchema } from "./validation";
 
 // UT-5: form schemas.
 describe("form validation", () => {
@@ -53,5 +53,11 @@ describe("form validation", () => {
   it("limits reply length", () => {
     expect(replySchema.safeParse({ body: "x".repeat(10001) }).success).toBe(false);
     expect(replySchema.safeParse({ body: "   " }).success).toBe(false);
+  });
+
+  it("accepts only listed affinity tags, once each (FR-GR-11)", () => {
+    expect(affinityTagsSchema.parse(["women", "bipoc", "women"])).toEqual(["women", "bipoc"]);
+    expect(affinityTagsSchema.parse([])).toEqual([]);
+    expect(affinityTagsSchema.safeParse(["ninjas"]).success).toBe(false);
   });
 });

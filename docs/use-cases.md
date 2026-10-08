@@ -192,8 +192,15 @@ plus one admin review, and nobody else can take it over.
 
 ## UC-9 — Keep the listings fresh
 
-> **Draft, awaiting review.** Nothing is built until Sarah approves this
-> use case and its [user flow](./user-flows#uc-9--keep-the-listings-fresh).
+> **Approved 8 October 2026,** with these decisions:
+> - The agent is a weekly scheduled Claude Code session that writes to the
+>   database directly. Nothing new to host.
+> - Review happens in a *Candidates* section on the admin page, with
+>   *List it* and *Skip*.
+> - Sources: public web search and public pages that allow reading. No
+>   signing in to Facebook or anywhere else, no scraping behind sign-ins.
+> - Everything is listed on this board, women-only and youth groups
+>   included, with *affinity tags*: Women, Youth, BIPOC, LGBTQIA+.
 
 **Actor:** The site admin, helped by a scheduled research agent
 
@@ -214,13 +221,125 @@ plus one admin review, and nobody else can take it over.
    the board as unclaimed listings (UC-8). Guides, businesses and venues
    stay in the research area for later decisions.
 
-**Requirements:** to be written after review (alternative paths and edge
-cases: duplicates, closed groups, past events, out-of-region finds,
-women-only and youth groups, pages the agent can't read).
+**Requirements:** FR-RS-1 to FR-RS-6, FR-RS-8, FR-RS-9, FR-GR-9, FR-GR-11
 
 **Succeeds when:** new local groups and events reach the board every week,
-nothing reaches the board without the site admin's yes, and no contact
-details or private notes are ever shown.
+no new group reaches the board without the site admin's yes, and no contact
+details or private notes are ever stored or shown.
+
+## UC-10 — Post a ride series
+
+> **Draft, awaiting review.** Nothing is built until Sarah approves this
+> use case and its [user flow](./user-flows#uc-10--post-a-ride-series).
+
+**Actor:** A group admin
+
+**Trigger:** The group rides every Thursday evening from September to
+December and wants it on the board.
+
+**Flow:**
+
+1. From the group page, chooses *Post an event*.
+2. Enters the title, the details people need, the start date and time,
+   the end date and time (an event can run over several days), the meeting
+   place and how many places there are.
+3. Sets it to repeat: weekly, on Thursdays, until 17 December 2026.
+4. Adds a picture.
+5. Adds the shop that sponsors the rides (a business on the board,
+   UC-12), so its logo shows on the event.
+6. Adds a few questions and answers (*Do I need lights? Is there a no-drop
+   pace?*).
+7. Publishes. Each Thursday is its own event in the series, and the page
+   shows the picture, dates, time, place, sponsor logo, FAQ, an RSVP button
+   and how many places are left.
+8. Later, edits the series once to change the meeting place for every
+   date still to come. Only the group's owner and admins can edit.
+
+**Already built:** steps 1 and 2, RSVP, places left, events belonging to a
+group, editing by group admins only.
+**New:** repeating series, pictures, sponsors, FAQ.
+
+**Requirements:** to be written after review.
+
+**Succeeds when:** a season of rides is posted in one go, people RSVP to
+the Thursday they're coming, and one edit changes every date still to come.
+
+## UC-11 — Ask before you go
+
+> **Draft, awaiting review.**
+
+**Actor:** The newcomer, then a group admin
+
+**Trigger:** Wants to try the Thursday ride but isn't sure a gravel bike
+is fine.
+
+**Flow:**
+
+1. Opens the event page and reads the FAQ. Their question isn't there.
+2. Signs in and chooses *Ask a question*. Writes it.
+3. The group's admins see it on the event page and answer it.
+4. The admin ticks *Add to the FAQ*, so the next person finds the answer.
+5. The newcomer sees the answer on the event page and RSVPs.
+
+**Requirements:** to be written after review.
+
+**Succeeds when:** a newcomer gets an answer from the people running the
+event without having to join the group first.
+
+## UC-12 — A bike shop on the board
+
+> **Draft, awaiting review.** This adds businesses to a board that today
+> lists only community groups; see the review notes in the PR.
+
+**Actor:** A business owner (an outfitter, a shop, a guide company), then
+the site admin
+
+**Trigger:** Headwaters Outfitters rents canoes from two shops and hosts
+fly-tying demonstrations; it sponsors a local group's paddles.
+
+**Flow:**
+
+1. Finds its business already listed (from the research agent) or asks
+   to add it, and claims it the way a group is claimed (UC-8).
+2. Fills in what it offers: services (canoe rental, shuttles, repairs),
+   the activities they fit (canoeing, fly fishing), and its locations
+   (both shops).
+3. Adds the places it operates (for a guide company: Looking Glass Rock,
+   Linville Gorge).
+4. Hosts an event of its own: a fly-tying demonstration at one of its
+   shops.
+5. Is added as a sponsor by a group admin on that group's event (UC-10).
+6. Its page shows what it offers, its locations, the places it operates,
+   its own events, and the events it sponsors.
+
+**Requirements:** to be written after review.
+
+**Succeeds when:** a person looking for canoe rental or a climbing guide
+near a place finds the business, and its listing never outranks or
+crowds out community groups.
+
+## UC-13 — A local chapter of a national club
+
+> **Draft, awaiting review.**
+
+**Actor:** A chapter organizer
+
+**Trigger:** The American Alpine Club is national; its Blue Ridge
+chapter runs local events.
+
+**Flow:**
+
+1. Starts or claims the group for the local chapter.
+2. Links it to the national organization (American Alpine Club), which
+   has its own page listing all its chapters on the board.
+3. Posts the chapter's events as usual.
+4. A visitor on the national organization's page sees every chapter, and
+   picks the one near them.
+
+**Requirements:** to be written after review.
+
+**Succeeds when:** someone who knows the national club finds their local
+chapter in one click.
 
 ---
 

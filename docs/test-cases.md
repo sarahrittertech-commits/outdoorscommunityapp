@@ -9,9 +9,9 @@ A solo build has no code review, so the tests are the safety net. They are
 weighted toward the thing most likely to go wrong silently in this project:
 **someone seeing or changing something they shouldn't.**
 
-:::note Status — 29 September 2026
-PT-1 to PT-24 are implemented in `supabase/tests/` (157 assertions) and pass.
-UT-1 to UT-5 are implemented in `src/lib/*.test.ts` (24 tests) and pass.
+:::note Status — 8 October 2026
+PT-1 to PT-27 are implemented in `supabase/tests/` (186 assertions) and pass.
+UT-1 to UT-5 are implemented in `src/lib/*.test.ts` (26 tests) and pass.
 E2E-1 to E2E-3 were walked in a real browser against a local database (43
 checks, all passing) but are not yet a CI job.
 MT-8 passed on 29 September 2026: all 26 pages at 390px wide, as a visitor,
@@ -51,6 +51,9 @@ web app is not the thing enforcing the rule.
 | PT-22 | No trigger function or internal helper (moderation log writer, rate limiter) can be called through the API, and every function pins its search path | Fake moderation log entries; functions hijackable |
 | PT-23 | Nobody can join, RSVP to or post events in an unclaimed listing, and nobody signed in can make one or set a source link | Listings behave like ownerless groups anyone can take over |
 | PT-24 | Only the site admin approves a claim; approval makes the claimant owner and declines the other claims; claimants see only their own | Anyone can seize a listed group |
+| PT-25 | Only the site admin can see, list or skip candidates; listing makes an unclaimed group with its events and affinity tags | Anyone can push research finds onto the board |
+| PT-26 | Adding a candidate validates every field and skips duplicates of candidates and board groups | Bad or repeated agent output lands in the review queue |
+| PT-27 | Only owners and admins change a group's affinity tags, and only to tags on the list | Anyone can relabel a group |
 
 ## Automated — unit
 
@@ -62,7 +65,7 @@ Run by the unit test command in CI. Pure functions only.
 | UT-2 | Event time formatting | An event stored in UTC displays in its own time zone, including across a daylight-saving change |
 | UT-3 | `.ics` generator | Output has the correct start, end, time zone, title and location |
 | UT-4 | Slug generator | Two groups called "Trail Friends" get distinct slugs; slugs are lowercase and URL-safe |
-| UT-5 | Zod schemas | Each form schema rejects missing required fields and over-length text |
+| UT-5 | Zod schemas | Each form schema rejects missing required fields and over-length text; affinity tags accept only the four on the list |
 
 ## Automated — end to end
 
@@ -73,12 +76,14 @@ Playwright in CI against the local stack with seed data.
 | E2E-1 | UC-1, signed out | Home → subcategory → group → event in three clicks; no sign-in prompt |
 | E2E-2 | UC-2 | Sign in (using the local email catcher), accept terms, join, RSVP, return to the event page showing "going" |
 | E2E-3 | Browse with JavaScript off | Home, listing, group and event pages render fully |
+| E2E-4 | UC-8, claim a listing | Signed in, ask to claim a listing; as the site admin approve it; the claimant's group page shows them as owner |
+| E2E-5 | UC-9, list a candidate | As the site admin, *List it* on a candidate; the group page shows the unclaimed listing with its tags and upcoming events |
 
 ## Manual — before launch
 
 | ID | Check |
 | --- | --- |
-| MT-1 | Walk all six use cases on the production site with seed data |
+| MT-1 | Walk every approved use case on the production site with seed data |
 | MT-2 | Sign-in email arrives in Gmail and Outlook inboxes, not spam |
 | MT-3 | Lighthouse mobile: performance and accessibility at or above target (TR-PERF-3, TR-A11Y) |
 | MT-4 | Keyboard-only pass through join, RSVP and post |
@@ -86,3 +91,18 @@ Playwright in CI against the local stack with seed data.
 | MT-6 | Supabase project is on Pro and backups are listed (TR-OPS-2) |
 | MT-7 | Shared group and event links show correct previews in iMessage and Slack |
 | MT-8 | Every page at phone width (390px): no sideways scrolling, and buttons and links meet the 24px minimum tap size (WCAG 2.2) |
+| MT-9 | After the first weekly research run: the session summary lists its searches and results, new candidates appear on the admin page, and none of them holds an email address, phone number or person's name |
+
+## Planned — pending use case review
+
+Draft use cases UC-10 to UC-13 are not approved yet, so these have no
+requirement numbers. They show what each would have to prove; they become
+real tests, with requirements, once the use case is approved.
+
+| Use case | Would test |
+| --- | --- |
+| UC-10 Post a ride series | Only a group's owner and admins create or edit a series; editing the series changes only dates still to come; each date takes its own RSVPs and shows places left; pictures are images only and re-encoded; a sponsor must be a business on the board |
+| UC-11 Ask before you go | Only signed-in users ask; only the group's admins answer or move an answer to the FAQ; unanswered questions are not shown to others; questions follow the post rate limit |
+| UC-12 A bike shop on the board | Businesses are claimed like groups; only the business owner edits services, locations and places; a business never appears above groups in listings; no prices or booking |
+| UC-13 A local chapter of a national club | Only a chapter's owner links it to a national organization; the national page lists only chapters that linked themselves |
+

@@ -73,7 +73,7 @@ and fewer roles means fewer permission rules to get wrong. A separate
 
 | Action | Visitor | User (not a member) | Pending | Member | Admin | Owner | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Edit group details, turn discussions on/off, change join policy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Edit group details and affinity tags, turn discussions on/off, change join policy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Archive / restore the group | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | Remove the group entirely | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
@@ -115,6 +115,15 @@ A listing has no owner, admins or members, so only these columns apply.
 | See a claim | ❌ | **own** | ✅ all |
 | Approve or decline a claim | ❌ | ❌ | ✅ |
 | Add a listing or set a source link | ❌ | ❌ | ❌ operator SQL only |
+
+### Research candidates (FR-RS-5, FR-RS-6)
+
+| Action | Visitor | User | Site admin |
+| --- | --- | --- | --- |
+| See candidates | ❌ | ❌ | ✅ |
+| List a group candidate | ❌ | ❌ | ✅ |
+| Skip a candidate | ❌ | ❌ | ✅ |
+| Add a candidate | ❌ | ❌ | ❌ research agent only |
 
 ## Cross-cutting rules
 
