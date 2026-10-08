@@ -112,3 +112,22 @@ flowchart TD
   check -->|no, Decline| declined(["Group page: claim wasn't approved"])
   owner --> done([Club runs its own group on the board])
 ```
+
+## UC-9 — Keep the listings fresh
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  sched(["Weekly schedule"]) --> agent["Research agent<br/>searches the web per activity and area"]
+  agent --> known{Already in the research area?}
+  known -->|yes| skip1([Skipped])
+  known -->|no| cand["Saved as a candidate<br/>type · activity · area · source link · events"]
+  cand --> admin["Site admin page: Candidates<br/>this week's finds, by type"]
+  admin --> kind{Community group?}
+  kind -->|no: guide, business, venue| keep(["Stays in the research area"])
+  kind -->|yes| check{Source page checks out?}
+  check -->|no, Skip| skip2(["Marked skipped; not suggested again"])
+  check -->|yes, List it| listed["Group page: unclaimed listing<br/>with its upcoming events"]
+  listed --> done(["Visible on the board; organizer can claim it (UC-8)"])
+```
