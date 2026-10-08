@@ -12,12 +12,13 @@ community app**. This page is how to do that cheaply, and what it costs.
 ## The short version
 
 The codebase was built so that a second board is mostly configuration. Only
-five things are deployment-specific:
+six things are deployment-specific:
 
 | What | Where | For the women's app |
 | --- | --- | --- |
-| Name, tagline, description, audience, region, contact | `src/config/site.ts` | New name and wording |
+| Name, tagline, description, audience, region, contact, home page headline, intro and background image, search example, default join setting | `src/config/site.ts` | New name and wording; `defaultJoinPolicy: "approval"` if groups should start approval-only |
 | Region and category list | `supabase/migrations/20260925000005_seed_directory.sql` | Replace the file's contents |
+| Category drawings | `src/components/ActivityIcon.tsx` (keyed by category slug) | One drawing per new category; unknown slugs fall back to a plain circle |
 | Legal and community wording | `src/app/{about,guidelines,terms,privacy}/page.tsx` | Rewrite for the audience |
 | Colors | the tokens at the top of `src/app/globals.css` (including the `--ridge-*` band colors) | The women's app design |
 | Logo | `src/components/BranchMark.tsx` and `src/app/icon.svg` | The women's app mark, if it differs |
@@ -33,7 +34,7 @@ costs:
 | Approach | What it means | Consequence |
 | --- | --- | --- |
 | **Copy** | Duplicate the files into a new repo and carry on separately | Every bug fix and security fix has to be made twice, by hand. The two drift apart within weeks. |
-| **Fork with upstream** (recommended) | New repo created from this one, keeping this one as `upstream` | Fixes made here are pulled into the women's app with one `git merge`. Its own changes stay in the five places above, so merges stay clean. |
+| **Fork with upstream** (recommended) | New repo created from this one, keeping this one as `upstream` | Fixes made here are pulled into the women's app with one `git merge`. Its own changes stay in the six places above, so merges stay clean. |
 
 Both give two separate public repositories for the portfolio. Only the
 second keeps them in sync.
@@ -52,7 +53,7 @@ second keeps them in sync.
    git push -u origin main
    ```
 
-3. Change the five deployment-specific places listed above, in one commit.
+3. Change the six deployment-specific places listed above, in one commit.
 4. Update `CLAUDE.md`, `README.md` and `docs/` for the new product. The PRD,
    personas and guidelines will differ; the ADRs, data model and permission
    matrix carry over.

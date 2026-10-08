@@ -1,3 +1,4 @@
+import { site } from "@/config/site";
 import type { Tables } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 
@@ -63,11 +64,11 @@ export async function GroupForm({
       <fieldset className="mt-4">
         <legend className="font-semibold">Who can join</legend>
         <label className="check">
-          <input type="radio" name="joinPolicy" value="open" defaultChecked={(group?.join_policy ?? "open") === "open"} />
+          <input type="radio" name="joinPolicy" value="open" defaultChecked={(group?.join_policy ?? site.defaultJoinPolicy) === "open"} />
           Anyone can join straight away
         </label>
         <label className="check mt-1">
-          <input type="radio" name="joinPolicy" value="approval" defaultChecked={group?.join_policy === "approval"} />
+          <input type="radio" name="joinPolicy" value="approval" defaultChecked={(group?.join_policy ?? site.defaultJoinPolicy) === "approval"} />
           People ask to join and an organizer approves them
         </label>
       </fieldset>
