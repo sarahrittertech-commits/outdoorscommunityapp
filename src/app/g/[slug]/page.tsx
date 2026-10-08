@@ -69,10 +69,31 @@ export default async function GroupPage({ params, searchParams }: Props) {
       isAdmin
         ? supabase.from("group_members").select("user_id", { count: "exact", head: true }).eq("group_id", group.id).eq("status", "pending")
         : Promise.resolve({ count: 0 }),
-      group.is_unclaimed && viewer
+      (group.is_unclaimed || group.needs_owner) && viewer
         ? supabase.from("group_claims").select("status").eq("group_id", group.id).eq("user_id", viewer.id).maybeSingle()
         : Promise.resolve({ data: null }),
     ]);
+
+  const claimForm =
+    myClaim?.status === "pending" ? (
+      <p className="m-0 mt-1 text-sm">Your claim is waiting for the site admin to check it.</p>
+    ) : myClaim?.status === "declined" ? (
+      <p className="m-0 mt-1 text-sm text-muted">Your claim wasn&apos;t approved.</p>
+    ) : !viewer ? (
+      <p className="m-0 mt-1 text-sm">
+        <Link href={`/signin?next=/g/${group.slug}`}>Sign in</Link> to claim it. Once approved you&apos;ll run it here: post events,
+        take RSVPs and open a discussion board.
+      </p>
+    ) : (
+      <form action={requestClaim.bind(null, group.id, group.slug)}>
+        <label htmlFor="claim-note" className="mt-1 text-sm font-normal">
+          Claim it: tell the site admin how you&apos;re connected to {group.name}, and how we can check (a club email address, your
+          role on their website).
+        </label>
+        <textarea id="claim-note" name="note" required minLength={10} maxLength={1000} className="min-h-20" />
+        <button className="button mt-2">Ask to claim</button>
+      </form>
+    );
 
   return (
     <>
@@ -97,7 +118,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
         )}
       </p>
 
-      {group.status === "archived" && (
+      {group.status === "archived" && !group.needs_owner && (
         <div role="status" className="mt-3 rounded bg-warning px-3 py-2">
           This group is archived. It is read-only and hidden from listings.
           {isOwner && (
@@ -106,6 +127,18 @@ export default async function GroupPage({ params, searchParams }: Props) {
             </form>
           )}
         </div>
+      )}
+
+      {/* FR-AC-6 / FR-GR-10: its owner deleted their account. ------------------ */}
+      {group.needs_owner && (
+        <section aria-label="Needs an organizer" className="mt-4 rounded border border-rule bg-panel px-4 py-3">
+          <p className="m-0">
+            <strong>This group needs an organizer.</strong> Its owner has left {site.name}, so it is read-only and hidden from listings,
+            and its upcoming events were cancelled. Members and past posts are kept.
+          </p>
+          <h2 className="mt-4 font-sans text-base font-bold text-ink">Want to run it?</h2>
+          {claimForm}
+        </section>
       )}
 
       {/* FR-GR-9 / FR-GR-10: a listing added from public information. ---------- */}
@@ -122,25 +155,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
             </a>
           </p>
           <h2 className="mt-4 font-sans text-base font-bold text-ink">Are you the organizer?</h2>
-          {myClaim?.status === "pending" ? (
-            <p className="m-0 mt-1 text-sm">Your claim is waiting for the site admin to check it.</p>
-          ) : myClaim?.status === "declined" ? (
-            <p className="m-0 mt-1 text-sm text-muted">Your claim wasn&apos;t approved.</p>
-          ) : !viewer ? (
-            <p className="m-0 mt-1 text-sm">
-              <Link href={`/signin?next=/g/${group.slug}`}>Sign in</Link> to claim it. Once approved you&apos;ll run it here: post events,
-              take RSVPs and open a discussion board.
-            </p>
-          ) : (
-            <form action={requestClaim.bind(null, group.id, group.slug)}>
-              <label htmlFor="claim-note" className="mt-1 text-sm font-normal">
-                Claim it: tell the site admin how you&apos;re connected to {group.name}, and how we can check (a club email address, your
-                role on their website).
-              </label>
-              <textarea id="claim-note" name="note" required minLength={10} maxLength={1000} className="min-h-20" />
-              <button className="button mt-2">Ask to claim</button>
-            </form>
-          )}
+          {claimForm}
         </section>
       )}
 

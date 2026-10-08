@@ -112,6 +112,7 @@ export type Database = {
           updated_at: string;
           search: unknown;
           is_unclaimed: boolean;
+          needs_owner: boolean;
           source_url: string | null;
           affinity_tags: string[];
         };
@@ -133,6 +134,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           is_unclaimed?: boolean;
+          needs_owner?: boolean;
           source_url?: string | null;
           affinity_tags?: string[];
         };
@@ -154,6 +156,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           is_unclaimed?: boolean;
+          needs_owner?: boolean;
           source_url?: string | null;
           affinity_tags?: string[];
         };

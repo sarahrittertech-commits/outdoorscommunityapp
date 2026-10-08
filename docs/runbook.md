@@ -179,6 +179,12 @@ by hand from the Supabase dashboard (Authentication → Users), or:
 delete from auth.users where id in (select id from public.accounts where deleted_at is not null);
 ```
 
+When an owner deletes their account, any group they still own is archived,
+its upcoming events are cancelled, and it shows *This group needs an
+organizer* with a claim form. Claims on it arrive under *Claim requests* on
+the site admin page; approving one makes the claimant the owner and the
+group active again. Restoring it any other way is refused.
+
 ### Restoring from backup
 
 Supabase Pro keeps daily backups for 7 days: Database → Backups → Restore.

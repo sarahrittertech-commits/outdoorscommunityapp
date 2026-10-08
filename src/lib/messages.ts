@@ -56,7 +56,6 @@ export const errors = {
   event_cancelled: "This event has been cancelled.",
   invalid_timezone: "That time zone isn't recognized.",
   terms_required: "You need to confirm you're 18 or older and accept the terms.",
-  owns_groups: "Transfer or archive the groups you own before deleting your account.",
   cannot_join: "You can't join this group.",
   already_member: "You're already in this group.",
   link_failed: "That sign-in link didn't work. It may have expired; request a new one.",

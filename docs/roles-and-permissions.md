@@ -103,15 +103,17 @@ Existing threads stay readable to members.
 | See reports for a group's content | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | See all reports, suspend accounts, view moderation log | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
-### Unclaimed listings (FR-GR-9, FR-GR-10)
+### Unclaimed listings and groups without an owner (FR-GR-9, FR-GR-10, FR-AC-6)
 
-A listing has no owner, admins or members, so only these columns apply.
+A listing has no owner, admins or members, so only these columns apply. A
+group whose owner deleted their account is archived (read-only) and can be
+claimed the same way; its remaining admins and members are users here.
 
 | Action | Visitor | User | Site admin |
 | --- | --- | --- | --- |
 | See a listing, its events and its website link | ✅ | ✅ | ✅ |
 | Join it, RSVP to its events, post in it | ❌ | ❌ | ❌ |
-| Ask to claim it | ❌ | ✅ once | ✅ |
+| Ask to claim it (a listing, or a group that needs an owner) | ❌ | ✅ once | ✅ |
 | See a claim | ❌ | **own** | ✅ all |
 | Approve or decline a claim | ❌ | ❌ | ✅ |
 | Add a listing or set a source link | ❌ | ❌ | ❌ operator SQL only |

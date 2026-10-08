@@ -45,7 +45,7 @@ web app is not the thing enforcing the rule.
 | PT-16 | A suspended user can read but every write is refused | Suspension incomplete |
 | PT-17 | A user who hasn't accepted the terms cannot write anything | FR-AC-2 bypassable |
 | PT-18 | A group admin sees only their own group's reports; the site admin sees all | Report routing leaks |
-| PT-19 | Nobody can update or delete a moderation log row | Log isn't append-only |
+| PT-19 | Nobody can update or delete a moderation log row; deleting a person or group in it only clears that id | Log isn't append-only, or organizers can never be deleted |
 | PT-20 | No table readable by other users contains an email address | FR-AC-5 broken |
 | PT-21 | The rate limits in TR-SEC-8 refuse the request over the limit | Limits missing or wrong |
 | PT-22 | No trigger function or internal helper (moderation log writer, rate limiter) can be called through the API, and every function pins its search path | Fake moderation log entries; functions hijackable |
