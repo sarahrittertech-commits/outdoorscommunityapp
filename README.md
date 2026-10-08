@@ -11,9 +11,10 @@ or by date, and they are the same for everyone.
 
 ## Status
 
-Built and working locally: every Must requirement, most Shoulds, 125
-database permission tests and 24 unit tests. Next: visual design, then
-launch setup. Not yet deployed.
+Live at https://branchoutapp-production.up.railway.app/ with every Must
+requirement, most Shoulds, 186 database permission tests and the unit
+tests passing. Real Western North Carolina groups are listed until their
+organizers claim them, and a weekly research agent suggests new ones.
 
 ## Running it
 

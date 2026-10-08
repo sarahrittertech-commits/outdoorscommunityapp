@@ -62,11 +62,16 @@ directed the build on them.
 
 ## Current state
 
-Built and working locally (25 September 2026): the full database with every
-permission rule and its tests, and a Next.js app covering every Must
-requirement plus most Shoulds. See the PRD's "Build status" for what is not
-built yet. No Supabase project or Railway service exists yet; the
-[runbook](docs/runbook.md) has the setup steps.
+Live since 29 September 2026: Supabase (project `outdoorscommunityapp`) and
+Railway (deploys `main`; https://branchoutapp-production.up.railway.app/).
+The full database with every permission rule and its tests, and a Next.js
+app covering every Must requirement plus most Shoulds. Production is seeded
+with unclaimed listings of real groups (FR-GR-9) that organizers can claim;
+a weekly research agent (UC-9, `scripts/research/agent.md`) suggests new
+ones for the site admin to list or skip; groups carry affinity tags
+(FR-GR-11). See the PRD's "Build status" for what is not built yet and the
+[runbook](docs/runbook.md) for operations. Draft use cases awaiting review:
+UC-10 to UC-13.
 
 The look follows the branch outdoors brand guide (v2, Claude Design),
 summarized in [docs/brand.md](docs/brand.md): plum, paper and autumn leaf

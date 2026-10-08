@@ -73,7 +73,7 @@ and fewer roles means fewer permission rules to get wrong. A separate
 
 | Action | Visitor | User (not a member) | Pending | Member | Admin | Owner | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Edit group details, turn discussions on/off, change join policy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Edit group details and affinity tags, turn discussions on/off, change join policy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Archive / restore the group | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | Remove the group entirely | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 

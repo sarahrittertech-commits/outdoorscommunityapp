@@ -114,13 +114,17 @@ These are decisions, not a backlog:
 
 - Feeds, timelines, "recommended" anything, ranking algorithms
 - Likes, reactions, follower counts
-- Ads, sponsored listings, paid tiers, payments, ticketing
+- Ads, sponsored listings, paid tiers, payments, ticketing. *(Under
+  review: UC-10 and UC-12 propose sponsor credits on events and business
+  pages; see the open questions.)*
 - Real-time chat and direct messages between users (see [ADR-0005](./architecture/adr-0005-discussions))
 - Push notifications and in-app notification badges
 - Native mobile apps (the web app is responsive)
-- Photo galleries, image uploads in posts
-- Recurring event series
-- AI features
+- Photo galleries, image uploads in posts. *(Under review: UC-10 proposes
+  one picture per event.)*
+- Recurring event series. *(Under review: UC-10 proposes them.)*
+- AI features for users. (The weekly research agent, UC-9, is an operator
+  tool: it only suggests candidates to the site admin.)
 - Users under 18
 - Shared code with the bike map or the dashboard
 
@@ -167,6 +171,13 @@ events) until their organizers claim them. It's the honest version of a
 seeded board: every listing says it is unclaimed and sends people to the
 organizer's own site.
 
+Added 8 October 2026: the **weekly research agent** (UC-9, FR-RS-*) and
+**affinity tags** (FR-GR-11). A scheduled Claude Code session searches the
+public web for new groups and events and saves them as candidates; the
+site admin lists or skips each one from the admin page. Groups can carry
+the tags Women, Youth, BIPOC and LGBTQIA+, and women-only and youth groups
+are listed like any other.
+
 Not built yet:
 
 | Item | Requirement | Why it waits |
@@ -181,6 +192,28 @@ Not built yet:
 ## Open questions
 
 These need Sarah's decision before or during build:
+
+- **Businesses on the board (UC-12).** The board was scoped to community
+  groups, with outfitters and guide services listed under "who this board
+  is not for". UC-12 would add business pages: services, locations, the
+  places they operate, their own events. Decide whether that is in, and if
+  so whether businesses can host events or only sponsor them.
+- **Sponsors (UC-10, UC-12).** A sponsor's name and logo on an event is
+  close to advertising, which is out of scope. A middle path: a small, plain
+  "Sponsored by" credit on the event page only, never in lists, never
+  affecting order.
+- **Event series, pictures and questions (UC-10, UC-11).** Each reverses
+  or extends an out-of-scope decision: recurring series and image uploads
+  are listed as out of scope, and event questions need either notification
+  emails or admins checking each event page.
+- **National organizations (UC-13).** Linking chapters to a parent
+  organization adds a level above groups. Small to build, but it is new
+  structure in the data model.
+- **Places and venues (UC-12).** One list of places (a crag area, a
+  trailhead, a put-in, a shop's storefront) that events, groups and
+  businesses point to would answer "business location or venue?": a
+  business links to places as *its location* or *operates at*. The
+  research tables already hold 116 places.
 
 - ~~**Audience.**~~ Settled 25 September 2026: this is the **general,
   all-adventure** local board. The women's outdoor community app comes

@@ -103,6 +103,7 @@ the dashboard.
 | TR-SEC-8 | Rate limits, enforced in the database so they can't be bypassed: 10 posts per user per 10 minutes; 20 joins or join requests per user per day; 10 reports per user per day; 3 groups created per user per week. Supabase Auth's own limits cover sign-in emails. |
 | TR-SEC-9 | Cover image uploads: images only (JPEG, PNG, WebP), 2 MB maximum, re-encoded on upload so no original file is ever served. |
 | TR-SEC-10 | Supabase's security advisor reports no errors before each release. Its remaining warnings are deliberate: the helper checks that the permission rules call ("is this person a member?") must be callable by visitors, and the action functions (join, RSVP, moderate) are the intended way in and check permissions themselves. Hosted Supabase lets signed-in users call any new function by default, so internal functions are revoked explicitly (PT-22). |
+| TR-SEC-11 | The weekly research agent (UC-9) reads untrusted web pages, so: its instructions treat page content as data, never instructions; it writes only through `research.add_candidate()`, which validates every field; and nothing it saves reaches the board until the site admin lists it. The remaining risk, a page tricking the session into other database changes, is accepted for a weekly operator tool and limited by the project's database backups (MT-6). |
 
 ## Privacy — TR-PRIV
 
@@ -113,6 +114,7 @@ the dashboard.
 | TR-PRIV-3 | Usage numbers come from counting rows in our own database (FR-AD-3), not from tracking visitors. |
 | TR-PRIV-4 | Account deletion (FR-AC-6) removes personal data within 24 hours; posts stay, attributed to "deleted user". |
 | TR-PRIV-5 | A privacy policy written in plain language, in the same style as the bike map's. |
+| TR-PRIV-6 | Research candidates (FR-RS-2) have no column for contact details, prices or people's names; the agent is told never to collect them. |
 
 ## Data — TR-DATA
 

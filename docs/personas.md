@@ -80,10 +80,22 @@ Group admins handle their own groups first; the site admin is the backstop.
 
 ---
 
+## Proposed: the business owner (UC-12, draft)
+
+**Wants:** people looking for canoe rental, repairs or a climbing guide
+near a place to find them, and credit for sponsoring local groups.
+
+**Design question:** the board was built for community groups (see below).
+Adding businesses is under review; until it's decided this persona has no
+requirements.
+
+---
+
 ## Who this board is not for
 
 - Commercial outfitters and guide services selling trips. No payments, no
-  ticketing, no promotion.
+  ticketing, no promotion. *(Under review: UC-12 proposes business pages
+  without payments or booking.)*
 - People looking for trail conditions, maps or route beta. AllTrails, Strava
   and the bike map serve that.
 - Large clubs that need membership dues, waivers or rosters. Out of scope.
