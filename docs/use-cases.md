@@ -209,8 +209,9 @@ plus one admin review, and nobody else can take it over.
 **Flow:**
 
 1. The research agent runs. For each activity and subcategory on the
-   board, and each area, it searches the public web for local groups and
-   their upcoming events, plus guides, businesses and venues.
+   board, it searches the public web in Western North Carolina and, in
+   turn, a wider ring across the Southeast, for groups and their upcoming
+   events, plus guides, businesses and venues.
 2. It saves each new find as a *candidate* in the private research area:
    name, type, activity, area, the public page it came from, and its
    upcoming events with dates and times. It skips anything already known.
