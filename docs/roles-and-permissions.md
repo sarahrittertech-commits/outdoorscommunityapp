@@ -35,6 +35,10 @@ of another and a plain member of a third.
 | **Pending** | — | Asked to join an approval-required group; no member access yet |
 | **Banned** | — | Removed by an owner or admin; cannot rejoin |
 
+*Draft UC-31 (9 October 2026) would show the owner as **Page admin** and
+admins as **Page managers**, limit managers to two, and add email invites
+and an invite link. Not built; see the functional requirements.*
+
 Meetup has five organizer tiers and Facebook has three. Three is enough here,
 and fewer roles means fewer permission rules to get wrong. A separate
 *moderator* role can be added later if admins turn out to be doing too much.
@@ -131,7 +135,7 @@ claimed the same way; its remaining admins and members are users here.
 
 ### Proposed with the 8 October design (drafts, not built)
 
-These follow the draft requirements for UC-10 to UC-29. Each becomes part
+These follow the draft requirements for UC-10 to UC-31. Each becomes part
 of the matrix above, with a permission test, once its use case is
 approved.
 

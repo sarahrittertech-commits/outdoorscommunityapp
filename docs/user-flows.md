@@ -421,3 +421,25 @@ flowchart TD
   resetmail -->|clicks the link| newpw["Set a new password"]
   newpw --> back
 ```
+
+## UC-31 — Bring people into the group
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  members["Members page (page admin)"] --> mgr["Page managers: pick a member, or enter an email"]
+  mgr --> cap{Already two managers?}
+  cap -->|yes| full(["Remove one first"])
+  cap -->|no, a member| made(["They are a page manager"])
+  cap -->|no, an email| mgrmail["Manager invite email"] --> accept["They sign up or sign in and accept"] --> made
+  members --> invite["Invite people: 1 to 25 emails"] --> sent(["One email per address with a join link"])
+  members --> link["Invite link: Create, copy, turn off"]
+  sent --> open
+  link --> open["Someone opens the link"]
+  open --> signed{Signed in?}
+  signed -->|no| signin["Sign up or sign in"] --> join
+  signed -->|yes| join{Banned, or link off or expired?}
+  join -->|no| member(["Member of the group, no approval needed"])
+  join -->|yes| refuse(["This link doesn't work. Ask the group for a new one"])
+```

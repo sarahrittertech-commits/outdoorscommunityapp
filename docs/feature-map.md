@@ -111,6 +111,14 @@ Requested by Sarah on 8 October; drafted 9 October.
 | **Confirm a claim by email** at the group's own website domain; the site admin sees *Confirmed at …* or *Not confirmed* | Fits · Waits on domain | UC-26 | FR-GR-18 to FR-GR-20 |
 | **Approval of a person's first group** (recommended of three options: every group, first group only, none) | Decision needed | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 |
 
+### Running a group
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Page admin and up to two page managers**; manager invites by email | Requested 9 Oct, awaiting review | UC-31 | FR-MB-11, FR-MB-12 |
+| **Invite members by email**, one or many addresses | Requested 9 Oct, awaiting review (needs email) | UC-31 | FR-MB-13, FR-MB-14, FR-MB-16 |
+| **Invite link** to share so people can join | Requested 9 Oct, awaiting review (no email needed) | UC-31 | FR-MB-14 to FR-MB-16 |
+
 ### Accounts
 
 | Feature | Status | Use case | Draft requirements |
