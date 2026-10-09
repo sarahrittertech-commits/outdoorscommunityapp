@@ -11,7 +11,7 @@ import { EventList } from "@/components/Listings";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
 import { site } from "@/config/site";
-import { loadGroup } from "@/lib/groups";
+import { loadGroup, roleLabel } from "@/lib/groups";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -45,6 +45,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
   const loaded = await loadGroup(slug);
   const { supabase, group, viewer, membership, isMember, isAdmin, isOwner, isActive, canManage } = loaded;
   const now = new Date().toISOString();
+  const query = await searchParams;
 
   const [{ data: listing }, { data: organizers }, { data: upcoming }, { count: pastCount }, { count: pendingCount }, { data: myClaim }] =
     await Promise.all([
@@ -62,7 +63,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
         .order("role"),
       supabase
         .from("event_listings")
-        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed")
+        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps")
         .eq("group_id", group.id)
         .gt("ends_at", now)
         .order("starts_at")
@@ -99,7 +100,13 @@ export default async function GroupPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <Notice params={await searchParams} />
+      {query.m === "joined_by_invite" ? (
+        <p role="status" className="mb-4 rounded bg-notice px-3 py-2">
+          Welcome to {group.name}. You&apos;re a member now.
+        </p>
+      ) : (
+        <Notice params={query} />
+      )}
       {listing && (
         <p className="breadcrumb">
           <Link href={`/c/${listing.category_slug}`}>{listing.category_name}</Link> ›{" "}
@@ -156,8 +163,8 @@ export default async function GroupPage({ params, searchParams }: Props) {
       {group.needs_owner && (
         <section aria-label="Needs an organizer" className="mt-4 rounded border border-rule bg-panel px-4 py-3">
           <p className="m-0">
-            <strong>This group needs an organizer.</strong> Its owner has left {site.name}, so it is read-only and hidden from listings, and
-            its upcoming events were cancelled. Members and past posts are kept.
+            <strong>This group needs an organizer.</strong> Its page admin has left {site.name}, so it is read-only and hidden from listings,
+            and its upcoming events were cancelled. Members and past posts are kept.
           </p>
           <h2 className="mt-4 font-sans text-base font-bold text-ink">Want to run it?</h2>
           {claimForm}
@@ -191,7 +198,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
             </Link>
           ) : isMember ? (
             <div className="text-sm">
-              You&apos;re {isOwner ? "the owner" : isAdmin ? "an admin" : "a member"}.{" "}
+              You&apos;re {isOwner ? "the page admin" : isAdmin ? "a page manager" : "a member"}.{" "}
               {!isOwner && (
                 <form action={leaveGroup.bind(null, group.id, group.slug)} className="inline">
                   <button className="link-button">Leave group</button>
@@ -222,10 +229,10 @@ export default async function GroupPage({ params, searchParams }: Props) {
       )}
 
       {canManage && (
-        <nav aria-label="Organizer tools" className="mt-4 flex flex-wrap gap-x-4 rounded bg-panel px-3 py-2 text-sm">
-          <strong>Organizer:</strong>
+        <nav aria-label="Page admin tools" className="mt-4 flex flex-wrap gap-x-4 rounded bg-panel px-3 py-2 text-sm">
+          <strong>{isOwner ? "Page admin:" : isAdmin ? "Page manager:" : "Site admin:"}</strong>
           <Link href={`/g/${group.slug}/events/new`}>post an event</Link>
-          <Link href={`/g/${group.slug}/members`}>members{pendingCount ? ` (${pendingCount} waiting)` : ""}</Link>
+          <Link href={`/g/${group.slug}/members`}>members and invites{pendingCount ? ` (${pendingCount} waiting)` : ""}</Link>
           <Link href={`/g/${group.slug}/edit`}>edit group</Link>
           <Link href={`/g/${group.slug}/reports`}>reports</Link>
         </nav>
@@ -264,12 +271,12 @@ export default async function GroupPage({ params, searchParams }: Props) {
         </>
       )}
 
-      {!group.is_unclaimed && <h2>Organizers</h2>}
+      {!group.is_unclaimed && <h2>Run by</h2>}
       <ul className="mt-2">
         {organizers?.map((o) => (
           <li key={o.user_id}>
             <Link href={`/u/${o.user_id}`}>{o.profiles?.display_name ?? "deleted user"}</Link>{" "}
-            <span className="text-sm text-muted">{o.role}</span>
+            <span className="text-sm text-muted">{roleLabel(o.role)}</span>
           </li>
         ))}
       </ul>

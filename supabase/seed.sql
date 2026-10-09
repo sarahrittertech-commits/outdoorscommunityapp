@@ -14,8 +14,11 @@ insert into auth.users (
   raw_app_meta_data, raw_user_meta_data, confirmation_token, recovery_token,
   email_change_token_new, email_change, created_at, updated_at
 )
+-- Every seed user's password is trail-mix-2026 (UC-29). Local only: this file
+-- never runs in production. The hash is bcrypt, as Supabase Auth stores it.
 select
-  '00000000-0000-0000-0000-000000000000', v.id::uuid, 'authenticated', 'authenticated', v.email, '',
+  '00000000-0000-0000-0000-000000000000', v.id::uuid, 'authenticated', 'authenticated', v.email,
+  '$2a$10$HRoNSIDRhtvHjG/VzfpakeuxJneeUNmWuQvGltZTl4ShjxX5cvB1.',
   now(), '{"provider":"email","providers":["email"]}', '{}', '', '', '', '', now(), now()
 from (values
   ('11111111-1111-4111-8111-000000000001', 'maya@example.com'),

@@ -4,6 +4,7 @@
 import { z } from "zod";
 
 import { AFFINITY_TAGS } from "./affinity";
+import { isCommonPassword } from "./common-passwords";
 import { safeNext } from "./navigation";
 import { isValidTimeZone, zonedLocalToUtc } from "./time";
 
@@ -34,10 +35,55 @@ export function formFields(formData: FormData): Record<string, string> {
   return fields;
 }
 
+// UC-29 (FR-AC-17 to FR-AC-21). Passwords are never trimmed: a space is a
+// character like any other. The issue messages are error codes from
+// messages.ts, so the action can say exactly which rule was missed.
+
+const email = z.string().trim().pipe(z.email().max(254));
+
+/** bcrypt, which Supabase uses, reads only the first 72 bytes. */
+const MAX_PASSWORD_BYTES = 72;
+
+export const passwordSchema = z
+  .string()
+  .min(10, "password_length")
+  .refine((v) => new TextEncoder().encode(v).length <= MAX_PASSWORD_BYTES, "password_length")
+  .refine((v) => !isCommonPassword(v), "password_common");
+
+/** Sign-in checks only the password's size: the rules may have changed since it was set. */
 export const signInSchema = z.object({
-  email: z.email().max(254),
+  email,
+  password: z.string().min(1).max(200),
   next: z.string().optional(),
 });
+
+const matching = { message: "password_mismatch", path: ["passwordAgain"] };
+
+export const signUpSchema = z
+  .object({ email, password: passwordSchema, passwordAgain: z.string(), next: z.string().optional() })
+  .refine((v) => v.password === v.passwordAgain, matching);
+
+export const forgotPasswordSchema = z.object({ email });
+
+export const newPasswordSchema = z
+  .object({ password: passwordSchema, passwordAgain: z.string() })
+  .refine((v) => v.password === v.passwordAgain, matching);
+
+export const changePasswordSchema = z
+  .object({ currentPassword: z.string().min(1).max(200), password: passwordSchema, passwordAgain: z.string() })
+  .refine((v) => v.password === v.passwordAgain, matching);
+
+const PASSWORD_CODES = ["password_length", "password_common", "password_mismatch"] as const;
+type PasswordCode = (typeof PASSWORD_CODES)[number];
+
+/** The error code for the first password rule a form missed, or "invalid". */
+export function passwordErrorCode(error: z.ZodError): PasswordCode | "invalid" {
+  for (const issue of error.issues) {
+    const code = PASSWORD_CODES.find((c) => c === issue.message);
+    if (code) return code;
+  }
+  return "invalid";
+}
 
 export const onboardingSchema = z.object({
   displayName: requiredText(2, 40),
@@ -72,20 +118,34 @@ export const groupSchema = z.object({
     .refine((v) => v === null || /^https?:\/\/[^\s/]+\.[^\s]+$/i.test(v), "Enter a web address like https://example.org"),
 });
 
+/** An http(s) link, or null when empty (FR-EV-27). */
+const optionalHttpUrl = (max: number) =>
+  optionalText(max).refine((value) => value === null || /^https?:\/\/\S+$/i.test(value), "Use an http or https link.");
+
+/** FR-EV-1 and FR-EV-23 to FR-EV-28. The photo file is checked by eventPhotoSchema. */
 export const eventSchema = z
   .object({
     title: requiredText(3, 120),
-    description: optionalText(10000).transform((v) => v ?? ""),
+    description: requiredText(10, 2000),
+    details: optionalText(10000),
     startsLocal: localDateTime,
     endsLocal: localDateTime,
     timezone: z.string().refine(isValidTimeZone),
     locationName: requiredText(2, 200),
     address: optionalText(300),
     addressVisibility: z.enum(["public", "members"]),
+    price: z.enum(["free", "paid"]),
+    registrationFee: optionalText(80),
+    totalCost: optionalText(80),
+    takesRsvps: checkbox,
     capacity: z.preprocess(
       (value) => (value === "" || value === undefined || value === null ? null : Number(value)),
       z.number().int().positive().max(10000).nullable(),
     ),
+    waitlistEnabled: checkbox,
+    signupUrl: optionalHttpUrl(500),
+    photoAlt: optionalText(200),
+    removePhoto: checkbox,
   })
   .transform((event, ctx) => {
     const startsAt = zonedLocalToUtc(event.startsLocal, event.timezone);
@@ -94,8 +154,40 @@ export const eventSchema = z
       ctx.addIssue({ code: "custom", path: ["endsLocal"], message: "The event must end after it starts." });
       return z.NEVER;
     }
-    return { ...event, startsAt: startsAt.toISOString(), endsAt: endsAt.toISOString() };
+    const isPaid = event.price === "paid";
+    if (isPaid && !event.registrationFee) {
+      ctx.addIssue({ code: "custom", path: ["registrationFee"], message: "A paid event needs a registration fee." });
+      return z.NEVER;
+    }
+    return {
+      ...event,
+      startsAt: startsAt.toISOString(),
+      endsAt: endsAt.toISOString(),
+      isPaid,
+      // A free event has no fee; fields for the other choice are dropped.
+      registrationFee: isPaid ? event.registrationFee : null,
+      totalCost: isPaid ? event.totalCost : null,
+      // A waitlist needs places; a sign-up link is for events without RSVPs.
+      waitlistEnabled: event.takesRsvps && event.capacity !== null && event.waitlistEnabled,
+      signupUrl: event.takesRsvps ? null : event.signupUrl,
+    };
   });
+
+export const EVENT_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
+export const EVENT_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+
+/**
+ * FR-EV-24: the uploaded photo, or null when none was chosen. The type is
+ * checked again from the file's contents when it is re-encoded.
+ */
+export const eventPhotoSchema = z
+  .union([z.instanceof(File), z.null(), z.undefined(), z.string()])
+  .transform((value) => (value instanceof File && value.size > 0 ? value : null))
+  .refine((file) => file === null || file.size <= EVENT_PHOTO_MAX_BYTES, "At most 5 MB.")
+  .refine(
+    (file) => file === null || (EVENT_PHOTO_TYPES as readonly string[]).includes(file.type),
+    "Use a JPEG, PNG or WebP image.",
+  );
 
 export const threadSchema = z.object({
   title: requiredText(1, 150),
@@ -137,3 +229,39 @@ export const slugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80)
 export const localPathSchema = z.string().max(2000).refine((value) => safeNext(value, "") === value);
 
 export const postTypeSchema = z.enum(["thread", "reply"]);
+
+// UC-31: invites -------------------------------------------------------------
+
+/** An invite code: 64 hex characters, made by the database. */
+export const inviteTokenSchema = z.string().regex(/^[a-f0-9]{64}$/);
+
+/** How long a new invite link lasts (FR-MB-15): days, or null for until turned off. */
+export const linkExpirySchema = z
+  .object({ valid: z.enum(["7", "30", "never"]) })
+  .transform(({ valid }) => (valid === "never" ? null : Number(valid)));
+
+/** FR-MB-13: at most this many addresses per send (the database checks too). */
+export const MAX_INVITES_PER_SEND = 25;
+
+const oneEmail = z.email().max(254);
+
+/**
+ * Pasted addresses, separated by commas, semicolons, spaces or new lines.
+ * Lowercased and deduplicated; anything that isn't an email address is
+ * returned separately so the form can list it back.
+ */
+export function parseInviteEmails(text: string): { valid: string[]; invalid: string[] } {
+  const valid = new Set<string>();
+  const invalid = new Set<string>();
+  for (const part of text.split(/[\s,;]+/)) {
+    const value = part.trim().toLowerCase();
+    if (!value) continue;
+    if (oneEmail.safeParse(value).success) valid.add(value);
+    else invalid.add(part.trim().slice(0, 100));
+  }
+  return { valid: [...valid], invalid: [...invalid] };
+}
+
+export const inviteEmailsSchema = z.object({ emails: z.string().max(10_000) });
+
+export const managerInviteSchema = z.object({ email: oneEmail });

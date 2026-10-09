@@ -220,6 +220,15 @@ export type Database = {
           updated_at: string;
           search: unknown;
           source_url: string | null;
+          details: string | null;
+          photo_path: string | null;
+          photo_alt: string | null;
+          is_paid: boolean;
+          registration_fee: string | null;
+          total_cost: string | null;
+          takes_rsvps: boolean;
+          signup_url: string | null;
+          waitlist_enabled: boolean;
         };
         Insert: {
           id?: string;
@@ -237,6 +246,15 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           source_url?: string | null;
+          details?: string | null;
+          photo_path?: string | null;
+          photo_alt?: string | null;
+          is_paid?: boolean;
+          registration_fee?: string | null;
+          total_cost?: string | null;
+          takes_rsvps?: boolean;
+          signup_url?: string | null;
+          waitlist_enabled?: boolean;
         };
         Update: {
           id?: string;
@@ -254,6 +272,15 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           source_url?: string | null;
+          details?: string | null;
+          photo_path?: string | null;
+          photo_alt?: string | null;
+          is_paid?: boolean;
+          registration_fee?: string | null;
+          total_cost?: string | null;
+          takes_rsvps?: boolean;
+          signup_url?: string | null;
+          waitlist_enabled?: boolean;
         };
         Relationships: [
           Fk<"events_group_id_fkey", "group_id", "groups">,
@@ -310,6 +337,7 @@ export type Database = {
           status: Database["public"]["Enums"]["rsvp_status"];
           created_at: string;
           updated_at: string;
+          waitlisted_at: string | null;
         };
         Insert: {
           event_id: string;
@@ -317,6 +345,7 @@ export type Database = {
           status: Database["public"]["Enums"]["rsvp_status"];
           created_at?: string;
           updated_at?: string;
+          waitlisted_at?: string | null;
         };
         Update: {
           event_id?: string;
@@ -324,6 +353,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["rsvp_status"];
           created_at?: string;
           updated_at?: string;
+          waitlisted_at?: string | null;
         };
         Relationships: [
           Fk<"event_rsvps_event_id_fkey", "event_id", "events">,
@@ -492,6 +522,19 @@ export type Database = {
         };
         Relationships: [Fk<"moderation_actions_actor_id_fkey", "actor_id", "profiles">];
       };
+      group_invite_links: {
+        Row: {
+          group_id: string;
+          token: string;
+          created_by: string | null;
+          created_at: string;
+          expires_at: string | null;
+          revoked_at: string | null;
+        };
+        Insert: never;
+        Update: never;
+        Relationships: [Fk<"group_invite_links_group_id_fkey", "group_id", "groups">];
+      };
       notification_preferences: {
         Row: { user_id: string; email_type: string; enabled: boolean };
         Insert: { user_id: string; email_type: string; enabled: boolean };
@@ -586,6 +629,8 @@ export type Database = {
           search: unknown;
           is_unclaimed: boolean | null;
           source_url: string | null;
+          is_paid: boolean | null;
+          takes_rsvps: boolean | null;
         };
         Relationships: [];
       };
@@ -612,6 +657,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      move_from_waitlist: { Args: { p_event_id: string; p_user_id: string }; Returns: undefined };
       approve_member: { Args: { p_group_id: string; p_user_id: string }; Returns: undefined };
       decline_member: { Args: { p_group_id: string; p_user_id: string }; Returns: undefined };
       remove_member: {
@@ -627,6 +673,20 @@ export type Database = {
         Returns: undefined;
       };
       transfer_ownership: { Args: { p_group_id: string; p_new_owner: string }; Returns: undefined };
+      create_invite_link: { Args: { p_group_id: string; p_valid_days: number | null }; Returns: string };
+      turn_off_invite_link: { Args: { p_group_id: string }; Returns: undefined };
+      invite_members: { Args: { p_group_id: string; p_emails: string[] }; Returns: number };
+      invite_manager: { Args: { p_group_id: string; p_email: string }; Returns: undefined };
+      open_manager_invites: {
+        Args: { p_group_id: string };
+        Returns: { id: string; sent_at: string; expires_at: string }[];
+      };
+      invite_preview: { Args: { p_token: string }; Returns: { name: string; slug: string }[] };
+      cancel_manager_invite: { Args: { p_invite_id: string }; Returns: undefined };
+      join_by_invite: {
+        Args: { p_token: string };
+        Returns: { slug: string; result: "joined" | "already_member" | "manager" }[];
+      };
       archive_group: { Args: { p_group_id: string; p_reason?: string }; Returns: undefined };
       restore_group: { Args: { p_group_id: string }; Returns: undefined };
       remove_group: { Args: { p_group_id: string; p_reason: string }; Returns: undefined };
@@ -683,7 +743,7 @@ export type Database = {
       member_status: "pending" | "active" | "banned";
       address_visibility: "public" | "members";
       event_status: "scheduled" | "cancelled";
-      rsvp_status: "going" | "not_going";
+      rsvp_status: "going" | "not_going" | "waitlisted";
       post_status: "visible" | "deleted_by_author" | "removed";
       report_target: "group" | "event" | "thread" | "reply" | "profile";
       report_reason: "spam" | "harassment" | "unsafe" | "off_topic" | "other";
@@ -696,7 +756,11 @@ export type Database = {
         | "unsuspend_user"
         | "archive_group"
         | "restore_group"
-        | "remove_group";
+        | "remove_group"
+        | "create_invite_link"
+        | "turn_off_invite_link"
+        | "invite_manager"
+        | "send_invites";
     };
     CompositeTypes: {
       [_ in never]: never;

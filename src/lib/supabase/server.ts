@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createServerClient } from "@supabase/ssr";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 import type { Database } from "./database.types";
@@ -38,3 +39,15 @@ export async function createClient() {
 }
 
 export type ServerClient = Awaited<ReturnType<typeof createClient>>;
+
+/**
+ * A throwaway anon client with no cookies, for checking a password without
+ * touching the visitor's own session (FR-AC-21). Whatever session it gets
+ * lives only in memory for this request; the caller then signs out every
+ * other session, which ends it on Supabase's side too.
+ */
+export function createDetachedClient() {
+  return createSupabaseClient<Database>(supabaseUrl(), supabaseAnonKey(), {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  });
+}

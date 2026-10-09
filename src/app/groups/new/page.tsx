@@ -15,7 +15,7 @@ export default async function NewGroupPage({ searchParams }: { searchParams: Pro
     <>
       <h1>Start a group</h1>
       <p className="mt-1 text-muted">
-        You&apos;ll be its owner. You can add admins to help once people join. Each person can own up to three groups.
+        You&apos;ll be its page admin. You can add up to two page managers to help. Each person can own up to three groups.
       </p>
       <Notice params={await searchParams} />
       {viewer.canWrite ? (

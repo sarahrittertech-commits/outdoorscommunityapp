@@ -13,8 +13,12 @@ code is wrong.
 ## Roles
 
 There are two kinds of role: what someone is **to the site**, and what they
-are **to a particular group**. A person can be an owner of one group, an admin
-of another and a plain member of a third.
+are **to a particular group**. A person can be the page admin of one group,
+a page manager of another and a plain member of a third.
+
+On the site the group's owner is called the **page admin** and its admins
+**page managers** (UC-31, 9 October 2026). The database keeps the role names
+`owner` and `admin`, so the functions and tests still say owner and admin.
 
 ### Site roles
 
@@ -29,15 +33,11 @@ of another and a plain member of a third.
 
 | Role | Per group | Summary |
 | --- | --- | --- |
-| **Owner** | Exactly one | Everything an admin can do, plus manage admins, transfer ownership and archive the group |
-| **Admin** | Any number | Runs the group day to day: events, join requests, moderation |
+| **Page admin** (owner) | Exactly one | Everything a page manager can do, plus add and remove page managers, transfer ownership and archive the group |
+| **Page manager** (admin) | At most two, counting open manager invites | Runs the group day to day: events, join requests, moderation, invites |
 | **Member** | Any number | Joins events and discussions |
 | **Pending** | — | Asked to join an approval-required group; no member access yet |
 | **Banned** | — | Removed by an owner or admin; cannot rejoin |
-
-*Draft UC-31 (9 October 2026) would show the owner as **Page admin** and
-admins as **Page managers**, limit managers to two, and add email invites
-and an invite link. Not built; see the functional requirements.*
 
 Meetup has five organizer tiers and Facebook has three. Three is enough here,
 and fewer roles means fewer permission rules to get wrong. A separate
@@ -49,7 +49,7 @@ and fewer roles means fewer permission rules to get wrong. A separate
 
 ### Browsing
 
-| Action | Visitor | User (not a member) | Pending | Member | Admin | Owner | Site admin |
+| Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | See categories, listings, active group pages | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See public event details | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -62,7 +62,7 @@ and fewer roles means fewer permission rules to get wrong. A separate
 
 ### Membership
 
-| Action | Visitor | User (not a member) | Pending | Member | Admin | Owner | Site admin |
+| Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Create a group | ❌ | ✅ (limit 3) | — | — | — | — | ✅ |
 | Join an open group | ❌ | ✅ unless banned | — | — | — | — | — |
@@ -71,12 +71,27 @@ and fewer roles means fewer permission rules to get wrong. A separate
 | Approve or decline requests | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Read a join request's answer | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Remove and ban a member | ❌ | ❌ | ❌ | ❌ | ✅ members only | ✅ members and admins | ✅ |
-| Promote member → admin, demote admin → member | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Transfer ownership | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ to an admin | ✅ |
+| Make a member a page manager (at most two), or step one down | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| Transfer ownership | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ to a page manager | ✅ |
+
+### Invites (UC-31, FR-MB-11 to FR-MB-16)
+
+| Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Make, see, copy or turn off the group's invite link | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| See which group an invite is for (holding a working code) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Join with an invite link or member email invite (skips approval) | ❌ create an account on the invite page first | ✅ unless banned | ✅ approves the request | — | — | — | — |
+| Invite members by email (25 a send, 100 a day per group) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| Invite a page manager by email; see or cancel open manager invites | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Accept a manager invite | ❌ | ✅ only the invited address | ✅ only the invited address | ✅ only the invited address | — | — | — |
+| See who was invited by email | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ email sender only |
+
+Email invites are stored but not sent until the board's email is set up
+(`emailEnabled` in `src/config/site.ts`); the forms show disabled until then.
 
 ### Group settings
 
-| Action | Visitor | User (not a member) | Pending | Member | Admin | Owner | Site admin |
+| Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Edit group details and affinity tags, turn discussions on/off, change join policy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Archive / restore the group | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
@@ -84,14 +99,17 @@ and fewer roles means fewer permission rules to get wrong. A separate
 
 ### Events
 
-| Action | Visitor | User (not a member) | Pending | Member | Admin | Owner | Site admin |
+| Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Create, edit, cancel events | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | RSVP going / not going | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Join or leave an event's waitlist when it is full (FR-EV-28) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Add, replace or remove an event photo; set price, RSVPs, sign-up link, waitlist (FR-EV-24 to FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Move someone from the waitlist to going, while a place is free (FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 
 ### Discussions (only while discussions are on)
 
-| Action | Visitor | User (not a member) | Pending | Member | Admin | Owner | Site admin |
+| Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Start a thread, reply (unless locked) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Edit or delete a post | ❌ | ❌ | ❌ | **own** | **own** | **own** | — |
@@ -102,7 +120,7 @@ Existing threads stay readable to members.
 
 ### Moderation
 
-| Action | Visitor | User (not a member) | Pending | Member | Admin | Owner | Site admin |
+| Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Report content | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See reports for a group's content | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
@@ -135,7 +153,7 @@ claimed the same way; its remaining admins and members are users here.
 
 ### Proposed with the 8 October design (drafts, not built)
 
-These follow the draft requirements for UC-10 to UC-32. Each becomes part
+These follow the draft requirements for UC-10 to UC-28 and UC-32. Each becomes part
 of the matrix above, with a permission test, once its use case is
 approved.
 
@@ -147,10 +165,10 @@ approved.
 | See a group's type and photo | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Set the group's type, photo and member list privacy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | See the member list and names on *who's going* | ❌ | per setting | per setting | ✅ | ✅ | ✅ |
-| Post an event series, photo, price, sponsors, FAQ, RSVP opening time | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Post an event series, sponsors, FAQ, RSVP opening time (photo and price built with UC-30) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Ask an event a question | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Read and answer questions, move answers to the FAQ | ❌ | ❌ own only | ❌ own only | ✅ | ✅ | ✅ |
-| RSVP to an approval event (request) or join a waitlist | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| RSVP to an approval event (request) (waitlist built with UC-30) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Approve, decline, waitlist or remove RSVPs | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Save an event; see own saved events and calendar | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See someone else's saved events | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |

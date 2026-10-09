@@ -2,10 +2,13 @@ import { describe, expect, it } from "vitest";
 
 import {
   affinityTagsSchema,
+  eventPhotoSchema,
   eventSchema,
   groupSchema,
+  inviteTokenSchema,
   localPathSchema,
   onboardingSchema,
+  parseInviteEmails,
   replySchema,
   slugSchema,
 } from "./validation";
@@ -40,6 +43,9 @@ describe("form validation", () => {
     locationName: "Put-in",
     addressVisibility: "members",
     capacity: "",
+    description: "An easy paddle for beginners.",
+    price: "free",
+    takesRsvps: "on",
   };
 
   it("converts event times to UTC and treats an empty capacity as no limit", () => {
@@ -51,6 +57,33 @@ describe("form validation", () => {
   it("rejects an event that ends before it starts, or an unknown zone", () => {
     expect(eventSchema.safeParse({ ...validEvent, endsLocal: "2026-10-03T08:00" }).success).toBe(false);
     expect(eventSchema.safeParse({ ...validEvent, timezone: "Nowhere/Here" }).success).toBe(false);
+  });
+
+  it("requires a description and a fee for a paid event (FR-EV-23, FR-EV-25)", () => {
+    expect(eventSchema.safeParse({ ...validEvent, description: "" }).success).toBe(false);
+    expect(eventSchema.safeParse({ ...validEvent, description: "x".repeat(2001) }).success).toBe(false);
+    expect(eventSchema.safeParse({ ...validEvent, price: "paid" }).success).toBe(false);
+    const paid = eventSchema.parse({ ...validEvent, price: "paid", registrationFee: "$25", totalCost: "about $60" });
+    expect(paid.isPaid).toBe(true);
+    const free = eventSchema.parse({ ...validEvent, registrationFee: "$25" });
+    expect(free.registrationFee).toBeNull();
+  });
+
+  it("keeps a waitlist only with places, and a sign-up link only without RSVPs (FR-EV-26 to FR-EV-28)", () => {
+    expect(eventSchema.parse({ ...validEvent, waitlistEnabled: "on" }).waitlistEnabled).toBe(false);
+    expect(eventSchema.parse({ ...validEvent, capacity: "20", waitlistEnabled: "on" }).waitlistEnabled).toBe(true);
+    const link = { ...validEvent, signupUrl: "https://club.example.org/signup" };
+    expect(eventSchema.parse(link).signupUrl).toBeNull();
+    expect(eventSchema.parse({ ...link, takesRsvps: undefined }).signupUrl).toBe("https://club.example.org/signup");
+    expect(eventSchema.safeParse({ ...link, takesRsvps: undefined, signupUrl: "javascript:alert(1)" }).success).toBe(false);
+  });
+
+  it("accepts only small JPEG, PNG or WebP photos (FR-EV-24)", () => {
+    expect(eventPhotoSchema.parse(new File([], "empty.jpg"))).toBeNull();
+    expect(eventPhotoSchema.parse(new File(["x"], "a.jpg", { type: "image/jpeg" }))).toBeInstanceOf(File);
+    expect(eventPhotoSchema.safeParse(new File(["x"], "a.gif", { type: "image/gif" })).success).toBe(false);
+    const big = new File([new Uint8Array(5 * 1024 * 1024 + 1)], "big.png", { type: "image/png" });
+    expect(eventPhotoSchema.safeParse(big).success).toBe(false);
   });
 
   it("requires both the 18+ box and the terms box", () => {
@@ -82,6 +115,23 @@ describe("bound action arguments", () => {
     for (const path of ["//evil.com", "/\\evil.com", "https://evil.com", "/.//evil.com", "admin"]) {
       expect(localPathSchema.safeParse(path).success).toBe(false);
     }
+  });
+});
+
+// UC-31: pasted invite addresses (FR-MB-13).
+describe("parseInviteEmails", () => {
+  it("splits on commas, spaces and new lines, lowercases and dedupes", () => {
+    expect(parseInviteEmails("A@x.org, b@x.org\nc@x.org  a@X.org;b@x.org")).toEqual({
+      valid: ["a@x.org", "b@x.org", "c@x.org"],
+      invalid: [],
+    });
+  });
+  it("lists back what isn't an address", () => {
+    expect(parseInviteEmails("ok@x.org nope bad@").invalid).toEqual(["nope", "bad@"]);
+  });
+  it("only accepts real invite codes", () => {
+    expect(inviteTokenSchema.safeParse("a".repeat(64)).success).toBe(true);
+    expect(inviteTokenSchema.safeParse("badtoken").success).toBe(false);
   });
 });
 

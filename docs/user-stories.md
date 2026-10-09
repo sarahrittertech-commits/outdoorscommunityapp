@@ -40,7 +40,7 @@ records where each one came from.
 | As a… | I want to… | So that… | Use case | Requirements | Status |
 | --- | --- | --- | --- | --- | --- |
 | member | join a group and RSVP to its events | the organizer knows I'm coming | UC-2 | FR-MB-1, FR-EV-3 | Live |
-| member | join through an invite link a group shared with me | I'm in without waiting for approval | UC-31 | FR-MB-14, FR-MB-15 | Draft |
+| member | join through an invite link a group shared with me, creating my account on the same page | I'm in without waiting for approval | UC-31 | FR-MB-14, FR-MB-15 | Built |
 | member | join the waitlist when an event is full | I get a place if someone drops out | UC-30 | FR-EV-28 | Draft |
 | member | see what an event costs, the registration fee and the total | I know before I commit | UC-30 | FR-EV-25 | Draft |
 
@@ -52,9 +52,9 @@ records where each one came from.
 | organizer | post an event with a description, details and a photo | people know what it is and want to come | UC-30 | FR-EV-23, FR-EV-24 | Draft |
 | organizer | choose whether an event takes RSVPs here, or link to our own sign-up page | I use the board my way | UC-30 | FR-EV-26, FR-EV-27 | Draft |
 | organizer | mark an event Free or Paid with its fee and total cost | nobody is surprised by a cost | UC-30 | FR-EV-25 | Draft |
-| page admin | add up to two page managers who help run the group | I'm not doing it alone, and only I can hand the group over | UC-31 | FR-MB-11, FR-MB-12 | Draft (roles live as owner and admins) |
-| page admin or manager | invite people by email, one address or many | I bring our club onto the board in one go | UC-31 | FR-MB-13 | Draft (needs a domain) |
-| page admin or manager | create a link to send to people so they can join | I can share it in our group chat | UC-31 | FR-MB-15 | Draft |
+| page admin | add up to two page managers who help run the group | I'm not doing it alone, and only I can hand the group over | UC-31 | FR-MB-11, FR-MB-12 | Built (manager email invites wait on email) |
+| page admin or manager | invite people by email, one address or many | I bring our club onto the board in one go | UC-31 | FR-MB-13 | Built, off until email is set up |
+| page admin or manager | create a link to send to people so they can join | I can share it in our group chat | UC-31 | FR-MB-15 | Built |
 | organizer | add our group's website | members can find our own site | — | FR-GR-23 | Built |
 | organizer | claim a listing of our real group | I run it here instead of starting over | UC-8 | FR-GR-9, FR-GR-10 | Live |
 | organizer | prove a claim with an email at our club's domain | the site admin can approve it quickly | UC-26 | FR-GR-18 to FR-GR-20 | Draft (needs a domain) |

@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { cancelEvent, rsvp } from "@/app/actions/events";
+import { cancelEvent, leaveWaitlist, moveFromWaitlist, rsvp } from "@/app/actions/events";
 import { groupPhotos } from "@/brand/activityPhotos";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
 import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
+import { eventPhotoUrl } from "@/lib/eventPhotos";
 import { loadEvent } from "@/lib/events";
 import { loadGroup } from "@/lib/groups";
 import { formatEventTime } from "@/lib/time";
@@ -18,13 +19,28 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { event, group } = await loadEvent((await params).id);
+  const { supabase, event, group } = await loadEvent((await params).id);
   const when = formatEventTime(event.starts_at, event.ends_at, event.timezone);
+  // FR-EV-23: the description is used in link previews.
+  const summary = `${when} · ${group.name}. ${event.description}`.slice(0, 200);
   return {
     title: event.title,
-    description: `${when} · ${event.location_name} · ${group.name}`,
-    openGraph: { title: event.title, description: `${when} · ${group.name}` },
+    description: summary,
+    openGraph: {
+      title: event.title,
+      description: summary,
+      ...(event.photo_path && { images: [{ url: eventPhotoUrl(supabase, event.photo_path), alt: event.photo_alt ?? "" }] }),
+    },
   };
+}
+
+/** "Sign up at club.example.org" (FR-EV-27). */
+function hostOf(url: string): string {
+  try {
+    return new URL(url).host;
+  } catch {
+    return url;
+  }
 }
 
 /** FR-BR-7 and FR-EV-*. Readable signed out; RSVPs for members. */
@@ -35,26 +51,36 @@ export default async function EventPage({ params, searchParams }: Props) {
   // decides what each query returns, so nothing here waits on isMember.
   const [{ supabase, event, group }, viewer] = await Promise.all([loadEvent(id), getViewer()]);
 
-  const [{ isMember, canManage }, { data: details }, { data: listing }, { data: goingRows }, { data: mine }] = await Promise.all([
+  const [{ isMember, canManage }, { data: details }, { data: listing }, { data: rsvpRows }] = await Promise.all([
     loadGroup(group.slug),
     supabase.from("event_private_details").select("address").eq("event_id", event.id).maybeSingle(),
     supabase.from("event_listings").select("going_count").eq("id", event.id).single(),
+    // Members read every RSVP to the event; anyone else reads only their own.
     viewer
-      ? supabase.from("event_rsvps").select("user_id, profiles(display_name)").eq("event_id", event.id).eq("status", "going")
-      : Promise.resolve({ data: null }),
-    viewer
-      ? supabase.from("event_rsvps").select("status").eq("event_id", event.id).eq("user_id", viewer.id).maybeSingle()
+      ? supabase
+          .from("event_rsvps")
+          .select("user_id, status, waitlisted_at, profiles(display_name)")
+          .eq("event_id", event.id)
+          .order("waitlisted_at", { ascending: true, nullsFirst: true })
       : Promise.resolve({ data: null }),
   ]);
+  const mine = viewer ? (rsvpRows ?? []).find((r) => r.user_id === viewer.id) : undefined;
 
-  // Non-members can read only their own RSVP, so the list is for members only (FR-EV-6).
-  const attendees = isMember ? goingRows : null;
+  // Non-members can read only their own RSVP, so the lists are for members only (FR-EV-6).
+  const attendees = isMember ? (rsvpRows ?? []).filter((r) => r.status === "going") : null;
+  const waitlist = (rsvpRows ?? []).filter((r) => r.status === "waitlisted");
+  const waitlistPlace = viewer ? waitlist.findIndex((r) => r.user_id === viewer.id) + 1 : 0;
   const going = listing?.going_count ?? 0;
-  // A representative photo for a couple of sample groups (src/brand/activityPhotos.ts).
-  const photo = groupPhotos[group.slug];
+  // FR-EV-24: the event's own photo first; otherwise a representative photo
+  // for a couple of sample groups (src/brand/activityPhotos.ts).
+  const ownPhoto = event.photo_path ? { src: eventPhotoUrl(supabase, event.photo_path), alt: event.photo_alt ?? "" } : null;
+  const samplePhoto = ownPhoto ? null : groupPhotos[group.slug];
   const started = new Date(event.starts_at) <= new Date();
   const cancelled = event.status === "cancelled";
-  const full = event.capacity !== null && going >= event.capacity && mine?.status !== "going";
+  const placeFree = event.capacity === null || going < event.capacity;
+  // FR-EV-28: while anyone is waiting, places go to the waitlist first.
+  const waitlistOpen = event.waitlist_enabled && event.capacity !== null;
+  const full = mine?.status !== "going" && (!placeFree || (waitlistOpen && waitlist.length > 0 && !canManage));
   const when = formatEventTime(event.starts_at, event.ends_at, event.timezone);
   const url = `${site.url}/e/${event.id}`;
   // FR-GR-9: a listed group's event points to the organizer's own page.
@@ -72,6 +98,8 @@ export default async function EventPage({ params, searchParams }: Props) {
     location: { "@type": "Place", name: event.location_name, ...(details?.address && { address: details.address }) },
     organizer: { "@type": "Organization", name: group.name, url: `${site.url}/g/${group.slug}` },
     description: event.description,
+    isAccessibleForFree: !event.is_paid,
+    ...(ownPhoto && { image: ownPhoto.src }),
     url,
   };
 
@@ -92,6 +120,9 @@ export default async function EventPage({ params, searchParams }: Props) {
 
       <div className="event-top">
         <div>
+          {/* FR-EV-23: the description comes first. */}
+          <PlainText text={event.description} className="mt-3" />
+
           <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
             <dt className="font-semibold">When</dt>
             <dd>{when}</dd>
@@ -104,12 +135,25 @@ export default async function EventPage({ params, searchParams }: Props) {
                 <span className="block text-sm text-muted">Address shown to group members.</span>
               ) : null}
             </dd>
-            {!group.is_unclaimed && (
+            {/* FR-EV-25: the board shows the price; it never takes payment. */}
+            <dt className="font-semibold">Price</dt>
+            <dd>
+              {event.is_paid
+                ? [
+                    event.registration_fee && `Registration fee: ${event.registration_fee}`,
+                    event.total_cost && `Total cost: ${event.total_cost}`,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")
+                : "Free"}
+            </dd>
+            {!group.is_unclaimed && event.takes_rsvps && (
               <>
                 <dt className="font-semibold">Going</dt>
                 <dd>
                   {going}
                   {event.capacity !== null && ` of ${event.capacity}`}
+                  {waitlistOpen && waitlist.length > 0 && isMember && `, ${waitlist.length} on the waitlist`}
                 </dd>
               </>
             )}
@@ -125,7 +169,19 @@ export default async function EventPage({ params, searchParams }: Props) {
                   {group.name} event page
                 </a>
               </p>
-            ) : cancelled ? null : started ? (
+            ) : cancelled ? null : !event.takes_rsvps ? (
+              // FR-EV-26 and FR-EV-27: no RSVPs here; perhaps the organizer's own page.
+              event.signup_url ? (
+                <p>
+                  Sign up at{" "}
+                  <a href={event.signup_url} rel="nofollow ugc noopener" className="font-bold">
+                    {hostOf(event.signup_url)}
+                  </a>
+                </p>
+              ) : (
+                <p className="text-muted">No RSVPs for this one. Just come along.</p>
+              )
+            ) : started ? (
               <p className="text-muted">This event has started.</p>
             ) : !viewer ? (
               <Link href={`/signin?next=/e/${event.id}`} className="button">
@@ -144,8 +200,24 @@ export default async function EventPage({ params, searchParams }: Props) {
                       <button className="button button-plain">Can&apos;t make it</button>
                     </form>
                   </>
+                ) : mine?.status === "waitlisted" ? (
+                  <>
+                    <strong>You&apos;re #{waitlistPlace || "?"} on the waitlist.</strong>
+                    <form action={leaveWaitlist.bind(null, event.id)}>
+                      <button className="button button-plain">Leave the waitlist</button>
+                    </form>
+                  </>
                 ) : full ? (
-                  <strong>This event is full.</strong>
+                  waitlistOpen ? (
+                    <>
+                      <strong>This event is full.</strong>
+                      <form action={rsvp.bind(null, event.id, "waitlisted")}>
+                        <button className="button">Join the waitlist</button>
+                      </form>
+                    </>
+                  ) : (
+                    <strong>This event is full.</strong>
+                  )
                 ) : (
                   <>
                     <form action={rsvp.bind(null, event.id, "going")}>
@@ -162,11 +234,17 @@ export default async function EventPage({ params, searchParams }: Props) {
             )}
           </section>
         </div>
-        {photo && (
+        {ownPhoto ? (
           <figure className="event-photo">
-            <Image src={photo.src} alt={photo.alt} width={900} height={604} sizes="(min-width: 768px) 20rem, 100vw" />
-            <figcaption>{photo.label} · representative photo</figcaption>
+            <Image src={ownPhoto.src} alt={ownPhoto.alt} width={1600} height={1200} sizes="(min-width: 768px) 20rem, 100vw" />
           </figure>
+        ) : (
+          samplePhoto && (
+            <figure className="event-photo">
+              <Image src={samplePhoto.src} alt={samplePhoto.alt} width={900} height={604} sizes="(min-width: 768px) 20rem, 100vw" />
+              <figcaption>{samplePhoto.label} · representative photo</figcaption>
+            </figure>
+          )
         )}
       </div>
 
@@ -175,8 +253,8 @@ export default async function EventPage({ params, searchParams }: Props) {
       </p>
 
       {canManage && !cancelled && (
-        <nav aria-label="Organizer tools" className="mt-4 flex flex-wrap items-baseline gap-x-4 rounded bg-panel px-3 py-2 text-sm">
-          <strong>Organizer:</strong>
+        <nav aria-label="Page admin tools" className="mt-4 flex flex-wrap items-baseline gap-x-4 rounded bg-panel px-3 py-2 text-sm">
+          <strong>Page admin tools:</strong>
           <Link href={`/e/${event.id}/edit`}>edit event</Link>
           <form action={cancelEvent.bind(null, event.id)} className="inline">
             <button className="link-button text-danger">cancel event</button>
@@ -184,10 +262,10 @@ export default async function EventPage({ params, searchParams }: Props) {
         </nav>
       )}
 
-      {event.description && (
+      {event.details && (
         <>
           <h2>Details</h2>
-          <PlainText text={event.description} className="mt-2" />
+          <PlainText text={event.details} className="mt-2" />
         </>
       )}
 
@@ -201,6 +279,26 @@ export default async function EventPage({ params, searchParams }: Props) {
               </li>
             ))}
           </ul>
+        </>
+      )}
+
+      {/* FR-EV-28: organizers move people from the waitlist, in order, while a place is free. */}
+      {canManage && waitlist.length > 0 && (
+        <>
+          <h2>Waitlist</h2>
+          {!placeFree && <p className="mt-2 text-sm text-muted">The event is full. When someone drops out, move the next person to going.</p>}
+          <ol className="mt-2 list-decimal pl-6">
+            {waitlist.map((w) => (
+              <li key={w.user_id} className="py-1">
+                <Link href={`/u/${w.user_id}`}>{w.profiles?.display_name ?? "deleted user"}</Link>
+                {placeFree && !cancelled && !started && (
+                  <form action={moveFromWaitlist.bind(null, event.id, w.user_id)} className="ml-3 inline">
+                    <button className="link-button">Move to going</button>
+                  </form>
+                )}
+              </li>
+            ))}
+          </ol>
         </>
       )}
 

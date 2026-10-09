@@ -32,7 +32,7 @@ export default async function Home({ searchParams }: Props) {
     supabase.from("categories").select("slug, name").order("sort_order"),
     supabase
       .from("event_listings")
-      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count, is_unclaimed")
+      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count, is_unclaimed, is_paid, takes_rsvps")
       .eq("status", "scheduled")
       .gt("starts_at", new Date().toISOString())
       .order("starts_at")
@@ -189,7 +189,10 @@ export default async function Home({ searchParams }: Props) {
                   </p>
                   <p className="m-0 mt-auto flex justify-between border-t border-rule pt-2 text-sm text-muted">
                     <Link href={`/g/${e.group_slug}`}>{e.group_name}</Link>
-                    <span>{e.is_unclaimed ? "via organizer" : `${e.going_count} going`}</span>
+                    <span>
+                      {e.is_paid && "Paid · "}
+                      {e.is_unclaimed ? "via organizer" : e.takes_rsvps ? `${e.going_count} going` : "sign up with the organizer"}
+                    </span>
                   </p>
                 </li>
               );

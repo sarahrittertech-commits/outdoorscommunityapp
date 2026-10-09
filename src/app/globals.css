@@ -168,6 +168,11 @@
   textarea {
     min-height: 8rem;
   }
+  input[type="file"] {
+    display: block;
+    margin-top: 0.25rem;
+    font: inherit;
+  }
   input[type="checkbox"],
   input[type="radio"] {
     width: 1.05rem;

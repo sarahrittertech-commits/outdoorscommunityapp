@@ -14,7 +14,7 @@ One page that separates the branded app as it runs today from the new
 features proposed in the 8 October Magic Patterns design or requested by
 Sarah the same day. Live features
 link to their requirements; new ones link to their draft use case. Nothing
-under *New features* is built.
+under *New features* is built, except UC-30 (the event form) and UC-31 (page managers and invites), both built 9 October.
 
 Last updated 9 October 2026.
 
@@ -29,9 +29,10 @@ permission enforced and tested in the database.
 | Events | Events page with activity and time-window filters, grouped by month; event pages; add to calendar | UC-7 | FR-BR-4, FR-BR-7, FR-EV-7 |
 | Communities | One table of every group, A to Z, filterable by activity | — | FR-BR-10 |
 | Search | Keyword search over groups and events | — | FR-BR-5 |
-| Accounts | Email sign-in link, 18+ and terms, profile, *My stuff*, delete account, public profiles | UC-2 | FR-AC-1 to FR-AC-7 |
+| Accounts | Email and password sign-in with a confirmed email, forgot and change password; 18+ and terms, profile, *My stuff*, delete account, public profiles | UC-2, UC-29 | FR-AC-2 to FR-AC-7, FR-AC-17 to FR-AC-21 |
 | Groups | Start, edit, archive; open or approval joining with a question; rules; discussions on or off; limit of 3 | UC-3 | FR-GR-1 to FR-GR-7 |
-| Membership and roles | Join, request, leave; owner, admin, member; approve, remove, ban; transfer ownership | UC-2, UC-4 | FR-MB-1 to FR-MB-9 |
+| Membership and roles | Join, request, leave; page admin, up to two page managers, member; approve, remove, ban; transfer ownership | UC-2, UC-4, UC-31 | FR-MB-1 to FR-MB-9, FR-MB-11 |
+| Invites | Invite link (7 days, 30 days or until turned off) that joins people straight in; email invites for members and page managers built but waiting on the board's email setup | UC-31 | FR-MB-12 to FR-MB-16 |
 | Events and RSVPs | Post, edit, cancel; going or not going; places and "full"; who's going; past events | UC-2, UC-3 | FR-EV-1 to FR-EV-8 |
 | Discussions | Threads and flat replies, pin, lock, remove, edit and delete own | UC-5 | FR-DS-1 to FR-DS-7 |
 | Moderation | Report anything; group and site queues; suspend; moderation log; rate limits | UC-6 | FR-MD-1 to FR-MD-6 |
@@ -120,15 +121,7 @@ Requested by Sarah on 8 October; drafted 9 October.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Event form**: required description plus details, a photo, Free or Paid with fee and total cost, optional RSVPs with places and a waitlist, or a sign-up link | Requested 9 Oct, awaiting review | UC-30 | FR-EV-23 to FR-EV-28 |
-
-### Running a group
-
-| Feature | Status | Use case | Draft requirements |
-| --- | --- | --- | --- |
-| **Page admin and up to two page managers**; manager invites by email | Requested 9 Oct, awaiting review | UC-31 | FR-MB-11, FR-MB-12 |
-| **Invite members by email**, one or many addresses | Requested 9 Oct, awaiting review (needs email) | UC-31 | FR-MB-13, FR-MB-14, FR-MB-16 |
-| **Invite link** to share so people can join | Requested 9 Oct, awaiting review (no email needed) | UC-31 | FR-MB-14 to FR-MB-16 |
+| **Event form**: required description plus details, a photo, Free or Paid with fee and total cost, optional RSVPs with places and a waitlist, or a sign-up link | Built 9 Oct (migration `20261010000002` to apply) | UC-30 | FR-EV-23 to FR-EV-28 |
 
 ### Suggestions
 
@@ -140,7 +133,7 @@ Requested by Sarah on 8 October; drafted 9 October.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Email and password sign-in**: sign up with a confirmed email and a password; forgot and change password. Replaces the emailed sign-in link | Requested 9 Oct, awaiting review | UC-29 | FR-AC-17 to FR-AC-21, ADR-0009 |
+| **Email and password sign-in**: sign up with a confirmed email and a password; forgot and change password. Replaces the emailed sign-in link | **Built 9 Oct** (now in the live table above) | UC-29 | FR-AC-17 to FR-AC-21, ADR-0009 |
 
 ### Demo
 

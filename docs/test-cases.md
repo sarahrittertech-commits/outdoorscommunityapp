@@ -69,6 +69,26 @@ web app is not the thing enforcing the rule.
 | PT-40 | A find with a similar name or the same website as something already known is kept and tagged as a possible duplicate; an exact name match is dropped; shared sites like Facebook never count as the same website (FR-RS-10) | Near duplicates listed twice, or real groups lost |
 | PT-41 | Events found for an unclaimed listing publish without review only from a group find whose event links are on the listing's own website (FR-RS-8) | A web page tricks the agent into putting a phishing link on a live listing |
 | PT-42 | Only a group's owner and admins set its website, and only http(s) addresses are stored (FR-GR-23) | A member points the group's link somewhere else, or a script link is stored |
+| PT-50 | Owner and admins set an event's description, details, price, RSVP choice, sign-up link and waitlist; members can't (FR-EV-23 to FR-EV-28) | A member edits an event's price or turns off its RSVPs |
+| PT-51 | A paid event needs a registration fee; sign-up links are http(s) only; a description is at most 2,000 characters (FR-EV-25, FR-EV-27) | A paid event with no price, or a script link on an event page |
+| PT-52 | An event that takes no RSVPs refuses new and changed RSVPs (FR-EV-26) | RSVPs made through the API to an event that says it takes none |
+| PT-53 | The waitlist opens only when the event is full, keeps join order set by the database, and waitlisted people don't count as going (FR-EV-28) | A member jumps the queue by sending their own join time |
+| PT-54 | Only an owner or admin moves someone from the waitlist to going, only into a free place; a waitlisted member can't move themselves; going never exceeds places (FR-EV-28) | Members skip the waitlist, or an event goes over capacity |
+| PT-55 | Leaving the waitlist is always allowed (FR-EV-28) | Someone is stuck on a waitlist |
+| PT-56 | Only the group's owner and admins upload event photos; members and outsiders can't (FR-EV-24) | Anyone puts pictures on someone else's event |
+| PT-57 | A photo path must name an event of the same group (FR-EV-24) | An admin of one group writes into another group's folder |
+| PT-58 | An archived group takes no new event photos (FR-EV-24, FR-GR-6) | A read-only group still changes |
+| PT-59 | An event points only at a photo in its own folder, and a photo needs alt text (FR-EV-24) | An event shows another event's photo, or a photo with no description |
+| PT-60 | A third page manager (admin) is refused by the database, through set_member_role or any direct write (FR-MB-11) | A group ends up with more managers than the page admin agreed to |
+| PT-61 | Only the page admin (owner) changes roles or invites a page manager by email (FR-MB-11, FR-MB-12) | A manager makes more managers |
+| PT-62 | Open manager invites count toward the limit of two; only the page admin lists or cancels them; only the invited address can accept one, once; no invite address is readable through the API (FR-MB-12) | A forwarded manager invite hands the group to a stranger |
+| PT-63 | Only the page admin and managers make an invite link (7 days, 30 days or until turned off); members, applicants, outsiders and visitors cannot read it; one link per group, a new one replaces the old (FR-MB-15) | Anyone can mint or read a group's join link |
+| PT-64 | Only the page admin and managers turn off the invite link, after which it joins nobody (FR-MB-15) | A leaked link can't be stopped |
+| PT-65 | Joining by link makes you an active member at once, even in an approval group, and approves a waiting request; a visitor holding a working code sees only the group's name and slug (FR-MB-14) | The link only files a join request |
+| PT-66 | A replaced, turned-off, expired or made-up link joins nobody and previews nothing; banned, suspended and not-onboarded accounts and archived groups are refused (FR-MB-14) | A banned member walks back in through a link |
+| PT-67 | Joining by invite counts toward the 20-joins-a-day limit (FR-MB-16, TR-SEC-8) | Invite links bypass the join rate limit |
+| PT-68 | Member email invites: page admin and managers only, at most 25 per send and 100 a day per group, duplicates and repeats within 30 days skipped (FR-MB-13) | The board becomes a spam relay |
+| PT-69 | Ownership still goes only to a manager and works with two managers; links and invites are written to the moderation log; invite addresses are purged after 30 days and the purge is not callable through the API (FR-MB-6, FR-MB-16) | Invites leave no trail, or addresses are kept forever |
 
 ## Automated — unit
 
@@ -83,6 +103,8 @@ Run by the unit test command in CI. Pure functions only.
 | UT-5 | Zod schemas | Each form schema rejects missing required fields and over-length text; affinity tags accept only the four on the list |
 | UT-6 | Page number parser | A page beyond the last is clamped, so no query asks for a huge offset (TR-SEC-12) |
 | UT-7 | `.ics` line folding | Folding counts UTF-8 bytes, not characters, and never splits an emoji in a title |
+| UT-8 | Password rules (FR-AC-17) | Under 10 characters or over 72 bytes is refused; passwords are never trimmed; the common-password list is refused whatever the case; both copies must match; each failure names its rule |
+| UT-9 | Sign-in limiter (FR-AC-19) | 5 failures for an address in 15 minutes pause it, case and spaces ignored; the pause lifts 15 minutes later; spread-out failures and a successful sign-in reset it; memory stays bounded |
 
 ## Automated — end to end
 
@@ -91,7 +113,7 @@ Playwright in CI against the local stack with seed data.
 | ID | Journey | Passes when |
 | --- | --- | --- |
 | E2E-1 | UC-1, signed out | Home → subcategory → group → event in three clicks; no sign-in prompt |
-| E2E-2 | UC-2 | Sign in (using the local email catcher), accept terms, join, RSVP, return to the event page showing "going" |
+| E2E-2 | UC-2, UC-29 | Create an account, confirm it from the local email catcher, accept terms, join, RSVP, return to the event page showing "going"; sign out and back in with the password |
 | E2E-3 | Browse with JavaScript off | Home, listing, group and event pages render fully |
 | E2E-4 | UC-8, claim a listing | Signed in, ask to claim a listing; as the site admin approve it; the claimant's group page shows them as owner |
 | E2E-5 | UC-9, list a candidate | As the site admin, *List it* on a candidate; the group page shows the unclaimed listing with its tags and upcoming events |
@@ -101,7 +123,8 @@ Playwright in CI against the local stack with seed data.
 | ID | Check |
 | --- | --- |
 | MT-1 | Walk every approved use case on the production site with seed data |
-| MT-2 | Sign-in email arrives in Gmail and Outlook inboxes, not spam |
+| MT-2 | Confirmation and password reset emails arrive in Gmail and Outlook inboxes, not spam |
+| MT-10 | UC-29 on production: sign up with a new address (page says *Check your email*), and again with the same address (same page, nothing revealed); an unconfirmed account cannot sign in; 5 wrong passwords pause sign-in for that address; *Forgot password* answers the same for an unknown address; the reset link sets a new password and signs out a second browser; *Set a new password* without the link sends you to *Forgot password*; a wrong current password on the profile page changes nothing |
 | MT-3 | Lighthouse mobile: performance and accessibility at or above target (TR-PERF-3, TR-A11Y) |
 | MT-4 | Keyboard-only pass through join, RSVP and post |
 | MT-5 | Supabase security advisor reports no errors (TR-SEC-10) |
@@ -112,7 +135,7 @@ Playwright in CI against the local stack with seed data.
 
 ## Planned — pending use case review
 
-Draft use cases UC-10 to UC-32 are not approved yet, so these have no
+Draft use cases UC-10 to UC-28 and UC-32 are not approved yet, so these have no
 requirement numbers. They show what each would have to prove; they become
 real tests, with requirements, once the use case is approved.
 
