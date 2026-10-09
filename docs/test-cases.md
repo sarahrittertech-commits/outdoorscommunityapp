@@ -89,6 +89,16 @@ web app is not the thing enforcing the rule.
 | PT-67 | Joining by invite counts toward the 20-joins-a-day limit (FR-MB-16, TR-SEC-8) | Invite links bypass the join rate limit |
 | PT-68 | Member email invites: page admin and managers only, at most 25 per send and 100 a day per group, duplicates and repeats within 30 days skipped (FR-MB-13) | The board becomes a spam relay |
 | PT-69 | Ownership still goes only to a manager and works with two managers; links and invites are written to the moderation log; invite addresses are purged after 30 days and the purge is not callable through the API (FR-MB-6, FR-MB-16) | Invites leave no trail, or addresses are kept forever |
+| PT-70 | Page admins and managers can't dismiss or action a report about their own content or another organizer's; the site admin can; reports about a group are the site admin's; dismissals are logged (FR-MD-2) | An organizer quietly dismisses complaints about themselves |
+| PT-71 | remove_member gives anyone who can't moderate the group the same refusal whoever they name (FR-MB-7) | Anyone can probe who is in or banned from a group |
+| PT-72 | Ownership can't be transferred to someone who already owns 3 active or archived groups (FR-GR-7) | The 3-group limit is bypassed by transfers |
+| PT-73 | Organizers of an archived or removed group can't remove posts, pin, remove members, decline requests, handle reports, change roles or transfer ownership; the site admin still can (FR-GR-6) | "Read-only" groups are still moderated through the API |
+| PT-74 | An archived group's event addresses can't be changed or cleared; an active group's still can (FR-GR-6) | Archived groups still change |
+| PT-75 | A suspended account can't delete its posts (FR-MD-3) | Suspension doesn't stop all writes |
+| PT-76 | Leaving groups doesn't reset the 20-joins-a-day limit; the join log can't be read or written through the API (TR-SEC-8) | The join limit is bypassed by leaving and rejoining |
+| PT-77 | The unused group-covers bucket has no upload policies and, when empty, is gone (TR-SEC-9) | Unlimited uploads into an unused public bucket |
+| PT-78 | Event listings show only active groups' events; restoring a group lists them again (FR-GR-6) | Archived groups' events still appear on Events and in search |
+| PT-79 | Signed-in users can't call raise_rule and a bad time zone still gets its message; the missing indexes exist; approving a claim keeps the claimant's RSVPs | Internal helpers in the API; slow admin pages; a claim drops the new owner's RSVPs |
 
 ## Automated — unit
 

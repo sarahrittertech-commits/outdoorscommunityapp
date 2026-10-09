@@ -11,6 +11,7 @@ import { EventList } from "@/components/Listings";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
 import { site } from "@/config/site";
+import { archivedGroupEvents } from "@/lib/groupEvents";
 import { loadGroup, roleLabel } from "@/lib/groups";
 
 type Props = {
@@ -61,13 +62,17 @@ export default async function GroupPage({ params, searchParams }: Props) {
         .in("role", ["owner", "admin"])
         .eq("status", "active")
         .order("role"),
-      supabase
-        .from("event_listings")
-        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps")
-        .eq("group_id", group.id)
-        .gt("ends_at", now)
-        .order("starts_at")
-        .limit(20),
+      // event_listings holds active groups only (FR-GR-6); an archived
+      // group's page reads its own events directly.
+      group.status === "active"
+        ? supabase
+            .from("event_listings")
+            .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps")
+            .eq("group_id", group.id)
+            .gt("ends_at", now)
+            .order("starts_at")
+            .limit(20)
+        : archivedGroupEvents(supabase, group, { upcoming: true, from: 0, to: 19 }).then(({ events }) => ({ data: events })),
       supabase.from("events").select("id", { count: "exact", head: true }).eq("group_id", group.id).lte("ends_at", now),
       isAdmin
         ? supabase.from("group_members").select("user_id", { count: "exact", head: true }).eq("group_id", group.id).eq("status", "pending")

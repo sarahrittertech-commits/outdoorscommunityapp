@@ -51,10 +51,11 @@ export default async function EventPage({ params, searchParams }: Props) {
   // decides what each query returns, so nothing here waits on isMember.
   const [{ supabase, event, group }, viewer] = await Promise.all([loadEvent(id), getViewer()]);
 
-  const [{ isMember, canManage }, { data: details }, { data: listing }, { data: rsvpRows }] = await Promise.all([
+  const [{ isMember, canManage }, { data: details }, { data: goingCount }, { data: rsvpRows }] = await Promise.all([
     loadGroup(group.slug),
     supabase.from("event_private_details").select("address").eq("event_id", event.id).maybeSingle(),
-    supabase.from("event_listings").select("going_count").eq("id", event.id).single(),
+    // Not event_listings, which leaves out archived groups (FR-GR-6).
+    supabase.rpc("event_going_count", { p_event_id: event.id }),
     // Members read every RSVP to the event; anyone else reads only their own.
     viewer
       ? supabase
@@ -70,7 +71,7 @@ export default async function EventPage({ params, searchParams }: Props) {
   const attendees = isMember ? (rsvpRows ?? []).filter((r) => r.status === "going") : null;
   const waitlist = (rsvpRows ?? []).filter((r) => r.status === "waitlisted");
   const waitlistPlace = viewer ? waitlist.findIndex((r) => r.user_id === viewer.id) + 1 : 0;
-  const going = listing?.going_count ?? 0;
+  const going = goingCount ?? 0;
   // FR-EV-24: the event's own photo first; otherwise a representative photo
   // for a couple of sample groups (src/brand/activityPhotos.ts).
   const ownPhoto = event.photo_path ? { src: eventPhotoUrl(supabase, event.photo_path), alt: event.photo_alt ?? "" } : null;

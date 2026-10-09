@@ -638,6 +638,7 @@ export type Database = {
     Functions: {
       is_site_admin: { Args: never; Returns: boolean };
       can_write: { Args: never; Returns: boolean };
+      can_moderate: { Args: { p_group_id: string }; Returns: boolean };
       is_group_member: { Args: { p_group_id: string }; Returns: boolean };
       is_group_admin: { Args: { p_group_id: string }; Returns: boolean };
       is_group_owner: { Args: { p_group_id: string }; Returns: boolean };

@@ -10,7 +10,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     supabase.from("groups").select("slug, updated_at").eq("status", "active").limit(5000),
     supabase
       .from("events")
-      .select("id, updated_at")
+      .select("id, updated_at, groups!inner(status)")
+      .eq("groups.status", "active")
       .eq("status", "scheduled")
       .gt("starts_at", new Date().toISOString())
       .limit(5000),
