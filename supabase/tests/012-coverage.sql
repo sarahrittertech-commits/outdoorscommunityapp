@@ -195,6 +195,7 @@ insert into definer_allowed values
   ('group_is_active(uuid)'),
   ('group_is_visible(uuid)'),
   ('group_member_count(uuid)'),
+  ('group_members_after_delete()'),
   ('group_members_before_insert()'),
   ('groups_after_insert()'),
   ('groups_before_insert()'),
