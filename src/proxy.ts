@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 import type { Database } from "@/lib/supabase/database.types";
-import { supabaseAnonKey, supabaseUrl } from "@/lib/supabase/env";
+import { sessionCookieOptions, supabaseAnonKey, supabaseUrl } from "@/lib/supabase/env";
 
 /**
  * Runs before every page:
@@ -29,6 +29,7 @@ export async function proxy(request: NextRequest) {
   let response = next();
 
   const supabase = createServerClient<Database>(supabaseUrl(), supabaseAnonKey(), {
+    cookieOptions: sessionCookieOptions,
     cookies: {
       getAll() {
         return request.cookies.getAll();

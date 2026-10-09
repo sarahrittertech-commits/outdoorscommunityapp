@@ -16,7 +16,7 @@ function icsTime(iso: string): string {
 }
 
 function escapeText(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/\r?\n/g, "\\n").replace(/([,;])/g, "\\$1");
+  return value.replace(/\\/g, "\\\\").replace(/\r\n|\r|\n/g, "\\n").replace(/([,;])/g, "\\$1");
 }
 
 /** Lines longer than 75 octets are folded, as the format requires. */

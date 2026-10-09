@@ -28,6 +28,23 @@ describe("buildIcs", () => {
     expect(ics).toContain("DESCRIPTION:Line one\\nLine two\\n\\nhttps://board.example/e/abc");
   });
 
+  it("never lets a lone carriage return start a new property", () => {
+    const injected = buildIcs(
+      {
+        id: "x",
+        title: "Hike\rATTENDEE:mailto:someone@example.com",
+        description: "",
+        startsAt: "2026-10-04T13:00:00.000Z",
+        endsAt: "2026-10-04T17:00:00.000Z",
+        location: "Trailhead",
+        url: "https://board.example/e/x",
+      },
+      "board.example",
+    );
+    expect(injected).toContain("SUMMARY:Hike\\nATTENDEE:mailto:someone@example.com");
+    expect(injected.split("\r\n").some((line) => line.startsWith("ATTENDEE"))).toBe(false);
+  });
+
   it("uses CRLF line endings and a stable UID", () => {
     expect(ics.split("\r\n")[0]).toBe("BEGIN:VCALENDAR");
     expect(ics).toContain("UID:abc@board.example");

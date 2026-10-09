@@ -12,3 +12,15 @@ export function supabaseAnonKey(): string {
   if (!value) throw new Error("NEXT_PUBLIC_SUPABASE_ANON_KEY is not set. Copy .env.example to .env.local.");
   return value;
 }
+
+/**
+ * The session cookie is only ever read on the server (there is no browser
+ * Supabase client), so scripts can't read it, and outside local development
+ * it only travels over HTTPS.
+ */
+export const sessionCookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  path: "/",
+} as const;
