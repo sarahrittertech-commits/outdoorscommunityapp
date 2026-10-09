@@ -19,8 +19,10 @@ npm run dev                 # http://localhost:3000
 ```
 
 Sign in as any seed user (for example `maya@example.com`, the owner of
-Brevard Saturday Paddlers, or `admin@example.com`, the site admin). The
-sign-in link arrives in the local mail catcher at http://127.0.0.1:54324.
+Brevard Saturday Paddlers, or `admin@example.com`, the site admin) with the
+local seed password `trail-mix-2026` (set in `supabase/seed.sql`, never used
+in production). Confirmation and password reset emails for new local
+accounts arrive in the mail catcher at http://127.0.0.1:54324.
 
 ```bash
 npm run db:reset   # rebuild the local database from migrations + seed
@@ -65,8 +67,11 @@ One-time setup, in this order.
 
 3. **Authentication → URL configuration:** Site URL = the production URL;
    redirect URLs = `https://<domain>/auth/callback`.
-4. **Authentication → Providers → Email:** enable email sign-in; turn off
-   password sign-up if the dashboard offers it.
+4. **Authentication → Providers → Email** (UC-29, ADR-0009): enable the
+   Email provider with **email and password sign-up allowed**, **Confirm
+   email ON**, **minimum password length 10**, and *Secure password change*
+   off (the app checks the current password itself, FR-AC-21). See
+   [Password sign-in settings](#password-sign-in-settings-uc-29).
 5. **Authentication → SMTP:** enter Resend's SMTP settings. Without this,
    Supabase only emails the project's own team (see
    [ADR-0004](./architecture/adr-0004-background-jobs-and-email)).
@@ -95,7 +100,7 @@ registrar), then create the SMTP credentials used in step 1.5.
    | --- | --- |
    | `NEXT_PUBLIC_SUPABASE_URL` | the project's API URL |
    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | the project's anon (publishable) key |
-   | `NEXT_PUBLIC_SITE_URL` | `https://<domain>`. Required: sign-in links and the redirect after sign-in are built from it, because behind Railway's proxy the server only sees itself as `0.0.0.0:8080`. |
+   | `NEXT_PUBLIC_SITE_URL` | `https://<domain>`. Required: the links in confirmation and reset emails and the redirect after sign-in are built from it, because behind Railway's proxy the server only sees itself as `0.0.0.0:8080`. |
 
    Never add the service-role key to Railway (TR-SEC-3).
 3. Add the custom domain. Set a usage limit and alert (TR-OPS-3).
@@ -167,6 +172,38 @@ If the token leaks, change it in both places; the old one stops working at
 once.
 
 ## Operations
+
+### Password sign-in settings (UC-29)
+
+Email and password replaced the emailed sign-in link on 9 October 2026.
+These are dashboard settings, not code, so check them on any new project
+(and on the women's clone):
+
+1. **Authentication → Sign In / Providers → Email:** Email provider
+   enabled; **Allow new users to sign up** on; **Confirm email** on;
+   **Minimum password length** 10; password requirements none (the app
+   refuses common passwords itself); *Secure password change* off.
+2. **Authentication → URL configuration:** the Site URL is the production
+   URL and `https://<domain>/auth/callback` is a redirect URL (the
+   confirmation and reset links land there with `?next=`).
+3. **Authentication → Rate limits:** leave Supabase's defaults (they limit
+   sign-ins and emails per IP address). The app adds a per-address pause:
+   5 wrong passwords in 15 minutes pause that address for 15 minutes. It
+   is kept in the server's memory, so a deploy or restart clears it, and
+   it only covers the whole site while Railway runs one instance
+   (ADR-0009).
+4. **Authentication → Emails → SMTP:** still needed. Until Resend's SMTP is
+   set up, Supabase's built-in sender only reaches the project's own team,
+   so the public can sign in to existing accounts but cannot confirm a new
+   account or reset a password.
+5. **Optional, for links that open in any browser:** in **Authentication →
+   Emails → Templates**, point *Confirm signup* at
+   `{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email&next=/`
+   and *Reset password* at
+   `{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password`.
+   The default links work only in the browser that asked for them.
+6. **Existing accounts** (created with the old emailed link) have no
+   password: use *Forgot password* on the sign-in page to set one.
 
 ### Deleted accounts
 

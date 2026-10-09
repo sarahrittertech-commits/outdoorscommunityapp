@@ -405,7 +405,7 @@ flowchart TD
 
 ## UC-29 — Sign up with an email and a password
 
-*Draft, awaiting review. Open sign-up with email confirmation; password only.*
+*Approved and built 9 October 2026. Open sign-up with email confirmation; password only.*
 
 ```mermaid
 flowchart TD
