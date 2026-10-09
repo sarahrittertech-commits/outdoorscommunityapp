@@ -43,4 +43,12 @@ export const loadGroup = cache(async (slug: string) => {
   };
 });
 
+/**
+ * What the site calls each role (UC-31): the owner is the *page admin* and
+ * admins are *page managers*. The database keeps owner / admin / member.
+ */
+export function roleLabel(role: "owner" | "admin" | "member"): string {
+  return role === "owner" ? "page admin" : role === "admin" ? "page manager" : "member";
+}
+
 export type LoadedGroup = Awaited<ReturnType<typeof loadGroup>>;

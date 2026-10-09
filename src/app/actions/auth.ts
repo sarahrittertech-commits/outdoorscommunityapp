@@ -28,13 +28,17 @@ import {
 
 const callbackUrl = (next: string) => `${site.url}/auth/callback?next=${encodeURIComponent(next)}`;
 
+/** /join/<invite code> (UC-31), the only sign-up form outside /signup. */
+const JOIN_PATH = /^\/join\/[a-f0-9]{64}$/;
+
 const isRateLimited = (error: AuthError) =>
   error.status === 429 || error.code === "over_request_rate_limit" || error.code === "over_email_send_rate_limit";
 
 /** FR-AC-17: create an account. Always answers *Check your email*. */
 export async function signUp(formData: FormData) {
   const next = safeNext(formData.get("next"));
-  const back = `/signup?next=${encodeURIComponent(next)}`;
+  // UC-31: the invite page has its own sign-up form and shows the answer itself.
+  const back = JOIN_PATH.test(next) ? next : `/signup?next=${encodeURIComponent(next)}`;
   const parsed = signUpSchema.safeParse(formFields(formData));
   if (!parsed.success) fail(back, passwordErrorCode(parsed.error));
 

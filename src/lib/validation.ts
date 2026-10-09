@@ -118,20 +118,34 @@ export const groupSchema = z.object({
     .refine((v) => v === null || /^https?:\/\/[^\s/]+\.[^\s]+$/i.test(v), "Enter a web address like https://example.org"),
 });
 
+/** An http(s) link, or null when empty (FR-EV-27). */
+const optionalHttpUrl = (max: number) =>
+  optionalText(max).refine((value) => value === null || /^https?:\/\/\S+$/i.test(value), "Use an http or https link.");
+
+/** FR-EV-1 and FR-EV-23 to FR-EV-28. The photo file is checked by eventPhotoSchema. */
 export const eventSchema = z
   .object({
     title: requiredText(3, 120),
-    description: optionalText(10000).transform((v) => v ?? ""),
+    description: requiredText(10, 2000),
+    details: optionalText(10000),
     startsLocal: localDateTime,
     endsLocal: localDateTime,
     timezone: z.string().refine(isValidTimeZone),
     locationName: requiredText(2, 200),
     address: optionalText(300),
     addressVisibility: z.enum(["public", "members"]),
+    price: z.enum(["free", "paid"]),
+    registrationFee: optionalText(80),
+    totalCost: optionalText(80),
+    takesRsvps: checkbox,
     capacity: z.preprocess(
       (value) => (value === "" || value === undefined || value === null ? null : Number(value)),
       z.number().int().positive().max(10000).nullable(),
     ),
+    waitlistEnabled: checkbox,
+    signupUrl: optionalHttpUrl(500),
+    photoAlt: optionalText(200),
+    removePhoto: checkbox,
   })
   .transform((event, ctx) => {
     const startsAt = zonedLocalToUtc(event.startsLocal, event.timezone);
@@ -140,8 +154,40 @@ export const eventSchema = z
       ctx.addIssue({ code: "custom", path: ["endsLocal"], message: "The event must end after it starts." });
       return z.NEVER;
     }
-    return { ...event, startsAt: startsAt.toISOString(), endsAt: endsAt.toISOString() };
+    const isPaid = event.price === "paid";
+    if (isPaid && !event.registrationFee) {
+      ctx.addIssue({ code: "custom", path: ["registrationFee"], message: "A paid event needs a registration fee." });
+      return z.NEVER;
+    }
+    return {
+      ...event,
+      startsAt: startsAt.toISOString(),
+      endsAt: endsAt.toISOString(),
+      isPaid,
+      // A free event has no fee; fields for the other choice are dropped.
+      registrationFee: isPaid ? event.registrationFee : null,
+      totalCost: isPaid ? event.totalCost : null,
+      // A waitlist needs places; a sign-up link is for events without RSVPs.
+      waitlistEnabled: event.takesRsvps && event.capacity !== null && event.waitlistEnabled,
+      signupUrl: event.takesRsvps ? null : event.signupUrl,
+    };
   });
+
+export const EVENT_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
+export const EVENT_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+
+/**
+ * FR-EV-24: the uploaded photo, or null when none was chosen. The type is
+ * checked again from the file's contents when it is re-encoded.
+ */
+export const eventPhotoSchema = z
+  .union([z.instanceof(File), z.null(), z.undefined(), z.string()])
+  .transform((value) => (value instanceof File && value.size > 0 ? value : null))
+  .refine((file) => file === null || file.size <= EVENT_PHOTO_MAX_BYTES, "At most 5 MB.")
+  .refine(
+    (file) => file === null || (EVENT_PHOTO_TYPES as readonly string[]).includes(file.type),
+    "Use a JPEG, PNG or WebP image.",
+  );
 
 export const threadSchema = z.object({
   title: requiredText(1, 150),
@@ -183,3 +229,39 @@ export const slugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80)
 export const localPathSchema = z.string().max(2000).refine((value) => safeNext(value, "") === value);
 
 export const postTypeSchema = z.enum(["thread", "reply"]);
+
+// UC-31: invites -------------------------------------------------------------
+
+/** An invite code: 64 hex characters, made by the database. */
+export const inviteTokenSchema = z.string().regex(/^[a-f0-9]{64}$/);
+
+/** How long a new invite link lasts (FR-MB-15): days, or null for until turned off. */
+export const linkExpirySchema = z
+  .object({ valid: z.enum(["7", "30", "never"]) })
+  .transform(({ valid }) => (valid === "never" ? null : Number(valid)));
+
+/** FR-MB-13: at most this many addresses per send (the database checks too). */
+export const MAX_INVITES_PER_SEND = 25;
+
+const oneEmail = z.email().max(254);
+
+/**
+ * Pasted addresses, separated by commas, semicolons, spaces or new lines.
+ * Lowercased and deduplicated; anything that isn't an email address is
+ * returned separately so the form can list it back.
+ */
+export function parseInviteEmails(text: string): { valid: string[]; invalid: string[] } {
+  const valid = new Set<string>();
+  const invalid = new Set<string>();
+  for (const part of text.split(/[\s,;]+/)) {
+    const value = part.trim().toLowerCase();
+    if (!value) continue;
+    if (oneEmail.safeParse(value).success) valid.add(value);
+    else invalid.add(part.trim().slice(0, 100));
+  }
+  return { valid: [...valid], invalid: [...invalid] };
+}
+
+export const inviteEmailsSchema = z.object({ emails: z.string().max(10_000) });
+
+export const managerInviteSchema = z.object({ email: oneEmail });

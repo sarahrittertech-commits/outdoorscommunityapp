@@ -792,7 +792,7 @@ a forgotten password is never a dead end.
 
 ## UC-30 — Post an event people want to come to
 
-> **Draft, awaiting review.** Requested by Sarah on 9 October 2026 after
+> **Approved and built 9 October 2026.** Requested by Sarah on 9 October 2026 after
 > testing *Post an event*: no photo, no price, every event forced to take
 > RSVPs, and one text box for everything. Decided with her the same day:
 > RSVPs are optional; with RSVPs, a place limit and an optional waitlist;
@@ -827,16 +827,19 @@ and come.
 **Alternatives** (in the requirements): a free event; an event without
 RSVPs that links to the organizer's own sign-up page instead.
 
-**Requirements:** to be written after review (drafts FR-EV-23 to FR-EV-28;
-FR-EV-12, FR-EV-13 and FR-EV-16 narrowed to these).
+**Requirements:** FR-EV-23 to FR-EV-28 (FR-EV-12, FR-EV-13 and FR-EV-16
+narrowed to these; FR-EV-10 replaced). Tests PT-50 to PT-59.
 
 **Succeeds when:** an event page answers *what is it, what does it cost,
 can I come, how do I sign up* without anyone leaving the page or asking.
 
+---
 
 ## UC-31 — Bring people into the group
 
-> **Draft, awaiting review. Decisions needed** (listed in the requirements).
+> **Approved and built 9 October 2026**, with the recommended choice for
+> each decision. Email invites (steps 1 and 2 by email) are built but wait
+> on the board's email setup; until then the invite link is the way in.
 > Requested by Sarah on 9 October 2026: a group has one main admin and up
 > to two page managers who help run it; only the main admin transfers
 > ownership; members can be invited by email, one address or many; and a
@@ -863,11 +866,19 @@ regulars and co-organizers with them.
    with a join link.
 3. Under *Invite link*, clicks *Create a link*, copies it and shares it in
    the club's group chat. The link works for 30 days.
-4. A rider opens the link, signs up or signs in, and lands in the group as
-   a member, even though the group asks people to request to join.
+4. A rider opens the link. The page says *Blue Ridge Dirt Skrrts is on
+   Branch Outdoors*, explains that this is the board the club uses for its
+   events and discussions, and offers *Create your account and join*
+   (email, password twice) or *Sign in*. She creates the account, confirms
+   her email, and the link in that email brings her back to the same page;
+   she adds her display name and accepts the terms, then presses *Join Blue
+   Ridge Dirt Skrrts* and lands on the group page (*Welcome to Blue Ridge
+   Dirt Skrrts*) as a member, even though the group asks people to request
+   to join. Someone already signed in just sees *Blue Ridge Dirt Skrrts
+   invites you* and the Join button.
 5. Later, the page admin turns the link off; it stops working at once.
 
-**Requirements:** to be written after review (drafts FR-MB-11 to FR-MB-16).
+**Requirements:** FR-MB-11 to FR-MB-16.
 
 **Succeeds when:** a club moves its people onto the board in one sitting,
 and nobody but the page admin can hand the group to someone else.

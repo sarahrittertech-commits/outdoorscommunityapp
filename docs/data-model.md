@@ -158,6 +158,8 @@ Constraints:
 - **Exactly one owner per group:** a unique index on `group_id` where
   `role = 'owner'`, and the group is created together with its owner row in
   one transaction.
+- **At most two admins (page managers) per group,** counting open manager
+  invites: a trigger on insert and on role changes (FR-MB-11).
 - Only `active` rows grant access. `pending` and `banned` rows exist so the
   database can refuse a banned user's rejoin.
 
@@ -170,7 +172,8 @@ Constraints:
 | `id` | uuid | |
 | `group_id` | uuid | host group |
 | `title` | text | |
-| `description` | text | |
+| `description` | text | FR-EV-23: what it is and who it's for, at most 2,000 characters; the form requires 10 or more |
+| `details` | text, optional | FR-EV-23: what to bring, pace, difficulty |
 | `starts_at`, `ends_at` | timestamp (UTC) | `ends_at` after `starts_at` |
 | `timezone` | text | IANA zone the event is shown in |
 | `location_name` | text | "Pisgah Fish Hatchery parking lot" — always public |
@@ -180,6 +183,12 @@ Constraints:
 | `created_by` | uuid | |
 | `created_at`, `updated_at` | timestamp | |
 | `source_url` | text, optional | FR-GR-9: the organizer's own page for a listed event. Only SQL run by the operator sets it. |
+| `photo_path`, `photo_alt` | text, optional | FR-EV-24: a file in the `event-photos` bucket, always in this event's own folder `<group_id>/<id>/`; alt text (at most 200) required with a photo |
+| `is_paid` | boolean | FR-EV-25: `false` (Free) by default |
+| `registration_fee`, `total_cost` | text, optional | FR-EV-25: at most 80 characters each; a paid event needs a registration fee |
+| `takes_rsvps` | boolean | FR-EV-26: `true` by default; when `false` the database refuses RSVPs |
+| `signup_url` | text, optional | FR-EV-27: http or https only |
+| `waitlist_enabled` | boolean | FR-EV-28: only meaningful with a capacity |
 
 ### event_private_details
 
@@ -198,11 +207,16 @@ to live in a row that only members may read.
 | --- | --- | --- |
 | `event_id` | uuid | part of the key |
 | `user_id` | uuid | part of the key |
-| `status` | enum | `going`, `not_going` |
+| `status` | enum | `going`, `not_going`, `waitlisted` |
+| `waitlisted_at` | timestamp, optional | FR-EV-28: set by the database when the person joins the waitlist; the waitlist's order |
 | `updated_at` | timestamp | |
 
 The database refuses an RSVP after the event starts, for a cancelled event,
-or one that would push `going` past `capacity`.
+for an event that takes no RSVPs, or one that would push `going` past
+`capacity`. Waitlisted people don't count as going. Only an owner or admin
+moves someone from the waitlist to going (`move_from_waitlist`, which locks
+the event row and needs a free place); while anyone is waiting, members
+can't take a freed place themselves.
 
 ## Discussions
 
@@ -261,12 +275,63 @@ site admin.
 | --- | --- | --- |
 | `id` | uuid | |
 | `actor_id` | uuid | who did it |
-| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, … |
+| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, `create_invite_link`, `turn_off_invite_link`, `invite_manager`, `send_invites`, … |
 | `target_type`, `target_id` | | what it was done to |
 | `group_id` | uuid, optional | |
 | `reason` | text | |
 | `content_snapshot` | json, optional | the removed text, kept for the site admin only |
 | `created_at` | timestamp | |
+
+## Invites (UC-31)
+
+### group_invite_links
+
+One shareable join link per group (FR-MB-15).
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `group_id` | uuid | the key: one link per group; a new link replaces the old one |
+| `token` | text | 64 random hex characters (244 random bits) |
+| `created_by` | uuid | |
+| `created_at` | timestamp | |
+| `expires_at` | timestamp, optional | 7 or 30 days on; empty means until turned off |
+| `revoked_at` | timestamp, optional | set by *Turn off* |
+
+The token is stored as it is, not hashed, because the page admin and
+managers need to see the link again to copy it: it works like a shared
+document link. Only they can read the row (RLS), writes go through
+`create_invite_link()` and `turn_off_invite_link()`, and the link only ever
+makes someone a plain member.
+
+### invites.email_invites
+
+Member and page-manager invites by email (FR-MB-12, FR-MB-13), in a schema
+of their own that the API does not expose, because they hold email
+addresses (PT-20). Written by `invite_members()` and `invite_manager()`;
+the page admin sees open manager invites, without the address, through
+`open_manager_invites()`.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `group_id` | uuid | |
+| `email` | text | lowercased; used only to send the invite and skip repeats |
+| `role` | enum | `member` or `admin` (a manager invite) |
+| `token` | text | 64 random hex characters, single use |
+| `invited_by` | uuid | |
+| `created_at`, `expires_at` | timestamp | member invites 30 days, manager invites 7 |
+| `accepted_at`, `cancelled_at` | timestamp, optional | |
+
+**Retention:** `purge_old_invites()` deletes rows older than 30 days. It is
+not callable through the API; schedule it with the other jobs once email is
+set up (runbook).
+
+The invite page names the group with `invite_preview(token)` (name and
+slug only, callable signed out, nothing for a bad code). Both kinds of
+invite are used through `join_by_invite(token)`, which checks
+the code, the group (active, not a listing), the person (can write, not
+banned) and, for a manager invite, that the account's email is the invited
+one, then adds an active member row, so the join limit applies.
 
 ## Notifications (Should)
 
@@ -294,17 +359,17 @@ without revealing the rows, so visitors see "12 members" but not who.
 
 ## Planned with the 8 October design (drafts, not built)
 
-What the draft use cases UC-10 to UC-28 and UC-30 to UC-31 would add. Field-level detail is
+What the draft use cases UC-10 to UC-28 would add. Field-level detail is
 written when each is approved, with its migration and permission tests.
 
 | Table or change | For | Notes |
 | --- | --- | --- |
-| `events`: `series_id`, `photo_path`, `price_text`, `rsvp_opens_at`, `requires_approval`, `place_id` | UC-10, UC-17, UC-15 | A series row holds the repeat rule; each date stays its own event |
+| `events`: `series_id`, `rsvp_opens_at`, `requires_approval`, `place_id` | UC-10, UC-17, UC-15 | A series row holds the repeat rule; each date stays its own event |
 | `event_series` | UC-10 | Repeat rule and end date; edits apply to later dates |
 | `event_sponsors` | UC-10 | Name, logo path, website, optional business or group it links to |
 | `event_faq` | UC-10, UC-11 | Question, answer, order |
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
-| `event_rsvps.status` gains `requested`, `waitlisted`, `declined` | UC-17 | Places counted on `going` only |
+| `event_rsvps.status` gains `requested`, `declined` (`waitlisted` built with UC-30) | UC-17 | Places counted on `going` only |
 | `saved_events` | UC-22 | User and event; private to the user |
 | `groups`: `group_type`, `cover_photo_path`, `member_list_visibility`, `organization_id` | UC-24, UC-16, UC-13 | Type from a fixed list |
 | `group_photos` | UC-21 | Uploader, path, alt text, status |

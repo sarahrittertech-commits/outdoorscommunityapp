@@ -13,7 +13,7 @@ type GroupListing = Pick<Views<"group_listings">, "slug" | "name" | "area" | "me
 type EventListing = Pick<
   Views<"event_listings">,
   "id" | "title" | "starts_at" | "timezone" | "group_name" | "group_slug" | "location_name" | "status" | "going_count"
-> & { category_slug?: string | null; is_unclaimed?: boolean | null };
+> & { category_slug?: string | null; is_unclaimed?: boolean | null; is_paid?: boolean | null; takes_rsvps?: boolean | null };
 
 /** One row per group: the facts a newcomer needs to judge it (FR-BR-2). */
 export function GroupList({ groups }: { groups: GroupListing[] }) {
@@ -50,6 +50,7 @@ export function EventList({ events, showGroup = true }: { events: EventListing[]
           <span className="min-w-0 flex-1">
             {e.category_slug && <ActivityIcon slug={e.category_slug} className="mr-1.5 inline h-4 w-4 align-[-2px]" />}
             <Link href={`/e/${e.id}`}>{e.title}</Link>
+            {e.is_paid && <span className="tag ml-2 align-middle">Paid</span>}
             {e.status === "cancelled" && <strong className="ml-2 text-danger">cancelled</strong>}
             <span className="block text-sm text-muted">
               {showGroup && (
@@ -57,7 +58,8 @@ export function EventList({ events, showGroup = true }: { events: EventListing[]
                   <Link href={`/g/${e.group_slug}`}>{e.group_name}</Link> ·{" "}
                 </>
               )}
-              {e.location_name} · {e.is_unclaimed ? "sign up with the organizer" : `${e.going_count} going`}
+              {e.location_name}
+              {e.is_unclaimed ? " · sign up with the organizer" : e.takes_rsvps === false ? null : ` · ${e.going_count} going`}
             </span>
           </span>
         </li>

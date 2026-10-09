@@ -153,12 +153,12 @@ Runs on GitHub Actions on every push and pull request, like the bike map.
 
 ## Proposed with the 8 October design (drafts)
 
-These apply when the draft use cases UC-10 to UC-28 and UC-30 to UC-31 are approved and
+These apply when the draft use cases UC-10 to UC-28 are approved and
 built. They extend the rules above rather than replacing them.
 
 | ID | Draft requirement |
 | --- | --- |
-| TR-SEC-12 | **All images follow TR-SEC-9,** extended to event photos, group cover photos, gallery photos and sponsor logos: JPEG, PNG or WebP only; 5 MB maximum (1 MB for logos); re-encoded and stripped of location and camera data on upload; required alt text; served from storage with the same permissions as the group or event they belong to. |
+| TR-SEC-12 | **All images follow TR-SEC-9,** extended to event photos, group cover photos, gallery photos and sponsor logos: JPEG, PNG or WebP only; 5 MB maximum (1 MB for logos); re-encoded and stripped of location and camera data on upload; required alt text; served from storage with the same permissions as the group or event they belong to. *Built for event photos (FR-EV-24), 9 October 2026:* the server action checks type and size with Zod, re-encodes with `sharp` (turned upright from EXIF, then no metadata kept, at most 1600px, WebP) and uploads as the signed-in user to the public `event-photos` bucket at `<group_id>/<event_id>/<random>.webp`. Its storage policies let only an owner or admin of an active group, with a writable account, write there, and only for an event of that group; the bucket accepts WebP only, at most 5 MB. |
 | TR-SEC-13 | **Direct messages** ([ADR-0006](./architecture/adr-0006-direct-messages)): readable only by the two people in a conversation, enforced by the database; requests, blocks and the daily request limit enforced by the database; reported conversations visible to the site admin only. |
 | TR-SEC-14 | **Sponsor links** use `rel="sponsored noopener"`; sponsors never change the order of any list (FR-EV-14). |
 | TR-PRIV-7 | **No device location.** Location search uses a town or zip the person types or picks, matched against a list of places bundled with the app. The *Near you* town is remembered in the browser only, never on the server. |

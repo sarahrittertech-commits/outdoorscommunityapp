@@ -222,6 +222,25 @@ organizer* with a claim form. Claims on it arrive under *Claim requests* on
 the site admin page; approving one makes the claimant the owner and the
 group active again. Restoring it any other way is refused.
 
+### Invites (UC-31)
+
+The invite link works with no setup. Email invites (FR-MB-12, FR-MB-13)
+are built but switched off with `emailEnabled: false` in
+`src/config/site.ts`; while off the forms show disabled and nothing is
+stored. To switch them on:
+
+1. Finish *Resend* above (a verified sending domain).
+2. Write the sender (not built yet): a scheduled Edge Function, run with
+   the service role, that picks up `invites.email_invites` rows with no
+   send recorded, sends one plain email each with the link
+   `<site url>/join/<token>` (manager invites say they are for that
+   address only), and records the send in `email_log`.
+3. Schedule `select public.purge_old_invites();` daily (pg_cron or the
+   same scheduled function). It deletes invites older than 30 days, which
+   is the promise FR-MB-13 makes about addresses. Run it by hand until then
+   if any invites were stored.
+4. Set `emailEnabled: true` and deploy.
+
 ### Restoring from backup
 
 Supabase Pro keeps daily backups for 7 days: Database → Backups → Restore.

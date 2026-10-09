@@ -76,18 +76,26 @@ Who is allowed to do each action is defined once, in
 | FR-MB-1 | Joining an *open* group makes the user a member immediately. | Must | — |
 | FR-MB-2 | Joining an *approval required* group creates a pending request that an owner or admin approves or declines. | Must | A pending user has no member access until approved. |
 | FR-MB-3 | Members can leave a group at any time. Leaving clears their RSVPs to the group's future events, as removal does. The owner cannot leave without first transferring ownership. | Must | — |
-| FR-MB-4 | Each group has exactly one owner, any number of admins and any number of members. | Must | The database refuses a second owner. |
+| FR-MB-4 | Each group has exactly one owner (page admin), at most two admins (page managers, FR-MB-11) and any number of members. | Must | The database refuses a second owner. |
 | FR-MB-5 | The owner can promote a member to admin and demote an admin to member. | Must | An admin cannot promote or demote anyone. |
 | FR-MB-6 | The owner can transfer ownership to an admin; the old owner becomes an admin. | Should | — |
 | FR-MB-7 | Owner and admins can remove a member. Removal is a ban: the user cannot rejoin or request to join. Admins cannot remove the owner or other admins. | Must | A banned user's join attempt is refused. |
 | FR-MB-8 | The member list is visible to members only. Visitors see the count and the organizers. | Must | — |
 | FR-MB-9 | Approval-required groups can set one join question; the answer is shown to admins with the request. | Should | — |
+| FR-MB-11 | **Page admin and page managers.** A group has one page admin (the owner) and at most two page managers (admins). Managers post and edit events, moderate discussions, approve, remove and ban members. Only the page admin adds or removes managers, transfers ownership (FR-MB-6) and archives the group. | Must | A third manager is refused by the database. |
+| FR-MB-12 | **Manager invite by email** (sending waits on email setup, like FR-MB-13). The page admin can invite a co-organizer by email to be a page manager. The invite is single use and works for 7 days; it counts toward the limit of two while it's open. Accepting makes them a member and a manager; the page admin can cancel it. | Should | Only the address it was sent to can accept it. |
+| FR-MB-13 | **Member invites by email.** The page admin and managers paste one or many addresses (commas, spaces or new lines; at most 25 per send, 100 a day per group). Each valid address gets one plain email with a join link (FR-MB-14); **sending waits on email setup** (Resend and a domain, ADR-0004), and until then the form is shown disabled and nothing is stored. Addresses are used only to send it: not shown to anyone, not kept after 30 days, never added to a list. An address already invited in the last 30 days is skipped. Invalid addresses are listed back. | Should | One send of 26 addresses is refused; nobody can see who was invited. |
+| FR-MB-14 | **Join by invite.** One page, /join/<code>, for links and email invites. It names the group (from `invite_preview()`, which returns only the group's name and slug, and nothing for a bad, turned-off or expired code). Signed out: *<Group> is on <site>*, a line on what the board is, and *Create your account and join* (email, password twice, UC-29's rules) whose confirmation email links back to the same page, or *Sign in*. Signed in but new: the welcome step, then back. Signed in: *<Group> invites you* and a *Join <Group>* button (a POST, so link previews never join anyone or use up an invite); already a member goes straight to the group. Joining makes them a member at once, even in a group that asks people to request to join, and lands on the group page with *Welcome to <Group>*. Banned people can't join this way; removed or archived groups refuse it. | Should | A banned user's invite does nothing; a bad code shows the group to nobody. |
+| FR-MB-15 | **Invite link.** The page admin or a manager creates one shareable link per group, valid for 30 days by default (7 days or until turned off as options). The Members page shows it with *Copy* and *Turn off*; turning it off or making a new one stops the old one at once. The link is a long random code, not guessable. | Should | A turned-off or expired link joins nobody. |
+| FR-MB-16 | **Invites are moderated like joins.** Joining by invite counts toward the 20-joins-a-day limit (TR-SEC-8), and the moderation log records who created each link and who sent each email invite. | Should | — |
+
+FR-MB-11 to FR-MB-16 came from UC-31, approved and built 9 October 2026. On the site the owner is called the **page admin** and admins are **page managers**; the database keeps owner and admin.
 
 ## Events and RSVPs — FR-EV
 
 | ID | Requirement | Priority | Accepted when |
 | --- | --- | --- | --- |
-| FR-EV-1 | Owner and admins create events: title, description, start, end, time zone, location name, address, optional capacity and address visibility (*public* or *members only*). | Must | A members-only address is not readable by non-members through any route, including the database API. |
+| FR-EV-1 | Owner and admins create events: title, description (FR-EV-23), start, end, time zone, location name, address, optional capacity and address visibility (*public* or *members only*). | Must | A members-only address is not readable by non-members through any route, including the database API. |
 | FR-EV-2 | Owner and admins can edit or cancel an event. A cancelled event stays visible, marked cancelled, and accepts no RSVPs. | Must | — |
 | FR-EV-3 | Members RSVP *going* or *not going* and can change it until the event starts. | Must | RSVPs are refused after the start time. |
 | FR-EV-4 | Only active members of the host group can RSVP. | Must | A visitor clicking *Going* is taken to sign in and join first. |
@@ -96,7 +104,13 @@ Who is allowed to do each action is defined once, in
 | FR-EV-7 | *Add to calendar* downloads an `.ics` file. | Should | The file opens correctly in Apple, Google and Outlook calendars. |
 | FR-EV-8 | Past events remain listed on the group page, newest first. | Should | — |
 | FR-EV-9 | *Duplicate event* copies an event's details into a new draft with no date. | Could | — |
-| FR-EV-10 | Waitlist for full events. | Could | — |
+| FR-EV-10 | ~~Waitlist for full events.~~ Replaced by FR-EV-28 (built 9 October 2026). | — | — |
+| FR-EV-23 | **Description and Details.** *Description* is required (10 to 2,000 characters): what the event is and who it's for, shown first and used in link previews. *Details* stays optional (what to bring, pace, difficulty). Existing events keep their text as Details. Plain text, links work. | Must | An event can't be posted without a description. |
+| FR-EV-24 | **Photo.** One optional photo per event, uploaded by the owner or admins: JPEG, PNG or WebP, at most 5 MB, re-encoded and stripped of location data on upload (TR-SEC-9), with a required short description of the picture (alt text). Replaceable and removable. Shown at the top of the event page; events without one show no photo. | Should | Only a group's owner and admins can add or remove an event's photo; nothing but a re-encoded image is ever served. |
+| FR-EV-25 | **Free or Paid.** Every event is *Free* or *Paid*. A paid event has a *Registration fee* and a *Total cost*, each plain text up to 80 characters (*$25 registration*, *about $60 with bike rental*), shown together on the event page and in event lists as *Paid*. The board never takes payment. | Should | A paid event can't be posted without a registration fee. |
+| FR-EV-26 | **Take RSVPs or not.** *Take RSVPs on Branch Outdoors* is ticked by default. Unticked, the event shows no RSVP buttons and no going count, and takes no RSVPs (the database refuses them). | Should | An event without RSVPs refuses an RSVP made directly through the API. |
+| FR-EV-27 | **Sign-up link.** An event without RSVPs can give an optional *Sign up at* link (http or https) to the organizer's own page, shown on the event page with `rel="nofollow ugc noopener"`. | Should | — |
+| FR-EV-28 | **Waitlist when full.** An event with places can turn on a waitlist. When it is full, members can join the waitlist, in the order they joined; they see their place in line. The owner and admins move people from the waitlist to *going* on the event page, never automatically, and only while a place is free. Leaving the waitlist is always allowed. Replaces FR-EV-10 and narrows FR-EV-16. | Should | Nobody moves from the waitlist to going without an organizer, and going never exceeds the places. |
 
 ## Discussions — FR-DS
 
@@ -173,7 +187,7 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 to UC-28 and UC-30 to UC-31 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 to UC-28 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built (UC-29, password sign-in, was approved and built on 9 October and
 its requirements, FR-AC-17 to FR-AC-21, are in the Accounts table). Each moves into its area's table above, with a priority, once Sarah
@@ -185,11 +199,11 @@ approves its use case and user flow. Priorities here are proposals.
 | ID | Draft requirement | Proposed | Accepted when |
 | --- | --- | --- | --- |
 | FR-EV-11 | **Series.** An event can repeat weekly or every two weeks, on chosen days, until an end date (at most a year). Each date is its own event with its own RSVPs and places left. Editing the series offers *this date only* or *this and every later date*; past dates never change. Cancelling one date leaves the rest. | Should | Editing "this and later" changes no date that has started. |
-| FR-EV-12 | **Event photo.** One photo per event or series: JPEG, PNG or WebP, at most 5 MB, re-encoded on upload (TR-SEC-9), with required alt text. Without one, the activity's drawing shows. | Should | No original upload is ever served. |
-| FR-EV-13 | **Price.** Optional plain text up to 60 characters (*Free*, *$10 trail fee*). The board never takes payment or links to checkout on its own behalf; a link to the organizer's page is allowed in the description. | Should | — |
+| FR-EV-12 | **Event photo.** One photo per event or series: JPEG, PNG or WebP, at most 5 MB, re-encoded on upload (TR-SEC-9), with required alt text. Without one, the activity's drawing shows. *For single events, narrowed to FR-EV-24 and built 9 October 2026; series photos stay draft.* | Should | No original upload is ever served. |
+| FR-EV-13 | **Price.** Optional plain text up to 60 characters (*Free*, *$10 trail fee*). The board never takes payment or links to checkout on its own behalf; a link to the organizer's page is allowed in the description. *Narrowed to FR-EV-25 (Free or Paid, fee and total cost) and built 9 October 2026.* | Should | — |
 | FR-EV-14 | **Sponsors.** Up to 5 per event: name, logo (same rules as photos, at most 1 MB), website link with `rel="sponsored noopener"`. Shown in a *Sponsored by* section with the sponsors' logos, below the event details, on the event page only: never in lists, never affecting order or search. A sponsor can link to a business or group page on the board. | Should | A sponsored event lists in exactly the same place as an unsponsored one. |
 | FR-EV-15 | **RSVP approval.** Owner and admins can set an event to *Approve RSVPs*. A member's RSVP is then a request; only admins approve or decline it. Approved RSVPs count against places; requests don't. | Should | The database refuses a member setting their own RSVP to approved. |
-| FR-EV-16 | **Waitlist.** When an event with places is full, members can join the waitlist, in order. An admin moves people from the waitlist to going; there is no automatic move. Replaces FR-EV-10. | Should | Going never exceeds places, even when two admins act at once. |
+| FR-EV-16 | **Waitlist.** When an event with places is full, members can join the waitlist, in order. An admin moves people from the waitlist to going; there is no automatic move. Replaces FR-EV-10. *Narrowed to FR-EV-28 and built 9 October 2026; the Manage RSVPs page (FR-EV-17) stays draft.* | Should | Going never exceeds places, even when two admins act at once. |
 | FR-EV-17 | **Manage RSVPs page.** Lists requests, going, waitlist and declined, with approve, decline, waitlist and remove. Removing someone is logged like other moderation. | Should | Only the group's owner and admins can open it. |
 | FR-EV-18 | **Save.** A signed-in user can save any event they can see, without RSVPing. Saved events are private to that user and listed under *Saved* in My stuff and on their calendar. | Should | No other user, organizer included, can read someone's saved events. |
 | FR-EV-19 | **FAQ.** Owner and admins add up to 15 questions and answers to an event or series, in their chosen order. Plain text. | Should | — |
@@ -334,45 +348,3 @@ read-only demo.
 | FR-AC-15 | **Read-only in the database.** The demo account is marked as a demo, and `can_write()` returns false for it, so every write the board has (post, reply, join, leave, RSVP, report, claim, message, profile edit, account deletion) is refused by the database whatever the page shows. Buttons explain that the demo can look but not change anything. | Should | A pgTAP test tries every write as the demo account and every one is refused. |
 | FR-AC-16 | **Demo groups only.** The demo account is a member only of groups marked as demo groups, whose content is sample content, so it never reads a real group's members-only discussions or member list. Demo groups are listed like any other but carry a *Demo* tag. | Should | The demo account belongs to no real group; every demo group is tagged. |
 
-### Posting an event (UC-30)
-
-Narrows FR-EV-12 (photo), FR-EV-13 (price) and FR-EV-16 (waitlist) to what
-Sarah chose on 9 October, and adds the description, the RSVP choice and the
-sign-up link. Every form keeps working with JavaScript off.
-
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-EV-23 | **Description and Details.** *Description* is required (10 to 2,000 characters): what the event is and who it's for, shown first and used in link previews. *Details* stays optional (what to bring, pace, difficulty). Existing events keep their text as Details. Plain text, links work. | Must | An event can't be posted without a description. |
-| FR-EV-24 | **Photo.** One optional photo per event, uploaded by the owner or admins: JPEG, PNG or WebP, at most 5 MB, re-encoded and stripped of location data on upload (TR-SEC-9), with a required short description of the picture (alt text). Replaceable and removable. Shown at the top of the event page; events without one show no photo. | Should | Only a group's owner and admins can add or remove an event's photo; nothing but a re-encoded image is ever served. |
-| FR-EV-25 | **Free or Paid.** Every event is *Free* or *Paid*. A paid event has a *Registration fee* and a *Total cost*, each plain text up to 80 characters (*$25 registration*, *about $60 with bike rental*), shown together on the event page and in event lists as *Paid*. The board never takes payment. | Should | A paid event can't be posted without a registration fee. |
-| FR-EV-26 | **Take RSVPs or not.** *Take RSVPs on Branch Outdoors* is ticked by default. Unticked, the event shows no RSVP buttons and no going count, and takes no RSVPs (the database refuses them). | Should | An event without RSVPs refuses an RSVP made directly through the API. |
-| FR-EV-27 | **Sign-up link.** An event without RSVPs can give an optional *Sign up at* link (http or https) to the organizer's own page, shown on the event page with `rel="nofollow ugc noopener"`. | Should | — |
-| FR-EV-28 | **Waitlist when full.** An event with places can turn on a waitlist. When it is full, members can join the waitlist, in the order they joined; they see their place in line. The owner and admins move people from the waitlist to *going* on the event page, never automatically, and only while a place is free. Leaving the waitlist is always allowed. Replaces FR-EV-10 and narrows FR-EV-16. | Should | Nobody moves from the waitlist to going without an organizer, and going never exceeds the places. |
-
-### Page managers and invites (UC-31)
-
-**Decisions needed**, each drafted with the recommended choice:
-
-1. **Names:** the owner shows as *Page admin* and admins as *Page
-   managers* everywhere on the site (permissions unchanged). Alternative:
-   keep Owner and Admins.
-2. **Adding a manager:** pick a member, or invite by email (they become a
-   manager after they sign up, accept and join). Alternative: members only.
-3. **Who sends email invites:** the page admin and managers, at most 25
-   addresses per send and 100 a day per group. Alternative: page admin
-   only.
-4. **Invite link:** created by the page admin or managers, works for 30
-   days (or 7, or until turned off), skips join approval, one active link
-   per group.
-
-**Depends on email:** manager and member invites by email need Resend and
-a domain (ADR-0004). The invite link doesn't, so it can ship first.
-
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-MB-11 | **Page admin and page managers.** A group has one page admin (the owner) and at most two page managers (admins). Managers post and edit events, moderate discussions, approve, remove and ban members. Only the page admin adds or removes managers, transfers ownership (FR-MB-6) and archives the group. | Must | A third manager is refused by the database. |
-| FR-MB-12 | **Manager invite by email.** The page admin can invite a co-organizer by email to be a page manager. The invite is single use and works for 7 days; it counts toward the limit of two while it's open. Accepting makes them a member and a manager; the page admin can cancel it. | Should | Only the address it was sent to can accept it. |
-| FR-MB-13 | **Member invites by email.** The page admin and managers paste one or many addresses (commas, spaces or new lines; at most 25 per send, 100 a day per group). Each valid address gets one plain email with a join link (FR-MB-14). Addresses are used only to send it: not shown to anyone, not kept after 30 days, never added to a list. An address already invited in the last 30 days is skipped. Invalid addresses are listed back. | Should | One send of 26 addresses is refused; nobody can see who was invited. |
-| FR-MB-14 | **Join by invite.** Opening a valid invite (email or link) signs the person up or in, then makes them a member at once, even in a group that asks people to request to join. Banned people can't join this way; removed or archived groups refuse it. | Should | A banned user's invite does nothing. |
-| FR-MB-15 | **Invite link.** The page admin or a manager creates one shareable link per group, valid for 30 days by default (7 days or until turned off as options). The Members page shows it with *Copy* and *Turn off*; turning it off or making a new one stops the old one at once. The link is a long random code, not guessable. | Should | A turned-off or expired link joins nobody. |
-| FR-MB-16 | **Invites are moderated like joins.** Joining by invite counts toward the 20-joins-a-day limit (TR-SEC-8), and the moderation log records who created each link and who sent each email invite. | Should | — |
