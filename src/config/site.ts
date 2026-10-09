@@ -43,8 +43,8 @@ export const site = {
   searchPlaceholder: "waterfall hike, beginner climbing, Brevard…",
   /** Whether the create-group form starts on "anyone can join" or "approval". */
   defaultJoinPolicy: "open" as "open" | "approval",
-  /** Public contact for the site admin. */
-  contactEmail: "hello@example.com",
+  /** Public contact for the site admin. null hides every contact line until there is a real address. */
+  contactEmail: null as string | null,
   /** Canonical origin, used for sitemaps, link previews and sign-in links. */
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, ""),
 } as const;
