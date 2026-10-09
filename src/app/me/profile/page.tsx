@@ -18,7 +18,7 @@ export default async function ProfilePage({ searchParams }: Props) {
 
   return (
     <>
-      <p className="text-sm">
+      <p className="breadcrumb">
         <Link href="/me">my stuff</Link> ›
       </p>
       <h1>Profile</h1>

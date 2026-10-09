@@ -106,6 +106,24 @@ first, no pressure. Plain, calm, local, welcoming.
 - **Pages are white, not paper.** Paper (`#FAF6EF`) is used for panels, and
   there is no dark mode: the board looks the same in every setting.
 
+## Representative photos
+
+Two sample groups show a photo from the 8 October design, on the group
+page and on each of their event pages: Blue Ridge Dirt Skrrts (mountain
+biking) and NC BIPOC Climbers (climbing). It is always captioned
+"<activity> · representative photo", never as the group's own
+(`src/brand/activityPhotos.ts`, images in `public/activities/`). Every
+other group and event shows no photo until real ones can be uploaded
+(UC-21, UC-24).
+
+## Spacing
+
+Stacked blocks on a page (headings, paragraphs, tags, sections) sit at
+least 1rem (16px) apart by default, and a breadcrumb sits 1.5rem (24px)
+above its page title (Sarah, 9 October 2026). The rule lives in
+`src/app/globals.css` at zero specificity, so a page can still set its own
+spacing on purpose.
+
 ## Alternate names
 
 If the domain isn't available, the guide's system also works for

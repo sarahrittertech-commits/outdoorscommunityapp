@@ -101,13 +101,53 @@
     }
   }
 
+  /*
+   * Vertical rhythm (Sarah, 9 October): stacked blocks on a page sit at least
+   * 1rem (16px) apart by default. :where() keeps this at zero specificity, so
+   * any spacing a page sets on purpose (mt-*, m-0) still wins.
+   */
+  :where(main, main section, main article, main aside) > :where(* + *) {
+    margin-top: 1rem;
+  }
+
+  /* Event page: details and RSVP beside a representative activity photo. */
+  .event-top {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 48rem) {
+    .event-top { grid-template-columns: 1fr 20rem; align-items: start; }
+  }
+  .event-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+  }
+  .event-photo figcaption {
+    margin-top: 0.4rem;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  /* Breadcrumbs above a page title: small, with about 25px before the heading. */
+  .breadcrumb {
+    margin: 0 0 1.5rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
   /* Forms: plain, large enough to use on a phone. */
   label {
     display: block;
     font-weight: 700;
-    margin-top: 0.9rem;
+    margin-top: 1rem;
   }
   input[type="text"],
+  input[type="url"],
   input[type="email"],
   input[type="number"],
   input[type="datetime-local"],

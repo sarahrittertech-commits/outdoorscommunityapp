@@ -118,6 +118,7 @@ it except through the database functions (onboarding, suspend, delete).
 | `is_unclaimed` | boolean | FR-GR-9: an unclaimed listing, added from public information. Only SQL run by the operator sets it. |
 | `needs_owner` | boolean | FR-AC-6: its owner deleted their account. The group is archived until a claim is approved. Only database functions set it. |
 | `source_url` | text, optional | The organization's own website. Required for a listing. |
+| `website` | text, optional | FR-GR-23: the group's own site, http(s) only, set by owner and admins |
 | `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia`; empty by default |
 
 ### group_claims
