@@ -108,10 +108,13 @@ first, no pressure. Plain, calm, local, welcoming.
 
 ## Representative photos
 
-An event page shows a photo of its activity beside the details, always
-captioned "<activity> · representative photo", never as the group's own
-(`src/brand/activityPhotos.ts`, images from the 8 October design in
-`public/activities/`). Activities without one keep their line drawing.
+Two sample groups show a photo from the 8 October design, on the group
+page and on each of their event pages: Blue Ridge Dirt Skrrts (mountain
+biking) and NC BIPOC Climbers (climbing). It is always captioned
+"<activity> · representative photo", never as the group's own
+(`src/brand/activityPhotos.ts`, images in `public/activities/`). Every
+other group and event shows no photo until real ones can be uploaded
+(UC-21, UC-24).
 
 ## Spacing
 
