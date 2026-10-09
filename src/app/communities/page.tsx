@@ -43,10 +43,12 @@ export default async function CommunitiesPage({ searchParams }: Props) {
     supabase.from("subcategory_group_counts").select("category_slug, group_count"),
     supabase.from("categories").select("slug, name").order("sort_order"),
   ]);
-  // A page number past the end shows the last page, not an empty one.
-  const pageCount = Math.ceil((first.count ?? 0) / PAGE_SIZE);
-  const page = pageFrom(params.page, pageCount);
-  const { data: groups, count } = page === asked ? first : await listPage(page);
+  // A page number past the end shows the last page, not an empty one. The
+  // database refuses a range past the end without a count, so take the
+  // count from page 1 then.
+  const counted = first.count === null && asked > 1 ? await listPage(1) : first;
+  const page = pageFrom(params.page, Math.ceil((counted.count ?? 0) / PAGE_SIZE));
+  const { data: groups, count } = page === asked ? first : page === 1 ? counted : await listPage(page);
 
   const perCategory = new Map<string, number>();
   for (const row of counts ?? []) perCategory.set(row.category_slug!, (perCategory.get(row.category_slug!) ?? 0) + (row.group_count ?? 0));
