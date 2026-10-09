@@ -68,6 +68,16 @@ web app is not the thing enforcing the rule.
 | PT-39 | Every SECURITY DEFINER function in the public schema is on a reviewed list, and a new one fails by name | A function that skips RLS ships without review |
 | PT-40 | A find with a similar name or the same website as something already known is kept and tagged as a possible duplicate; an exact name match is dropped; shared sites like Facebook never count as the same website (FR-RS-10) | Near duplicates listed twice, or real groups lost |
 | PT-41 | Events found for an unclaimed listing publish without review only from a group find whose event links are on the listing's own website (FR-RS-8) | A web page tricks the agent into putting a phishing link on a live listing |
+| PT-60 | A third page manager (admin) is refused by the database, through set_member_role or any direct write (FR-MB-11) | A group ends up with more managers than the page admin agreed to |
+| PT-61 | Only the page admin (owner) changes roles or invites a page manager by email (FR-MB-11, FR-MB-12) | A manager makes more managers |
+| PT-62 | Open manager invites count toward the limit of two; only the page admin lists or cancels them; only the invited address can accept one, once; no invite address is readable through the API (FR-MB-12) | A forwarded manager invite hands the group to a stranger |
+| PT-63 | Only the page admin and managers make an invite link (7 days, 30 days or until turned off); members, applicants, outsiders and visitors cannot read it; one link per group, a new one replaces the old (FR-MB-15) | Anyone can mint or read a group's join link |
+| PT-64 | Only the page admin and managers turn off the invite link, after which it joins nobody (FR-MB-15) | A leaked link can't be stopped |
+| PT-65 | Joining by link makes you an active member at once, even in an approval group, and approves a waiting request (FR-MB-14) | The link only files a join request |
+| PT-66 | A replaced, turned-off, expired or made-up link joins nobody; banned, suspended and not-onboarded accounts and archived groups are refused (FR-MB-14) | A banned member walks back in through a link |
+| PT-67 | Joining by invite counts toward the 20-joins-a-day limit (FR-MB-16, TR-SEC-8) | Invite links bypass the join rate limit |
+| PT-68 | Member email invites: page admin and managers only, at most 25 per send and 100 a day per group, duplicates and repeats within 30 days skipped (FR-MB-13) | The board becomes a spam relay |
+| PT-69 | Ownership still goes only to a manager and works with two managers; links and invites are written to the moderation log; invite addresses are purged after 30 days and the purge is not callable through the API (FR-MB-6, FR-MB-16) | Invites leave no trail, or addresses are kept forever |
 
 ## Automated — unit
 
