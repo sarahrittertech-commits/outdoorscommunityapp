@@ -129,3 +129,39 @@ export const slugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80)
 export const localPathSchema = z.string().max(2000).refine((value) => safeNext(value, "") === value);
 
 export const postTypeSchema = z.enum(["thread", "reply"]);
+
+// UC-31: invites -------------------------------------------------------------
+
+/** An invite code: 64 hex characters, made by the database. */
+export const inviteTokenSchema = z.string().regex(/^[a-f0-9]{64}$/);
+
+/** How long a new invite link lasts (FR-MB-15): days, or null for until turned off. */
+export const linkExpirySchema = z
+  .object({ valid: z.enum(["7", "30", "never"]) })
+  .transform(({ valid }) => (valid === "never" ? null : Number(valid)));
+
+/** FR-MB-13: at most this many addresses per send (the database checks too). */
+export const MAX_INVITES_PER_SEND = 25;
+
+const oneEmail = z.email().max(254);
+
+/**
+ * Pasted addresses, separated by commas, semicolons, spaces or new lines.
+ * Lowercased and deduplicated; anything that isn't an email address is
+ * returned separately so the form can list it back.
+ */
+export function parseInviteEmails(text: string): { valid: string[]; invalid: string[] } {
+  const valid = new Set<string>();
+  const invalid = new Set<string>();
+  for (const part of text.split(/[\s,;]+/)) {
+    const value = part.trim().toLowerCase();
+    if (!value) continue;
+    if (oneEmail.safeParse(value).success) valid.add(value);
+    else invalid.add(part.trim().slice(0, 100));
+  }
+  return { valid: [...valid], invalid: [...invalid] };
+}
+
+export const inviteEmailsSchema = z.object({ emails: z.string().max(10_000) });
+
+export const managerInviteSchema = z.object({ email: oneEmail });

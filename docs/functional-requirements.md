@@ -70,12 +70,20 @@ Who is allowed to do each action is defined once, in
 | FR-MB-1 | Joining an *open* group makes the user a member immediately. | Must | — |
 | FR-MB-2 | Joining an *approval required* group creates a pending request that an owner or admin approves or declines. | Must | A pending user has no member access until approved. |
 | FR-MB-3 | Members can leave a group at any time. Leaving clears their RSVPs to the group's future events, as removal does. The owner cannot leave without first transferring ownership. | Must | — |
-| FR-MB-4 | Each group has exactly one owner, any number of admins and any number of members. | Must | The database refuses a second owner. |
+| FR-MB-4 | Each group has exactly one owner (page admin), at most two admins (page managers, FR-MB-11) and any number of members. | Must | The database refuses a second owner. |
 | FR-MB-5 | The owner can promote a member to admin and demote an admin to member. | Must | An admin cannot promote or demote anyone. |
 | FR-MB-6 | The owner can transfer ownership to an admin; the old owner becomes an admin. | Should | — |
 | FR-MB-7 | Owner and admins can remove a member. Removal is a ban: the user cannot rejoin or request to join. Admins cannot remove the owner or other admins. | Must | A banned user's join attempt is refused. |
 | FR-MB-8 | The member list is visible to members only. Visitors see the count and the organizers. | Must | — |
 | FR-MB-9 | Approval-required groups can set one join question; the answer is shown to admins with the request. | Should | — |
+| FR-MB-11 | **Page admin and page managers.** A group has one page admin (the owner) and at most two page managers (admins). Managers post and edit events, moderate discussions, approve, remove and ban members. Only the page admin adds or removes managers, transfers ownership (FR-MB-6) and archives the group. | Must | A third manager is refused by the database. |
+| FR-MB-12 | **Manager invite by email** (sending waits on email setup, like FR-MB-13). The page admin can invite a co-organizer by email to be a page manager. The invite is single use and works for 7 days; it counts toward the limit of two while it's open. Accepting makes them a member and a manager; the page admin can cancel it. | Should | Only the address it was sent to can accept it. |
+| FR-MB-13 | **Member invites by email.** The page admin and managers paste one or many addresses (commas, spaces or new lines; at most 25 per send, 100 a day per group). Each valid address gets one plain email with a join link (FR-MB-14); **sending waits on email setup** (Resend and a domain, ADR-0004), and until then the form is shown disabled and nothing is stored. Addresses are used only to send it: not shown to anyone, not kept after 30 days, never added to a list. An address already invited in the last 30 days is skipped. Invalid addresses are listed back. | Should | One send of 26 addresses is refused; nobody can see who was invited. |
+| FR-MB-14 | **Join by invite.** Opening a valid invite (email or link) signs the person up or in; pressing *Accept invite* makes them a member at once (a button, so link previews never join anyone), even in a group that asks people to request to join. Banned people can't join this way; removed or archived groups refuse it. | Should | A banned user's invite does nothing. |
+| FR-MB-15 | **Invite link.** The page admin or a manager creates one shareable link per group, valid for 30 days by default (7 days or until turned off as options). The Members page shows it with *Copy* and *Turn off*; turning it off or making a new one stops the old one at once. The link is a long random code, not guessable. | Should | A turned-off or expired link joins nobody. |
+| FR-MB-16 | **Invites are moderated like joins.** Joining by invite counts toward the 20-joins-a-day limit (TR-SEC-8), and the moderation log records who created each link and who sent each email invite. | Should | — |
+
+FR-MB-11 to FR-MB-16 came from UC-31, approved and built 9 October 2026. On the site the owner is called the **page admin** and admins are **page managers**; the database keeps owner and admin.
 
 ## Events and RSVPs — FR-EV
 
@@ -167,7 +175,7 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 to UC-31 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 to UC-30 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built. Each moves into its area's table above, with a priority, once Sarah
 approves its use case and user flow. Priorities here are proposals.
@@ -341,31 +349,3 @@ working with JavaScript off.
 | FR-AC-19 | **Sign in.** Email and password. A wrong address or password gets one message for both ("That email and password don't match"). After 5 failed tries for an address in 15 minutes, sign-in for it pauses for 15 minutes (Supabase Auth's limits plus a check in the sign-in action), with that said plainly. | Must | Repeated wrong passwords are slowed and the page never says which part was wrong. |
 | FR-AC-20 | **Forgot password.** Enter the email; the page always answers *If that address has an account, we've sent a link*. The link works once, for 1 hour, and leads to *Set a new password*, which signs the person in. Changing a password signs out every other session. | Must | A reset link is single use and expires; other devices are signed out. |
 | FR-AC-21 | **Change password** on the profile page: current password, new password twice. | Should | A wrong current password changes nothing. |
-
-### Page managers and invites (UC-31)
-
-**Decisions needed**, each drafted with the recommended choice:
-
-1. **Names:** the owner shows as *Page admin* and admins as *Page
-   managers* everywhere on the site (permissions unchanged). Alternative:
-   keep Owner and Admins.
-2. **Adding a manager:** pick a member, or invite by email (they become a
-   manager after they sign up, accept and join). Alternative: members only.
-3. **Who sends email invites:** the page admin and managers, at most 25
-   addresses per send and 100 a day per group. Alternative: page admin
-   only.
-4. **Invite link:** created by the page admin or managers, works for 30
-   days (or 7, or until turned off), skips join approval, one active link
-   per group.
-
-**Depends on email:** manager and member invites by email need Resend and
-a domain (ADR-0004). The invite link doesn't, so it can ship first.
-
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-MB-11 | **Page admin and page managers.** A group has one page admin (the owner) and at most two page managers (admins). Managers post and edit events, moderate discussions, approve, remove and ban members. Only the page admin adds or removes managers, transfers ownership (FR-MB-6) and archives the group. | Must | A third manager is refused by the database. |
-| FR-MB-12 | **Manager invite by email.** The page admin can invite a co-organizer by email to be a page manager. The invite is single use and works for 7 days; it counts toward the limit of two while it's open. Accepting makes them a member and a manager; the page admin can cancel it. | Should | Only the address it was sent to can accept it. |
-| FR-MB-13 | **Member invites by email.** The page admin and managers paste one or many addresses (commas, spaces or new lines; at most 25 per send, 100 a day per group). Each valid address gets one plain email with a join link (FR-MB-14). Addresses are used only to send it: not shown to anyone, not kept after 30 days, never added to a list. An address already invited in the last 30 days is skipped. Invalid addresses are listed back. | Should | One send of 26 addresses is refused; nobody can see who was invited. |
-| FR-MB-14 | **Join by invite.** Opening a valid invite (email or link) signs the person up or in, then makes them a member at once, even in a group that asks people to request to join. Banned people can't join this way; removed or archived groups refuse it. | Should | A banned user's invite does nothing. |
-| FR-MB-15 | **Invite link.** The page admin or a manager creates one shareable link per group, valid for 30 days by default (7 days or until turned off as options). The Members page shows it with *Copy* and *Turn off*; turning it off or making a new one stops the old one at once. The link is a long random code, not guessable. | Should | A turned-off or expired link joins nobody. |
-| FR-MB-16 | **Invites are moderated like joins.** Joining by invite counts toward the 20-joins-a-day limit (TR-SEC-8), and the moderation log records who created each link and who sent each email invite. | Should | — |

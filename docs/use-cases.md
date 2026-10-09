@@ -792,7 +792,9 @@ a forgotten password is never a dead end.
 
 ## UC-31 — Bring people into the group
 
-> **Draft, awaiting review. Decisions needed** (listed in the requirements).
+> **Approved and built 9 October 2026**, with the recommended choice for
+> each decision. Email invites (steps 1 and 2 by email) are built but wait
+> on the board's email setup; until then the invite link is the way in.
 > Requested by Sarah on 9 October 2026: a group has one main admin and up
 > to two page managers who help run it; only the main admin transfers
 > ownership; members can be invited by email, one address or many; and a
@@ -819,11 +821,12 @@ regulars and co-organizers with them.
    with a join link.
 3. Under *Invite link*, clicks *Create a link*, copies it and shares it in
    the club's group chat. The link works for 30 days.
-4. A rider opens the link, signs up or signs in, and lands in the group as
-   a member, even though the group asks people to request to join.
+4. A rider opens the link, signs up or signs in, presses *Accept invite*
+   and lands in the group as a member, even though the group asks people
+   to request to join.
 5. Later, the page admin turns the link off; it stops working at once.
 
-**Requirements:** to be written after review (drafts FR-MB-11 to FR-MB-16).
+**Requirements:** FR-MB-11 to FR-MB-16.
 
 **Succeeds when:** a club moves its people onto the board in one sitting,
 and nobody but the page admin can hand the group to someone else.

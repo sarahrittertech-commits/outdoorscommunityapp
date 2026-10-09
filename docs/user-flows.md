@@ -424,7 +424,9 @@ flowchart TD
 
 ## UC-31 — Bring people into the group
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. Email invites wait on the board's email
+setup; the forms show disabled until then. Opening a link shows an* Accept
+invite *button, so link previews never join anyone.*
 
 ```mermaid
 flowchart TD
@@ -438,8 +440,8 @@ flowchart TD
   sent --> open
   link --> open["Someone opens the link"]
   open --> signed{Signed in?}
-  signed -->|no| signin["Sign up or sign in"] --> join
-  signed -->|yes| join{Banned, or link off or expired?}
+  signed -->|no| signin["Sign up or sign in"] --> acceptbtn
+  signed -->|yes| acceptbtn["Accept invite"] --> join{Banned, or link off or expired?}
   join -->|no| member(["Member of the group, no approval needed"])
   join -->|yes| refuse(["This link doesn't work. Ask the group for a new one"])
 ```

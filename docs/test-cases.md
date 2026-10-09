@@ -121,7 +121,7 @@ Playwright in CI against the local stack with seed data.
 
 ## Planned — pending use case review
 
-Draft use cases UC-10 to UC-31 are not approved yet, so these have no
+Draft use cases UC-10 to UC-30 are not approved yet, so these have no
 requirement numbers. They show what each would have to prove; they become
 real tests, with requirements, once the use case is approved.
 
