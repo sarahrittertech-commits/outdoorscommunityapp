@@ -58,14 +58,14 @@ the home page, never having been asked to sign in.
 **Flow:**
 
 1. Clicks *Join group*. Is asked to sign in.
-2. Enters an email address and receives a sign-in link.
-3. Clicks the link, confirms they are 18 or over, accepts the terms and sets a
-   display name.
+2. Creates an account with an email address and a password, and confirms
+   the address from the emailed link (UC-29).
+3. Confirms they are 18 or over, accepts the terms and sets a display name.
 4. Lands back on the group page. The group is open, so they are a member at
    once.
 5. Opens the next event and clicks *Going*.
 
-**Requirements:** FR-AC-1, FR-AC-2, FR-AC-3, FR-MB-1, FR-EV-3, FR-EV-4
+**Requirements:** FR-AC-17 to FR-AC-19, FR-AC-2, FR-AC-3, FR-MB-1, FR-EV-3, FR-EV-4
 
 **Succeeds when:** sign-up to RSVP takes under two minutes and they end on the
 page they started from.
@@ -187,7 +187,7 @@ listing*, added from its public web page.
 4. The organizer opens the group page and is now its owner: they can edit
    it, post events and open the discussion board.
 
-**Requirements:** FR-GR-9, FR-GR-10, FR-AC-1, FR-AC-2
+**Requirements:** FR-GR-9, FR-GR-10, FR-AC-17, FR-AC-2
 
 **Succeeds when:** a real organizer takes over their listing in one visit
 plus one admin review, and nobody else can take it over.
@@ -757,7 +757,7 @@ report or message, on any page or through the API.
 
 ## UC-29 — Sign up with an email and a password
 
-> **Draft, awaiting review.** Requested by Sarah on 9 October 2026:
+> **Approved and built 9 October 2026.** Requested by Sarah the same day:
 > people should sign up with an email address they confirm and a password
 > they choose, instead of the emailed one-time link (FR-AC-1, a Must, and
 > ADR-0002). Decided with Sarah the same day: **open sign-up with email
@@ -782,8 +782,8 @@ report or message, on any page or through the API.
 6. Months later, has forgotten the password: clicks *Forgot password*,
    gets an email, sets a new one and is signed in.
 
-**Requirements:** to be written after review (drafts FR-AC-17 to FR-AC-21,
-replacing FR-AC-1).
+**Requirements:** FR-AC-17 to FR-AC-21 (replacing FR-AC-1), FR-AC-2,
+FR-AC-3
 
 **Succeeds when:** nobody can use an account whose email they haven't
 confirmed, a returning member signs in without waiting for an email, and

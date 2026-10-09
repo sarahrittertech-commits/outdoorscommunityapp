@@ -29,7 +29,7 @@ permission enforced and tested in the database.
 | Events | Events page with activity and time-window filters, grouped by month; event pages; add to calendar | UC-7 | FR-BR-4, FR-BR-7, FR-EV-7 |
 | Communities | One table of every group, A to Z, filterable by activity | — | FR-BR-10 |
 | Search | Keyword search over groups and events | — | FR-BR-5 |
-| Accounts | Email sign-in link, 18+ and terms, profile, *My stuff*, delete account, public profiles | UC-2 | FR-AC-1 to FR-AC-7 |
+| Accounts | Email and password sign-in with a confirmed email, forgot and change password; 18+ and terms, profile, *My stuff*, delete account, public profiles | UC-2, UC-29 | FR-AC-2 to FR-AC-7, FR-AC-17 to FR-AC-21 |
 | Groups | Start, edit, archive; open or approval joining with a question; rules; discussions on or off; limit of 3 | UC-3 | FR-GR-1 to FR-GR-7 |
 | Membership and roles | Join, request, leave; owner, admin, member; approve, remove, ban; transfer ownership | UC-2, UC-4 | FR-MB-1 to FR-MB-9 |
 | Events and RSVPs | Post, edit, cancel; going or not going; places and "full"; who's going; past events | UC-2, UC-3 | FR-EV-1 to FR-EV-8 |
@@ -134,7 +134,7 @@ Requested by Sarah on 8 October; drafted 9 October.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Email and password sign-in**: sign up with a confirmed email and a password; forgot and change password. Replaces the emailed sign-in link | Requested 9 Oct, awaiting review | UC-29 | FR-AC-17 to FR-AC-21, ADR-0009 |
+| **Email and password sign-in**: sign up with a confirmed email and a password; forgot and change password. Replaces the emailed sign-in link | **Built 9 Oct** (now in the live table above) | UC-29 | FR-AC-17 to FR-AC-21, ADR-0009 |
 
 ### Demo
 

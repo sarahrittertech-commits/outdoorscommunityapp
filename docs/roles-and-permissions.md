@@ -135,7 +135,7 @@ claimed the same way; its remaining admins and members are users here.
 
 ### Proposed with the 8 October design (drafts, not built)
 
-These follow the draft requirements for UC-10 to UC-31. Each becomes part
+These follow the draft requirements for UC-10 to UC-28 and UC-30 to UC-31. Each becomes part
 of the matrix above, with a permission test, once its use case is
 approved.
 
