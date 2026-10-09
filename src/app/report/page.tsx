@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { submitReport } from "@/app/actions/moderation";
 import { Notice } from "@/components/Notice";
 import { ReportTarget } from "@/components/ReportTarget";
-import { requireViewer, safeNext } from "@/lib/auth";
+import { requireViewer } from "@/lib/auth";
+import { safeNext } from "@/lib/navigation";
 import { reportSchema } from "@/lib/validation";
 
 export const metadata: Metadata = { title: "Report", robots: { index: false } };

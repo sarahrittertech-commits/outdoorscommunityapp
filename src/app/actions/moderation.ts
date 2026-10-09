@@ -3,7 +3,7 @@
 import { z } from "zod";
 
 import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
-import { safeNext } from "@/lib/auth";
+import { safeNext } from "@/lib/navigation";
 import { formFields, reportSchema } from "@/lib/validation";
 
 /** FR-MD-1. The database routes the report to the right queue. */

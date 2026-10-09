@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import { completeOnboarding } from "@/app/actions/auth";
 import { Notice } from "@/components/Notice";
 import { site } from "@/config/site";
-import { getViewer, safeNext } from "@/lib/auth";
+import { getViewer } from "@/lib/auth";
+import { safeNext } from "@/lib/navigation";
 
 export const metadata: Metadata = { title: "Welcome", robots: { index: false } };
 

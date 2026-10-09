@@ -2,7 +2,7 @@ import type { EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { site } from "@/config/site";
-import { safeNext } from "@/lib/auth";
+import { safeNext } from "@/lib/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 /**
