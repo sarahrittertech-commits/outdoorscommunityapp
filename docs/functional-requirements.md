@@ -119,13 +119,14 @@ Forum-style, not chat; see [ADR-0005](./architecture/adr-0005-discussions).
 | ID | Requirement | Priority | Accepted when |
 | --- | --- | --- | --- |
 | FR-DS-1 | When discussions are on, members can start a thread with a title and body. | Must | — |
-| FR-DS-2 | Members reply to threads. Replies are flat (no nesting) and read oldest first. | Must | — |
+| FR-DS-2 | Members reply to threads. Replies read oldest first. Replies were flat; FR-DS-9 adds one level of answers. | Must | — |
 | FR-DS-3 | The board lists threads by most recent reply, pinned threads first, 30 per page. | Must | A new reply moves its thread to the top. |
 | FR-DS-4 | Authors can edit and delete their own posts. Edited posts say "edited". Deleted posts read "deleted by author". | Must | — |
 | FR-DS-5 | Owner and admins can pin, lock and remove threads and remove replies. Removed content reads "removed by a moderator". Locked threads accept no replies. | Must | — |
 | FR-DS-6 | Discussions are readable by group members only. | Must | A signed-in non-member gets nothing from the database, not just an empty page. |
 | FR-DS-7 | Post bodies are plain text: line breaks kept, links made clickable, no HTML, no images. 10,000 characters maximum. | Must | A post containing `<script>` displays the text literally. |
 | FR-DS-8 | Each event gets its own comment thread. | Could | — |
+| FR-DS-9 | **Reply to a reply** (UC-19, built 9 October 2026). A member can answer a top-level reply; the answer shows indented under it, one level only. Answering an answer attaches to the same top-level reply and names who it answers. The answered reply must be visible and in the same thread; the posting rules and rate limit are those of FR-DS-2. Removing or deleting a reply leaves its answers readable under the "removed" or "deleted" placeholder. Posts by the page admin and page managers carry a role label. A *reply* link opens the form under that reply without JavaScript. Changes FR-DS-2. | Should | No thread ever shows more than one level of indent (PT-90 to PT-99). |
 
 There are deliberately no likes, reactions or view counts (principle P7).
 
@@ -248,7 +249,6 @@ link opens.
 | FR-MB-10 | **Member list privacy.** The owner chooses who sees the member list: *organizers only*, *members* (default) or *anyone signed in*. The same rule applies to names on *who's going*; counts are always shown. | Should | The database returns no names the setting doesn't allow, through any route. |
 | FR-AC-9 | **Calendar.** The signed-in home page shows the user's going and saved events as a month (computer) or week (phone), switchable, filterable by group and by going or saved. Each entry links to the event. Plain pages: works without JavaScript. | Should | — |
 | FR-AC-10 | **Reminders.** A list on the signed-in home page of things that need the user, newest first: join and RSVP requests for groups they run, events they're going to in the next 48 hours, saved events nearly full or newly open for RSVPs, new threads in their groups since their last visit, and message requests and unread messages. Items drop off when handled or past. No email or push unless the user turns it on (FR-NT). | Should | The list contains only items that need this user; nothing is ranked or suggested. |
-| FR-DS-9 | **Reply to a reply.** A reply can answer another reply. It shows indented under it, one level only: replies to a nested reply join the same level and name who they answer. Posts by owners and admins carry a role label. Changes FR-DS-2. | Should | No thread ever shows more than one level of indent. |
 
 ### Group photos, types and chapters (UC-13, UC-21, UC-24)
 

@@ -99,6 +99,16 @@ web app is not the thing enforcing the rule.
 | PT-77 | The unused group-covers bucket has no upload policies and, when empty, is gone (TR-SEC-9) | Unlimited uploads into an unused public bucket |
 | PT-78 | Event listings show only active groups' events; restoring a group lists them again (FR-GR-6) | Archived groups' events still appear on Events and in search |
 | PT-79 | Signed-in users can't call raise_rule and a bad time zone still gets its message; the missing indexes exist; approving a claim keeps the claimant's RSVPs | Internal helpers in the API; slow admin pages; a claim drops the new owner's RSVPs |
+| PT-90 | A member answers a top-level reply; the answer sits under it (FR-DS-9) | Answers can't be posted, or float loose in the thread |
+| PT-91 | Answering an answer joins the same top-level reply and records who it answers; no reply ever has a nested parent (FR-DS-9) | Threads nest without limit |
+| PT-92 | An answer can't point at a reply in another thread, or one that doesn't exist (FR-DS-9) | Replies leak into, or are attached to, other threads |
+| PT-93 | Non-members, banned members and signed-out visitors can't answer a reply (FR-DS-6, FR-DS-9) | Outsiders post into a group's discussions |
+| PT-94 | Nobody answers a reply in a locked thread or while discussions are off (FR-DS-5, FR-GR-4) | Locks and the discussions switch are bypassed through answers |
+| PT-95 | Removing a reply leaves its answers readable (FR-DS-5, FR-DS-9) | A moderator's removal silently takes other people's posts with it |
+| PT-96 | A removed reply can't be answered (FR-DS-9) | Removed posts gain new answers |
+| PT-97 | An author can't move their reply to another parent (FR-DS-9) | Replies rearranged after the fact |
+| PT-98 | Answers count toward the posting rate limit (FR-MD-4, TR-SEC-8) | The rate limit is bypassed through answers |
+| PT-99 | Who a reply answers is set by the database only (FR-DS-9) | A post claims to answer someone it doesn't |
 
 ## Automated — unit
 
@@ -160,7 +170,6 @@ real tests, with requirements, once the use case is approved.
 | UC-16 Keep our member list private | With *organizers only*, a member gets no other members' names from the database, on the members tab or on *who's going* |
 | UC-17 Approve who comes | A member can't approve their own RSVP; going never exceeds places with two admins acting at once; only admins open Manage RSVPs |
 | UC-18 My calendar | Shows only the user's going and saved events; works without JavaScript |
-| UC-19 Reply to a reply | Never more than one level of indent; role labels only on owner and admin posts |
 | UC-20 Message another member | A second message before acceptance is refused; a blocked user's message is refused; a third user, group admins included, reads nothing; the 11th request in a day is refused |
 | UC-21 Share trip photos | A non-member gets no photo from a members-only gallery, from the database or storage; uploads are re-encoded and stripped of location data; only the uploader and organizers remove photos |
 | UC-22 Save it for later | No other user, organizer included, can read someone's saved events |

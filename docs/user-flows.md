@@ -263,11 +263,12 @@ flowchart TD
 
 ## UC-19 — Reply to a reply
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. The* reply *link opens the form under
+that reply (`?replyTo=<id>#reply-form`), so it works without JavaScript.*
 
 ```mermaid
 flowchart TD
-  thread["Thread page"] -->|Reply under a reply| form["Reply form, quoting who it answers"]
+  thread["Thread page"] -->|reply under a reply| form["Reply form, naming who it answers"]
   form -->|Post| nested["Reply shown indented under the one it answers"]
   nested --> deeper{Reply to that reply?}
   deeper -->|yes| same(["Shown at the same indent: one level only"])

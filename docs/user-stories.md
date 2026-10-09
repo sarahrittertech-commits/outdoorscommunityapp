@@ -43,6 +43,7 @@ records where each one came from.
 | member | join through an invite link a group shared with me, creating my account on the same page | I'm in without waiting for approval | UC-31 | FR-MB-14, FR-MB-15 | Built |
 | member | join the waitlist when an event is full | I get a place if someone drops out | UC-30 | FR-EV-28 | Draft |
 | member | see what an event costs, the registration fee and the total | I know before I commit | UC-30 | FR-EV-25 | Draft |
+| member | answer one person's reply in a thread, not the whole thread | side conversations stay together and readable | UC-19 | FR-DS-9 | Built |
 
 ## Running a group
 
