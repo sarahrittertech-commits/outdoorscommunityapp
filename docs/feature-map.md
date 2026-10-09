@@ -111,6 +111,12 @@ Requested by Sarah on 8 October; drafted 9 October.
 | **Confirm a claim by email** at the group's own website domain; the site admin sees *Confirmed at …* or *Not confirmed* | Fits · Waits on domain | UC-26 | FR-GR-18 to FR-GR-20 |
 | **Approval of a person's first group** (recommended of three options: every group, first group only, none) | Decision needed | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 |
 
+### Posting events
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Event form**: required description plus details, a photo, Free or Paid with fee and total cost, optional RSVPs with places and a waitlist, or a sign-up link | Requested 9 Oct, awaiting review | UC-30 | FR-EV-23 to FR-EV-28 |
+
 ### Accounts
 
 | Feature | Status | Use case | Draft requirements |
