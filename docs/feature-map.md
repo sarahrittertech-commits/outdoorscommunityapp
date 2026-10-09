@@ -123,6 +123,12 @@ Requested by Sarah on 8 October; drafted 9 October.
 | --- | --- | --- | --- |
 | **Event form**: required description plus details, a photo, Free or Paid with fee and total cost, optional RSVPs with places and a waitlist, or a sign-up link | Built 9 Oct (migration `20261010000002` to apply) | UC-30 | FR-EV-23 to FR-EV-28 |
 
+### Suggestions
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Suggest something** to the site admin: a region, a feature, a group to invite, an event to add | Requested 9 Oct, awaiting review | UC-32 | FR-AD-4 to FR-AD-7 |
+
 ### Accounts
 
 | Feature | Status | Use case | Draft requirements |

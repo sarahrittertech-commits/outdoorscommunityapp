@@ -883,6 +883,37 @@ regulars and co-organizers with them.
 **Succeeds when:** a club moves its people onto the board in one sitting,
 and nobody but the page admin can hand the group to someone else.
 
+
+## UC-32 — Suggest something to the site admin
+
+> **Draft, awaiting review.** Requested by Sarah on 9 October 2026: a way
+> for people to send the site admin recommendations: a region to cover, a
+> feature, a group to invite, or an event to add. Written with the
+> recommended choices: signed-in members only, private to the site admin,
+> never shown publicly or voted on.
+
+**Actor:** A member, then the site admin
+
+**Trigger:** A member knows a club that isn't on the board yet.
+
+**Flow:**
+
+1. From the footer or *My stuff*, opens *Suggest something*.
+2. Picks what kind: *A region to cover*, *A feature*, *A group to invite*,
+   *An event to add*, or *Something else*.
+3. Writes a short title and the details, and adds a link if there is one
+   (the group's website, the event page).
+4. Sends it and sees *Thanks, the site admin reads every suggestion.* It is
+   listed under *My suggestions* with its status.
+5. The site admin sees it under *Suggestions* on the admin page, newest
+   first, filtered by kind, and marks it *Planned*, *Done* or *Declined*,
+   with an optional note back to the member.
+
+**Requirements:** to be written after review (drafts FR-AD-4 to FR-AD-7).
+
+**Succeeds when:** every suggestion reaches the site admin in one place,
+and the member can see what happened to it.
+
 ---
 
 ## Journeys the seed data must cover

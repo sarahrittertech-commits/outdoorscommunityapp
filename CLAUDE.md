@@ -76,9 +76,9 @@ event form: description, photo, price, optional RSVPs and a waitlist) and
 UC-31 (page admin and up to two page managers, invite link, email invites
 waiting on email setup) were approved and built on 9 October 2026; the
 emailed sign-in link is gone. Draft use cases awaiting review: UC-10 to
-UC-28, mostly from the 8 October Magic Patterns design (UC-25 to UC-28,
+UC-28 and UC-32, mostly from the 8 October Magic Patterns design (UC-25 to UC-28,
 drafted 9 October, are Sarah's own requests: branded sign-in email, claim
-confirmation by email, new-group approval, a demo member); on that
+confirmation by email, new-group approval, a demo member; UC-32, suggestions to the site admin); on that
 date Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live
