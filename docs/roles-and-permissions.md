@@ -54,7 +54,7 @@ and fewer roles means fewer permission rules to get wrong. A separate
 | See who is going to an event | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | Read discussions | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | See an archived group's page | ✅ read-only | ✅ read-only | ✅ read-only | ✅ read-only | ✅ read-only | ✅ | ✅ |
-| See a removed group | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| See a removed group, its members, RSVPs or discussions | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
 ### Membership
 
@@ -65,6 +65,7 @@ and fewer roles means fewer permission rules to get wrong. A separate
 | Request to join an approval group | ❌ | ✅ unless banned | — | — | — | — | — |
 | Cancel own request / leave | — | — | ✅ | ✅ | ✅ | ❌ must transfer first | — |
 | Approve or decline requests | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Read a join request's answer | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Remove and ban a member | ❌ | ❌ | ❌ | ❌ | ✅ members only | ✅ members and admins | ✅ |
 | Promote member → admin, demote admin → member | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | Transfer ownership | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ to an admin | ✅ |

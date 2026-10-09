@@ -27,11 +27,16 @@ export default async function MembersPage({ params, searchParams }: Props) {
   const { supabase, group, isMember, isOwner, canManage } = await loadGroup(slug);
   if (!isMember && !viewer.isSiteAdmin) redirect(`/g/${slug}?e=not_allowed`);
 
-  const { data: rows } = await supabase
-    .from("group_members")
-    .select("user_id, role, status, join_answer, created_at, profiles(display_name)")
-    .eq("group_id", group.id)
-    .order("created_at");
+  const [{ data: rows }, { data: answerRows }] = await Promise.all([
+    supabase
+      .from("group_members")
+      .select("user_id, role, status, created_at, profiles(display_name)")
+      .eq("group_id", group.id)
+      .order("created_at"),
+    // Organizers only (FR-MB-9); empty for everyone else.
+    canManage ? supabase.rpc("join_answers", { p_group_id: group.id }) : Promise.resolve({ data: [] }),
+  ]);
+  const answers = new Map((answerRows ?? []).map((a) => [a.user_id, a.join_answer]));
 
   const byName = (a: NonNullable<typeof rows>[number], b: NonNullable<typeof rows>[number]) =>
     (a.profiles?.display_name ?? "").localeCompare(b.profiles?.display_name ?? "");
@@ -56,7 +61,9 @@ export default async function MembersPage({ params, searchParams }: Props) {
             {pending.map((p) => (
               <li key={p.user_id} className="py-2">
                 <Link href={`/u/${p.user_id}`}>{p.profiles?.display_name ?? "deleted user"}</Link>
-                {p.join_answer && <blockquote className="mt-1 border-l-2 border-rule pl-3 text-sm">{p.join_answer}</blockquote>}
+                {answers.get(p.user_id) && (
+                  <blockquote className="mt-1 border-l-2 border-rule pl-3 text-sm">{answers.get(p.user_id)}</blockquote>
+                )}
                 <div className="mt-1 flex gap-3">
                   <form action={approveMember.bind(null, group.id, p.user_id, group.slug)}>
                     <button className="button">Approve</button>
