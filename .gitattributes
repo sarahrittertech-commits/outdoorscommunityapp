@@ -14,6 +14,7 @@
 src/brand/tokens.css      merge=ours
 src/brand/Mark.tsx        merge=ours
 src/brand/ActivityIcon.tsx merge=ours
+src/brand/GroupTypeIcon.tsx merge=ours
 src/app/icon.svg          merge=ours
 docs/brand.md             merge=ours
 src/brand/activityPhotos.ts merge=ours
