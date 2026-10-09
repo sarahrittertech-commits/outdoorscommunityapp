@@ -372,7 +372,7 @@
     font-weight: 700;
   }
 
-  /* Small tags: "New group", "Cancelled". */
+  /* Small tags, e.g. "outside the region" on research candidates. */
   .tag {
     display: inline-block;
     padding: 0 0.45rem;
@@ -381,10 +381,6 @@
     font-weight: 700;
     color: var(--ink);
     background: var(--tag-new);
-  }
-  .tag-cancelled {
-    color: var(--danger);
-    background: var(--tag-cancelled);
   }
   /* FR-GR-11: affinity tags (Women, Youth, BIPOC, LGBTQIA+). Plum text on panel, outlined. */
   .tag-affinity {

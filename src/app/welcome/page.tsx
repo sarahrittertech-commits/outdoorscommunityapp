@@ -33,7 +33,7 @@ export default async function WelcomePage({ searchParams }: Props) {
         <input id="displayName" name="displayName" type="text" required minLength={2} maxLength={40} />
 
         <label htmlFor="area">
-          Area <span className="hint">Optional, e.g. Brevard</span>
+          Area <span className="hint">Optional, e.g. {site.exampleArea}</span>
         </label>
         <input id="area" name="area" type="text" maxLength={80} />
 
