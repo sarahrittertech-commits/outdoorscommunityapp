@@ -348,3 +348,11 @@ read-only demo.
 | FR-AC-15 | **Read-only in the database.** The demo account is marked as a demo, and `can_write()` returns false for it, so every write the board has (post, reply, join, leave, RSVP, report, claim, message, profile edit, account deletion) is refused by the database whatever the page shows. Buttons explain that the demo can look but not change anything. | Should | A pgTAP test tries every write as the demo account and every one is refused. |
 | FR-AC-16 | **Demo groups only.** The demo account is a member only of groups marked as demo groups, whose content is sample content, so it never reads a real group's members-only discussions or member list. Demo groups are listed like any other but carry a *Demo* tag. | Should | The demo account belongs to no real group; every demo group is tagged. |
 
+### Suggestions to the site admin (UC-32)
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-AD-4 | **Suggest something.** A signed-in member sends a suggestion: kind (*region*, *feature*, *group to invite*, *event to add*, *other*), title (3 to 120 characters), details (up to 2,000) and an optional http(s) link. Visitors are asked to sign in first (anonymous visitors never write, TR-SEC-2). | Should | Only signed-in, writable accounts can send one; the kind must be one of the five. |
+| FR-AD-5 | **Private.** A suggestion is readable only by the member who sent it and the site admin. Never shown publicly, never voted on or ranked (product principles). | Must | No other member, organizer or visitor can read it. |
+| FR-AD-6 | **Site admin review.** The admin page lists suggestions newest first, filterable by kind, each with its sender, link and date. The site admin sets *Planned*, *Done* or *Declined*, with an optional note (up to 500 characters) the member can read. | Should | Only the site admin can change a status. |
+| FR-AD-7 | **Limits.** 5 suggestions per member per day, with the per-person lock and server time every other write has (TR-SEC-8). The member's own list (*My suggestions*) shows each one's status and note. | Should | A sixth suggestion in a day is refused. |
