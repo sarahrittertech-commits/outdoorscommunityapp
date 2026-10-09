@@ -127,7 +127,7 @@ Requested by Sarah on 8 October; drafted 9 October.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Suggest something** to the site admin: a region, a feature, a group to invite, an event to add | Requested 9 Oct, awaiting review | UC-32 | FR-AD-4 to FR-AD-7 |
+| **Suggest something** to the site admin: a region, a feature, a group to invite, an event to add; private to the sender and the site admin, 5 a day, *My suggestions* shows the status and note | **Built 9 Oct** (migration `20261010000008` to apply) | UC-32 | FR-AD-4 to FR-AD-7 |
 
 ### Accounts
 

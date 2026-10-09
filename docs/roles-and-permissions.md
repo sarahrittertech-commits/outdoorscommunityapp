@@ -168,6 +168,18 @@ claimed the same way; its remaining admins and members are users here.
 | Skip a candidate | ❌ | ❌ | ✅ |
 | Add a candidate | ❌ | ❌ | ❌ research agent only |
 
+### Suggestions to the site admin (UC-32, FR-AD-4 to FR-AD-7)
+
+Built 9 October 2026. Page admins and page managers are users here: being
+an organizer gives no access to anyone's suggestions.
+
+| Action | Visitor | User | Site admin |
+| --- | --- | --- | --- |
+| Send a suggestion | ❌ signs in first | ✅ as themselves, 5 a day | ✅ |
+| Read a suggestion and its note | ❌ | **own** | ✅ all |
+| Set planned, done or declined, with a note | ❌ | ❌ | ✅ through `set_suggestion_status` only |
+| Edit or delete a suggestion | ❌ | ❌ | ❌ |
+
 ### Proposed with the 8 October design (drafts, not built)
 
 These follow the draft requirements for UC-10 to UC-28 and UC-32. Each becomes part

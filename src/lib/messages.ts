@@ -57,6 +57,8 @@ export const notices = {
   claim_declined: "Claim declined.",
   candidate_listed: "Listed. It's on the board as an unclaimed listing.",
   candidate_skipped: "Skipped. It won't be suggested again.",
+  suggestion_sent: "Thanks, the site admin reads every suggestion.",
+  suggestion_updated: "Suggestion updated.",
 } as const;
 
 export const errors = {

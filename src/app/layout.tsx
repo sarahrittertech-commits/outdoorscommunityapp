@@ -100,6 +100,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <Link href="/events">all events</Link>
             <Link href="/communities">communities</Link>
             <Link href="/about">about</Link>
+            <Link href="/suggest">suggest something</Link>
             <Link href="/guidelines">community guidelines</Link>
             <Link href="/terms">terms</Link>
             <Link href="/privacy">privacy</Link>

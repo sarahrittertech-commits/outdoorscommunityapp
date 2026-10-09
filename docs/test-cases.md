@@ -129,6 +129,16 @@ web app is not the thing enforcing the rule.
 | PT-107 | A group's cover folder holds at most 5 files; old ones can be removed (FR-GR-14, TR-SEC-8) | Unlimited uploads into a public bucket |
 | PT-108 | An archived group takes no new cover (FR-GR-14, FR-GR-6) | A read-only group still changes |
 | PT-109 | A group points only at a cover in its own folder, and a cover needs alt text (FR-GR-14) | A group shows another group's photo, or a photo with no description |
+| PT-110 | A member sends a suggestion; it starts as *new* with no note (FR-AD-4) | Members can't reach the site admin |
+| PT-111 | Visitors, suspended accounts and accounts that haven't accepted the terms can't send one (FR-AD-4, TR-SEC-2) | Anonymous or suspended accounts write |
+| PT-112 | A member sends only as themselves and can't set a status or the admin's note (FR-AD-4, FR-AD-6) | Suggestions in someone else's name, or self-approved |
+| PT-113 | The database refuses a bad kind, a title under 3 or over 120 characters, details over 2,000 and a link that isn't http(s) (FR-AD-4) | A `javascript:` link on the admin page |
+| PT-114 | Only the sender and the site admin can read a suggestion; other members, page admins and visitors can't (FR-AD-5) | Suggestions leak to the board |
+| PT-115 | The sender and page admins can't change a status, directly or through set_suggestion_status (FR-AD-6) | A member marks their own idea done |
+| PT-116 | The site admin marks a suggestion planned with a note, and the sender reads both (FR-AD-6, FR-AD-7) | The member never hears back |
+| PT-117 | set_suggestion_status refuses *new* and a note over 500 characters (FR-AD-6) | Bad data through the admin function |
+| PT-118 | Five suggestions a day are allowed and the sixth is refused (FR-AD-7, TR-SEC-8) | One account floods the admin queue |
+| PT-119 | A member can't backdate a suggestion to slip past the daily limit (FR-AD-7, TR-SEC-8) | The limit is bypassed with an old date |
 
 ## Automated — unit
 
