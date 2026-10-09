@@ -114,8 +114,18 @@ page and on each of their event pages: Blue Ridge Dirt Skrrts (mountain
 biking) and NC BIPOC Climbers (climbing). It is always captioned
 "<activity> · representative photo", never as the group's own
 (`src/brand/activityPhotos.ts`, images in `public/activities/`). Every
-other group and event shows no photo until real ones can be uploaded
-(UC-21, UC-24).
+other group and event shows no photo until its organizers upload one. A
+group's own cover photo (UC-24) replaces the representative photo on the
+group page and on its event pages.
+
+## Group type drawings
+
+The five group types (UC-24) have their own line drawings in the same
+style as the activities: 24px grid, 1.5px stroke, current text color, and
+always with the type's name beside them (`src/brand/GroupTypeIcon.tsx`):
+*Club* a pennant, *Meetup* two people, *Volunteer group* a trail shovel,
+*Nonprofit* a heart, *Chapter* one node branching into two. They name no
+color, so the slots in `tokens.css` decide.
 
 ## Spacing
 

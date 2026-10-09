@@ -52,6 +52,7 @@ and fewer roles means fewer permission rules to get wrong. A separate
 | Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | See categories, listings, active group pages | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See a group's type and cover photo (FR-GR-14, FR-GR-16) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See public event details | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See a members-only event address | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | See the member list | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
@@ -102,6 +103,7 @@ Email invites are stored but not sent until the board's email is set up
 | Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Edit group details and affinity tags, turn discussions on/off, change join policy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Set the group's type; add, replace or remove its cover photo (FR-GR-14, FR-GR-16; active groups only, at most 5 cover files) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ type, and can take a cover down; can't upload |
 | Archive / restore the group | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | Remove the group entirely | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
@@ -172,8 +174,7 @@ approved.
 | Search by town or zip and distance, see *Near you* | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See the destinations map and place pages | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Manage the places list | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| See a group's type and photo | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Set the group's type, photo and member list privacy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| Set the group's member list privacy (type and cover photo built with UC-24) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | See the member list and names on *who's going* | ❌ | per setting | per setting | ✅ | ✅ | ✅ |
 | Post an event series, sponsors, FAQ, RSVP opening time (photo and price built with UC-30) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Ask an event a question | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |

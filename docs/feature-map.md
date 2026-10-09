@@ -65,8 +65,8 @@ until the domain is chosen and email sending through Resend is set up.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Group types:** *Club*, *Meetup*, *Volunteer group*, *Nonprofit*, *Chapter*, with a type icon on lists and group pages, and a type filter | Fits | UC-24 | FR-GR-16, FR-GR-17 |
-| **Group cover photo** on the group page and in the Communities list | Fits | UC-24 | FR-GR-14 |
+| **Group types:** *Club*, *Meetup*, *Volunteer group*, *Nonprofit*, *Chapter*, with a type icon on Communities and group pages, and a type filter on Communities | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-16, FR-GR-17 |
+| **Group cover photo** on the group page and in the Communities list, uploaded in group settings | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-14 (narrowed) |
 | **Event photo**, one per event or series | Fits | UC-10 | FR-EV-12 |
 | **Group photo galleries**, members-only by default, removable and reportable | In scope | UC-21 | FR-GR-12, FR-GR-13 |
 | **Chapters** of national organizations (for example the American Alpine Club) | Decision needed | UC-13 | FR-GR-15 |

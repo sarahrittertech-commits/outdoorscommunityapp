@@ -99,6 +99,16 @@ web app is not the thing enforcing the rule.
 | PT-77 | The unused group-covers bucket has no upload policies and, when empty, is gone (TR-SEC-9) | Unlimited uploads into an unused public bucket |
 | PT-78 | Event listings show only active groups' events; restoring a group lists them again (FR-GR-6) | Archived groups' events still appear on Events and in search |
 | PT-79 | Signed-in users can't call raise_rule and a bad time zone still gets its message; the missing indexes exist; approving a claim keeps the claimant's RSVPs | Internal helpers in the API; slow admin pages; a claim drops the new owner's RSVPs |
+| PT-100 | The owner and admins set a group's type (FR-GR-16) | Organizers can't describe their group |
+| PT-101 | A type outside the five is refused by the database (FR-GR-16) | Made-up types appear in lists and filters |
+| PT-102 | Members, outsiders and visitors can't change a group's type (FR-GR-16) | Anyone relabels someone else's group |
+| PT-103 | Visitors read type and cover from group_listings; the view still runs as the caller and nobody writes through it (FR-GR-16, FR-GR-17) | The listing view leaks or accepts writes |
+| PT-104 | Only the group's owner and admins upload a cover; members, outsiders and other groups' owners can't, and members can't list the folder (FR-GR-14) | Anyone puts pictures on someone else's group |
+| PT-105 | A suspended admin can't upload a cover (FR-GR-14, FR-MD-3) | Suspension doesn't stop uploads |
+| PT-106 | Covers go only to `<group_id>/<random>.webp`, no other names or folders (FR-GR-14, TR-SEC-9) | Arbitrary files under a group's folder |
+| PT-107 | A group's cover folder holds at most 5 files; old ones can be removed (FR-GR-14, TR-SEC-8) | Unlimited uploads into a public bucket |
+| PT-108 | An archived group takes no new cover (FR-GR-14, FR-GR-6) | A read-only group still changes |
+| PT-109 | A group points only at a cover in its own folder, and a cover needs alt text (FR-GR-14) | A group shows another group's photo, or a photo with no description |
 
 ## Automated — unit
 
@@ -110,7 +120,7 @@ Run by the unit test command in CI. Pure functions only.
 | UT-2 | Event time formatting | An event stored in UTC displays in its own time zone, including across a daylight-saving change |
 | UT-3 | `.ics` generator | Output has the correct start, end, time zone, title and location |
 | UT-4 | Slug generator | Two groups called "Trail Friends" get distinct slugs; slugs are lowercase and URL-safe |
-| UT-5 | Zod schemas | Each form schema rejects missing required fields and over-length text; affinity tags accept only the four on the list |
+| UT-5 | Zod schemas | Each form schema rejects missing required fields and over-length text; affinity tags accept only the four on the list; a group type only the five, or none |
 | UT-6 | Page number parser | A page beyond the last is clamped, so no query asks for a huge offset (TR-SEC-12) |
 | UT-7 | `.ics` line folding | Folding counts UTF-8 bytes, not characters, and never splits an emoji in a title |
 | UT-8 | Password rules (FR-AC-17) | Under 10 characters or over 72 bytes is refused; passwords are never trimmed; the common-password list is refused whatever the case; both copies must match; each failure names its rule |
@@ -165,7 +175,6 @@ real tests, with requirements, once the use case is approved.
 | UC-21 Share trip photos | A non-member gets no photo from a members-only gallery, from the database or storage; uploads are re-encoded and stripped of location data; only the uploader and organizers remove photos |
 | UC-22 Save it for later | No other user, organizer included, can read someone's saved events |
 | UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |
-| UC-24 Tell groups apart | A type outside the list is refused; only the owner sets type and photo; the type filter matches the type shown |
 | UC-25 A sign-in email that sounds like us | The email comes from the board's domain with no images or tracked links; an expired or used link signs nobody in |
 | UC-26 Prove it's my club | A confirmation at a domain other than the group's website is refused; a used or expired link confirms nothing; no full address is kept afterwards; a confirmed claim is never approved automatically |
 | UC-27 Start your first group | A group waiting for review is returned to nobody but its owner and the site admin; joins are refused; only the site admin approves or declines; a person with an approved group skips review |

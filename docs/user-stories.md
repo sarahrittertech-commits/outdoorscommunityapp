@@ -25,6 +25,8 @@ records where each one came from.
 | visitor | search for events near a town I pick, within a distance | I find things I can actually get to | UC-14 | FR-BR-12 to FR-BR-15 | Live (towns; no zip codes yet) |
 | visitor | see where people are heading on a map and a list | I discover new places to go | UC-15 | FR-BR-16 to FR-BR-18 | Live (towns; no place pages yet) |
 | visitor | see a group's own website | I can learn more about them off the board | — | FR-GR-23 | Built |
+| newcomer | see what kind of group it is (club, meetup, volunteer group, nonprofit, chapter) and filter by it | I find a group that suits how I want to take part | UC-24 | FR-GR-16, FR-GR-17 | Built |
+| newcomer | see a group's own photo on its page and in Communities | I get a feel for the group before I open it | UC-24 | FR-GR-14 | Built |
 
 ## Accounts
 
@@ -56,6 +58,7 @@ records where each one came from.
 | page admin or manager | invite people by email, one address or many | I bring our club onto the board in one go | UC-31 | FR-MB-13 | Built, off until email is set up |
 | page admin or manager | create a link to send to people so they can join | I can share it in our group chat | UC-31 | FR-MB-15 | Built |
 | organizer | add our group's website | members can find our own site | — | FR-GR-23 | Built |
+| organizer | set our group's type and a cover photo with its description | newcomers can tell us apart from other groups | UC-24 | FR-GR-16, FR-GR-14 | Built |
 | organizer | claim a listing of our real group | I run it here instead of starting over | UC-8 | FR-GR-9, FR-GR-10 | Live |
 | organizer | prove a claim with an email at our club's domain | the site admin can approve it quickly | UC-26 | FR-GR-18 to FR-GR-20 | Draft (needs a domain) |
 

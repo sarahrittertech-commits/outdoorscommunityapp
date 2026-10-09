@@ -315,13 +315,15 @@ flowchart TD
 
 ## UC-24 — Tell groups apart
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026.* The photo is uploaded in group
+settings (no gallery yet, UC-21); a group without one shows no photo, or a
+sample group's representative photo.
 
 ```mermaid
 flowchart TD
   list["Communities<br/>photo · type icon and label · activity icons"] -->|filter: Volunteer group| filtered["Communities: volunteer groups"]
   filtered -->|opens one| group["Group page<br/>photo · type · area · members"]
-  owner["Group settings (owner)"] -->|sets type and photo| group
+  owner["Group settings (page admin or manager)<br/>type · cover photo and its description"] -->|saves| group
   group --> done(["Knows what kind of group it is"])
 ```
 

@@ -111,7 +111,9 @@ it except through the database functions (onboarding, suspend, delete).
 | `join_policy` | enum | `open`, `approval` |
 | `join_question` | text, optional | FR-MB-9 |
 | `discussions_enabled` | boolean | FR-GR-4 |
-| `cover_image_path` | text, optional | unused, always null (the `group-covers` bucket was dropped; UC-24 will revisit) |
+| `cover_image_path` | text, optional | FR-GR-14: the cover photo, a file in the `group-covers-v2` bucket, always `<id>/<random>.webp` (checked). Cleared on creation; set on the edit form. The old `group-covers` bucket stays retired. |
+| `cover_alt` | text, optional | FR-GR-14: the cover's description (1 to 200 characters), required whenever there is a cover |
+| `group_type` | enum, optional | FR-GR-16: `club`, `meetup`, `volunteer`, `nonprofit`, `chapter`; null until an organizer picks one |
 | `status` | enum | `active`, `archived`, `removed` |
 | `created_by` | uuid | |
 | `created_at`, `updated_at` | timestamp | |
@@ -378,7 +380,7 @@ written when each is approved, with its migration and permission tests.
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
 | `event_rsvps.status` gains `requested`, `declined` (`waitlisted` built with UC-30) | UC-17 | Places counted on `going` only |
 | `saved_events` | UC-22 | User and event; private to the user |
-| `groups`: `group_type`, `cover_photo_path`, `member_list_visibility`, `organization_id` | UC-24, UC-16, UC-13 | Type from a fixed list |
+| `groups`: `member_list_visibility`, `organization_id` (`group_type` and the cover built with UC-24) | UC-16, UC-13 | |
 | `group_photos` | UC-21 | Uploader, path, alt text, status |
 | `places` | UC-15, UC-12 | Name, kind, activities, coordinates, description; seeded from the research workspace's places |
 | `towns` | UC-14 | Bundled US towns and zip codes with coordinates |
