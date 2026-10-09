@@ -51,7 +51,7 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
   checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   const parsed = groupSchema.safeParse(formFields(formData));
   const tags = affinityTagsSchema.safeParse(formData.getAll("affinityTags"));
-  if (!idSchema.safeParse(groupId).success || !parsed.success || !tags.success) fail(back, "invalid");
+  if (!parsed.success || !tags.success) fail(back, "invalid");
   const group = parsed.data;
 
   const { data, error } = await supabase
