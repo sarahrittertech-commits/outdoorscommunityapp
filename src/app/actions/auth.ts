@@ -40,7 +40,8 @@ export async function signUp(formData: FormData) {
 
   const supabase = await createClient();
   // With *Confirm email* on, Supabase answers the same way for a new address
-  // and an existing one, and emails the existing one instead (FR-AC-17).
+  // and an existing one (FR-AC-17): it resends the confirmation to an
+  // unconfirmed address and sends nothing to a confirmed one.
   const { error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
