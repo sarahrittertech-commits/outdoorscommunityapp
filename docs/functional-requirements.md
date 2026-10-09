@@ -223,6 +223,12 @@ town, shown rounded on the home page cards; FR-BR-14 uses 100 miles and
 keeps the town in the page address, not the browser; FR-BR-15 covers
 Events; FR-BR-17 maps **towns with upcoming events** rather than places,
 because FR-BR-16 (places) isn't built. FR-BR-18 waits on FR-BR-16.
+Fixed after the 9 October review: the home search defaults to *Anywhere*;
+near a town, Events doesn't list events whose group's area isn't a known
+town, but says how many it left out and links to all events (FR-BR-13's
+"distance unknown" list is not built); each destination's count is the
+number of events in the next 90 days within 25 miles, the same list its
+link opens.
 :::
 
 | ID | Draft requirement | Proposed | Accepted when |

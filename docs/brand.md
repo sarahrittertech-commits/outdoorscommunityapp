@@ -50,9 +50,10 @@ leaves and small highlights. Pages stay mostly paper (about 70% paper, 14% ink,
 | Rule | `#E4DACB` | Borders | — |
 | Paper | `#FAF6EF` | Page | — |
 | White | `#FFFFFF` | Cards, form fields | — |
+| Shadow | `rgb(0 0 0 / 0.05)` | The faint lift under the home search box (`--shadow` slot) | — |
 
-Ember and Marigold never carry text or links. Every color is a token at the top
-of `src/app/globals.css`. The page itself is white (see below), and there is no
+Ember and Marigold never carry text or links. Every color, shadows included, is a slot
+in `src/brand/tokens.css`. The page itself is white (see below), and there is no
 dark mode.
 
 ## Type

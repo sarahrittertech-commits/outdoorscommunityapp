@@ -326,7 +326,7 @@
       border: 1px solid var(--rule);
       border-radius: 10px;
       background: var(--paper);
-      box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+      box-shadow: 0 1px 2px var(--shadow);
     }
     .hero-search label { padding-top: 0.25rem; }
     .hero-search > div + div { border-left: 1px solid var(--rule); }

@@ -12,7 +12,6 @@ export async function joinGroup(groupId: string, slug: string, formData: FormDat
   const back = `/g/${slug}`;
   const { viewer, supabase } = await actingUser(back);
   checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
-  if (!idSchema.safeParse(groupId).success) fail(back, "invalid");
   const answer = joinAnswer.safeParse(formData.get("answer") ?? undefined);
 
   const { data: group } = await supabase.from("groups").select("join_policy, status").eq("id", groupId).single();

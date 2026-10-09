@@ -4,7 +4,8 @@ import Link from "next/link";
 import { ActivityIcon } from "@/brand/ActivityIcon";
 import { EventList } from "@/components/Listings";
 import { site } from "@/config/site";
-import { distances, towns } from "@/config/towns";
+import { TownSelect } from "@/components/TownSelect";
+import { distances } from "@/config/towns";
 import { findTown, milesBetween, townForArea } from "@/lib/geo";
 import { createClient } from "@/lib/supabase/server";
 
@@ -14,6 +15,8 @@ export const metadata: Metadata = {
 };
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
+
+const monthFormat = new Intl.DateTimeFormat("en-US", { timeZone: site.defaultTimezone, month: "long", year: "numeric" });
 
 const WINDOWS = [
   { days: 7, label: "next 7 days" },
@@ -75,10 +78,17 @@ export default async function EventsPage({ searchParams }: Props) {
   // Counts per activity, for the sidebar: over the whole window, not the page.
   const counts = new Map<string, number>();
   for (const e of (countRows ?? []).filter((r) => inRange(r.group_slug))) counts.set(e.category_slug ?? "", (counts.get(e.category_slug ?? "") ?? 0) + 1);
+  // "all" is every activity together, whichever one is picked.
+  const allCount = [...counts.values()].reduce((a, b) => a + b, 0);
+
+  // Near a town, events whose group area isn't a known town have no
+  // distance, so they drop out; the page says how many (UC-14).
+  const unplaced = near
+    ? (countRows ?? []).filter((r) => (!category || r.category_slug === category) && !milesOf.has(r.group_slug ?? "")).length
+    : 0;
 
   // Group by month, in the board's time zone.
-  const monthOf = (iso: string) =>
-    new Intl.DateTimeFormat("en-US", { timeZone: site.defaultTimezone, month: "long", year: "numeric" }).format(new Date(iso));
+  const monthOf = (iso: string) => monthFormat.format(new Date(iso));
   const months: { label: string; events: typeof events }[] = [];
   for (const e of events) {
     const label = monthOf(e.starts_at!);
@@ -86,13 +96,13 @@ export default async function EventsPage({ searchParams }: Props) {
     months.at(-1)!.events.push(e);
   }
 
-  const href = (next: { category?: string; days?: number }) => {
+  const href = (next: { category?: string; days?: number; anywhere?: boolean }) => {
     const q = new URLSearchParams();
     const c = "category" in next ? next.category : category;
     const d = next.days ?? days;
     if (c) q.set("category", c);
     if (d !== 30) q.set("days", String(d));
-    if (near) {
+    if (near && !next.anywhere) {
       q.set("near", near.name);
       q.set("within", String(within));
     }
@@ -121,16 +131,7 @@ export default async function EventsPage({ searchParams }: Props) {
         <label htmlFor={`events-near-${where}`} className="sr-only">
           Town
         </label>
-        <select id={`events-near-${where}`} name="near" defaultValue={near?.name ?? ""} className="w-full py-1 text-sm">
-          <option value="">Anywhere</option>
-          {towns
-            .toSorted((a, b) => a.name.localeCompare(b.name))
-            .map((t) => (
-              <option key={t.name} value={t.name}>
-                {t.name}, {t.state}
-              </option>
-            ))}
-        </select>
+        <TownSelect id={`events-near-${where}`} name="near" defaultValue={near?.name ?? ""} anywhere className="w-full py-1 text-sm" />
         <label htmlFor={`events-within-${where}`} className="sr-only">
           Distance
         </label>
@@ -148,7 +149,7 @@ export default async function EventsPage({ searchParams }: Props) {
       <ul className="mt-1 space-y-0.5">
         <li>
           {category ? <Link href={href({ category: undefined })}>all</Link> : <strong>all</strong>}{" "}
-          <span className="text-muted">({events.length})</span>
+          <span className="text-muted">({allCount})</span>
         </li>
         {categories?.map((c) => (
           <li key={c.slug}>
@@ -174,17 +175,9 @@ export default async function EventsPage({ searchParams }: Props) {
   );
 
   return (
+    // The h1 comes first in the source; grid placement puts the filters on the left.
     <div className="grid gap-8 md:grid-cols-[14rem_1fr]">
-      {/* Phones: the filters fold into a card, open until a filter is picked. Computers: a side column. */}
-      <details className="filter-card text-sm md:hidden" open={!category}>
-        <summary>{!category ? "Browse by activity and date" : "Change activity or date"}</summary>
-        <div>{filters("card")}</div>
-      </details>
-      <aside aria-label="Filters" className="hidden text-sm md:block">
-        {filters("side")}
-      </aside>
-
-      <div>
+      <div className="md:col-start-2 md:row-start-1">
         <h1 className="m-0 flex items-center gap-3">
           {current && <ActivityIcon slug={current.slug} />}
           {current ? `${current.name} events` : "Events"}
@@ -194,6 +187,12 @@ export default async function EventsPage({ searchParams }: Props) {
           {events.length} upcoming in the {WINDOWS.find((w) => w.days === days)!.label}
           {near ? `, within ${within} miles of ${near.name}` : ""}, soonest first
         </p>
+        {unplaced > 0 && (
+          <p className="mt-2 text-sm text-muted">
+            {unplaced} event{unplaced === 1 ? "" : "s"} without a known town {unplaced === 1 ? "isn’t" : "aren’t"} shown —{" "}
+            <Link href={href({ anywhere: true })}>see all events</Link>
+          </p>
+        )}
         {months.length ? (
           months.map((m) => (
             <section key={m.label} aria-label={m.label}>
@@ -208,6 +207,15 @@ export default async function EventsPage({ searchParams }: Props) {
           </p>
         )}
       </div>
+
+      {/* Phones: the filters fold into a card above the list, open until a filter is picked. Computers: a side column. */}
+      <details className="filter-card order-first text-sm md:hidden" open={!category}>
+        <summary>{!category ? "Browse by activity and date" : "Change activity or date"}</summary>
+        <div>{filters("card")}</div>
+      </details>
+      <aside aria-label="Filters" className="hidden text-sm md:col-start-1 md:row-start-1 md:block">
+        {filters("side")}
+      </aside>
     </div>
   );
 }

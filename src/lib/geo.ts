@@ -35,3 +35,16 @@ export function aboutMiles(miles: number): string {
   const rounded = miles < 50 ? Math.round(miles / 5) * 5 : Math.round(miles / 10) * 10;
   return `about ${rounded} miles`;
 }
+
+/**
+ * How many places lie within `miles` of `center`; places with no known town
+ * never count. The home page's destination counts use this with the same
+ * radius as the /events link beside them, so the number matches that page.
+ */
+export function countWithin(
+  center: { lat: number; lng: number },
+  places: ({ lat: number; lng: number } | undefined)[],
+  miles: number,
+): number {
+  return places.filter((p) => p && milesBetween(center, p) <= miles).length;
+}

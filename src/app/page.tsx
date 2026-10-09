@@ -5,14 +5,18 @@ import { Ridgeline } from "@/brand/Ridgeline";
 import { DestinationMap, type MapPoint } from "@/components/DestinationMap";
 import { Notice } from "@/components/Notice";
 import { site } from "@/config/site";
-import { defaultTown, distances, towns, type Town } from "@/config/towns";
-import { aboutMiles, findTown, milesBetween, townForArea } from "@/lib/geo";
+import { TownSelect } from "@/components/TownSelect";
+import { defaultTown, distances, type Town } from "@/config/towns";
+import { aboutMiles, countWithin, findTown, milesBetween, townForArea } from "@/lib/geo";
 import { createClient } from "@/lib/supabase/server";
 import { dateParts } from "@/lib/time";
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
 const NEAR_MILES = 100;
+/** Destination counts: one of the /events distances and time windows. */
+const DEST_MILES = 25;
+const DEST_DAYS = 90;
 
 /**
  * The front door (8 October design): search by activity and town, the
@@ -49,21 +53,31 @@ export default async function Home({ searchParams }: Props) {
     .filter((e) => e.miles <= NEAR_MILES)
     .slice(0, 8);
 
-  // Destinations (UC-15): towns with upcoming events, for one activity or all.
+  // Destinations (UC-15): towns with events in the next DEST_DAYS days, for
+  // one activity or all. Each count follows the same rules as the /events
+  // page it links to: that window, and every event within DEST_MILES.
+  const destUntil = new Date().getTime() + DEST_DAYS * 24 * 60 * 60 * 1000;
+  const destEvents = placed.filter((e) => new Date(e.starts_at!).getTime() < destUntil && (!dest || e.category_slug === dest));
   const byTown = new Map<string, { town: Town; count: number; activities: Set<string> }>();
-  for (const e of placed) {
-    if (!e.town || (dest && e.category_slug !== dest)) continue;
+  for (const e of destEvents) {
+    if (!e.town) continue;
     const entry = byTown.get(e.town.name) ?? { town: e.town, count: 0, activities: new Set<string>() };
-    entry.count += 1;
     if (e.category_slug) entry.activities.add(e.category_slug);
     byTown.set(e.town.name, entry);
   }
+  const destTowns = destEvents.map((e) => e.town);
+  for (const entry of byTown.values()) entry.count = countWithin(entry.town, destTowns, DEST_MILES);
   const needle = where.toLowerCase();
   const destinations = [...byTown.values()]
     .filter((d) => !needle || d.town.name.toLowerCase().includes(needle) || d.town.state.toLowerCase() === needle)
     .sort((a, b) => b.count - a.count || a.town.name.localeCompare(b.town.name));
   const focus = findTown(where);
-  const eventsNear = (t: Town) => `/events?near=${encodeURIComponent(t.name)}&within=25${dest ? `&category=${dest}` : ""}`;
+  const categoryName = new Map((categories ?? []).map((c) => [c.slug, c.name]));
+  const eventsNear = (t: Town) => {
+    const q = new URLSearchParams({ near: t.name, within: String(DEST_MILES), days: String(DEST_DAYS) });
+    if (dest) q.set("category", dest);
+    return `/events?${q}`;
+  };
   const points: MapPoint[] = destinations.map((d) => ({
     name: d.town.name,
     lat: d.town.lat,
@@ -107,7 +121,8 @@ export default async function Home({ searchParams }: Props) {
             </div>
             <div>
               <label htmlFor="hero-near">Location</label>
-              <TownSelect id="hero-near" name="near" defaultValue={nearTown.name} />
+              {/* Anywhere by default: events whose group area isn't a known town only show without a town. */}
+              <TownSelect id="hero-near" name="near" defaultValue="" anywhere />
             </div>
             <div>
               <label htmlFor="hero-within">Distance</label>
@@ -159,6 +174,7 @@ export default async function Home({ searchParams }: Props) {
                 </label>
                 <TownSelect id="near-town" name="near" defaultValue={nearTown.name} />
                 {dest && <input type="hidden" name="dest" value={dest} />}
+                {where && <input type="hidden" name="where" value={where} />}
                 <button className="button">Show</button>
               </form>
             </details>
@@ -179,7 +195,12 @@ export default async function Home({ searchParams }: Props) {
                         {when.weekday}, {when.month} · {when.time}
                       </span>
                     </p>
-                    {e.category_slug && <ActivityIcon slug={e.category_slug} className="h-7 w-7" />}
+                    {e.category_slug && (
+                      <span>
+                        <ActivityIcon slug={e.category_slug} className="h-7 w-7" />
+                        <span className="sr-only">{categoryName.get(e.category_slug) ?? e.category_slug}</span>
+                      </span>
+                    )}
                   </div>
                   <Link href={`/e/${e.id}`} className="mt-3 font-bold">
                     {e.title}
@@ -253,7 +274,10 @@ export default async function Home({ searchParams }: Props) {
                         </span>
                         <span className="mt-0.5 flex gap-1 text-muted">
                           {[...d.activities].slice(0, 4).map((a) => (
-                            <ActivityIcon key={a} slug={a} className="h-4 w-4" />
+                            <span key={a}>
+                              <ActivityIcon slug={a} className="h-4 w-4" />
+                              <span className="sr-only">{categoryName.get(a) ?? a}</span>
+                            </span>
                           ))}
                         </span>
                       </span>
@@ -271,23 +295,14 @@ export default async function Home({ searchParams }: Props) {
               </p>
             )}
           </div>
-          <DestinationMap points={points} focus={focus ? { lat: focus.lat, lng: focus.lng } : undefined} />
+          <DestinationMap
+            points={points}
+            focus={focus ? { lat: focus.lat, lng: focus.lng } : undefined}
+            tiles={site.mapTiles}
+            center={site.mapCenter}
+          />
         </div>
       </section>
     </>
-  );
-}
-
-function TownSelect({ id, name, defaultValue }: { id: string; name: string; defaultValue?: string }) {
-  return (
-    <select id={id} name={name} defaultValue={defaultValue}>
-      {towns
-        .toSorted((a, b) => a.name.localeCompare(b.name))
-        .map((t) => (
-          <option key={t.name} value={t.name}>
-            {t.name}, {t.state}
-          </option>
-        ))}
-    </select>
   );
 }

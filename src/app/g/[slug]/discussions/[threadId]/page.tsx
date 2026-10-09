@@ -118,7 +118,9 @@ export default async function ThreadPage({ params, searchParams }: Props) {
       <h2>{replies?.length ?? 0} {replies?.length === 1 ? "reply" : "replies"}</h2>
       <ol className="mt-2 divide-y divide-rule border-y border-rule">
         {replies?.map((r, i) => (
-          <li key={r.id} id={i === replies.length - 1 ? "latest" : `reply-${r.id}`} className="py-3">
+          <li key={r.id} id={`reply-${r.id}`} className="py-3">
+            {/* postReply redirects to #latest; every reply keeps its own reply-<id> anchor for report links. */}
+            {i === replies.length - 1 && <span id="latest" />}
             <p className="text-sm text-muted">
               {r.author_id ? <Link href={`/u/${r.author_id}`}>{r.profiles?.display_name ?? "deleted user"}</Link> : "deleted user"} ·{" "}
               {formatPostDate(r.created_at, tz)}
