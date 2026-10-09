@@ -66,7 +66,9 @@ begin
     select 1 from public.replies p
     where p.id = new.parent_id and p.thread_id = new.thread_id and p.parent_id is null
   ) then
-    perform public.raise_rule('invalid', 'Replies nest one level only.');
+    -- Runs as the signed-in user, and raise_rule is internal (20261010000004),
+    -- so the error is raised directly in the same "code: message" form.
+    raise exception using errcode = 'P0001', message = 'invalid: Replies nest one level only.';
   end if;
   return new;
 end
