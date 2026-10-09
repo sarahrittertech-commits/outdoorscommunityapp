@@ -91,13 +91,8 @@ describe("brand tokens", () => {
     ).toEqual([]);
   });
 
-  it("gives the home page band every slot it needs", () => {
-    for (const slot of [
-      "--ridge-sky",
-      "--ridge-haze",
-      "--ridge-ink",
-      "--ridge-ink-muted",
-    ]) {
+  it("gives the home page line drawing every slot it needs", () => {
+    for (const slot of ["--ridgeline", "--sun"]) {
       expect(defined, `${slot} is missing from ${BRAND}`).toContain(slot);
     }
   });
