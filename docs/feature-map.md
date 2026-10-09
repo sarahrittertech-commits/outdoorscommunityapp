@@ -10,7 +10,7 @@ features proposed in the 8 October Magic Patterns design. Live features
 link to their requirements; new ones link to their draft use case. Nothing
 under *New features* is built.
 
-Last updated 8 October 2026.
+Last updated 9 October 2026.
 
 ## Live in the branded app
 
@@ -19,7 +19,7 @@ permission enforced and tested in the database.
 
 | Area | What it does | Use case | Requirements |
 | --- | --- | --- | --- |
-| Home and browsing | Ridgeline hero with activity and keyword search, activity drawings, *Coming up* event cards; *Browse all* directory; category and subcategory listings | UC-1 | FR-BR-1 to FR-BR-3, FR-BR-9 |
+| Home and browsing | Line-drawn ridgeline hero with activity, town and distance search, activity drawings, *Near you* event cards, *Explore destinations* map and list; *Browse all* directory; category and subcategory listings | UC-1 | FR-BR-1 to FR-BR-3, FR-BR-9 |
 | Events | Events page with activity and time-window filters, grouped by month; event pages; add to calendar | UC-7 | FR-BR-4, FR-BR-7, FR-EV-7 |
 | Communities | One table of every group, A to Z, filterable by activity | — | FR-BR-10 |
 | Search | Keyword search over groups and events | — | FR-BR-5 |
@@ -67,9 +67,9 @@ and awaits review; **Decision needed** means a product question is open
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Location and distance search** by town or zip, with distance on results and shareable filtered links | Fits | UC-14 | FR-BR-12, FR-BR-13, FR-BR-15 |
-| **Near you** row on the home page | Fits | UC-14 | FR-BR-14 |
-| **Destinations map** and place pages | Fits | UC-15 | FR-BR-16 to FR-BR-18, ADR-0007 |
+| **Location and distance search** by town or zip, with distance on results and shareable filtered links | **Built 9 Oct** (towns, home and Events; no zip codes or Communities yet) | UC-14 | FR-BR-12, FR-BR-13, FR-BR-15 |
+| **Near you** row on the home page | **Built 9 Oct** | UC-14 | FR-BR-14 |
+| **Destinations map** and place pages | **Map built 9 Oct** (towns with events); place pages wait on places | UC-15 | FR-BR-16 to FR-BR-18, ADR-0007 |
 
 ### Events
 

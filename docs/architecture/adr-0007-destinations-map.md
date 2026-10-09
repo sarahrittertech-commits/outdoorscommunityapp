@@ -5,7 +5,7 @@ title: ADR-0007 Destinations map
 
 # ADR-0007 — How to draw the destinations map
 
-**Status:** Proposed · **Date:** 8 October 2026
+**Status:** Accepted · **Date:** 8 October 2026 · built 9 October 2026
 
 ## Context
 
@@ -56,3 +56,12 @@ point.
 **Bad:** one new outside service and its key. The map is the one part of
 the home page that needs JavaScript. Places need coordinates, so the
 places list (FR-BR-16) must be built first.
+
+## As built (9 October 2026)
+
+Leaflet 1.9.4 is bundled with the site and loaded only on the home page.
+Tiles come from OpenStreetMap's own servers (`site.mapTiles` in
+`src/config/site.ts`), which allow light use with attribution; the CSP
+allows images from that host and nothing else. Before traffic grows, move
+to a tile provider's free tier by changing that one setting. The map shows
+towns with upcoming events until the places list (FR-BR-16) exists.

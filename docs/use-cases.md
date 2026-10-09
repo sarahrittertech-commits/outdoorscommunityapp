@@ -365,7 +365,7 @@ chapter in one click.
 
 ## UC-14 — What's near me?
 
-> **Draft, awaiting review.** From the 8 October design (bucket 2).
+> **Built 9 October 2026,** on Sarah's direction, ahead of review. See the note on FR-BR-12 to FR-BR-18 for what differs from the draft.
 
 **Actor:** The newcomer
 
@@ -390,7 +390,7 @@ choose, without the board ever asking for their device's location.
 
 ## UC-15 — Explore destinations
 
-> **Draft, awaiting review.** Needs the places list proposed in UC-12.
+> **Built 9 October 2026,** on Sarah's direction, ahead of review. See the note on FR-BR-12 to FR-BR-18 for what differs from the draft.
 
 **Actor:** The regular
 

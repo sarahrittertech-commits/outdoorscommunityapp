@@ -89,12 +89,15 @@ first, no pressure. Plain, calm, local, welcoming.
 
 ## Where the app differs from the guide
 
-- **The home page has a ridgeline hero.** The guide keeps images off the home
-  page. Sarah chose the Magic Patterns layout: a full-width band of layered
-  Blue Ridge silhouettes (drawn as SVG, colors from the `--ridge-*` tokens)
-  behind the heading and search (`src/components/RidgeBand.tsx`). The hero's
-  Search button is deep orange with white text, the design's choice (Sarah,
-  8 October; marigold and plum were the alternatives).
+- **The home page has a ridgeline line drawing.** The guide keeps images
+  off the home page; the 8 October design's answer is a thin plum line
+  drawing of the Blue Ridge with a few pines and an ember sun, on white,
+  above the search fields (`src/brand/Ridgeline.tsx`, colors from the
+  `--ridgeline` and `--sun` slots). It replaced the purple ridge band on
+  9 October. The headline is bold plum sans, lowercase: *find your people.
+  find your outdoors.* The hero's Search button is deep orange with white
+  text, the design's choice (Sarah, 8 October; marigold and plum were the
+  alternatives).
 - **Filters fold away on phones.** On Events and Communities the side
   filters become a card at the top (*Browse by activity*, or *Change
   activity* once one is picked); filter headings are plum, underlined.
