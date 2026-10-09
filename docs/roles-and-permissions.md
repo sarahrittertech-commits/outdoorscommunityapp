@@ -72,7 +72,15 @@ and fewer roles means fewer permission rules to get wrong. A separate
 | Read a join request's answer | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Remove and ban a member | ❌ | ❌ | ❌ | ❌ | ✅ members only | ✅ members and admins | ✅ |
 | Make a member a page manager (at most two), or step one down | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Transfer ownership | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ to a page manager | ✅ |
+| Transfer ownership | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ to a page manager who owns fewer than 3 groups (FR-GR-7) | ✅ |
+
+Every ✅ for a page manager or page admin in this table, and for pinning,
+removing posts, changing event addresses and handling reports below, holds
+only while the group is **active**: the database checks it in
+`can_moderate()`, so an archived or removed group's organizers can't
+moderate through the API either (FR-GR-6). The site admin can.
+`remove_member` checks the caller's role before it looks at the person
+named, so it tells a non-admin nothing about who is in the group.
 
 ### Invites (UC-31, FR-MB-11 to FR-MB-16)
 
@@ -124,6 +132,8 @@ Existing threads stay readable to members.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Report content | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See reports for a group's content | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Dismiss or action a report on a member's post or event (dismissals are logged) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Dismiss or action a report on their own content or another organizer's | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | See who reported something (FR-MD-8) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | See all reports, suspend accounts, view moderation log | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 

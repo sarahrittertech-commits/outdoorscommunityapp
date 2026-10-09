@@ -111,7 +111,7 @@ it except through the database functions (onboarding, suspend, delete).
 | `join_policy` | enum | `open`, `approval` |
 | `join_question` | text, optional | FR-MB-9 |
 | `discussions_enabled` | boolean | FR-GR-4 |
-| `cover_image_path` | text, optional | Supabase Storage path |
+| `cover_image_path` | text, optional | unused, always null (the `group-covers` bucket was dropped; UC-24 will revisit) |
 | `status` | enum | `active`, `archived`, `removed` |
 | `created_by` | uuid | |
 | `created_at`, `updated_at` | timestamp | |
@@ -162,6 +162,11 @@ Constraints:
   invites: a trigger on insert and on role changes (FR-MB-11).
 - Only `active` rows grant access. `pending` and `banned` rows exist so the
   database can refuse a banned user's rejoin.
+
+`join_log` (internal: row-level security on, no policies, no grants) gets a
+row, `user_id`, `group_id`, `created_at`, each time a membership row is
+created. The 20-joins-a-day limit counts it, so leaving a group doesn't hand
+the join back (TR-SEC-8). Rows older than two days are pruned.
 
 ## Events
 
@@ -275,7 +280,7 @@ site admin.
 | --- | --- | --- |
 | `id` | uuid | |
 | `actor_id` | uuid | who did it |
-| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, `create_invite_link`, `turn_off_invite_link`, `invite_manager`, `send_invites`, … |
+| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, `create_invite_link`, `turn_off_invite_link`, `invite_manager`, `send_invites`, `dismiss_report`, … |
 | `target_type`, `target_id` | | what it was done to |
 | `group_id` | uuid, optional | |
 | `reason` | text | |
@@ -352,7 +357,9 @@ Three read-only views, each running with the reader's own permissions:
 - `group_listings` — each group with its category, subcategory, member count
   and next event. Every listing page is one query against it.
 - `subcategory_group_counts` — the home page directory with counts.
-- `event_listings` — events with their group, category and number going.
+- `event_listings` — events of **active** groups with their group, category
+  and number going. An archived group's own pages read its events from
+  `events` (`src/lib/groupEvents.ts`), so they still list them (FR-GR-6).
 
 Member and RSVP counts come from small functions that reveal the *number*
 without revealing the rows, so visitors see "12 members" but not who.

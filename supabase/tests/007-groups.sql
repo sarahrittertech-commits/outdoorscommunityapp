@@ -62,14 +62,16 @@ select throws_ok(
 );
 
 -- Cover images (TR-SEC-9) -----------------------------------------------------
-select lives_ok(
+-- The unused group-covers bucket has no write policy since 20261010000004
+-- (PT-77): nobody uploads into it until UC-24 adds a reviewed version.
+select throws_ok(
   format($$ insert into storage.objects (bucket_id, name) values ('group-covers', %L) $$, tests.id('g1') || '/cover.webp'),
-  'Admins upload their group''s cover image'
+  null, null, 'PT-77 admins cannot upload a cover image into the unused bucket'
 );
 select tests.as('member');
 select throws_ok(
   format($$ insert into storage.objects (bucket_id, name) values ('group-covers', %L) $$, tests.id('g1') || '/cover.webp'),
-  '42501', null, 'Members cannot upload a cover image'
+  null, null, 'Members cannot upload a cover image'
 );
 select tests.as('admin');
 
