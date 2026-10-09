@@ -99,7 +99,7 @@ export default async function MembersPage({ params, searchParams }: Props) {
         </section>
       )}
 
-      <h2>{active.length} members</h2>
+      <h2>{active.length} {active.length === 1 ? "member" : "members"}</h2>
       <ul className="mt-2 divide-y divide-rule border-y border-rule">
         {active.map((m) => (
           <li key={m.user_id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
