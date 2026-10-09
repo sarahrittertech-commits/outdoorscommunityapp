@@ -402,3 +402,22 @@ flowchart TD
   refuse --> browse
   browse -->|Sign out, or one hour passes| out(["Signed out"])
 ```
+
+## UC-29 — Sign up with an email and a password
+
+*Draft, awaiting review. Open sign-up with email confirmation; password only.*
+
+```mermaid
+flowchart TD
+  join["Group page: Join group"] --> signin["Sign in<br/>email + password<br/>links: Create an account · Forgot password"]
+  signin -->|Create an account| signup["Create an account<br/>email, password, password again"]
+  signup -->|Create account| check(["Check your email to confirm your address"])
+  check -->|clicks Confirm my email| welcome["Welcome: 18+, terms, display name"]
+  welcome --> back["Back on the group page: Join"]
+  signin -->|correct email + password| back
+  signin -->|wrong, or email not confirmed| signin
+  signin -->|Forgot password| forgot["Forgot password: email"]
+  forgot --> resetmail(["Check your email for a reset link"])
+  resetmail -->|clicks the link| newpw["Set a new password"]
+  newpw --> back
+```

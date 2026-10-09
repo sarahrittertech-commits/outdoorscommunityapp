@@ -38,7 +38,7 @@ Who is allowed to do each action is defined once, in
 
 | ID | Requirement | Priority | Accepted when |
 | --- | --- | --- | --- |
-| FR-AC-1 | Sign up and sign in with an emailed one-time link. No passwords. | Must | A new address receives a link that signs it in; the same flow signs in an existing user. |
+| FR-AC-1 | Sign up and sign in with an emailed one-time link. No passwords. *(To be replaced by FR-AC-17 to FR-AC-21 if UC-29 is approved.)* | Must | A new address receives a link that signs it in; the same flow signs in an existing user. |
 | FR-AC-2 | On first sign-in, the user confirms they are 18 or older and accepts the terms and community guidelines before doing anything else. | Must | A user who hasn't confirmed cannot join, post or RSVP. |
 | FR-AC-3 | Profile: display name (required, 2–40 characters), short bio (optional, 280 characters), general area (optional). No profile photos. Required means the database refuses to store a missing or blank one, and an account without a name cannot post, join or RSVP — a member must always be nameable, reportable and reachable by a moderator. | Must | Display name is required at first sign-in and editable later. Clearing it through the API is refused, not silently accepted. |
 | FR-AC-4 | A public profile page shows display name, bio and area. | Should | Reachable from any post author's name. |
@@ -166,7 +166,7 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 to UC-28 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 to UC-29 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built. Each moves into its area's table above, with a priority, once Sarah
 approves its use case and user flow. Priorities here are proposals.
@@ -326,3 +326,17 @@ read-only demo.
 | FR-AC-14 | **Demo sign-in.** The sign-in page offers *Look around as a demo member*. It signs the visitor into one shared demo account without an email, through a server action; the account's password lives only in a Railway secret and never reaches the browser. The session lasts at most an hour. | Should | Anyone can open the demo without an email; nobody can sign in as the demo any other way. |
 | FR-AC-15 | **Read-only in the database.** The demo account is marked as a demo, and `can_write()` returns false for it, so every write the board has (post, reply, join, leave, RSVP, report, claim, message, profile edit, account deletion) is refused by the database whatever the page shows. Buttons explain that the demo can look but not change anything. | Should | A pgTAP test tries every write as the demo account and every one is refused. |
 | FR-AC-16 | **Demo groups only.** The demo account is a member only of groups marked as demo groups, whose content is sample content, so it never reads a real group's members-only discussions or member list. Demo groups are listed like any other but carry a *Demo* tag. | Should | The demo account belongs to no real group; every demo group is tagged. |
+
+### Email and password sign-in (UC-29, ADR-0009)
+
+**Replaces FR-AC-1** once approved. Open sign-up, email confirmed before
+the account can be used, password the only way in. Every form keeps
+working with JavaScript off.
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-AC-17 | **Create an account.** Email address and a password entered twice. Password: at least 10 characters, at most 72 (the bcrypt limit), no other composition rules; a short list of the most common passwords is refused. The page never says whether an address already has an account: it always answers *Check your email*, and an existing address gets a "you already have an account, sign in or reset your password" email instead. | Must | Signing up with an address that already has an account reveals nothing on the page. |
+| FR-AC-18 | **Confirm the email first.** A new account can do nothing until its address is confirmed through the emailed link (Supabase *Confirm email* on). The link works once, for 24 hours; an expired one offers to send another. Then FR-AC-2 and FR-AC-3 as today. | Must | An unconfirmed account cannot sign in. |
+| FR-AC-19 | **Sign in.** Email and password. A wrong address or password gets one message for both ("That email and password don't match"). After 5 failed tries for an address in 15 minutes, sign-in for it pauses for 15 minutes (Supabase Auth's limits plus a check in the sign-in action), with that said plainly. | Must | Repeated wrong passwords are slowed and the page never says which part was wrong. |
+| FR-AC-20 | **Forgot password.** Enter the email; the page always answers *If that address has an account, we've sent a link*. The link works once, for 1 hour, and leads to *Set a new password*, which signs the person in. Changing a password signs out every other session. | Must | A reset link is single use and expires; other devices are signed out. |
+| FR-AC-21 | **Change password** on the profile page: current password, new password twice. | Should | A wrong current password changes nothing. |

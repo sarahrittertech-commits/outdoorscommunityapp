@@ -111,6 +111,12 @@ Requested by Sarah on 8 October; drafted 9 October.
 | **Confirm a claim by email** at the group's own website domain; the site admin sees *Confirmed at …* or *Not confirmed* | Fits · Waits on domain | UC-26 | FR-GR-18 to FR-GR-20 |
 | **Approval of a person's first group** (recommended of three options: every group, first group only, none) | Decision needed | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 |
 
+### Accounts
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Email and password sign-in**: sign up with a confirmed email and a password; forgot and change password. Replaces the emailed sign-in link | Requested 9 Oct, awaiting review | UC-29 | FR-AC-17 to FR-AC-21, ADR-0009 |
+
 ### Demo
 
 | Feature | Status | Use case | Draft requirements |
