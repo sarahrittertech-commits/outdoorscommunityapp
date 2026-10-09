@@ -13,8 +13,8 @@ to one board.
 One page that separates the branded app as it runs today from the new
 features proposed in the 8 October Magic Patterns design or requested by
 Sarah the same day. Live features
-link to their requirements; new ones link to their draft use case. Nothing
-under *New features* is built, except UC-30 (the event form) and UC-31 (page managers and invites), both built 9 October.
+link to their requirements; new ones link to their draft use case. Rows under *New features* say *Built* where they were built on 9 October
+(UC-14 to UC-16, UC-19, UC-22, UC-24, UC-29 to UC-32); the rest are drafts.
 
 Last updated 9 October 2026.
 
