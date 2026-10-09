@@ -5,8 +5,14 @@ import { createClient } from "@/lib/supabase/server";
 
 type Group = Pick<
   Tables<"groups">,
-  "name" | "description" | "rules" | "subcategory_id" | "area" | "join_policy" | "join_question" | "discussions_enabled" | "affinity_tags" | "website"
+  "name" | "description" | "rules" | "subcategory_id" | "area" | "join_policy" | "join_question" | "discussions_enabled" | "affinity_tags" | "website" | "member_list_visibility"
 >;
+
+const MEMBER_LIST_CHOICES = [
+  { value: "members", label: "Members (default)" },
+  { value: "organizers", label: "Organizers only" },
+  { value: "signed_in", label: "Anyone signed in" },
+] as const;
 
 /** The fields shared by "start a group" and "edit group". Works without JavaScript. */
 export async function GroupForm({
@@ -96,6 +102,25 @@ export async function GroupForm({
             </label>
           ))}
         </div>
+      </fieldset>
+
+      {/* FR-MB-10: organizers are always listed; counts are always shown. */}
+      <fieldset className="mt-4">
+        <legend className="font-semibold">
+          Who can see the member list{" "}
+          <span className="hint">Also decides who sees names on &ldquo;who&apos;s going&rdquo;. Organizers and counts are always shown.</span>
+        </legend>
+        {MEMBER_LIST_CHOICES.map((c) => (
+          <label key={c.value} className="check mt-1">
+            <input
+              type="radio"
+              name="memberListVisibility"
+              value={c.value}
+              defaultChecked={(group?.member_list_visibility ?? "members") === c.value}
+            />
+            {c.label}
+          </label>
+        ))}
       </fieldset>
 
       <label className="check mt-4">

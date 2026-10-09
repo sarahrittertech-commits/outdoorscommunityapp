@@ -43,6 +43,7 @@ records where each one came from.
 | member | join through an invite link a group shared with me, creating my account on the same page | I'm in without waiting for approval | UC-31 | FR-MB-14, FR-MB-15 | Built |
 | member | join the waitlist when an event is full | I get a place if someone drops out | UC-30 | FR-EV-28 | Draft |
 | member | see what an event costs, the registration fee and the total | I know before I commit | UC-30 | FR-EV-25 | Draft |
+| member | save an event without RSVPing, and see it under Saved in My stuff | I keep track of things I might go to, and nobody else sees my list | UC-22 | FR-EV-18 | Built |
 | member | answer one person's reply in a thread, not the whole thread | side conversations stay together and readable | UC-19 | FR-DS-9 | Built |
 
 ## Running a group
@@ -56,6 +57,7 @@ records where each one came from.
 | page admin | add up to two page managers who help run the group | I'm not doing it alone, and only I can hand the group over | UC-31 | FR-MB-11, FR-MB-12 | Built (manager email invites wait on email) |
 | page admin or manager | invite people by email, one address or many | I bring our club onto the board in one go | UC-31 | FR-MB-13 | Built, off until email is set up |
 | page admin or manager | create a link to send to people so they can join | I can share it in our group chat | UC-31 | FR-MB-15 | Built |
+| page admin or manager | choose who sees our member list: members, organizers only or anyone signed in | members who want privacy aren't listed for everyone | UC-16 | FR-MB-10 | Built |
 | organizer | add our group's website | members can find our own site | — | FR-GR-23 | Built |
 | organizer | claim a listing of our real group | I run it here instead of starting over | UC-8 | FR-GR-9, FR-GR-10 | Live |
 | organizer | prove a claim with an email at our club's domain | the site admin can approve it quickly | UC-26 | FR-GR-18 to FR-GR-20 | Draft (needs a domain) |

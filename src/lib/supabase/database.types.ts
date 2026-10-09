@@ -116,6 +116,7 @@ export type Database = {
           source_url: string | null;
           website: string | null;
           affinity_tags: string[];
+          member_list_visibility: Database["public"]["Enums"]["member_list_visibility"];
         };
         Insert: {
           id?: string;
@@ -139,6 +140,7 @@ export type Database = {
           source_url?: string | null;
           website?: string | null;
           affinity_tags?: string[];
+          member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
         };
         Update: {
           id?: string;
@@ -162,6 +164,7 @@ export type Database = {
           source_url?: string | null;
           website?: string | null;
           affinity_tags?: string[];
+          member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
         };
         Relationships: [
           Fk<"groups_subcategory_id_fkey", "subcategory_id", "subcategories">,
@@ -322,6 +325,15 @@ export type Database = {
           Fk<"group_claims_group_id_fkey", "group_id", "groups">,
           Fk<"group_claims_user_id_fkey", "user_id", "profiles">,
           Fk<"group_claims_decided_by_fkey", "decided_by", "profiles">,
+        ];
+      };
+      saved_events: {
+        Row: { user_id: string; event_id: string; created_at: string };
+        Insert: { user_id: string; event_id: string; created_at?: string };
+        Update: { user_id?: string; event_id?: string; created_at?: string };
+        Relationships: [
+          Fk<"saved_events_user_id_fkey", "user_id", "profiles">,
+          Fk<"saved_events_event_id_fkey", "event_id", "events">,
         ];
       };
       event_private_details: {
@@ -652,6 +664,11 @@ export type Database = {
       is_group_owner: { Args: { p_group_id: string }; Returns: boolean };
       group_member_count: { Args: { p_group_id: string }; Returns: number };
       event_going_count: { Args: { p_event_id: string }; Returns: number };
+      member_list_visible: { Args: { p_group_id: string }; Returns: boolean };
+      event_waitlist_place: {
+        Args: { p_event_id: string };
+        Returns: { waiting: number; my_place: number }[];
+      };
       join_answers: {
         Args: { p_group_id: string };
         Returns: { user_id: string; join_answer: string }[];
@@ -749,6 +766,7 @@ export type Database = {
       join_policy: "open" | "approval";
       group_status: "active" | "archived" | "removed";
       member_role: "owner" | "admin" | "member";
+      member_list_visibility: "organizers" | "members" | "signed_in";
       member_status: "pending" | "active" | "banned";
       address_visibility: "public" | "members";
       event_status: "scheduled" | "cancelled";

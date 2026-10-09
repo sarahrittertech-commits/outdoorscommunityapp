@@ -89,13 +89,13 @@ until the domain is chosen and email sending through Resend is set up.
 | **FAQ** and **RSVPs open at** | Fits / In scope | UC-10 | FR-EV-19, FR-EV-20 |
 | **Ask a question** and answer into the FAQ | Fits | UC-11 | FR-EV-21, FR-EV-22 |
 | **Approve RSVPs**, **waitlist**, **Manage RSVPs** page | Fits / In scope | UC-17 | FR-EV-15 to FR-EV-17 |
-| **Save for later** | In scope | UC-22 | FR-EV-18 |
+| **Save for later** | **Built 9 Oct** (Saved in My stuff; not on a calendar or in reminders yet) | UC-22 | FR-EV-18 |
 
 ### Members
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Member list privacy** | Fits | UC-16 | FR-MB-10 |
+| **Member list privacy** | **Built 9 Oct** (set by the page admin or a manager) | UC-16 | FR-MB-10 |
 | **Calendar** on the signed-in home page | Fits | UC-18 | FR-AC-9 |
 | **Reminders** list and unread-message count | In scope | UC-23 | FR-AC-10 |
 | **Replies to replies**, one level | Built 9 October 2026 | UC-19 | FR-DS-9 |

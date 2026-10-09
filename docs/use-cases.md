@@ -414,7 +414,8 @@ list works on its own for anyone who can't use the map.
 
 ## UC-16 — Keep our member list private
 
-> **Draft, awaiting review.**
+> **Approved and built 9 October 2026.** The page admin or a page manager
+> sets it, in the group's settings.
 
 **Actor:** A group owner
 
@@ -429,7 +430,7 @@ non-members.
 3. A member now sees only the organizers on the members tab; on event
    pages, *who's going* shows a count but no names.
 
-**Requirements:** to be written after review (draft FR-MB-10).
+**Requirements:** FR-MB-10.
 
 **Succeeds when:** the choice holds everywhere names could appear, enforced
 by the database, not just hidden on the page.
@@ -548,7 +549,9 @@ members, with nothing algorithmic about it.
 
 ## UC-22 — Save it for later
 
-> **Draft, awaiting review.** Brought into scope on 8 October 2026.
+> **Approved and built 9 October 2026.** Brought into scope on 8 October
+> 2026. Steps 1 and 2 are built; step 3 waits on UC-10 (RSVP opening time)
+> and UC-23 (reminders).
 
 **Actor:** The newcomer
 
@@ -561,7 +564,7 @@ members, with nothing algorithmic about it.
 3. The event page says when RSVPs open (UC-10). When they do, the saved
    event appears in their reminders (UC-23).
 
-**Requirements:** to be written after review (draft FR-EV-18).
+**Requirements:** FR-EV-18.
 
 **Succeeds when:** a member can keep track of an event without RSVPing,
 and nobody else can see what they saved.

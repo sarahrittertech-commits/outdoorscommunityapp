@@ -107,6 +107,8 @@ export const groupSchema = z.object({
   joinPolicy: z.enum(["open", "approval"]),
   joinQuestion: optionalText(280),
   discussionsEnabled: checkbox,
+  /** FR-MB-10: who sees the member list and names on who's going. */
+  memberListVisibility: z.enum(["organizers", "members", "signed_in"]).default("members"),
   /** FR-GR-23: optional; a missing scheme is taken as https. */
   website: z
     .string()
