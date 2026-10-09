@@ -207,6 +207,7 @@ insert into definer_allowed values
   ('is_site_admin()'),
   ('join_answers(uuid)'),
   ('list_candidate(uuid)'),
+  ('move_from_waitlist(uuid, uuid)'),
   ('log_moderation(moderation_action_type, report_target, uuid, uuid, text, jsonb)'),
   ('profiles_before_update()'),
   ('remove_group(uuid, text)'),
