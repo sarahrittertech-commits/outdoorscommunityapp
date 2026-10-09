@@ -59,9 +59,8 @@ export const signInSchema = z.object({
 
 const matching = { message: "password_mismatch", path: ["passwordAgain"] };
 
-export const signUpSchema = z
-  .object({ email, password: passwordSchema, passwordAgain: z.string(), next: z.string().optional() })
-  .refine((v) => v.password === v.passwordAgain, matching);
+/** UC-29: sign-up asks only for the email; the password is chosen after the confirmation link. */
+export const signUpSchema = z.object({ email, next: z.string().optional() });
 
 export const forgotPasswordSchema = z.object({ email });
 
