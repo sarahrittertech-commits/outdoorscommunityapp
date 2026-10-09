@@ -66,6 +66,8 @@ web app is not the thing enforcing the rule.
 | PT-37 | Authors delete only their own threads and replies, which are blanked rather than removed (FR-DS-4) | One member deletes another's posts, or a thread loses its replies |
 | PT-38 | Only the site admin unsuspends an account, after which it can write again (FR-MD-3) | Anyone lifts a suspension |
 | PT-39 | Every SECURITY DEFINER function in the public schema is on a reviewed list, and a new one fails by name | A function that skips RLS ships without review |
+| PT-40 | A find with a similar name or the same website as something already known is kept and tagged as a possible duplicate; an exact name match is dropped; shared sites like Facebook never count as the same website (FR-RS-10) | Near duplicates listed twice, or real groups lost |
+| PT-41 | Events found for an unclaimed listing publish without review only from a group find whose event links are on the listing's own website (FR-RS-8) | A web page tricks the agent into putting a phishing link on a live listing |
 
 ## Automated — unit
 
