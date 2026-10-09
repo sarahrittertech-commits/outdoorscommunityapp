@@ -12,7 +12,7 @@ export async function createThread(groupId: string, slug: string, formData: Form
   const { viewer, supabase } = await actingUser(back);
   checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   const parsed = threadSchema.safeParse(formFields(formData));
-  if (!idSchema.safeParse(groupId).success || !parsed.success) fail(back, "invalid");
+  if (!parsed.success) fail(back, "invalid");
 
   const { data, error } = await supabase
     .from("threads")
@@ -28,7 +28,7 @@ export async function postReply(threadId: string, path: string, formData: FormDa
   const { viewer, supabase } = await actingUser(path);
   checkArgs(path, z.tuple([idSchema, localPathSchema]), [threadId, path]);
   const parsed = replySchema.safeParse(formFields(formData));
-  if (!idSchema.safeParse(threadId).success || !parsed.success) fail(path, "invalid");
+  if (!parsed.success) fail(path, "invalid");
 
   const { error } = await supabase
     .from("replies")

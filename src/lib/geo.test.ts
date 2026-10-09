@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { aboutMiles, findTown, milesBetween, townForArea } from "./geo";
+import { aboutMiles, countWithin, findTown, milesBetween, townForArea } from "./geo";
 
 describe("towns and distance", () => {
   it("finds towns by name or alias, ignoring case", () => {
@@ -26,5 +26,13 @@ describe("towns and distance", () => {
     expect(aboutMiles(2)).toBe("nearby");
     expect(aboutMiles(23)).toBe("about 25 miles");
     expect(aboutMiles(117)).toBe("about 120 miles");
+  });
+
+  it("counts places within a radius, skipping unknown towns", () => {
+    const asheville = findTown("Asheville")!;
+    const places = [asheville, findTown("Brevard"), findTown("West Asheville"), undefined, findTown("Red River Gorge")];
+    expect(countWithin(asheville, places, 10)).toBe(2);
+    expect(countWithin(asheville, places, 50)).toBe(3);
+    expect(countWithin(asheville, [], 25)).toBe(0);
   });
 });

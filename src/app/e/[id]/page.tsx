@@ -84,7 +84,10 @@ export default async function EventPage({ params, searchParams }: Props) {
   const when = formatEventTime(event.starts_at, event.ends_at, event.timezone);
   const url = `${site.url}/e/${event.id}`;
   // FR-GR-9: a listed group's event points to the organizer's own page.
-  const organizerUrl = group.is_unclaimed ? (event.source_url ?? group.source_url) : null;
+  // Hidden once the event is cancelled: there is nothing left to sign up for.
+  const organizerUrl = group.is_unclaimed && !cancelled ? (event.source_url ?? group.source_url) : null;
+  // The database refuses RSVPs to an archived group's events, so offer none.
+  const archived = group.status === "archived";
 
   // TR-SEO-3: schema.org Event data for search engines.
   const jsonLd = {
@@ -169,7 +172,9 @@ export default async function EventPage({ params, searchParams }: Props) {
                   {group.name} event page
                 </a>
               </p>
-            ) : cancelled ? null : !event.takes_rsvps ? (
+            ) : cancelled ? null : archived ? (
+              <p className="text-muted">This group is archived.</p>
+            ) : !event.takes_rsvps ? (
               // FR-EV-26 and FR-EV-27: no RSVPs here; perhaps the organizer's own page.
               event.signup_url ? (
                 <p>
