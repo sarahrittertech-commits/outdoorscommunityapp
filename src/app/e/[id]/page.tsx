@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { cancelEvent, rsvp } from "@/app/actions/events";
+import { activityPhotos } from "@/brand/activityPhotos";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
 import { site } from "@/config/site";
@@ -31,30 +33,65 @@ export default async function EventPage({ params, searchParams }: Props) {
   // Two round trips, not five: the event and the viewer together, then the
   // membership and everything on the page together. Row-level security
   // decides what each query returns, so nothing here waits on isMember.
-  const [{ supabase, event, group }, viewer] = await Promise.all([loadEvent(id), getViewer()]);
+  const [{ supabase, event, group }, viewer] = await Promise.all([
+    loadEvent(id),
+    getViewer(),
+  ]);
 
-  const [{ isMember, canManage }, { data: details }, { data: listing }, { data: goingRows }, { data: mine }] = await Promise.all([
+  const [
+    { isMember, canManage },
+    { data: details },
+    { data: listing },
+    { data: goingRows },
+    { data: mine },
+  ] = await Promise.all([
     loadGroup(group.slug),
-    supabase.from("event_private_details").select("address").eq("event_id", event.id).maybeSingle(),
-    supabase.from("event_listings").select("going_count").eq("id", event.id).single(),
+    supabase
+      .from("event_private_details")
+      .select("address")
+      .eq("event_id", event.id)
+      .maybeSingle(),
+    supabase
+      .from("event_listings")
+      .select("going_count, category_slug")
+      .eq("id", event.id)
+      .single(),
     viewer
-      ? supabase.from("event_rsvps").select("user_id, profiles(display_name)").eq("event_id", event.id).eq("status", "going")
+      ? supabase
+          .from("event_rsvps")
+          .select("user_id, profiles(display_name)")
+          .eq("event_id", event.id)
+          .eq("status", "going")
       : Promise.resolve({ data: null }),
     viewer
-      ? supabase.from("event_rsvps").select("status").eq("event_id", event.id).eq("user_id", viewer.id).maybeSingle()
+      ? supabase
+          .from("event_rsvps")
+          .select("status")
+          .eq("event_id", event.id)
+          .eq("user_id", viewer.id)
+          .maybeSingle()
       : Promise.resolve({ data: null }),
   ]);
 
   // Non-members can read only their own RSVP, so the list is for members only (FR-EV-6).
   const attendees = isMember ? goingRows : null;
   const going = listing?.going_count ?? 0;
+  // The 8 October design: a representative photo of the activity, labelled as such.
+  const photo = listing?.category_slug
+    ? activityPhotos[listing.category_slug]
+    : undefined;
   const started = new Date(event.starts_at) <= new Date();
   const cancelled = event.status === "cancelled";
-  const full = event.capacity !== null && going >= event.capacity && mine?.status !== "going";
+  const full =
+    event.capacity !== null &&
+    going >= event.capacity &&
+    mine?.status !== "going";
   const when = formatEventTime(event.starts_at, event.ends_at, event.timezone);
   const url = `${site.url}/e/${event.id}`;
   // FR-GR-9: a listed group's event points to the organizer's own page.
-  const organizerUrl = group.is_unclaimed ? (event.source_url ?? group.source_url) : null;
+  const organizerUrl = group.is_unclaimed
+    ? (event.source_url ?? group.source_url)
+    : null;
 
   // TR-SEO-3: schema.org Event data for search engines.
   const jsonLd = {
@@ -63,10 +100,20 @@ export default async function EventPage({ params, searchParams }: Props) {
     name: event.title,
     startDate: event.starts_at,
     endDate: event.ends_at,
-    eventStatus: cancelled ? "https://schema.org/EventCancelled" : "https://schema.org/EventScheduled",
+    eventStatus: cancelled
+      ? "https://schema.org/EventCancelled"
+      : "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    location: { "@type": "Place", name: event.location_name, ...(details?.address && { address: details.address }) },
-    organizer: { "@type": "Organization", name: group.name, url: `${site.url}/g/${group.slug}` },
+    location: {
+      "@type": "Place",
+      name: event.location_name,
+      ...(details?.address && { address: details.address }),
+    },
+    organizer: {
+      "@type": "Organization",
+      name: group.name,
+      url: `${site.url}/g/${group.slug}`,
+    },
     description: event.description,
     url,
   };
@@ -75,7 +122,9 @@ export default async function EventPage({ params, searchParams }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
       />
       <Notice params={await searchParams} />
       <p className="breadcrumb">
@@ -86,82 +135,109 @@ export default async function EventPage({ params, searchParams }: Props) {
         {cancelled && <span className="ml-2 text-danger">(cancelled)</span>}
       </h1>
 
-      <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
-        <dt className="font-semibold">When</dt>
-        <dd>{when}</dd>
-        <dt className="font-semibold">Where</dt>
-        <dd>
-          {event.location_name}
-          {details?.address ? (
-            <span className="block text-sm">{details.address}</span>
-          ) : event.address_visibility === "members" && !isMember ? (
-            <span className="block text-sm text-muted">Address shown to group members.</span>
-          ) : null}
-        </dd>
-        {!group.is_unclaimed && (
-          <>
-            <dt className="font-semibold">Going</dt>
+      <div className="event-top">
+        <div>
+          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+            <dt className="font-semibold">When</dt>
+            <dd>{when}</dd>
+            <dt className="font-semibold">Where</dt>
             <dd>
-              {going}
-              {event.capacity !== null && ` of ${event.capacity}`}
+              {event.location_name}
+              {details?.address ? (
+                <span className="block text-sm">{details.address}</span>
+              ) : event.address_visibility === "members" && !isMember ? (
+                <span className="block text-sm text-muted">
+                  Address shown to group members.
+                </span>
+              ) : null}
             </dd>
-          </>
-        )}
-      </dl>
-
-      {/* RSVP ------------------------------------------------------------------ */}
-      <section aria-label="RSVP" className="mt-4">
-        {organizerUrl ? (
-          <p className="rounded border border-rule bg-panel px-4 py-3">
-            From an <Link href={`/g/${group.slug}`}>unclaimed listing</Link>, added from public information. Check the details and sign up
-            on the organizer&apos;s own page:{" "}
-            <a href={organizerUrl} rel="nofollow noopener" className="font-bold">
-              {group.name} event page
-            </a>
-          </p>
-        ) : cancelled ? null : started ? (
-          <p className="text-muted">This event has started.</p>
-        ) : !viewer ? (
-          <Link href={`/signin?next=/e/${event.id}`} className="button">
-            Sign in to RSVP
-          </Link>
-        ) : !isMember ? (
-          <p>
-            <Link href={`/g/${group.slug}`}>Join {group.name}</Link> to RSVP.
-          </p>
-        ) : (
-          <div className="flex flex-wrap items-center gap-3">
-            {mine?.status === "going" ? (
+            {!group.is_unclaimed && (
               <>
-                <strong>You&apos;re going.</strong>
-                <form action={rsvp.bind(null, event.id, "not_going")}>
-                  <button className="button button-plain">Can&apos;t make it</button>
-                </form>
-              </>
-            ) : full ? (
-              <strong>This event is full.</strong>
-            ) : (
-              <>
-                <form action={rsvp.bind(null, event.id, "going")}>
-                  <button className="button">I&apos;m going</button>
-                </form>
-                {mine?.status !== "not_going" && (
-                  <form action={rsvp.bind(null, event.id, "not_going")}>
-                    <button className="button button-plain">Not going</button>
-                  </form>
-                )}
+                <dt className="font-semibold">Going</dt>
+                <dd>
+                  {going}
+                  {event.capacity !== null && ` of ${event.capacity}`}
+                </dd>
               </>
             )}
-          </div>
+          </dl>
+
+          {/* RSVP ------------------------------------------------------------------ */}
+          <section aria-label="RSVP" className="mt-4">
+            {organizerUrl ? (
+              <p className="rounded border border-rule bg-panel px-4 py-3">
+                From an <Link href={`/g/${group.slug}`}>unclaimed listing</Link>
+                , added from public information. Check the details and sign up
+                on the organizer&apos;s own page:{" "}
+                <a
+                  href={organizerUrl}
+                  rel="nofollow noopener"
+                  className="font-bold"
+                >
+                  {group.name} event page
+                </a>
+              </p>
+            ) : cancelled ? null : started ? (
+              <p className="text-muted">This event has started.</p>
+            ) : !viewer ? (
+              <Link href={`/signin?next=/e/${event.id}`} className="button">
+                Sign in to RSVP
+              </Link>
+            ) : !isMember ? (
+              <p>
+                <Link href={`/g/${group.slug}`}>Join {group.name}</Link> to
+                RSVP.
+              </p>
+            ) : (
+              <div className="flex flex-wrap items-center gap-3">
+                {mine?.status === "going" ? (
+                  <>
+                    <strong>You&apos;re going.</strong>
+                    <form action={rsvp.bind(null, event.id, "not_going")}>
+                      <button className="button button-plain">
+                        Can&apos;t make it
+                      </button>
+                    </form>
+                  </>
+                ) : full ? (
+                  <strong>This event is full.</strong>
+                ) : (
+                  <>
+                    <form action={rsvp.bind(null, event.id, "going")}>
+                      <button className="button">I&apos;m going</button>
+                    </form>
+                    {mine?.status !== "not_going" && (
+                      <form action={rsvp.bind(null, event.id, "not_going")}>
+                        <button className="button button-plain">
+                          Not going
+                        </button>
+                      </form>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+        {photo && (
+          <figure className="event-photo">
+            <Image src={photo.src} alt={photo.alt} width={900} height={604} sizes="(min-width: 768px) 20rem, 100vw" />
+            <figcaption>
+              {photo.label} · representative photo
+            </figcaption>
+          </figure>
         )}
-      </section>
+      </div>
 
       <p className="mt-3 text-sm">
         <a href={`/e/${event.id}/calendar.ics`}>Add to calendar</a>
       </p>
 
       {canManage && !cancelled && (
-        <nav aria-label="Organizer tools" className="mt-4 flex flex-wrap items-baseline gap-x-4 rounded bg-panel px-3 py-2 text-sm">
+        <nav
+          aria-label="Organizer tools"
+          className="mt-4 flex flex-wrap items-baseline gap-x-4 rounded bg-panel px-3 py-2 text-sm"
+        >
           <strong>Organizer:</strong>
           <Link href={`/e/${event.id}/edit`}>edit event</Link>
           <form action={cancelEvent.bind(null, event.id)} className="inline">
@@ -183,7 +259,9 @@ export default async function EventPage({ params, searchParams }: Props) {
           <ul className="mt-2 flex flex-wrap gap-x-4">
             {attendees.map((a) => (
               <li key={a.user_id}>
-                <Link href={`/u/${a.user_id}`}>{a.profiles?.display_name ?? "deleted user"}</Link>
+                <Link href={`/u/${a.user_id}`}>
+                  {a.profiles?.display_name ?? "deleted user"}
+                </Link>
               </li>
             ))}
           </ul>
@@ -192,7 +270,10 @@ export default async function EventPage({ params, searchParams }: Props) {
 
       {viewer && (
         <p className="mt-8 text-sm">
-          <Link href={`/report?type=event&id=${event.id}&next=/e/${event.id}`} className="text-muted">
+          <Link
+            href={`/report?type=event&id=${event.id}&next=/e/${event.id}`}
+            className="text-muted"
+          >
             Report this event
           </Link>
         </p>

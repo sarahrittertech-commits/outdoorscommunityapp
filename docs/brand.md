@@ -106,6 +106,13 @@ first, no pressure. Plain, calm, local, welcoming.
 - **Pages are white, not paper.** Paper (`#FAF6EF`) is used for panels, and
   there is no dark mode: the board looks the same in every setting.
 
+## Representative photos
+
+An event page shows a photo of its activity beside the details, always
+captioned "<activity> · representative photo", never as the group's own
+(`src/brand/activityPhotos.ts`, images from the 8 October design in
+`public/activities/`). Activities without one keep their line drawing.
+
 ## Spacing
 
 Stacked blocks on a page (headings, paragraphs, tags, sections) sit at
