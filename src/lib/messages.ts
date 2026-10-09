@@ -68,9 +68,9 @@ export type NoticeCode = keyof typeof notices;
 export type ErrorCode = keyof typeof errors;
 
 export function noticeText(code: string | undefined): string | null {
-  return code && code in notices ? notices[code as NoticeCode] : null;
+  return code && Object.hasOwn(notices, code) ? notices[code as NoticeCode] : null;
 }
 
 export function errorText(code: string | undefined): string | null {
-  return code && code in errors ? errors[code as ErrorCode] : null;
+  return code && Object.hasOwn(errors, code) ? errors[code as ErrorCode] : null;
 }
