@@ -5,8 +5,10 @@ import { z } from "zod";
 import { site } from "@/config/site";
 import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
+import { reencodeEventPhoto } from "@/lib/eventPhotos";
+import { groupCoverPath, removeGroupCover, uploadGroupCover } from "@/lib/groupCovers";
 import { slugify, slugWithSuffix } from "@/lib/slug";
-import { affinityTagsSchema, formFields, groupSchema, idSchema, slugSchema } from "@/lib/validation";
+import { affinityTagsSchema, eventPhotoSchema, formFields, groupSchema, idSchema, slugSchema } from "@/lib/validation";
 
 /** FR-GR-1. The database makes the creator the owner. */
 export async function createGroup(formData: FormData) {
@@ -36,6 +38,7 @@ export async function createGroup(formData: FormData) {
       discussions_enabled: group.discussionsEnabled,
       affinity_tags: tags.data,
       website: group.website,
+      group_type: group.groupType,
       created_by: viewer.id,
     });
     if (!error) succeed(`/g/${slug}`, "group_created");
@@ -44,7 +47,7 @@ export async function createGroup(formData: FormData) {
   fail(back, "generic");
 }
 
-/** FR-GR-3, FR-GR-4, FR-GR-5. */
+/** FR-GR-3, FR-GR-4, FR-GR-5, with the type (FR-GR-16) and the cover photo kept, replaced or removed (FR-GR-14). */
 export async function updateGroup(groupId: string, slug: string, formData: FormData) {
   const back = `/g/${slug}/edit`;
   const { supabase } = await actingUser(back);
@@ -53,6 +56,34 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
   const tags = affinityTagsSchema.safeParse(formData.getAll("affinityTags"));
   if (!parsed.success || !tags.success) fail(back, "invalid");
   const group = parsed.data;
+
+  // FR-GR-14: the same image rules as an event photo (FR-EV-24, TR-SEC-9).
+  const coverFile = eventPhotoSchema.safeParse(formData.get("cover"));
+  if (!coverFile.success) fail(back, "photo_invalid");
+  let cover: Buffer | null = null;
+  if (coverFile.data) {
+    if (!group.coverAlt) fail(back, "photo_alt_required");
+    cover = await reencodeEventPhoto(coverFile.data);
+    if (!cover) fail(back, "photo_invalid");
+  }
+
+  const { data: current } = await supabase.from("groups").select("cover_image_path").eq("id", groupId).maybeSingle();
+  if (!current) fail(back, "not_allowed");
+  const keepCover = Boolean(current.cover_image_path) && !cover && !group.removeCover;
+  if (keepCover && !group.coverAlt) fail(back, "photo_alt_required");
+
+  // A new cover is uploaded first; the storage policies refuse anyone but
+  // an active group's owner and admins.
+  const newPath = cover ? groupCoverPath(groupId) : null;
+  if (cover && newPath) {
+    const { error: uploadError } = await uploadGroupCover(supabase, newPath, cover);
+    if (uploadError) fail(back, "cover_failed");
+  }
+  const coverColumns = newPath
+    ? { cover_image_path: newPath, cover_alt: group.coverAlt }
+    : keepCover
+      ? { cover_alt: group.coverAlt }
+      : { cover_image_path: null, cover_alt: null };
 
   const { data, error } = await supabase
     .from("groups")
@@ -67,11 +98,17 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
       discussions_enabled: group.discussionsEnabled,
       affinity_tags: tags.data,
       website: group.website,
+      group_type: group.groupType,
+      ...coverColumns,
     })
     .eq("id", groupId)
     .select("id");
-  failOnError(back, error);
-  if (!data?.length) fail(back, "not_allowed");
+  if (error || !data?.length) {
+    await removeGroupCover(supabase, newPath);
+    failOnError(back, error);
+    fail(back, "not_allowed");
+  }
+  if (!keepCover) await removeGroupCover(supabase, current.cover_image_path);
   succeed(`/g/${slug}`, "group_saved");
 }
 

@@ -5,12 +5,14 @@ import { requestClaim } from "@/app/actions/claims";
 import { restoreGroup } from "@/app/actions/groups";
 import { joinGroup, leaveGroup } from "@/app/actions/membership";
 import { groupPhotos } from "@/brand/activityPhotos";
+import { GroupTypeIcon } from "@/brand/GroupTypeIcon";
 import Image from "next/image";
 import { AffinityTags } from "@/components/AffinityTags";
 import { EventList } from "@/components/Listings";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
 import { site } from "@/config/site";
+import { groupCoverUrl } from "@/lib/groupCovers";
 import { archivedGroupEvents } from "@/lib/groupEvents";
 import { loadGroup, roleLabel } from "@/lib/groups";
 
@@ -82,6 +84,11 @@ export default async function GroupPage({ params, searchParams }: Props) {
         : Promise.resolve({ data: null }),
     ]);
 
+  // FR-GR-14: the group's own cover first; otherwise a representative photo
+  // for a couple of sample groups (src/brand/activityPhotos.ts).
+  const cover = group.cover_image_path ? { src: groupCoverUrl(supabase, group.cover_image_path), alt: group.cover_alt ?? "" } : null;
+  const samplePhoto = cover ? null : groupPhotos[group.slug];
+
   const claimForm =
     myClaim?.status === "pending" ? (
       <p className="m-0 mt-1 text-sm">Your claim is waiting for the site admin to check it.</p>
@@ -119,6 +126,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
         </p>
       )}
       <h1>{group.name}</h1>
+      <GroupTypeIcon type={group.group_type} className="mr-3 align-middle text-sm" />
       <AffinityTags tags={group.affinity_tags} />
       <p className="text-sm text-muted">
         {group.area} ·{" "}
@@ -131,17 +139,15 @@ export default async function GroupPage({ params, searchParams }: Props) {
           </>
         )}
       </p>
-      {groupPhotos[group.slug] && (
+      {cover && (
         <figure className="event-photo max-w-xl">
-          <Image
-            src={groupPhotos[group.slug].src}
-            alt={groupPhotos[group.slug].alt}
-            width={900}
-            height={604}
-            sizes="(min-width: 640px) 36rem, 100vw"
-            priority
-          />
-          <figcaption>{groupPhotos[group.slug].label} · representative photo</figcaption>
+          <Image src={cover.src} alt={cover.alt} width={900} height={600} sizes="(min-width: 640px) 36rem, 100vw" priority />
+        </figure>
+      )}
+      {samplePhoto && (
+        <figure className="event-photo max-w-xl">
+          <Image src={samplePhoto.src} alt={samplePhoto.alt} width={900} height={604} sizes="(min-width: 640px) 36rem, 100vw" priority />
+          <figcaption>{samplePhoto.label} · representative photo</figcaption>
         </figure>
       )}
       {group.website && !group.is_unclaimed && (
