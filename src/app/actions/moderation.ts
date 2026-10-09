@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 
-import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
+import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { safeNext } from "@/lib/navigation";
-import { formFields, reportSchema } from "@/lib/validation";
+import { formFields, idSchema, localPathSchema, reportSchema } from "@/lib/validation";
 
 /** FR-MD-1. The database routes the report to the right queue. */
 export async function submitReport(formData: FormData) {
@@ -26,6 +26,7 @@ export async function submitReport(formData: FormData) {
 
 export async function resolveReport(reportId: string, status: "actioned" | "dismissed", path: string) {
   const { supabase } = await actingUser(path);
+  checkArgs(path, z.tuple([idSchema, z.enum(["actioned", "dismissed"]), localPathSchema]), [reportId, status, path]);
   const { error } = await supabase.rpc("resolve_report", { p_report_id: reportId, p_status: status });
   failOnError(path, error);
   succeed(path, "report_resolved");
@@ -37,6 +38,7 @@ const reasonSchema = z.string().trim().min(1).max(500);
 export async function suspendUser(userId: string, formData: FormData) {
   const back = "/admin";
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema]), [userId]);
   const reason = reasonSchema.safeParse(formData.get("reason"));
   if (!reason.success) fail(back, "invalid");
   const { error } = await supabase.rpc("suspend_user", { p_user_id: userId, p_reason: reason.data });
@@ -47,6 +49,7 @@ export async function suspendUser(userId: string, formData: FormData) {
 export async function unsuspendUser(userId: string) {
   const back = "/admin";
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema]), [userId]);
   const { error } = await supabase.rpc("unsuspend_user", { p_user_id: userId });
   failOnError(back, error);
   succeed(back, "user_unsuspended");
@@ -55,6 +58,7 @@ export async function unsuspendUser(userId: string) {
 export async function removeGroup(groupId: string, formData: FormData) {
   const back = "/admin";
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema]), [groupId]);
   const reason = reasonSchema.safeParse(formData.get("reason"));
   if (!reason.success) fail(back, "invalid");
   const { error } = await supabase.rpc("remove_group", { p_group_id: groupId, p_reason: reason.data });

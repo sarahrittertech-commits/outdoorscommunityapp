@@ -1,6 +1,7 @@
 import "server-only";
 
 import { redirect } from "next/navigation";
+import type { z } from "zod";
 
 import { getViewer, type Viewer } from "./auth";
 import { errorCode } from "./db-errors";
@@ -32,4 +33,12 @@ export function succeed(returnTo: string, code: NoticeCode): never {
 /** Redirect with the right message if a database call failed. */
 export function failOnError(returnTo: string, error: { code?: string; message?: string } | null): void {
   if (error) fail(returnTo, errorCode(error));
+}
+
+/**
+ * Check the arguments bound into an action. They are sent back by the
+ * browser, so anyone can change them; a mismatch sends the person back.
+ */
+export function checkArgs(returnTo: string, schema: z.ZodType, args: unknown[]): void {
+  if (!schema.safeParse(args).success) fail(returnTo, "invalid");
 }

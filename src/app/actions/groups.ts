@@ -1,10 +1,12 @@
 "use server";
 
+import { z } from "zod";
+
 import { site } from "@/config/site";
-import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
+import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
 import { slugify, slugWithSuffix } from "@/lib/slug";
-import { affinityTagsSchema, formFields, groupSchema, idSchema } from "@/lib/validation";
+import { affinityTagsSchema, formFields, groupSchema, idSchema, slugSchema } from "@/lib/validation";
 
 /** FR-GR-1. The database makes the creator the owner. */
 export async function createGroup(formData: FormData) {
@@ -45,6 +47,7 @@ export async function createGroup(formData: FormData) {
 export async function updateGroup(groupId: string, slug: string, formData: FormData) {
   const back = `/g/${slug}/edit`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   const parsed = groupSchema.safeParse(formFields(formData));
   const tags = affinityTagsSchema.safeParse(formData.getAll("affinityTags"));
   if (!idSchema.safeParse(groupId).success || !parsed.success || !tags.success) fail(back, "invalid");
@@ -74,6 +77,7 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
 export async function archiveGroup(groupId: string, slug: string) {
   const back = `/g/${slug}/edit`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   const { error } = await supabase.rpc("archive_group", { p_group_id: groupId });
   failOnError(back, error);
   succeed(`/g/${slug}`, "group_archived");
@@ -82,6 +86,7 @@ export async function archiveGroup(groupId: string, slug: string) {
 export async function restoreGroup(groupId: string, slug: string) {
   const back = `/g/${slug}`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   const { error } = await supabase.rpc("restore_group", { p_group_id: groupId });
   failOnError(back, error);
   succeed(back, "group_restored");

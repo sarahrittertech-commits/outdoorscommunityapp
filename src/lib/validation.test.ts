@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { affinityTagsSchema, eventSchema, groupSchema, onboardingSchema, replySchema } from "./validation";
+import {
+  affinityTagsSchema,
+  eventSchema,
+  groupSchema,
+  localPathSchema,
+  onboardingSchema,
+  replySchema,
+  slugSchema,
+} from "./validation";
 
 // UT-5: form schemas.
 describe("form validation", () => {
@@ -59,5 +67,20 @@ describe("form validation", () => {
     expect(affinityTagsSchema.parse(["women", "bipoc", "women"])).toEqual(["women", "bipoc"]);
     expect(affinityTagsSchema.parse([])).toEqual([]);
     expect(affinityTagsSchema.safeParse(["ninjas"]).success).toBe(false);
+  });
+});
+
+describe("bound action arguments", () => {
+  it("accepts slugs as slugify makes them", () => {
+    for (const slug of ["blue-ridge-hikers", "g1", "trail-friends-x7k2"]) expect(slugSchema.safeParse(slug).success).toBe(true);
+    for (const slug of ["", "../admin", "Blue", "a--b", "-a", "a b", "x".repeat(81)]) expect(slugSchema.safeParse(slug).success).toBe(false);
+  });
+
+  it("accepts only canonical paths on this site", () => {
+    expect(localPathSchema.safeParse("/g/x/discussions/0b6f7a2e-1c1d-4c3b-9b1a-2f8e9d6c5b4a").success).toBe(true);
+    expect(localPathSchema.safeParse("/admin").success).toBe(true);
+    for (const path of ["//evil.com", "/\\evil.com", "https://evil.com", "/.//evil.com", "admin"]) {
+      expect(localPathSchema.safeParse(path).success).toBe(false);
+    }
   });
 });

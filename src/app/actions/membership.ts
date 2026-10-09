@@ -2,8 +2,8 @@
 
 import { z } from "zod";
 
-import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
-import { idSchema } from "@/lib/validation";
+import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
+import { idSchema, slugSchema } from "@/lib/validation";
 
 const joinAnswer = z.string().trim().max(1000).optional();
 
@@ -11,6 +11,7 @@ const joinAnswer = z.string().trim().max(1000).optional();
 export async function joinGroup(groupId: string, slug: string, formData: FormData) {
   const back = `/g/${slug}`;
   const { viewer, supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   if (!idSchema.safeParse(groupId).success) fail(back, "invalid");
   const answer = joinAnswer.safeParse(formData.get("answer") ?? undefined);
 
@@ -43,6 +44,7 @@ export async function joinGroup(groupId: string, slug: string, formData: FormDat
 export async function leaveGroup(groupId: string, slug: string) {
   const back = `/g/${slug}`;
   const { viewer, supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   const { data, error } = await supabase
     .from("group_members")
     .delete()
@@ -57,6 +59,7 @@ export async function leaveGroup(groupId: string, slug: string) {
 export async function approveMember(groupId: string, userId: string, slug: string) {
   const back = `/g/${slug}/members`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, idSchema, slugSchema]), [groupId, userId, slug]);
   const { error } = await supabase.rpc("approve_member", { p_group_id: groupId, p_user_id: userId });
   failOnError(back, error);
   succeed(back, "member_approved");
@@ -65,6 +68,7 @@ export async function approveMember(groupId: string, userId: string, slug: strin
 export async function declineMember(groupId: string, userId: string, slug: string) {
   const back = `/g/${slug}/members`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, idSchema, slugSchema]), [groupId, userId, slug]);
   const { error } = await supabase.rpc("decline_member", { p_group_id: groupId, p_user_id: userId });
   failOnError(back, error);
   succeed(back, "member_declined");
@@ -74,6 +78,7 @@ export async function declineMember(groupId: string, userId: string, slug: strin
 export async function removeMember(groupId: string, userId: string, slug: string, formData: FormData) {
   const back = `/g/${slug}/members`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, idSchema, slugSchema]), [groupId, userId, slug]);
   const reason = z.string().trim().max(500).safeParse(formData.get("reason") ?? "");
   const { error } = await supabase.rpc("remove_member", {
     p_group_id: groupId,
@@ -88,6 +93,7 @@ export async function removeMember(groupId: string, userId: string, slug: string
 export async function setMemberRole(groupId: string, userId: string, role: "admin" | "member", slug: string) {
   const back = `/g/${slug}/members`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, idSchema, z.enum(["admin", "member"]), slugSchema]), [groupId, userId, role, slug]);
   const { error } = await supabase.rpc("set_member_role", { p_group_id: groupId, p_user_id: userId, p_role: role });
   failOnError(back, error);
   succeed(back, "role_changed");
@@ -97,6 +103,7 @@ export async function setMemberRole(groupId: string, userId: string, role: "admi
 export async function transferOwnership(groupId: string, userId: string, slug: string) {
   const back = `/g/${slug}/members`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, idSchema, slugSchema]), [groupId, userId, slug]);
   const { error } = await supabase.rpc("transfer_ownership", { p_group_id: groupId, p_new_owner: userId });
   failOnError(back, error);
   succeed(back, "ownership_transferred");
