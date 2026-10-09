@@ -28,18 +28,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /** FR-BR-3: every group in a category, alphabetically. */
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { supabase, category } = await loadCategory((await params).category);
-  const page = pageFrom((await searchParams).page);
-
-  const [{ data: subcategories }, { data: groups, count }] = await Promise.all([
-    supabase.from("subcategories").select("slug, name").eq("category_id", category.id).order("sort_order"),
+  const pageParam = (await searchParams).page;
+  const asked = pageFrom(pageParam);
+  const listPage = (n: number) =>
     supabase
       .from("group_listings")
       .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags", { count: "exact" })
       .eq("category_id", category.id)
       .eq("status", "active")
       .order("name")
-      .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1),
+      .range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
+
+  const [{ data: subcategories }, first] = await Promise.all([
+    supabase.from("subcategories").select("slug, name").eq("category_id", category.id).order("sort_order"),
+    listPage(asked),
   ]);
+  // A page number past the end shows the last page, not an empty one.
+  const page = pageFrom(pageParam, Math.ceil((first.count ?? 0) / PAGE_SIZE));
+  const { data: groups, count } = page === asked ? first : await listPage(page);
 
   return (
     <>

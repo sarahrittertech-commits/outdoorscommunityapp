@@ -21,25 +21,32 @@ type Props = { searchParams: Promise<Record<string, string | string[] | undefine
 export default async function CommunitiesPage({ searchParams }: Props) {
   const params = await searchParams;
   const category = typeof params.category === "string" ? params.category : undefined;
-  const page = pageFrom(params.page);
+  const asked = pageFrom(params.page);
 
   const supabase = await createClient();
-  let query = supabase
-    .from("group_listings")
-    .select(
-      "slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags",
-      { count: "exact" },
-    )
-    .eq("status", "active")
-    .order("name")
-    .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
-  if (category) query = query.eq("category_slug", category);
+  const listPage = (n: number) => {
+    let query = supabase
+      .from("group_listings")
+      .select(
+        "slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags",
+        { count: "exact" },
+      )
+      .eq("status", "active")
+      .order("name")
+      .range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
+    if (category) query = query.eq("category_slug", category);
+    return query;
+  };
 
-  const [{ data: groups, count }, { data: counts }, { data: categories }] = await Promise.all([
-    query,
+  const [first, { data: counts }, { data: categories }] = await Promise.all([
+    listPage(asked),
     supabase.from("subcategory_group_counts").select("category_slug, group_count"),
     supabase.from("categories").select("slug, name").order("sort_order"),
   ]);
+  // A page number past the end shows the last page, not an empty one.
+  const pageCount = Math.ceil((first.count ?? 0) / PAGE_SIZE);
+  const page = pageFrom(params.page, pageCount);
+  const { data: groups, count } = page === asked ? first : await listPage(page);
 
   const perCategory = new Map<string, number>();
   for (const row of counts ?? []) perCategory.set(row.category_slug!, (perCategory.get(row.category_slug!) ?? 0) + (row.group_count ?? 0));
@@ -73,17 +80,9 @@ export default async function CommunitiesPage({ searchParams }: Props) {
   );
 
   return (
+    // The h1 comes first in the source; grid placement puts the filters on the left.
     <div className="grid gap-8 md:grid-cols-[14rem_1fr]">
-      {/* Phones: the filters fold into a card, open until a filter is picked. Computers: a side column. */}
-      <details className="filter-card text-sm md:hidden" open={!category}>
-        <summary>{!category ? "Browse by activity" : "Change activity"}</summary>
-        <div>{filters}</div>
-      </details>
-      <aside aria-label="Filters" className="hidden text-sm md:block">
-        {filters}
-      </aside>
-
-      <div className="min-w-0">
+      <div className="min-w-0 md:col-start-2 md:row-start-1">
         <h1 className="m-0 flex items-center gap-3">
           {current && <ActivityIcon slug={current.slug} />}
           {current ? `${current.name} communities` : "Communities"}
@@ -140,9 +139,18 @@ export default async function CommunitiesPage({ searchParams }: Props) {
         <Pagination
           page={page}
           pageCount={Math.ceil((count ?? 0) / PAGE_SIZE)}
-          basePath={category ? `/communities?category=${category}` : "/communities"}
+          basePath={category ? `/communities?${new URLSearchParams({ category })}` : "/communities"}
         />
       </div>
+
+      {/* Phones: the filters fold into a card above the list, open until a filter is picked. Computers: a side column. */}
+      <details className="filter-card order-first text-sm md:hidden" open={!category}>
+        <summary>{!category ? "Browse by activity" : "Change activity"}</summary>
+        <div>{filters}</div>
+      </details>
+      <aside aria-label="Filters" className="hidden text-sm md:col-start-1 md:row-start-1 md:block">
+        {filters}
+      </aside>
     </div>
   );
 }
