@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ActivityIcon } from "@/components/ActivityIcon";
+import { ActivityIcon } from "@/brand/ActivityIcon";
 import { AffinityTags } from "@/components/AffinityTags";
 import { pageFrom, Pagination } from "@/components/Pagination";
 import { site } from "@/config/site";

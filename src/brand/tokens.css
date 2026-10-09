@@ -1,0 +1,61 @@
+/*
+  Brand tokens for THIS deployment: branch outdoors (docs/brand.md).
+
+  This file holds color VALUES only. The slots themselves — which names
+  exist and what each one is for — are part of the shared tool, used by
+  pages and components in src/app and src/components.
+
+  A cloned board replaces this whole file and changes nothing else to be
+  re-skinned (docs/cloning.md). Because the file is replaced rather than
+  edited, merges from the upstream board never touch a color.
+
+  When the tool adds a new slot, every board must define it: the contract
+  test in src/brand/tokens.test.ts fails by name until it does.
+
+  Plum does the work: headings, links, buttons. Ember, Marigold and Rust
+  live in the leaves and small highlights; they are below 4.5:1 on paper,
+  so never use Ember or Marigold for text. Pages stay mostly paper.
+*/
+:root {
+  /* Palette */
+  --plum: #39204d; /* the logo's plum */
+  --plum-ui: #382a63; /* links, buttons, headings (8 October design) */
+  --ember: #dd7242;
+  --marigold: #e7a855;
+  --rust: #b43c34;
+  --lake: #50759f;
+
+  /* Roles */
+  --paper: #ffffff;
+  --ink: #2a2230;
+  --muted: #6b6072;
+  --rule: #e4dacb;
+  --panel: #faf6ef;
+  --subtle: #464b5e; /* readable secondary text under page titles */
+  --band: #efedf7; /* light purple section bars */
+  --heading: var(--plum-ui);
+  --link: var(--plum-ui);
+  --link-visited: #6a4c93;
+  --focus: var(--lake);
+  --accent: var(--plum-ui);
+  --search: #b94f1c; /* deep orange Search button, white text 5.0:1 (AA) */
+  --search-hover: #a2441a;
+  --search-ink: #ffffff; /* text on the Search button; must reach 4.5:1 on --search */
+  --mark: var(--plum); /* the logo's stem and the wordmark */
+  --accent-ink: var(--paper);
+  --danger: var(--rust);
+  --notice: #e1e9f2;
+  --warning: #f6e3c2;
+  --tag-new: #f6e3c2;
+  --tag-cancelled: #f5dad6;
+
+  /* Home page name band (RidgeBand): dusk over the Blue Ridge. */
+  --ridge-sky: #2f2356;
+  --ridge-haze: #43306b;
+  --ridge-1: #3a2b62;
+  --ridge-2: #332655;
+  --ridge-3: #2b2049;
+  --ridge-4: #231a3e;
+  --ridge-ink: #faf6ef;
+  --ridge-ink-muted: #d8cfe6;
+}

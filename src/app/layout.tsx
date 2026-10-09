@@ -3,7 +3,7 @@ import { Atkinson_Hyperlegible, Young_Serif } from "next/font/google";
 import Link from "next/link";
 
 import { signOut } from "@/app/actions/auth";
-import { BranchMark } from "@/components/BranchMark";
+import { Mark } from "@/brand/Mark";
 import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
 
@@ -38,7 +38,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <header className="border-b border-rule">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
             <Link href="/" className="wordmark flex items-center gap-1.5 text-xl no-underline sm:text-2xl">
-              <BranchMark className="h-[1.5em] w-[0.94em] shrink-0" />
+              <Mark className="h-[1.5em] w-[0.94em] shrink-0" />
               {site.name}
             </Link>
             <nav aria-label="Main" className="flex items-baseline gap-x-4">
@@ -89,7 +89,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
         <footer className="mx-auto mt-16 max-w-6xl border-t border-rule px-4 pt-6 text-sm text-muted">
           <Link href="/" className="wordmark mb-3 inline-flex items-center gap-1.5 text-lg no-underline">
-            <BranchMark className="h-[1.5em] w-[0.94em] shrink-0" />
+            <Mark className="h-[1.5em] w-[0.94em] shrink-0" />
             {site.name}
           </Link>
           <p>

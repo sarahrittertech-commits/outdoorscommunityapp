@@ -34,3 +34,6 @@ npm-debug.log*
 research.sql
 *.xlsx
 *.csv
+
+# Claude Code local state and worktrees
+/.claude/

@@ -11,31 +11,55 @@ community app**. This page is how to do that cheaply, and what it costs.
 
 ## The short version
 
-The codebase was built so that a second board is mostly configuration. Only
-seven things are deployment-specific:
+The codebase is built so that a second board is mostly configuration, and
+so that merging this board's later work into it never touches its look
+(see [ADR-0008](./architecture/adr-0008-brand-separation)).
 
-| What | Where | For the women's app |
-| --- | --- | --- |
-| Name, tagline, description, audience, region, contact, home page headline, intro and background image, search example, default join setting | `src/config/site.ts` | New name and wording; `defaultJoinPolicy: "approval"` if groups should start approval-only |
-| Region and category list | `supabase/migrations/20260925000005_seed_directory.sql` | Replace the file's contents |
-| Category drawings | `src/components/ActivityIcon.tsx` (keyed by category slug) | One drawing per new category; unknown slugs fall back to a plain circle |
-| Legal and community wording | `src/app/{about,guidelines,terms,privacy}/page.tsx` | Rewrite for the audience |
-| Colors | the tokens at the top of `src/app/globals.css` (including the `--ridge-*` band colors) | The women's app design |
-| Logo | `src/components/BranchMark.tsx` and `src/app/icon.svg` | The women's app mark, if it differs |
-| Seed listings and the research agent's areas | `scripts/research/listings.sql` (the curated groups) and the area list in `scripts/research/agent.md` | Its own research, its own areas |
+Three kinds of thing, and only the last two belong to a clone:
+
+|                  | What it covers                                                       | Where                                                                   |
+| ---------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| **The tool**     | Pages, components, schema, permissions, and the _set_ of color slots | Everything outside the rows below. Shared: a clone takes it as it comes |
+| **The brand**    | Colors, logo, favicon, category drawings, brand guide                | `src/brand/` and `src/app/icon.svg`                                     |
+| **The audience** | Name and wording, categories, legal copy, PRD, personas              | `src/config/site.ts`, the directory seed, the legal pages, those docs   |
+
+In full, what a clone replaces:
+
+| What                                                                                                                                        | Where                                                                                                 | For the women's app                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Colors                                                                                                                                      | `src/brand/tokens.css`                                                                                | Replace the whole file. Shared code only names slots, so this is the only place a color lives |
+| Logo and favicon                                                                                                                            | `src/brand/Mark.tsx` and `src/app/icon.svg`                                                           | Its own mark, keeping the name `Mark` and the `.mark-stem` class                              |
+| Category drawings                                                                                                                           | `src/brand/ActivityIcon.tsx` (keyed by category slug)                                                 | One drawing per new category; unknown slugs fall back to a plain circle                       |
+| Brand guide                                                                                                                                 | `docs/brand.md`                                                                                       | Its own palette, with contrast ratios                                                         |
+| Name, tagline, description, audience, region, contact, home page headline, intro and background image, search example, default join setting | `src/config/site.ts`                                                                                  | New name and wording; `defaultJoinPolicy: "approval"` if groups should start approval-only    |
+| Region and category list                                                                                                                    | `supabase/migrations/20260925000005_seed_directory.sql`                                               | Replace the file's contents                                                                   |
+| Legal and community wording                                                                                                                 | `src/app/{about,guidelines,terms,privacy}/page.tsx`                                                   | Rewrite for the audience                                                                      |
+| Who the board is for                                                                                                                        | `docs/prd.md`, `docs/personas.md`, `CLAUDE.md`, `README.md`                                           | Its own audience and product context                                                          |
+| Seed listings and the research agent's areas                                                                                                | `scripts/research/listings.sql` (the curated groups) and the area list in `scripts/research/agent.md` | Its own research, its own areas                                                               |
 
 Everything else — the database schema, every permission rule, the
 permission tests, the pages and forms — is shared and should not change.
+
+**The rule that keeps it true:** shared code never holds a color, only a
+slot name. When a feature needs a new color it adds a slot, and every board
+gives it a value. `npm test` fails by name if a board is missing one, so a
+clone finds out from a check rather than from a page that quietly lost its
+background.
+
+**The product documents are not a clone's to replace.** Use cases, user
+flows, functional and technical requirements, the data model and the test
+cases all merge down from here. A clone reads them as the list of what it
+has yet to catch up on.
 
 ## Recommended: fork with an upstream, not copy-paste
 
 "Clone the codebase" can mean two things with very different long-term
 costs:
 
-| Approach | What it means | Consequence |
-| --- | --- | --- |
-| **Copy** | Duplicate the files into a new repo and carry on separately | Every bug fix and security fix has to be made twice, by hand. The two drift apart within weeks. |
-| **Fork with upstream** (recommended) | New repo created from this one, keeping this one as `upstream` | Fixes made here are pulled into the women's app with one `git merge`. Its own changes stay in the six places above, so merges stay clean. |
+| Approach                             | What it means                                                  | Consequence                                                                                                                                            |
+| ------------------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Copy**                             | Duplicate the files into a new repo and carry on separately    | Every bug fix and security fix has to be made twice, by hand. The two drift apart within weeks.                                                        |
+| **Fork with upstream** (recommended) | New repo created from this one, keeping this one as `upstream` | Fixes made here are pulled into the women's app with one `git merge`. Its own changes stay in the files above, which are marked so a merge keeps them. |
 
 Both give two separate public repositories for the portfolio. Only the
 second keeps them in sync.
@@ -52,21 +76,32 @@ second keeps them in sync.
    git remote rename origin upstream
    git remote add origin https://github.com/sarahrittertech-commits/<new-repo>.git
    git push -u origin main
+   git config merge.ours.driver true   # once: see below
    ```
 
-3. Change the six deployment-specific places listed above, in one commit.
+   That last line turns on the rule in `.gitattributes` that keeps the
+   clone's own brand and audience files when merging from here. Without it
+   Git ignores the marks and every merge conflicts on the colors and the
+   logo. It is per checkout, so run it again on another machine.
+
+3. Replace the files listed above, in one commit.
 4. Update `CLAUDE.md`, `README.md` and `docs/` for the new product. The PRD,
-   personas and guidelines will differ; the ADRs, data model and permission
-   matrix carry over.
+   personas and guidelines will differ; the ADRs, data model, use cases and
+   permission matrix carry over.
 5. Create its own Supabase project and Railway service (see
    [Runbook](./runbook)). **Never share a database between the two boards.**
-6. To bring in later fixes from this board:
+6. To bring in later fixes and features from this board:
 
    ```bash
    git fetch upstream
    git merge upstream/main
-   npm run db:test && npm test
+   npm run db:test && npm test   # a missing color slot fails here, by name
    ```
+
+   Expect this to bring new use cases and requirements with it. Those are
+   the catch-up list, not a change to the clone's own look: the brand files
+   are kept as they are, and the merge only asks for a color when the tool
+   has added a slot.
 
 ## Decisions to make before cloning
 
@@ -78,7 +113,7 @@ they change requirements:
   large, costly and sensitive feature; it would be new requirements, not a
   configuration change.
 - **Safety features.** Members-only addresses already exist. The women's app
-  may want members-only *events* entirely, or approval-required groups by
+  may want members-only _events_ entirely, or approval-required groups by
   default. Both are small, per-deployment settings if decided up front.
 - **Moderation load.** Expect more reports per member. The site-admin queue
   and moderation log are already built; the question is who, besides Sarah,
@@ -92,12 +127,12 @@ here. That keeps one codebase and keeps the merge in step 6 clean.
 
 Per the portfolio's free-tier rule ([cost position](./technical-requirements#cost-position)):
 
-| Service | Added cost | Note |
-| --- | --- | --- |
+| Service  | Added cost                                                           | Note                                                                                                                      |
+| -------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | Supabase | ≈ $10/month if in the same Pro organization; $25/month if in its own | Pro's included compute covers one small project; each extra project is billed for its own compute. Check current pricing. |
-| Railway | A few dollars of usage | A second service on the same Hobby plan. |
-| Resend | $0 with a second free account, or $20/month | The free plan allows one sending domain per account. |
-| Domain | ≈ $12–20/year | |
+| Railway  | A few dollars of usage                                               | A second service on the same Hobby plan.                                                                                  |
+| Resend   | $0 with a second free account, or $20/month                          | The free plan allows one sending domain per account.                                                                      |
+| Domain   | ≈ $12–20/year                                                        |                                                                                                                           |
 
 Roughly **$12–30/month more** for the second board, depending on the
 Supabase choice.

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ActivityIcon } from "@/components/ActivityIcon";
+import { ActivityIcon } from "@/brand/ActivityIcon";
 import { Notice } from "@/components/Notice";
 import { RidgeBand } from "@/components/RidgeBand";
 import { site } from "@/config/site";
