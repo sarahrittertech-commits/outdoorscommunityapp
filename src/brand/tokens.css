@@ -47,7 +47,6 @@
   --notice: #e1e9f2;
   --warning: #f6e3c2;
   --tag-new: #f6e3c2;
-  --tag-cancelled: #f5dad6;
 
   /* Home page line drawing (Ridgeline): plum ridges and an ember sun. */
   --ridgeline: var(--plum-ui);
