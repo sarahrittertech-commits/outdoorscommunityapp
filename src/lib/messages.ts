@@ -60,6 +60,7 @@ export const errors = {
   generic: "Something went wrong. Please try again.",
   invalid: "Some of those details aren't right. Check the form and try again.",
   not_allowed: "You don't have permission to do that.",
+  own_content: "That report is about an organizer's own post, so the site admin handles it.",
   not_signed_in: "Sign in first.",
   not_found: "That couldn't be found.",
   rate_limited: "You're doing that too often. Please wait a while and try again.",

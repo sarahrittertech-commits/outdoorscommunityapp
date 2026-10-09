@@ -45,7 +45,7 @@ export default async function GroupReportsPage({ params, searchParams }: Props) 
       <h1>Reports</h1>
       <p className="mt-1 text-sm text-muted">
         Reports about events and posts in this group. Remove what breaks your rules, then close the report. The site
-        admin sees these too.
+        admin sees these too. Reports about a page admin&apos;s or page manager&apos;s own posts go to the site admin.
       </p>
       <Notice params={await searchParams} />
       {!reports?.length ? (
