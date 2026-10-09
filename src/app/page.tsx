@@ -235,7 +235,7 @@ export default async function Home({ searchParams }: Props) {
               <label htmlFor="dest-where" className="sr-only">
                 Search a town
               </label>
-              <input id="dest-where" name="where" type="search" defaultValue={where} placeholder="Search a town, e.g. Brevard" className="w-full max-w-none" />
+              <input id="dest-where" name="where" type="search" defaultValue={where} placeholder={`Search a town, e.g. ${site.exampleArea}`} className="w-full max-w-none" />
               {dest && <input type="hidden" name="dest" value={dest} />}
               {str("near") && <input type="hidden" name="near" value={str("near")} />}
             </form>

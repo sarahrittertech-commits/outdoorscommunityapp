@@ -41,6 +41,10 @@ export const site = {
   mapCenter: { lat: 35.6, lng: -82.55 },
   /** Example searches shown in the home page search box. */
   searchPlaceholder: "waterfall hike, beginner climbing, Brevard…",
+  /** A town people will recognize, used in form hints ("e.g. Brevard") and the town search. */
+  exampleArea: "Brevard",
+  /** A well-known meeting spot, used as the example on the event form. */
+  exampleMeetingPlace: "Hooker Falls parking area",
   /** Whether the create-group form starts on "anyone can join" or "approval". */
   defaultJoinPolicy: "open" as "open" | "approval",
   /** Public contact for the site admin. null hides every contact line until there is a real address. */

@@ -48,7 +48,7 @@ export async function GroupForm({
       </select>
 
       <label htmlFor="area">
-        Area <span className="hint">Town or area you usually meet, e.g. Brevard</span>
+        Area <span className="hint">Town or area you usually meet, e.g. {site.exampleArea}</span>
       </label>
       <input id="area" name="area" type="text" required minLength={2} maxLength={80} defaultValue={group?.area} />
 

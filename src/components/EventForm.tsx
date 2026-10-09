@@ -72,7 +72,7 @@ export function EventForm({
       </select>
 
       <label htmlFor="locationName">
-        Meeting place <span className="hint">Always public, e.g. &ldquo;Hooker Falls parking area&rdquo;</span>
+        Meeting place <span className="hint">Always public, e.g. &ldquo;{site.exampleMeetingPlace}&rdquo;</span>
       </label>
       <input id="locationName" name="locationName" type="text" required minLength={2} maxLength={200} defaultValue={event?.location_name} />
 

@@ -19,6 +19,7 @@ docs/brand.md             merge=ours
 
 # The audience: who the board is for and what it is called.
 src/config/site.ts        merge=ours
+src/config/towns.ts       merge=ours
 src/app/about/page.tsx    merge=ours
 src/app/guidelines/page.tsx merge=ours
 src/app/terms/page.tsx    merge=ours
