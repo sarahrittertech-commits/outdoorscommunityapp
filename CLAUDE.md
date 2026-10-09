@@ -7,7 +7,8 @@ development window starts with full project context without re-explaining it.
 
 A web-based community board for outdoor groups. People browse groups by
 category and subcategory, join them, RSVP to the events those groups host,
-and talk in group discussion boards. Groups are run by an owner and admins.
+and talk in group discussion boards. Groups are run by an owner and admins,
+shown on the site as the *page admin* and up to two *page managers*.
 
 Think Meetup's groups and events, a Facebook group's membership and roles,
 and an old forum's discussion threads, presented with the plainness of
@@ -70,10 +71,14 @@ with unclaimed listings of real groups (FR-GR-9) that organizers can claim;
 a weekly research agent (UC-9, `scripts/research/agent.md`) suggests new
 ones for the site admin to list or skip; groups carry affinity tags
 (FR-GR-11). See the PRD's "Build status" for what is not built yet and the
-[runbook](docs/runbook.md) for operations. Draft use cases awaiting review:
-UC-10 to UC-29 and UC-31, mostly from the 8 October Magic Patterns design (UC-25 to
-UC-28, drafted 9 October, are Sarah's own requests: branded sign-in email,
-claim confirmation by email, new-group approval, a demo member, password sign-in as UC-29, page managers and invites as UC-31; the event form, UC-30, was approved and built the same day); on that
+[runbook](docs/runbook.md) for operations. UC-29 (sign-in with email and a password), UC-30 (the
+event form: description, photo, price, optional RSVPs and a waitlist) and
+UC-31 (page admin and up to two page managers, invite link, email invites
+waiting on email setup) were approved and built on 9 October 2026; the
+emailed sign-in link is gone. Draft use cases awaiting review: UC-10 to
+UC-28, mostly from the 8 October Magic Patterns design (UC-25 to UC-28,
+drafted 9 October, are Sarah's own requests: branded sign-in email, claim
+confirmation by email, new-group approval, a demo member); on that
 date Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live
@@ -118,7 +123,7 @@ src/config/site.ts     everything deployment-specific
 src/proxy.ts           session refresh + Content Security Policy
 src/lib/               auth, validation (Zod), time zones, plain-text rendering, .ics
 src/app/actions/       every form's server action, grouped by area
-src/app/               pages: / browse c/ g/ e/ events communities search post me u/ admin report signin welcome
+src/app/               pages: / browse c/ g/ e/ events communities search post me u/ admin report signin signup forgot-password reset-password welcome
 src/components/        listings, forms, notices, plain text
 ```
 

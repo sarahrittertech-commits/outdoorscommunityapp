@@ -5,8 +5,10 @@ import {
   eventPhotoSchema,
   eventSchema,
   groupSchema,
+  inviteTokenSchema,
   localPathSchema,
   onboardingSchema,
+  parseInviteEmails,
   replySchema,
   slugSchema,
 } from "./validation";
@@ -113,6 +115,23 @@ describe("bound action arguments", () => {
     for (const path of ["//evil.com", "/\\evil.com", "https://evil.com", "/.//evil.com", "admin"]) {
       expect(localPathSchema.safeParse(path).success).toBe(false);
     }
+  });
+});
+
+// UC-31: pasted invite addresses (FR-MB-13).
+describe("parseInviteEmails", () => {
+  it("splits on commas, spaces and new lines, lowercases and dedupes", () => {
+    expect(parseInviteEmails("A@x.org, b@x.org\nc@x.org  a@X.org;b@x.org")).toEqual({
+      valid: ["a@x.org", "b@x.org", "c@x.org"],
+      invalid: [],
+    });
+  });
+  it("lists back what isn't an address", () => {
+    expect(parseInviteEmails("ok@x.org nope bad@").invalid).toEqual(["nope", "bad@"]);
+  });
+  it("only accepts real invite codes", () => {
+    expect(inviteTokenSchema.safeParse("a".repeat(64)).success).toBe(true);
+    expect(inviteTokenSchema.safeParse("badtoken").success).toBe(false);
   });
 });
 

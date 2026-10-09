@@ -4,6 +4,7 @@
 import { z } from "zod";
 
 import { AFFINITY_TAGS } from "./affinity";
+import { isCommonPassword } from "./common-passwords";
 import { safeNext } from "./navigation";
 import { isValidTimeZone, zonedLocalToUtc } from "./time";
 
@@ -34,10 +35,55 @@ export function formFields(formData: FormData): Record<string, string> {
   return fields;
 }
 
+// UC-29 (FR-AC-17 to FR-AC-21). Passwords are never trimmed: a space is a
+// character like any other. The issue messages are error codes from
+// messages.ts, so the action can say exactly which rule was missed.
+
+const email = z.string().trim().pipe(z.email().max(254));
+
+/** bcrypt, which Supabase uses, reads only the first 72 bytes. */
+const MAX_PASSWORD_BYTES = 72;
+
+export const passwordSchema = z
+  .string()
+  .min(10, "password_length")
+  .refine((v) => new TextEncoder().encode(v).length <= MAX_PASSWORD_BYTES, "password_length")
+  .refine((v) => !isCommonPassword(v), "password_common");
+
+/** Sign-in checks only the password's size: the rules may have changed since it was set. */
 export const signInSchema = z.object({
-  email: z.email().max(254),
+  email,
+  password: z.string().min(1).max(200),
   next: z.string().optional(),
 });
+
+const matching = { message: "password_mismatch", path: ["passwordAgain"] };
+
+export const signUpSchema = z
+  .object({ email, password: passwordSchema, passwordAgain: z.string(), next: z.string().optional() })
+  .refine((v) => v.password === v.passwordAgain, matching);
+
+export const forgotPasswordSchema = z.object({ email });
+
+export const newPasswordSchema = z
+  .object({ password: passwordSchema, passwordAgain: z.string() })
+  .refine((v) => v.password === v.passwordAgain, matching);
+
+export const changePasswordSchema = z
+  .object({ currentPassword: z.string().min(1).max(200), password: passwordSchema, passwordAgain: z.string() })
+  .refine((v) => v.password === v.passwordAgain, matching);
+
+const PASSWORD_CODES = ["password_length", "password_common", "password_mismatch"] as const;
+type PasswordCode = (typeof PASSWORD_CODES)[number];
+
+/** The error code for the first password rule a form missed, or "invalid". */
+export function passwordErrorCode(error: z.ZodError): PasswordCode | "invalid" {
+  for (const issue of error.issues) {
+    const code = PASSWORD_CODES.find((c) => c === issue.message);
+    if (code) return code;
+  }
+  return "invalid";
+}
 
 export const onboardingSchema = z.object({
   displayName: requiredText(2, 40),
@@ -183,3 +229,39 @@ export const slugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80)
 export const localPathSchema = z.string().max(2000).refine((value) => safeNext(value, "") === value);
 
 export const postTypeSchema = z.enum(["thread", "reply"]);
+
+// UC-31: invites -------------------------------------------------------------
+
+/** An invite code: 64 hex characters, made by the database. */
+export const inviteTokenSchema = z.string().regex(/^[a-f0-9]{64}$/);
+
+/** How long a new invite link lasts (FR-MB-15): days, or null for until turned off. */
+export const linkExpirySchema = z
+  .object({ valid: z.enum(["7", "30", "never"]) })
+  .transform(({ valid }) => (valid === "never" ? null : Number(valid)));
+
+/** FR-MB-13: at most this many addresses per send (the database checks too). */
+export const MAX_INVITES_PER_SEND = 25;
+
+const oneEmail = z.email().max(254);
+
+/**
+ * Pasted addresses, separated by commas, semicolons, spaces or new lines.
+ * Lowercased and deduplicated; anything that isn't an email address is
+ * returned separately so the form can list it back.
+ */
+export function parseInviteEmails(text: string): { valid: string[]; invalid: string[] } {
+  const valid = new Set<string>();
+  const invalid = new Set<string>();
+  for (const part of text.split(/[\s,;]+/)) {
+    const value = part.trim().toLowerCase();
+    if (!value) continue;
+    if (oneEmail.safeParse(value).success) valid.add(value);
+    else invalid.add(part.trim().slice(0, 100));
+  }
+  return { valid: [...valid], invalid: [...invalid] };
+}
+
+export const inviteEmailsSchema = z.object({ emails: z.string().max(10_000) });
+
+export const managerInviteSchema = z.object({ email: oneEmail });

@@ -44,9 +44,10 @@ Requests from the 8 October Magic Patterns design are summarized in the
 | 9 Oct | Sarah | Photos from the design on a couple of sample groups and their events | Brand | docs/brand.md *Representative photos* | Built (PR #23). Captioned as representative, never as the group's own. |
 | 9 Oct | Sarah | Real group photos and a photos page per group | Tool | UC-21, UC-24, FR-GR-12 to FR-GR-14 | Draft. |
 | 9 Oct | Sarah | Event form: description and details, a photo, Free or Paid with registration fee and total cost, optional RSVPs with a waitlist, or a sign-up link | Tool | UC-30, FR-EV-23 to FR-EV-28 | In review (PR #24). |
-| 9 Oct | Sarah | One page admin and up to two page managers; only the page admin transfers ownership | Tool (limit as a setting) | UC-31, FR-MB-11, FR-MB-12 | In review (PR #25). Roles exist today as owner and admins. |
-| 9 Oct | Sarah | Invite members by email, one address or many | Tool | UC-31, FR-MB-13, FR-MB-14, FR-MB-16 | In review (PR #25). Needs a domain. |
-| 9 Oct | Sarah | Generate a link to send to people to join the group | Tool | UC-31, FR-MB-14 to FR-MB-16 | In review (PR #25). No email needed, so it can ship first. |
+| 9 Oct | Sarah | One page admin and up to two page managers; only the page admin transfers ownership | Tool (limit as a setting) | UC-31, FR-MB-11, FR-MB-12 | Built (PR #28). Limit of two in the database; manager email invites wait on email. Migration to apply. |
+| 9 Oct | Sarah | Invite members by email, one address or many | Tool | UC-31, FR-MB-13, FR-MB-14, FR-MB-16 | Built (PR #28) but switched off until email is set up (needs a domain). |
+| 9 Oct | Sarah | Generate a link to send to people to join the group | Tool | UC-31, FR-MB-14 to FR-MB-16 | Built (PR #28). |
+| 9 Oct | Sarah | Invite page that names the group and creates the account and joins in one place | Tool | UC-31, FR-MB-14 | Built (PR #28, after #27). |
 | 9 Oct | Sarah | Fix Catalyst Sports Asheville's activity (filed under mountain biking) | Board | — | Open: a data fix for the site admin. |
 
 ## How a request becomes a feature

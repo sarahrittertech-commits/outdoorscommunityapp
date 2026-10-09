@@ -158,6 +158,8 @@ Constraints:
 - **Exactly one owner per group:** a unique index on `group_id` where
   `role = 'owner'`, and the group is created together with its owner row in
   one transaction.
+- **At most two admins (page managers) per group,** counting open manager
+  invites: a trigger on insert and on role changes (FR-MB-11).
 - Only `active` rows grant access. `pending` and `banned` rows exist so the
   database can refuse a banned user's rejoin.
 
@@ -273,12 +275,63 @@ site admin.
 | --- | --- | --- |
 | `id` | uuid | |
 | `actor_id` | uuid | who did it |
-| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, … |
+| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, `create_invite_link`, `turn_off_invite_link`, `invite_manager`, `send_invites`, … |
 | `target_type`, `target_id` | | what it was done to |
 | `group_id` | uuid, optional | |
 | `reason` | text | |
 | `content_snapshot` | json, optional | the removed text, kept for the site admin only |
 | `created_at` | timestamp | |
+
+## Invites (UC-31)
+
+### group_invite_links
+
+One shareable join link per group (FR-MB-15).
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `group_id` | uuid | the key: one link per group; a new link replaces the old one |
+| `token` | text | 64 random hex characters (244 random bits) |
+| `created_by` | uuid | |
+| `created_at` | timestamp | |
+| `expires_at` | timestamp, optional | 7 or 30 days on; empty means until turned off |
+| `revoked_at` | timestamp, optional | set by *Turn off* |
+
+The token is stored as it is, not hashed, because the page admin and
+managers need to see the link again to copy it: it works like a shared
+document link. Only they can read the row (RLS), writes go through
+`create_invite_link()` and `turn_off_invite_link()`, and the link only ever
+makes someone a plain member.
+
+### invites.email_invites
+
+Member and page-manager invites by email (FR-MB-12, FR-MB-13), in a schema
+of their own that the API does not expose, because they hold email
+addresses (PT-20). Written by `invite_members()` and `invite_manager()`;
+the page admin sees open manager invites, without the address, through
+`open_manager_invites()`.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `group_id` | uuid | |
+| `email` | text | lowercased; used only to send the invite and skip repeats |
+| `role` | enum | `member` or `admin` (a manager invite) |
+| `token` | text | 64 random hex characters, single use |
+| `invited_by` | uuid | |
+| `created_at`, `expires_at` | timestamp | member invites 30 days, manager invites 7 |
+| `accepted_at`, `cancelled_at` | timestamp, optional | |
+
+**Retention:** `purge_old_invites()` deletes rows older than 30 days. It is
+not callable through the API; schedule it with the other jobs once email is
+set up (runbook).
+
+The invite page names the group with `invite_preview(token)` (name and
+slug only, callable signed out, nothing for a bad code). Both kinds of
+invite are used through `join_by_invite(token)`, which checks
+the code, the group (active, not a listing), the person (can write, not
+banned) and, for a manager invite, that the account's email is the invited
+one, then adds an active member row, so the join limit applies.
 
 ## Notifications (Should)
 
@@ -306,7 +359,7 @@ without revealing the rows, so visitors see "12 members" but not who.
 
 ## Planned with the 8 October design (drafts, not built)
 
-What the draft use cases UC-10 to UC-29 and UC-31 would add. Field-level detail is
+What the draft use cases UC-10 to UC-28 would add. Field-level detail is
 written when each is approved, with its migration and permission tests.
 
 | Table or change | For | Notes |

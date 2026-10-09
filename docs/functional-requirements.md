@@ -38,7 +38,7 @@ Who is allowed to do each action is defined once, in
 
 | ID | Requirement | Priority | Accepted when |
 | --- | --- | --- | --- |
-| FR-AC-1 | Sign up and sign in with an emailed one-time link. No passwords. *(To be replaced by FR-AC-17 to FR-AC-21 if UC-29 is approved.)* | Must | A new address receives a link that signs it in; the same flow signs in an existing user. |
+| FR-AC-1 | ~~Sign up and sign in with an emailed one-time link. No passwords.~~ **Replaced by FR-AC-17 to FR-AC-21** (UC-29, ADR-0009), built 9 October 2026. | — | — |
 | FR-AC-2 | On first sign-in, the user confirms they are 18 or older and accepts the terms and community guidelines before doing anything else. | Must | A user who hasn't confirmed cannot join, post or RSVP. |
 | FR-AC-3 | Profile: display name (required, 2–40 characters), short bio (optional, 280 characters), general area (optional). No profile photos. Required means the database refuses to store a missing or blank one, and an account without a name cannot post, join or RSVP — a member must always be nameable, reportable and reachable by a moderator. | Must | Display name is required at first sign-in and editable later. Clearing it through the API is refused, not silently accepted. |
 | FR-AC-4 | A public profile page shows display name, bio and area. | Should | Reachable from any post author's name. |
@@ -46,6 +46,11 @@ Who is allowed to do each action is defined once, in
 | FR-AC-6 | A user can delete their account. Profile and memberships are removed; their posts remain as "deleted user" so threads still make sense. An owner can transfer a group to one of its admins first (FR-MB-6). Any group they still own goes inactive: archived (read-only, hidden from listings, still viewable), its upcoming events cancelled, members and posts kept, and open to claims (FR-GR-10). | Must | After deletion the user cannot sign in, and their name appears nowhere. |
 | FR-AC-7 | *My stuff* page: the user's groups (alphabetical) and upcoming RSVPs (by date). | Must | Shows only the signed-in user's own groups and RSVPs. |
 | FR-AC-8 | Sign in with Google. | Could | — |
+| FR-AC-17 | **Create an account.** Email address and a password entered twice. Password: at least 10 characters, at most 72 (the bcrypt limit), no other composition rules; a short list of the most common passwords is refused. The page never says whether an address already has an account: it always answers *Check your email*, an unconfirmed existing address gets its confirmation email again, and a confirmed one gets no email (Supabase sends none; a "you already have an account" email needs a custom send-email hook and waits on UC-25's own emails). | Must | Signing up with an address that already has an account reveals nothing on the page. |
+| FR-AC-18 | **Confirm the email first.** A new account can do nothing until its address is confirmed through the emailed link (Supabase *Confirm email* on). The link works once, for 24 hours; an expired one offers to send another. Then FR-AC-2 and FR-AC-3 as today. | Must | An unconfirmed account cannot sign in. |
+| FR-AC-19 | **Sign in.** Email and password. A wrong address or password gets one message for both ("That email and password don't match"). After 5 failed tries for an address in 15 minutes, sign-in for it pauses for 15 minutes (Supabase Auth's limits plus a per-address check in the sign-in action, kept in server memory: see ADR-0009), with that said plainly. | Must | Repeated wrong passwords are slowed and the page never says which part was wrong. |
+| FR-AC-20 | **Forgot password.** Enter the email; the page always answers *If that address has an account, we've sent a link*. The link works once, for 1 hour, and leads to *Set a new password*, which signs the person in; that page only works straight after the link (a one-hour cookie set by the link), never from an ordinary session. Changing a password signs out every other session. | Must | A reset link is single use and expires; other devices are signed out. |
+| FR-AC-21 | **Change password** on the profile page: current password, new password twice, same rules as FR-AC-17. Changing it signs out every other session. | Should | A wrong current password changes nothing. |
 
 ## Groups — FR-GR
 
@@ -71,12 +76,20 @@ Who is allowed to do each action is defined once, in
 | FR-MB-1 | Joining an *open* group makes the user a member immediately. | Must | — |
 | FR-MB-2 | Joining an *approval required* group creates a pending request that an owner or admin approves or declines. | Must | A pending user has no member access until approved. |
 | FR-MB-3 | Members can leave a group at any time. Leaving clears their RSVPs to the group's future events, as removal does. The owner cannot leave without first transferring ownership. | Must | — |
-| FR-MB-4 | Each group has exactly one owner, any number of admins and any number of members. | Must | The database refuses a second owner. |
+| FR-MB-4 | Each group has exactly one owner (page admin), at most two admins (page managers, FR-MB-11) and any number of members. | Must | The database refuses a second owner. |
 | FR-MB-5 | The owner can promote a member to admin and demote an admin to member. | Must | An admin cannot promote or demote anyone. |
 | FR-MB-6 | The owner can transfer ownership to an admin; the old owner becomes an admin. | Should | — |
 | FR-MB-7 | Owner and admins can remove a member. Removal is a ban: the user cannot rejoin or request to join. Admins cannot remove the owner or other admins. | Must | A banned user's join attempt is refused. |
 | FR-MB-8 | The member list is visible to members only. Visitors see the count and the organizers. | Must | — |
 | FR-MB-9 | Approval-required groups can set one join question; the answer is shown to admins with the request. | Should | — |
+| FR-MB-11 | **Page admin and page managers.** A group has one page admin (the owner) and at most two page managers (admins). Managers post and edit events, moderate discussions, approve, remove and ban members. Only the page admin adds or removes managers, transfers ownership (FR-MB-6) and archives the group. | Must | A third manager is refused by the database. |
+| FR-MB-12 | **Manager invite by email** (sending waits on email setup, like FR-MB-13). The page admin can invite a co-organizer by email to be a page manager. The invite is single use and works for 7 days; it counts toward the limit of two while it's open. Accepting makes them a member and a manager; the page admin can cancel it. | Should | Only the address it was sent to can accept it. |
+| FR-MB-13 | **Member invites by email.** The page admin and managers paste one or many addresses (commas, spaces or new lines; at most 25 per send, 100 a day per group). Each valid address gets one plain email with a join link (FR-MB-14); **sending waits on email setup** (Resend and a domain, ADR-0004), and until then the form is shown disabled and nothing is stored. Addresses are used only to send it: not shown to anyone, not kept after 30 days, never added to a list. An address already invited in the last 30 days is skipped. Invalid addresses are listed back. | Should | One send of 26 addresses is refused; nobody can see who was invited. |
+| FR-MB-14 | **Join by invite.** One page, /join/<code>, for links and email invites. It names the group (from `invite_preview()`, which returns only the group's name and slug, and nothing for a bad, turned-off or expired code). Signed out: *<Group> is on <site>*, a line on what the board is, and *Create your account and join* (email, password twice, UC-29's rules) whose confirmation email links back to the same page, or *Sign in*. Signed in but new: the welcome step, then back. Signed in: *<Group> invites you* and a *Join <Group>* button (a POST, so link previews never join anyone or use up an invite); already a member goes straight to the group. Joining makes them a member at once, even in a group that asks people to request to join, and lands on the group page with *Welcome to <Group>*. Banned people can't join this way; removed or archived groups refuse it. | Should | A banned user's invite does nothing; a bad code shows the group to nobody. |
+| FR-MB-15 | **Invite link.** The page admin or a manager creates one shareable link per group, valid for 30 days by default (7 days or until turned off as options). The Members page shows it with *Copy* and *Turn off*; turning it off or making a new one stops the old one at once. The link is a long random code, not guessable. | Should | A turned-off or expired link joins nobody. |
+| FR-MB-16 | **Invites are moderated like joins.** Joining by invite counts toward the 20-joins-a-day limit (TR-SEC-8), and the moderation log records who created each link and who sent each email invite. | Should | — |
+
+FR-MB-11 to FR-MB-16 came from UC-31, approved and built 9 October 2026. On the site the owner is called the **page admin** and admins are **page managers**; the database keeps owner and admin.
 
 ## Events and RSVPs — FR-EV
 
@@ -174,9 +187,10 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 to UC-29 and UC-31 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 to UC-28 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
-built. Each moves into its area's table above, with a priority, once Sarah
+built (UC-29, password sign-in, was approved and built on 9 October and
+its requirements, FR-AC-17 to FR-AC-21, are in the Accounts table). Each moves into its area's table above, with a priority, once Sarah
 approves its use case and user flow. Priorities here are proposals.
 :::
 
@@ -322,7 +336,6 @@ listed as its own open question in the PRD.
 | FR-GR-21 | **New groups queue.** A *New groups* section on the admin page lists groups waiting for review, oldest first: name, description, subcategory, area and the owner's display name (never their email, FR-AC-5). *Approve* lists the group. *Decline* needs a short reason, which the owner sees on the group page; a declined group stays read-only for its owner, who can delete it and start again. Both are logged (FR-MD-6). | Should | Only the site admin can approve or decline; the database refuses everyone else. |
 | FR-GR-22 | **Telling the organizer.** The form says before they submit that first groups are checked first. The group page states plainly that it is waiting, and later whether it was approved or declined and why. Once built, the reminders list (FR-AC-10) shows the decision; an email is sent only once the domain exists and the organizer hasn't switched it off (FR-NT-1). No promised waiting time. If the owner deletes their account while the group is waiting, the group is deleted with it, since nothing about it was ever public. | Should | — |
 
-
 ### Demo member (UC-28)
 
 **Decision needed:** read-only demo member on the live board
@@ -335,44 +348,3 @@ read-only demo.
 | FR-AC-15 | **Read-only in the database.** The demo account is marked as a demo, and `can_write()` returns false for it, so every write the board has (post, reply, join, leave, RSVP, report, claim, message, profile edit, account deletion) is refused by the database whatever the page shows. Buttons explain that the demo can look but not change anything. | Should | A pgTAP test tries every write as the demo account and every one is refused. |
 | FR-AC-16 | **Demo groups only.** The demo account is a member only of groups marked as demo groups, whose content is sample content, so it never reads a real group's members-only discussions or member list. Demo groups are listed like any other but carry a *Demo* tag. | Should | The demo account belongs to no real group; every demo group is tagged. |
 
-### Email and password sign-in (UC-29, ADR-0009)
-
-**Replaces FR-AC-1** once approved. Open sign-up, email confirmed before
-the account can be used, password the only way in. Every form keeps
-working with JavaScript off.
-
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-AC-17 | **Create an account.** Email address and a password entered twice. Password: at least 10 characters, at most 72 (the bcrypt limit), no other composition rules; a short list of the most common passwords is refused. The page never says whether an address already has an account: it always answers *Check your email*, and an existing address gets a "you already have an account, sign in or reset your password" email instead. | Must | Signing up with an address that already has an account reveals nothing on the page. |
-| FR-AC-18 | **Confirm the email first.** A new account can do nothing until its address is confirmed through the emailed link (Supabase *Confirm email* on). The link works once, for 24 hours; an expired one offers to send another. Then FR-AC-2 and FR-AC-3 as today. | Must | An unconfirmed account cannot sign in. |
-| FR-AC-19 | **Sign in.** Email and password. A wrong address or password gets one message for both ("That email and password don't match"). After 5 failed tries for an address in 15 minutes, sign-in for it pauses for 15 minutes (Supabase Auth's limits plus a check in the sign-in action), with that said plainly. | Must | Repeated wrong passwords are slowed and the page never says which part was wrong. |
-| FR-AC-20 | **Forgot password.** Enter the email; the page always answers *If that address has an account, we've sent a link*. The link works once, for 1 hour, and leads to *Set a new password*, which signs the person in. Changing a password signs out every other session. | Must | A reset link is single use and expires; other devices are signed out. |
-| FR-AC-21 | **Change password** on the profile page: current password, new password twice. | Should | A wrong current password changes nothing. |
-
-### Page managers and invites (UC-31)
-
-**Decisions needed**, each drafted with the recommended choice:
-
-1. **Names:** the owner shows as *Page admin* and admins as *Page
-   managers* everywhere on the site (permissions unchanged). Alternative:
-   keep Owner and Admins.
-2. **Adding a manager:** pick a member, or invite by email (they become a
-   manager after they sign up, accept and join). Alternative: members only.
-3. **Who sends email invites:** the page admin and managers, at most 25
-   addresses per send and 100 a day per group. Alternative: page admin
-   only.
-4. **Invite link:** created by the page admin or managers, works for 30
-   days (or 7, or until turned off), skips join approval, one active link
-   per group.
-
-**Depends on email:** manager and member invites by email need Resend and
-a domain (ADR-0004). The invite link doesn't, so it can ship first.
-
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-MB-11 | **Page admin and page managers.** A group has one page admin (the owner) and at most two page managers (admins). Managers post and edit events, moderate discussions, approve, remove and ban members. Only the page admin adds or removes managers, transfers ownership (FR-MB-6) and archives the group. | Must | A third manager is refused by the database. |
-| FR-MB-12 | **Manager invite by email.** The page admin can invite a co-organizer by email to be a page manager. The invite is single use and works for 7 days; it counts toward the limit of two while it's open. Accepting makes them a member and a manager; the page admin can cancel it. | Should | Only the address it was sent to can accept it. |
-| FR-MB-13 | **Member invites by email.** The page admin and managers paste one or many addresses (commas, spaces or new lines; at most 25 per send, 100 a day per group). Each valid address gets one plain email with a join link (FR-MB-14). Addresses are used only to send it: not shown to anyone, not kept after 30 days, never added to a list. An address already invited in the last 30 days is skipped. Invalid addresses are listed back. | Should | One send of 26 addresses is refused; nobody can see who was invited. |
-| FR-MB-14 | **Join by invite.** Opening a valid invite (email or link) signs the person up or in, then makes them a member at once, even in a group that asks people to request to join. Banned people can't join this way; removed or archived groups refuse it. | Should | A banned user's invite does nothing. |
-| FR-MB-15 | **Invite link.** The page admin or a manager creates one shareable link per group, valid for 30 days by default (7 days or until turned off as options). The Members page shows it with *Copy* and *Turn off*; turning it off or making a new one stops the old one at once. The link is a long random code, not guessable. | Should | A turned-off or expired link joins nobody. |
-| FR-MB-16 | **Invites are moderated like joins.** Joining by invite counts toward the 20-joins-a-day limit (TR-SEC-8), and the moderation log records who created each link and who sent each email invite. | Should | — |

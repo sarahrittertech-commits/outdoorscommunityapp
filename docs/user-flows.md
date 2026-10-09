@@ -405,7 +405,7 @@ flowchart TD
 
 ## UC-29 — Sign up with an email and a password
 
-*Draft, awaiting review. Open sign-up with email confirmation; password only.*
+*Approved and built 9 October 2026. Open sign-up with email confirmation; password only.*
 
 ```mermaid
 flowchart TD
@@ -441,7 +441,10 @@ flowchart TD
 
 ## UC-31 — Bring people into the group
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. Email invites wait on the board's email
+setup; the forms show disabled until then. The invite page (/join/<code>)
+names the group, creates the account and joins in one place; joining is
+always a button press, so link previews never join anyone.*
 
 ```mermaid
 flowchart TD
@@ -454,9 +457,18 @@ flowchart TD
   members --> link["Invite link: Create, copy, turn off"]
   sent --> open
   link --> open["Someone opens the link"]
-  open --> signed{Signed in?}
-  signed -->|no| signin["Sign up or sign in"] --> join
-  signed -->|yes| join{Banned, or link off or expired?}
-  join -->|no| member(["Member of the group, no approval needed"])
-  join -->|yes| refuse(["This link doesn't work. Ask the group for a new one"])
+  open --> valid{Link working?}
+  valid -->|no: off, expired or made up| refuse(["This invite link isn't working. Ask the group for a new one"])
+  valid -->|yes| signed{Signed in?}
+  signed -->|no| landing["Group name is on Branch Outdoors<br/>Create your account and join: email, password twice<br/>or Sign in"]
+  landing -->|creates account| check(["Check your email: the link brings you back to join"])
+  check -->|confirms email| onboard
+  landing -->|signs in| onboard{Finished the welcome step?}
+  signed -->|yes| onboard
+  onboard -->|no| welcome["Welcome: display name, 18+, terms"] --> invites
+  onboard -->|yes| invites{Already a member?}
+  invites -->|yes| grouppage(["Group page"])
+  invites -->|no| joinbtn["Group name invites you: Join button"] --> join{Banned?}
+  join -->|no| member(["Group page: Welcome to the group, no approval needed"])
+  join -->|yes| refuse2(["You can't join this group"])
 ```

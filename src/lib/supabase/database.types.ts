@@ -522,6 +522,19 @@ export type Database = {
         };
         Relationships: [Fk<"moderation_actions_actor_id_fkey", "actor_id", "profiles">];
       };
+      group_invite_links: {
+        Row: {
+          group_id: string;
+          token: string;
+          created_by: string | null;
+          created_at: string;
+          expires_at: string | null;
+          revoked_at: string | null;
+        };
+        Insert: never;
+        Update: never;
+        Relationships: [Fk<"group_invite_links_group_id_fkey", "group_id", "groups">];
+      };
       notification_preferences: {
         Row: { user_id: string; email_type: string; enabled: boolean };
         Insert: { user_id: string; email_type: string; enabled: boolean };
@@ -660,6 +673,20 @@ export type Database = {
         Returns: undefined;
       };
       transfer_ownership: { Args: { p_group_id: string; p_new_owner: string }; Returns: undefined };
+      create_invite_link: { Args: { p_group_id: string; p_valid_days: number | null }; Returns: string };
+      turn_off_invite_link: { Args: { p_group_id: string }; Returns: undefined };
+      invite_members: { Args: { p_group_id: string; p_emails: string[] }; Returns: number };
+      invite_manager: { Args: { p_group_id: string; p_email: string }; Returns: undefined };
+      open_manager_invites: {
+        Args: { p_group_id: string };
+        Returns: { id: string; sent_at: string; expires_at: string }[];
+      };
+      invite_preview: { Args: { p_token: string }; Returns: { name: string; slug: string }[] };
+      cancel_manager_invite: { Args: { p_invite_id: string }; Returns: undefined };
+      join_by_invite: {
+        Args: { p_token: string };
+        Returns: { slug: string; result: "joined" | "already_member" | "manager" }[];
+      };
       archive_group: { Args: { p_group_id: string; p_reason?: string }; Returns: undefined };
       restore_group: { Args: { p_group_id: string }; Returns: undefined };
       remove_group: { Args: { p_group_id: string; p_reason: string }; Returns: undefined };
@@ -729,7 +756,11 @@ export type Database = {
         | "unsuspend_user"
         | "archive_group"
         | "restore_group"
-        | "remove_group";
+        | "remove_group"
+        | "create_invite_link"
+        | "turn_off_invite_link"
+        | "invite_manager"
+        | "send_invites";
     };
     CompositeTypes: {
       [_ in never]: never;

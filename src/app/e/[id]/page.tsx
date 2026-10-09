@@ -253,8 +253,8 @@ export default async function EventPage({ params, searchParams }: Props) {
       </p>
 
       {canManage && !cancelled && (
-        <nav aria-label="Organizer tools" className="mt-4 flex flex-wrap items-baseline gap-x-4 rounded bg-panel px-3 py-2 text-sm">
-          <strong>Organizer:</strong>
+        <nav aria-label="Page admin tools" className="mt-4 flex flex-wrap items-baseline gap-x-4 rounded bg-panel px-3 py-2 text-sm">
+          <strong>Page admin tools:</strong>
           <Link href={`/e/${event.id}/edit`}>edit event</Link>
           <form action={cancelEvent.bind(null, event.id)} className="inline">
             <button className="link-button text-danger">cancel event</button>
