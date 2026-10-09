@@ -11,6 +11,8 @@ import {
   parseInviteEmails,
   replySchema,
   slugSchema,
+  suggestionSchema,
+  suggestionStatusSchema,
 } from "./validation";
 
 // UT-5: form schemas.
@@ -158,5 +160,28 @@ describe("group website (FR-GR-23)", () => {
     for (const website of ["javascript:alert(1)", "not a url", "https://", "ftp://example.org"]) {
       expect(groupSchema.safeParse({ ...base, website }).success).toBe(false);
     }
+  });
+});
+
+describe("suggestions (FR-AD-4, FR-AD-6)", () => {
+  const base = { kind: "group", title: "Pisgah Paddlers" };
+
+  it("accepts a title alone and turns empty optional fields into null", () => {
+    expect(suggestionSchema.parse({ ...base, details: "", link: "" })).toEqual({ ...base, details: null, link: null });
+  });
+
+  it("refuses an unknown kind, a short or long title, long details and non-http links", () => {
+    expect(suggestionSchema.safeParse({ ...base, kind: "party" }).success).toBe(false);
+    expect(suggestionSchema.safeParse({ ...base, title: " a " }).success).toBe(false);
+    expect(suggestionSchema.safeParse({ ...base, title: "x".repeat(121) }).success).toBe(false);
+    expect(suggestionSchema.safeParse({ ...base, details: "x".repeat(2001) }).success).toBe(false);
+    expect(suggestionSchema.safeParse({ ...base, link: "javascript:alert(1)" }).success).toBe(false);
+    expect(suggestionSchema.safeParse({ ...base, link: "https://example.org/club" }).success).toBe(true);
+  });
+
+  it("lets the site admin set planned, done or declined, never back to new", () => {
+    expect(suggestionStatusSchema.safeParse({ status: "planned", note: "" }).success).toBe(true);
+    expect(suggestionStatusSchema.safeParse({ status: "new" }).success).toBe(false);
+    expect(suggestionStatusSchema.safeParse({ status: "done", note: "x".repeat(501) }).success).toBe(false);
   });
 });

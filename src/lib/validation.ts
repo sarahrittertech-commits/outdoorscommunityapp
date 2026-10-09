@@ -206,6 +206,21 @@ export const reportSchema = z.object({
   next: z.string().optional(),
 });
 
+/** FR-AD-4: a suggestion to the site admin (UC-32). */
+export const SUGGESTION_KINDS = ["region", "feature", "group", "event", "other"] as const;
+export const suggestionSchema = z.object({
+  kind: z.enum(SUGGESTION_KINDS),
+  title: requiredText(3, 120),
+  details: optionalText(2000),
+  link: optionalHttpUrl(500),
+});
+
+/** FR-AD-6: the site admin's decision and optional note. */
+export const suggestionStatusSchema = z.object({
+  status: z.enum(["planned", "done", "declined"]),
+  note: optionalText(500),
+});
+
 /** FR-GR-10: how the claimant is connected to an unclaimed listing. */
 export const claimSchema = z.object({
   note: requiredText(10, 1000),

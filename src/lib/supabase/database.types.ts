@@ -486,6 +486,31 @@ export type Database = {
           Fk<"reports_reporter_id_fkey", "reporter_id", "profiles">,
         ];
       };
+      suggestions: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          kind: Database["public"]["Enums"]["suggestion_kind"];
+          title: string;
+          details: string | null;
+          link: string | null;
+          status: Database["public"]["Enums"]["suggestion_status"];
+          admin_note: string | null;
+          handled_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          kind: Database["public"]["Enums"]["suggestion_kind"];
+          title: string;
+          details?: string | null;
+          link?: string | null;
+        };
+        Update: {
+          [_ in never]: never;
+        };
+        Relationships: [Fk<"suggestions_user_id_fkey", "user_id", "profiles">];
+      };
       moderation_actions: {
         Row: {
           id: string;
@@ -707,6 +732,10 @@ export type Database = {
         Args: { p_target_type: Database["public"]["Enums"]["report_target"]; p_target_id: string };
         Returns: undefined;
       };
+      set_suggestion_status: {
+        Args: { p_suggestion_id: string; p_status: Database["public"]["Enums"]["suggestion_status"]; p_note?: string | null };
+        Returns: undefined;
+      };
       resolve_report: {
         Args: { p_report_id: string; p_status: Database["public"]["Enums"]["report_status"] };
         Returns: undefined;
@@ -749,6 +778,8 @@ export type Database = {
       report_target: "group" | "event" | "thread" | "reply" | "profile";
       report_reason: "spam" | "harassment" | "unsafe" | "off_topic" | "other";
       report_status: "open" | "actioned" | "dismissed";
+      suggestion_kind: "region" | "feature" | "group" | "event" | "other";
+      suggestion_status: "new" | "planned" | "done" | "declined";
       claim_status: "pending" | "approved" | "declined";
       moderation_action_type:
         | "remove_content"

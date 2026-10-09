@@ -3,8 +3,11 @@ import Link from "next/link";
 
 import { EventList } from "@/components/Listings";
 import { Notice } from "@/components/Notice";
+import { site } from "@/config/site";
 import { requireViewer } from "@/lib/auth";
+import { SUGGESTION_KIND_LABELS, SUGGESTION_STATUS_LABELS } from "@/lib/suggestions";
 import { createClient } from "@/lib/supabase/server";
+import { formatPostDate } from "@/lib/time";
 
 export const metadata: Metadata = { title: "My stuff", robots: { index: false } };
 
@@ -34,6 +37,14 @@ export default async function MyStuffPage({ searchParams }: Props) {
         .gt("ends_at", new Date().toISOString())
         .order("starts_at")
     : { data: [] };
+
+  // FR-AD-7: only the viewer's own; the database returns nobody else's.
+  const { data: suggestions } = await supabase
+    .from("suggestions")
+    .select("id, kind, title, status, admin_note, created_at")
+    .eq("user_id", viewer.id)
+    .order("created_at", { ascending: false })
+    .limit(50);
 
   return (
     <>
@@ -68,6 +79,27 @@ export default async function MyStuffPage({ searchParams }: Props) {
           You haven&apos;t joined any groups yet. <Link href="/">Browse the board</Link>.
         </p>
       )}
+
+      <h2 id="suggestions">My suggestions</h2>
+      {suggestions?.length ? (
+        <ul className="mt-2 divide-y divide-rule border-y border-rule">
+          {suggestions.map((s) => (
+            <li key={s.id} className="py-2">
+              <strong>{s.title}</strong>{" "}
+              <span className="text-sm text-muted">
+                {SUGGESTION_KIND_LABELS[s.kind]} · sent {formatPostDate(s.created_at, site.defaultTimezone)} ·{" "}
+              </span>
+              <span className={s.status === "new" ? "text-sm text-muted" : "tag"}>{SUGGESTION_STATUS_LABELS[s.status]}</span>
+              {s.admin_note && <p className="mt-1 text-sm">Site admin: &ldquo;{s.admin_note}&rdquo;</p>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 text-muted">You haven&apos;t sent any suggestions.</p>
+      )}
+      <p className="mt-2 text-sm">
+        <Link href="/suggest">Suggest something</Link>: a region, a feature, a group to invite or an event to add.
+      </p>
     </>
   );
 }
