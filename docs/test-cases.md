@@ -47,7 +47,7 @@ web app is not the thing enforcing the rule.
 | PT-18 | A group admin sees only their own group's reports; the site admin sees all | Report routing leaks |
 | PT-19 | Nobody can update or delete a moderation log row; deleting a person or group in it only clears that id | Log isn't append-only, or organizers can never be deleted |
 | PT-20 | No table readable by other users contains an email address | FR-AC-5 broken |
-| PT-21 | The rate limits in TR-SEC-8 refuse the request over the limit | Limits missing or wrong |
+| PT-21 | The rate limits in TR-SEC-8 refuse the request over the limit: posts, joins, reports, new groups and claims each have a test | Limits missing or wrong |
 | PT-22 | No trigger function or internal helper (moderation log writer, rate limiter) can be called through the API, and every function pins its search path | Fake moderation log entries; functions hijackable |
 | PT-23 | Nobody can join, RSVP to or post events in an unclaimed listing, and nobody signed in can make one or set a source link | Listings behave like ownerless groups anyone can take over |
 | PT-24 | Only the site admin approves a claim; approval makes the claimant owner and declines the other claims; claimants see only their own | Anyone can seize a listed group |
@@ -61,6 +61,11 @@ web app is not the thing enforcing the rule.
 | PT-32 | An RSVP in an archived group cannot be changed, not just created (FR-GR-6) | "Read-only" is not read-only |
 | PT-33 | Leaving a group clears the person's RSVPs to its future events and keeps past ones (FR-MB-3) | Someone who left still holds a place and shows as going |
 | PT-34 | No permission rule calls auth.uid() or is_site_admin() once per row (Supabase advisor auth_rls_initplan) | Listing pages slow down as the board grows |
+| PT-35 | Only a group's owner or admins decline a join request, and declining removes it (FR-MB-2) | Anyone can turn away a group's applicants |
+| PT-36 | Only the owner restores an archived group; only the site admin restores a removed one; restoring is logged (FR-GR-6, FR-MD-3) | An admin reopens a group the owner closed, or an owner undoes a removal |
+| PT-37 | Authors delete only their own threads and replies, which are blanked rather than removed (FR-DS-4) | One member deletes another's posts, or a thread loses its replies |
+| PT-38 | Only the site admin unsuspends an account, after which it can write again (FR-MD-3) | Anyone lifts a suspension |
+| PT-39 | Every SECURITY DEFINER function in the public schema is on a reviewed list, and a new one fails by name | A function that skips RLS ships without review |
 
 ## Automated — unit
 
