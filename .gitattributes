@@ -16,6 +16,8 @@ src/brand/Mark.tsx        merge=ours
 src/brand/ActivityIcon.tsx merge=ours
 src/app/icon.svg          merge=ours
 docs/brand.md             merge=ours
+src/brand/activityPhotos.ts merge=ours
+public/activities/**      merge=ours
 
 # The audience: who the board is for and what it is called.
 src/config/site.ts        merge=ours

@@ -5,6 +5,11 @@ title: Feature map
 
 # Feature map: what's live, what's new
 
+See also [User stories](./user-stories) for the same features as stories
+any board can use, and the [feature request log](./feature-requests) for
+where each request came from and whether it belongs to the shared tool or
+to one board.
+
 One page that separates the branded app as it runs today from the new
 features proposed in the 8 October Magic Patterns design or requested by
 Sarah the same day. Live features
