@@ -6,7 +6,8 @@ title: Feature map
 # Feature map: what's live, what's new
 
 One page that separates the branded app as it runs today from the new
-features proposed in the 8 October Magic Patterns design. Live features
+features proposed in the 8 October Magic Patterns design or requested by
+Sarah the same day. Live features
 link to their requirements; new ones link to their draft use case. Nothing
 under *New features* is built.
 
@@ -51,7 +52,8 @@ See [Brand](./brand) for the colors.
 Status: **In scope** means Sarah brought it into scope on 8 October and
 it awaits use case review; **Fits** means it fits the product as written
 and awaits review; **Decision needed** means a product question is open
-(see the PRD's open questions).
+(see the PRD's open questions). **Waits on domain** means it can't ship
+until the domain is chosen and email sending through Resend is set up.
 
 ### Grouping differentiation and photos
 
@@ -98,6 +100,22 @@ and awaits review; **Decision needed** means a product question is open
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
 | **Business pages** owned by the business email account, with their own admins; services, locations and places they operate; a linked group (separate admins) that hosts their events; events they sponsor | In scope | UC-12 | FR-BZ-1 to FR-BZ-7 |
+
+### Sign-in, claims and new groups
+
+Requested by Sarah on 8 October; drafted 9 October.
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Branded sign-in email**: plain wording from Branch Outdoors instead of Supabase's generic email; no images or tracking | Fits · Waits on domain | UC-25 | FR-AC-11 to FR-AC-13 |
+| **Confirm a claim by email** at the group's own website domain; the site admin sees *Confirmed at …* or *Not confirmed* | Fits · Waits on domain | UC-26 | FR-GR-18 to FR-GR-20 |
+| **Approval of a person's first group** (recommended of three options: every group, first group only, none) | Decision needed | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 |
+
+### Demo
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Demo member sign-in**, read-only, so reviewers can see the signed-in pages without an email | Decision needed | UC-28 | FR-AC-14 to FR-AC-16 |
 
 ## Still out of scope
 

@@ -104,7 +104,7 @@ Playwright in CI against the local stack with seed data.
 
 ## Planned — pending use case review
 
-Draft use cases UC-10 to UC-24 are not approved yet, so these have no
+Draft use cases UC-10 to UC-28 are not approved yet, so these have no
 requirement numbers. They show what each would have to prove; they become
 real tests, with requirements, once the use case is approved.
 
@@ -125,4 +125,7 @@ real tests, with requirements, once the use case is approved.
 | UC-22 Save it for later | No other user, organizer included, can read someone's saved events |
 | UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |
 | UC-24 Tell groups apart | A type outside the list is refused; only the owner sets type and photo; the type filter matches the type shown |
+| UC-25 A sign-in email that sounds like us | The email comes from the board's domain with no images or tracked links; an expired or used link signs nobody in |
+| UC-26 Prove it's my club | A confirmation at a domain other than the group's website is refused; a used or expired link confirms nothing; no full address is kept afterwards; a confirmed claim is never approved automatically |
+| UC-27 Start your first group | A group waiting for review is returned to nobody but its owner and the site admin; joins are refused; only the site admin approves or declines; a person with an approved group skips review |
 

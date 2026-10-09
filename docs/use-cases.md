@@ -24,7 +24,8 @@ Each use case maps to requirements in
 No build starts before step 3. UC-1 to UC-6 were written before this
 process; UC-7 and UC-8 were written after the features were built, to
 close that gap. UC-14 to UC-23 come from the 8 October Magic Patterns
-design.
+design. UC-25 to UC-27 were requested by Sarah on 8 October and drafted on
+9 October.
 
 ## UC-1 — What's out there?
 
@@ -613,6 +614,145 @@ FR-GR-17).
 
 **Succeeds when:** a newcomer can tell what kind of group it is, and
 whether it's active, before opening it.
+
+## UC-25 — A sign-in email that sounds like us
+
+> **Draft, awaiting review.** Requested by Sarah on 8 October 2026.
+> **Depends on the domain** (PRD open question): the email can only come
+> from Branch Outdoors once a domain is chosen and verified with Resend
+> ([ADR-0004](./architecture/adr-0004-background-jobs-and-email)). Until
+> then, sign-in emails keep Supabase's generic wording and sender.
+
+**Actor:** The newcomer
+
+**Trigger:** Enters their email address on the sign-in page for the
+first time.
+
+**Flow:**
+
+1. Clicks *Send me a link*. The page says to check their email.
+2. Receives an email from Branch Outdoors at the board's own address,
+   subject *Your Branch Outdoors sign-in link*. It reads like a short
+   note: a welcome line for a first sign-in, the link, how long it works,
+   and "If you didn't ask for this, ignore it." No images, no
+   marketing, no tracking.
+3. Clicks the link and lands on the Welcome page (18+, terms, display
+   name), as today.
+
+**Requirements:** to be written after review (drafts FR-AC-11, FR-AC-12).
+
+**Succeeds when:** a newcomer recognizes the email as coming from the
+board they just used, and it reads as plainly as the site does.
+
+## UC-26 — Prove it's my club
+
+> **Draft, awaiting review.** Requested by Sarah on 8 October 2026.
+> Extends UC-8 and FR-GR-10. **Depends on the domain** and Resend, like
+> UC-25: the confirmation link is an email the board sends.
+
+**Actor:** The organizer, then the site admin
+
+**Trigger:** Is claiming their club's unclaimed listing (UC-8), and has
+an email address at the club's own website domain.
+
+**Flow:**
+
+1. On the claim form, writes their note as today and, in the optional
+   *Confirm with a club email* field, enters their address at the club's
+   domain (the listing's website is *brevardpaddlers.org*; they enter
+   *rides@brevardpaddlers.org*).
+2. Sends the claim. The page says a confirmation link has gone to that
+   address and the claim is waiting for review.
+3. Opens that mailbox and clicks the link. A page confirms it: "Confirmed
+   at brevardpaddlers.org."
+4. The site admin sees the claim in the admin queue with *Confirmed at
+   brevardpaddlers.org* beside it, reads the note and approves.
+5. The organizer is the group's owner, as in UC-8.
+
+**Requirements:** to be written after review (drafts FR-GR-18 to
+FR-GR-20).
+
+**Succeeds when:** the site admin can tell at a glance that the claimant
+controls an address at the club's own domain, and still makes the
+decision themselves.
+
+## UC-27 — Start your first group
+
+> **Draft, awaiting review. Decision needed.** Requested by Sarah on 8
+> October 2026. Answers the PRD open question *Who can create groups*
+> and would replace FR-GR-8 (Could). Written for the recommended option,
+> **approve only a person's first group**; the alternatives and their
+> costs are in [Functional requirements](./functional-requirements#group-creation-approval-uc-27).
+
+**Actor:** The organizer, then the site admin
+
+**Trigger:** Has never run a group on the board, and starts one.
+
+**Flow:**
+
+1. Signs in, clicks *Start a group* and fills in the form as in UC-3.
+   The form says first groups are checked by the site admin before they
+   are listed.
+2. Lands on the new group's page, marked *Waiting for review*. Only they
+   and the site admin can see it.
+3. The site admin sees it under *New groups* on the admin page, checks it
+   is a real outdoor group, and approves it.
+4. The group is listed in its subcategory, open to join, and the
+   organizer posts the first event.
+5. Later, the same organizer starts a second group. It is listed at once,
+   with no review.
+
+**Requirements:** to be written after review (drafts FR-GR-8, FR-GR-21,
+FR-GR-22).
+
+**Succeeds when:** no one's first group reaches the listings without the
+site admin's yes, and an organizer who has been checked once is never
+held up again.
+
+
+## UC-28 — Look around as a member
+
+> **Draft, awaiting review. Decision needed.** Requested by Sarah on 9
+> October 2026, after the Magic Patterns prototype's *demo member* button.
+> The prototype simulated sign-in; the live board signs people in by email
+> link only, so a demo needs a real account. Written for the recommended
+> option, a **read-only demo member** on the live board; the alternatives
+> are below.
+
+**Actor:** The reviewer (a hiring manager or a peer looking at the
+portfolio)
+
+**Trigger:** Wants to see the signed-in side of the board (a group's
+discussions and member list, who's going, My stuff) without giving an
+email address.
+
+**Flow:**
+
+1. On the sign-in page, under the email form, picks *Look around as a
+   demo member*.
+2. Is signed in as **Demo member**, a member of a few demo groups, with
+   a band on every page: *You're looking around as a demo member. Nothing
+   you do here is saved.*
+3. Opens a group's discussions, its member list, an event's *who's going*
+   and My stuff.
+4. Tries to RSVP or post: the button explains that the demo can look but
+   not change anything, with a link to sign in for real.
+5. Signs out, or the demo session ends after an hour.
+
+**Requirements:** to be written after review (drafts FR-AC-14 to
+FR-AC-16).
+
+**Succeeds when:** a reviewer sees every signed-in page in under a minute
+without an email, and the demo account can never post, join, RSVP,
+report or message, on any page or through the API.
+
+**Options and their cost:**
+
+| Option | What it means | Cost and risk |
+| --- | --- | --- |
+| **Read-only demo member on the live board** (recommended) | One demo account, a member of a few demo groups on the live board. The database treats it like a suspended account: it can read what a member reads, never write. | Small: one setting on the account, one check in `can_write()`, one button. Demo groups have to be real-looking but clearly marked *demo*, or the demo sees real members' discussions, which it must not. |
+| A separate demo board | A second copy of the site with its own database, filled with sample groups and people, reset every night. Anyone can do anything there. | A second Railway service and a second Supabase project (the free plan allows two active projects; Sage Women uses the other), plus a nightly reset job. Two sites to keep deployed. |
+| Writable demo on the live board | The prototype's behaviour: the demo can post and RSVP. | Not recommended. Anyone on the internet could post on the real board as "Demo member"; the site admin would moderate it daily. |
 
 ---
 

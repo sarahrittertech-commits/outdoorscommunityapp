@@ -336,3 +336,69 @@ flowchart TD
   home --> mine["My communities<br/>next event · latest thread · manage links"]
   mine --> done(["Nothing left needing them"])
 ```
+
+## UC-25 — A sign-in email that sounds like us
+
+*Draft, awaiting review. Needs the domain and Resend before it can ship.*
+
+```mermaid
+flowchart TD
+  signin["Sign in<br/>enter email"] -->|Send me a link| check["Check your email"]
+  check --> first{First sign-in?}
+  first -->|yes| welcomeMail["Email from Branch Outdoors<br/>welcome line · link · works for 1 hour · ignore if not you"]
+  first -->|no| signinMail["Email from Branch Outdoors<br/>link · works for 1 hour · ignore if not you"]
+  welcomeMail -->|clicks link| welcome["Welcome<br/>18+, terms, display name"]
+  signinMail -->|clicks link| back(["Back on the page they started from"])
+  welcome --> back
+```
+
+## UC-26 — Prove it's my club
+
+*Draft, awaiting review. Needs the domain and Resend before it can ship.*
+
+```mermaid
+flowchart TD
+  claim["Group page: claim form<br/>note · optional club email"] --> email{Club email given?}
+  email -->|no| waiting["Group page: claim waiting for review"]
+  email -->|yes, at the website's domain| sent["Group page: link sent to that address<br/>claim waiting for review"]
+  sent -->|clicks link in time| confirmed["Confirmed at brevardpaddlers.org"]
+  sent -.->|never clicks, or link expires| waiting
+  confirmed --> admin["Site admin page: claim requests<br/>'Confirmed at …' or 'Not confirmed'"]
+  waiting --> admin
+  admin --> decide{Note and confirmation check out?}
+  decide -->|yes, Approve| owner(["Group page: you're the owner"])
+  decide -->|no, Decline| declined(["Group page: claim wasn't approved"])
+```
+
+## UC-27 — Start your first group
+
+*Draft, awaiting review. Decision needed: drawn for "approve only a
+person's first group".*
+
+```mermaid
+flowchart TD
+  start["Start a group form<br/>'first groups are checked before listing'"] -->|Create| first{Already has an approved group?}
+  first -->|yes| listed["Group page: listed, open to join"]
+  first -->|no| pending["Group page: Waiting for review<br/>visible to them and the site admin"]
+  pending --> admin["Site admin page: New groups"]
+  admin --> decide{Real outdoor group?}
+  decide -->|yes, Approve| listed
+  decide -->|no, Decline with a reason| declined(["Group page: not approved, with the reason"])
+  listed -->|posts first event| done(["Group is live"])
+```
+
+## UC-28 — Look around as a member
+
+*Draft, awaiting review. Decision needed: drawn for the read-only demo
+member on the live board.*
+
+```mermaid
+flowchart TD
+  signin["Sign-in page"] -->|Look around as a demo member| demo["Signed in as Demo member<br/>band: nothing you do here is saved"]
+  demo --> browse["Demo groups: discussions, members,<br/>who's going, My stuff"]
+  browse --> act{Tries to RSVP, post, join or report?}
+  act -->|yes| refuse["Button explains: the demo can look, not change<br/>link: sign in for real"]
+  act -->|no| browse
+  refuse --> browse
+  browse -->|Sign out, or one hour passes| out(["Signed out"])
+```

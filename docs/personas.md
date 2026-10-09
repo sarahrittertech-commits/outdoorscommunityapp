@@ -59,7 +59,9 @@ ride every week.
 as one series with a photo, price, sponsors and FAQ (UC-10); approve who
 comes and keep a waitlist (UC-17); keep the member list private (UC-16);
 answer questions and move answers into the FAQ (UC-11); see join and RSVP
-requests in one reminders list (UC-23).
+requests in one reminders list (UC-23). **Requested 8 October (drafts):**
+confirm a claim with an address at the club's own domain (UC-26); a first
+group may wait for the site admin's review (UC-27, decision needed).
 
 ## 3. The regular
 
@@ -100,7 +102,10 @@ Group admins handle their own groups first; the site admin is the backstop.
 week (UC-9) and claims on unclaimed listings (UC-8). **Proposed with the 8
 October design:** reported private messages (UC-20) and reported photos
 (UC-21) join the queue, which makes moderation a bigger job; the places
-list for the map is maintained by the site admin (UC-15).
+list for the map is maintained by the site admin (UC-15). **Requested 8
+October (drafts):** claims show whether the claimant confirmed an address
+at the group's domain (UC-26); if approval is chosen, first groups wait in
+a *New groups* queue (UC-27).
 
 ---
 
