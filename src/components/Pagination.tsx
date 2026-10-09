@@ -24,7 +24,18 @@ export function Pagination({ basePath, page, pageCount }: { basePath: string; pa
   );
 }
 
-export function pageFrom(value: string | string[] | undefined): number {
+/**
+ * The page number from the URL, bounded (TR-SEC-12, UT-6).
+ *
+ * The result goes straight into a range query, so an unbounded number lets
+ * `?page=99999999` ask Postgres to count and discard a whole table. Callers
+ * that already know the row count pass `pageCount` to clamp to the last real
+ * page; the ceiling covers the first query, before the count is known.
+ */
+const MAX_PAGE = 1000;
+
+export function pageFrom(value: string | string[] | undefined, pageCount?: number): number {
   const n = Number(Array.isArray(value) ? value[0] : value);
-  return Number.isInteger(n) && n > 0 ? n : 1;
+  if (!Number.isInteger(n) || n < 1) return 1;
+  return Math.min(n, pageCount && pageCount > 0 ? pageCount : MAX_PAGE);
 }

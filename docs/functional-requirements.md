@@ -40,7 +40,7 @@ Who is allowed to do each action is defined once, in
 | --- | --- | --- | --- |
 | FR-AC-1 | Sign up and sign in with an emailed one-time link. No passwords. | Must | A new address receives a link that signs it in; the same flow signs in an existing user. |
 | FR-AC-2 | On first sign-in, the user confirms they are 18 or older and accepts the terms and community guidelines before doing anything else. | Must | A user who hasn't confirmed cannot join, post or RSVP. |
-| FR-AC-3 | Profile: display name (required, 2–40 characters), short bio (optional, 280 characters), general area (optional). No profile photos. | Must | Display name is required at first sign-in and editable later. |
+| FR-AC-3 | Profile: display name (required, 2–40 characters), short bio (optional, 280 characters), general area (optional). No profile photos. Required means the database refuses to store a missing or blank one, and an account without a name cannot post, join or RSVP — a member must always be nameable, reportable and reachable by a moderator. | Must | Display name is required at first sign-in and editable later. Clearing it through the API is refused, not silently accepted. |
 | FR-AC-4 | A public profile page shows display name, bio and area. | Should | Reachable from any post author's name. |
 | FR-AC-5 | A user's email address is never shown to any other user, including group admins. | Must | No page or API response available to another user contains it. |
 | FR-AC-6 | A user can delete their account. Profile and memberships are removed; their posts remain as "deleted user" so threads still make sense. An owner can transfer a group to one of its admins first (FR-MB-6). Any group they still own goes inactive: archived (read-only, hidden from listings, still viewable), its upcoming events cancelled, members and posts kept, and open to claims (FR-GR-10). | Must | After deletion the user cannot sign in, and their name appears nowhere. |
@@ -56,12 +56,12 @@ Who is allowed to do each action is defined once, in
 | FR-GR-3 | Owner and admins can edit the group's details. | Must | A member cannot. |
 | FR-GR-4 | Discussions can be switched off per group. When off, the discussion tab is hidden and no new threads or replies can be posted; existing threads stay readable to members. | Must | With discussions off, a member's attempt to post is refused by the database, not just hidden in the UI. |
 | FR-GR-5 | Group rules text, shown on the group page and before joining. | Should | — |
-| FR-GR-6 | The owner can archive a group: it leaves the listings, becomes read-only, and can be restored. | Should | An archived group's URL still works and says it is archived. |
+| FR-GR-6 | The owner can archive a group: it leaves the listings, becomes read-only, and can be restored. Read-only covers changing an answer already given, not just making a new one: an RSVP in an archived group cannot be changed either. | Should | An archived group's URL still works and says it is archived. Flipping an existing RSVP through the API is refused. |
 | FR-GR-7 | A user can own at most 3 active groups. | Should | Creating a fourth is refused with an explanation. |
 | FR-GR-8 | A user's first group is held for site-admin approval before it is listed. | Could | — |
 | FR-GR-9 | **Unclaimed listings.** Real local groups can be listed from public information before their organizers join, so the board isn't empty at launch. A listing holds only a name, a neutral description, an area and a link to the organization's own website, plus upcoming events that link to the organizer's own page. Nobody runs it here, so it has no owner and nobody can join it, RSVP to its events or post in it. Listings are added by the operator in SQL, never through the app. | Must | A listing's page says it is unclaimed and links to the source; no Join or RSVP is offered and the database refuses both. |
 | FR-GR-11 | **Affinity tags.** A group can carry any of these tags: *Women*, *Youth*, *BIPOC*, *LGBTQIA+*. They show on the group page and in group lists. The owner and admins can change them on the group's edit form; listings get them from the import or the research agent. | Should | A tag outside the list is refused by the database. |
-| FR-GR-10 | **Claiming a listing.** A signed-in user can ask to claim a listing, or a group whose owner deleted their account (FR-AC-6), with a short note on how they're connected. The site admin checks it against the organization's website or the group's members and approves (the claimant becomes owner, the group is active again, a listing's discussions open, other claims are declined) or declines. A group without an owner comes back only through a claim. | Must | Only the site admin can approve; an approved claimant owns the group and it becomes an ordinary group. |
+| FR-GR-10 | **Claiming a listing.** A signed-in user can ask to claim a listing, or a group whose owner deleted their account (FR-AC-6), with a short note on how they're connected. The site admin checks it against the organization's website or the group's members and approves (the claimant becomes owner, the group is active again, a listing's discussions open, other claims are declined) or declines. A group without an owner comes back only through a claim, whatever state it was in when the owner left: a group that was removed at the time is still marked as needing one, so restoring it can never produce a live group nobody can run. | Must | Only the site admin can approve; an approved claimant owns the group and it becomes an ordinary group. |
 
 ## Membership and roles — FR-MB
 
@@ -128,12 +128,13 @@ are not notifications and are always sent.
 | ID | Requirement | Priority | Accepted when |
 | --- | --- | --- | --- |
 | FR-MD-1 | Any signed-in user can report a group, event, thread, reply or profile, with a reason (spam, harassment, unsafe, off-topic, other) and an optional note. | Must | — |
-| FR-MD-2 | Reports on content inside a group go to that group's owner and admins and to the site admin. Reports on a group itself or a profile go to the site admin only. | Must | A group admin sees only their own group's reports. |
+| FR-MD-2 | Reports on content inside a group go to that group's owner and admins and to the site admin, without the reporter's identity (FR-MD-8). Reports on a group itself or a profile go to the site admin only. | Must | A group admin sees only their own group's reports. |
 | FR-MD-3 | The site admin can remove any content, archive or remove any group, and suspend any account. A suspended user can read but not post, join or RSVP. | Must | — |
-| FR-MD-4 | Rate limits on posting, joining, RSVPing, reporting and group creation. | Must | Limits in [Technical requirements](./technical-requirements#security--tr-sec). |
+| FR-MD-4 | Rate limits on posting, joining, RSVPing, reporting, group creation and claim requests. | Must | Limits in [Technical requirements](./technical-requirements#security--tr-sec). |
 | FR-MD-5 | Terms of use, privacy policy and community guidelines pages, linked from every page footer. | Must | — |
 | FR-MD-6 | Every moderation action (remove, ban, suspend, archive) is logged with who, what, when and why. | Should | The site admin can view the log. |
 | FR-MD-7 | A user can block another user, hiding that user's posts from them. | Could | — |
+| FR-MD-8 | **Who reported is not shown to the person reported.** Group owners and admins see the reason, the note and what was reported, never who reported it; only the site admin can see that. The report form says so, so the database enforces it rather than relying on pages not to ask. | Must | A group admin querying the API for their group's reports cannot obtain the reporter's identity. |
 
 ## Site administration — FR-AD
 

@@ -54,6 +54,11 @@ web app is not the thing enforcing the rule.
 | PT-25 | Only the site admin can see, list or skip candidates; listing makes an unclaimed group with its events and affinity tags | Anyone can push research finds onto the board |
 | PT-26 | Adding a candidate validates every field and skips duplicates of candidates and board groups | Bad or repeated agent output lands in the review queue |
 | PT-27 | Only owners and admins change a group's affinity tags, and only to tags on the list | Anyone can relabel a group |
+| PT-28 | An account cannot clear its display name, through the API or through onboarding, and an account without one cannot post, join or RSVP (FR-AC-3) | An unnameable member posts and cannot be reported or reached by a moderator |
+| PT-29 | A group owner or admin reading their group's reports cannot obtain the reporter's identity; the site admin can (FR-MD-8) | The person reported learns who reported them |
+| PT-30 | A group that was removed when its owner deleted their account is marked as needing an owner, so restoring it never produces an active group with no owner (FR-GR-10) | A live group nobody can run, moderate or claim |
+| PT-31 | Claim requests are rate limited like every other write (TR-SEC-8) | One account floods the site admin's claim queue |
+| PT-32 | An RSVP in an archived group cannot be changed, not just created (FR-GR-6) | "Read-only" is not read-only |
 
 ## Automated — unit
 
@@ -66,6 +71,8 @@ Run by the unit test command in CI. Pure functions only.
 | UT-3 | `.ics` generator | Output has the correct start, end, time zone, title and location |
 | UT-4 | Slug generator | Two groups called "Trail Friends" get distinct slugs; slugs are lowercase and URL-safe |
 | UT-5 | Zod schemas | Each form schema rejects missing required fields and over-length text; affinity tags accept only the four on the list |
+| UT-6 | Page number parser | A page beyond the last is clamped, so no query asks for a huge offset (TR-SEC-12) |
+| UT-7 | `.ics` line folding | Folding counts UTF-8 bytes, not characters, and never splits an emoji in a title |
 
 ## Automated — end to end
 

@@ -102,6 +102,7 @@ Existing threads stay readable to members.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Report content | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See reports for a group's content | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| See who reported something (FR-MD-8) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | See all reports, suspend accounts, view moderation log | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
 ### Unclaimed listings and groups without an owner (FR-GR-9, FR-GR-10, FR-AC-6)

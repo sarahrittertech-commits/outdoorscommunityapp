@@ -140,10 +140,12 @@ one outside the group can read the thread.
 4. The same account posted in other groups; the site admin sees the pattern in
    the site queue and suspends it.
 
-**Requirements:** FR-MD-1, FR-MD-2, FR-MD-3, FR-DS-5, FR-MB-7
+**Requirements:** FR-MD-1, FR-MD-2, FR-MD-3, FR-MD-8, FR-DS-5, FR-MB-7
 
-**Succeeds when:** the content is gone within the group's own moderation, and
-the site admin can act across groups when needed.
+**Succeeds when:** the content is gone within the group's own moderation, the
+site admin can act across groups when needed, and the regular who reported it
+is never identified to the organizer or the member — including to an
+organizer who is the one reported.
 
 ## UC-7 — Something to do this weekend
 

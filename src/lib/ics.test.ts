@@ -58,3 +58,43 @@ describe("buildIcs", () => {
     for (const line of long.split("\r\n")) expect(line.length).toBeLessThanOrEqual(75);
   });
 });
+
+// UT-7: folding counts octets, not characters, and never splits a character.
+describe("line folding", () => {
+  const withTitle = (title: string) =>
+    buildIcs(
+      {
+        id: "abc",
+        title,
+        description: "An event.",
+        startsAt: "2026-10-04T13:00:00.000Z",
+        endsAt: "2026-10-04T17:00:00.000Z",
+        location: "Somewhere",
+        url: "https://board.example/e/abc",
+      },
+      "board.example",
+      new Date("2026-09-25T00:00:00Z"),
+    );
+  const unfold = (ics: string) => ics.replace(/\r\n /g, "");
+
+  it("never splits an emoji across a fold", () => {
+    // One plain character then emoji, so the old cut at index 74 lands
+    // between the two halves of one rather than on a boundary.
+    const title = `x${"\u{1F600}".repeat(60)}`;
+    const ics = withTitle(title);
+
+    // Rejoining in JavaScript would repair a split pair, so check each line
+    // as it is actually sent: a half surrogate cannot be encoded as UTF-8.
+    for (const line of ics.split("\r\n")) {
+      expect(line, "a folded line holds half an emoji").not.toMatch(/[\uD800-\uDFFF]/u);
+    }
+    expect(unfold(ics)).toContain(title);
+  });
+
+  it("folds on byte length, so a multi-byte title stays within 75 octets", () => {
+    const ics = withTitle("é".repeat(120));
+    for (const line of ics.split("\r\n")) {
+      expect(new TextEncoder().encode(line).length).toBeLessThanOrEqual(75);
+    }
+  });
+});

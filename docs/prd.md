@@ -227,6 +227,36 @@ or a static image ([ADR-0007](./architecture/adr-0007-destinations-map)).
 The visual refresh from the same design (logo, colors, type) is a small
 fix and doesn't wait on any of this.
 
+## Security review — 9 October 2026
+
+A review of the whole codebase after the 8 October work. Nothing found was
+a new feature; each finding was the code not keeping a promise the product
+already makes, so the fixes went in with the requirements they belong to
+rather than through a new use case.
+
+Two were promises to a member that only the pages kept, not the database:
+
+- **Who reported something stays private.** The report form says the
+  reporter's name is not shown to the person reported. The pages never
+  showed it, but the data was readable by a group's own admins — so an
+  organizer could learn who reported them. Now written down as FR-MD-8 and
+  enforced in the database, with the site admin the only one who can see it.
+- **A member always has a name.** A display name has been required since
+  FR-AC-3, but an account could clear it and keep posting, leaving a member
+  nobody could report, reach or suspend. The requirement now says what
+  required means, and the database refuses it.
+
+The rest were edge cases in rules already written: a group removed when its
+owner left could be restored with nobody able to run it (FR-GR-10), an
+archived group still allowed an RSVP to be changed (FR-GR-6), and claim
+requests were the one write with no rate limit (TR-SEC-8, FR-MD-4). Two
+were bounds rather than permissions: a page number from the URL could make
+the database scan a whole table, and the Events page filtered and counted
+in the application over a truncated set of rows, so both are now covered by
+TR-SEC-12.
+
+None of this changes what the board does or how any page looks.
+
 ## Open questions
 
 These need Sarah's decision before or during build:
