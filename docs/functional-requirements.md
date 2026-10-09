@@ -69,7 +69,7 @@ Who is allowed to do each action is defined once, in
 | --- | --- | --- | --- |
 | FR-MB-1 | Joining an *open* group makes the user a member immediately. | Must | — |
 | FR-MB-2 | Joining an *approval required* group creates a pending request that an owner or admin approves or declines. | Must | A pending user has no member access until approved. |
-| FR-MB-3 | Members can leave a group at any time. The owner cannot leave without first transferring ownership. | Must | — |
+| FR-MB-3 | Members can leave a group at any time. Leaving clears their RSVPs to the group's future events, as removal does. The owner cannot leave without first transferring ownership. | Must | — |
 | FR-MB-4 | Each group has exactly one owner, any number of admins and any number of members. | Must | The database refuses a second owner. |
 | FR-MB-5 | The owner can promote a member to admin and demote an admin to member. | Must | An admin cannot promote or demote anyone. |
 | FR-MB-6 | The owner can transfer ownership to an admin; the old owner becomes an admin. | Should | — |
