@@ -57,7 +57,7 @@ language plpgsql set search_path = ''
 as $$
 begin
   if (select count(*) from public.saved_events s where s.user_id = (select auth.uid())) >= 500 then
-    raise exception using errcode = 'P0001', message = 'rate_limited: You can save at most 500 events.';
+    raise exception using errcode = 'P0001', message = 'save_limit: You can save at most 500 events.';
   end if;
   return new;
 end

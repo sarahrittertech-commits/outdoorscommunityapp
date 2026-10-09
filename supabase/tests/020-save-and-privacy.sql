@@ -123,7 +123,7 @@ select lives_ok(
 select throws_ok(
   format($$ insert into public.saved_events (user_id, event_id)
             select %L, id from public.events where title = 'Bulk 501' $$, tests.uid('outsider')),
-  'P0001', 'rate_limited: You can save at most 500 events.',
+  'P0001', 'save_limit: You can save at most 500 events.',
   'PT-85 the 501st save is refused'
 );
 
