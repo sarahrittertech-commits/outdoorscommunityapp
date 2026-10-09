@@ -126,7 +126,9 @@ the intake answers `401`, stop and say so in your summary.
      group's own time zone, with the offset.
 
    The intake answers `{"result": ...}` with `added`, `updated`,
-   `events_added` or `duplicate`. A duplicate is not an error: the board
+   `events_added` or `duplicate`. An `added` answer may carry
+   `"possible_duplicate": true`: the board kept it for the site admin to
+   compare with something similar; count it as added. A duplicate is not an error: the board
    already knows it, or the site admin skipped it. A `422` means the
    database rejected a field; its `detail` says which. Fix it and try once
    more, or count it as failed.

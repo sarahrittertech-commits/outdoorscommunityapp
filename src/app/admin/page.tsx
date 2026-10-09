@@ -134,7 +134,7 @@ export default async function AdminPage({ searchParams }: Props) {
 
       <h2>Candidates ({candidates?.length ?? 0})</h2>
       <p className="mt-1 text-sm text-muted">
-        Groups the weekly research agent found, oldest first. Check each against its source page. <em>List it</em> puts it on the board as
+        Groups the weekly research agent found, oldest first. Check each against its source page; ones tagged <em>possible duplicate</em> look like something already on the board. <em>List it</em> puts it on the board as
         an unclaimed listing with its upcoming events; <em>Skip</em> means it won&apos;t be suggested again.
       </p>
       <ul className="mt-2 divide-y divide-rule border-y border-rule">
@@ -144,7 +144,24 @@ export default async function AdminPage({ searchParams }: Props) {
               <strong>{c.name}</strong> <span className="text-sm text-muted">· {c.subcategory_name} · {c.area}</span>
               <AffinityTags tags={c.affinity_tags} className="ml-2 align-middle" />
               {c.out_of_region && <span className="tag ml-2">outside the region</span>}
+              {c.possible_duplicate_of && <span className="tag tag-new ml-2">possible duplicate</span>}
             </p>
+            {c.possible_duplicate_of && (
+              <p className="mt-1 text-sm">
+                May be the same as <strong>{c.possible_duplicate_of}</strong>
+                {c.possible_duplicate_url && (
+                  <>
+                    {" "}
+                    (
+                    <a href={c.possible_duplicate_url} rel="nofollow noopener">
+                      {c.possible_duplicate_url}
+                    </a>
+                    )
+                  </>
+                )}
+                . Compare the two before listing; skip it if it&apos;s the same.
+              </p>
+            )}
             <p className="mt-1 text-sm">{c.description}</p>
             <p className="mt-1 text-sm text-muted">
               <a href={c.source_url} rel="nofollow noopener">
