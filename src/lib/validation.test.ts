@@ -84,3 +84,29 @@ describe("bound action arguments", () => {
     }
   });
 });
+
+describe("group website (FR-GR-23)", () => {
+  const base = {
+    name: "Trail Friends",
+    description: "We ride every Saturday.",
+    subcategoryId: "0b6f7a2e-1c1d-4c3b-9b1a-2f8e9d6c5b4a",
+    area: "Brevard",
+    joinPolicy: "open",
+  };
+
+  it("is optional", () => {
+    expect(groupSchema.parse(base).website).toBeNull();
+    expect(groupSchema.parse({ ...base, website: "  " }).website).toBeNull();
+  });
+
+  it("adds https when the scheme is missing", () => {
+    expect(groupSchema.parse({ ...base, website: "dirtskrrts.com" }).website).toBe("https://dirtskrrts.com");
+    expect(groupSchema.parse({ ...base, website: "https://www.dirtskrrts.com/" }).website).toBe("https://www.dirtskrrts.com/");
+  });
+
+  it("refuses things that aren't web addresses", () => {
+    for (const website of ["javascript:alert(1)", "not a url", "https://", "ftp://example.org"]) {
+      expect(groupSchema.safeParse({ ...base, website }).success).toBe(false);
+    }
+  });
+});

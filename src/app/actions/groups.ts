@@ -35,6 +35,7 @@ export async function createGroup(formData: FormData) {
       join_question: group.joinPolicy === "approval" ? group.joinQuestion : null,
       discussions_enabled: group.discussionsEnabled,
       affinity_tags: tags.data,
+      website: group.website,
       created_by: viewer.id,
     });
     if (!error) succeed(`/g/${slug}`, "group_created");
@@ -65,6 +66,7 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
       join_question: group.joinPolicy === "approval" ? group.joinQuestion : null,
       discussions_enabled: group.discussionsEnabled,
       affinity_tags: tags.data,
+      website: group.website,
     })
     .eq("id", groupId)
     .select("id");

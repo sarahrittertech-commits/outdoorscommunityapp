@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { cancelEvent, rsvp } from "@/app/actions/events";
+import { groupPhotos } from "@/brand/activityPhotos";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
 import { site } from "@/config/site";
@@ -48,6 +50,8 @@ export default async function EventPage({ params, searchParams }: Props) {
   // Non-members can read only their own RSVP, so the list is for members only (FR-EV-6).
   const attendees = isMember ? goingRows : null;
   const going = listing?.going_count ?? 0;
+  // A representative photo for a couple of sample groups (src/brand/activityPhotos.ts).
+  const photo = groupPhotos[group.slug];
   const started = new Date(event.starts_at) <= new Date();
   const cancelled = event.status === "cancelled";
   const full = event.capacity !== null && going >= event.capacity && mine?.status !== "going";
@@ -78,7 +82,7 @@ export default async function EventPage({ params, searchParams }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <Notice params={await searchParams} />
-      <p className="text-sm">
+      <p className="breadcrumb">
         <Link href={`/g/${group.slug}`}>{group.name}</Link> ›
       </p>
       <h1>
@@ -86,75 +90,85 @@ export default async function EventPage({ params, searchParams }: Props) {
         {cancelled && <span className="ml-2 text-danger">(cancelled)</span>}
       </h1>
 
-      <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
-        <dt className="font-semibold">When</dt>
-        <dd>{when}</dd>
-        <dt className="font-semibold">Where</dt>
-        <dd>
-          {event.location_name}
-          {details?.address ? (
-            <span className="block text-sm">{details.address}</span>
-          ) : event.address_visibility === "members" && !isMember ? (
-            <span className="block text-sm text-muted">Address shown to group members.</span>
-          ) : null}
-        </dd>
-        {!group.is_unclaimed && (
-          <>
-            <dt className="font-semibold">Going</dt>
+      <div className="event-top">
+        <div>
+          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+            <dt className="font-semibold">When</dt>
+            <dd>{when}</dd>
+            <dt className="font-semibold">Where</dt>
             <dd>
-              {going}
-              {event.capacity !== null && ` of ${event.capacity}`}
+              {event.location_name}
+              {details?.address ? (
+                <span className="block text-sm">{details.address}</span>
+              ) : event.address_visibility === "members" && !isMember ? (
+                <span className="block text-sm text-muted">Address shown to group members.</span>
+              ) : null}
             </dd>
-          </>
-        )}
-      </dl>
-
-      {/* RSVP ------------------------------------------------------------------ */}
-      <section aria-label="RSVP" className="mt-4">
-        {organizerUrl ? (
-          <p className="rounded border border-rule bg-panel px-4 py-3">
-            From an <Link href={`/g/${group.slug}`}>unclaimed listing</Link>, added from public information. Check the details and sign up
-            on the organizer&apos;s own page:{" "}
-            <a href={organizerUrl} rel="nofollow noopener" className="font-bold">
-              {group.name} event page
-            </a>
-          </p>
-        ) : cancelled ? null : started ? (
-          <p className="text-muted">This event has started.</p>
-        ) : !viewer ? (
-          <Link href={`/signin?next=/e/${event.id}`} className="button">
-            Sign in to RSVP
-          </Link>
-        ) : !isMember ? (
-          <p>
-            <Link href={`/g/${group.slug}`}>Join {group.name}</Link> to RSVP.
-          </p>
-        ) : (
-          <div className="flex flex-wrap items-center gap-3">
-            {mine?.status === "going" ? (
+            {!group.is_unclaimed && (
               <>
-                <strong>You&apos;re going.</strong>
-                <form action={rsvp.bind(null, event.id, "not_going")}>
-                  <button className="button button-plain">Can&apos;t make it</button>
-                </form>
-              </>
-            ) : full ? (
-              <strong>This event is full.</strong>
-            ) : (
-              <>
-                <form action={rsvp.bind(null, event.id, "going")}>
-                  <button className="button">I&apos;m going</button>
-                </form>
-                {mine?.status !== "not_going" && (
-                  <form action={rsvp.bind(null, event.id, "not_going")}>
-                    <button className="button button-plain">Not going</button>
-                  </form>
-                )}
+                <dt className="font-semibold">Going</dt>
+                <dd>
+                  {going}
+                  {event.capacity !== null && ` of ${event.capacity}`}
+                </dd>
               </>
             )}
-          </div>
+          </dl>
+
+          {/* RSVP ------------------------------------------------------------------ */}
+          <section aria-label="RSVP" className="mt-4">
+            {organizerUrl ? (
+              <p className="rounded border border-rule bg-panel px-4 py-3">
+                From an <Link href={`/g/${group.slug}`}>unclaimed listing</Link>, added from public information. Check the details and sign
+                up on the organizer&apos;s own page:{" "}
+                <a href={organizerUrl} rel="nofollow noopener" className="font-bold">
+                  {group.name} event page
+                </a>
+              </p>
+            ) : cancelled ? null : started ? (
+              <p className="text-muted">This event has started.</p>
+            ) : !viewer ? (
+              <Link href={`/signin?next=/e/${event.id}`} className="button">
+                Sign in to RSVP
+              </Link>
+            ) : !isMember ? (
+              <p>
+                <Link href={`/g/${group.slug}`}>Join {group.name}</Link> to RSVP.
+              </p>
+            ) : (
+              <div className="flex flex-wrap items-center gap-3">
+                {mine?.status === "going" ? (
+                  <>
+                    <strong>You&apos;re going.</strong>
+                    <form action={rsvp.bind(null, event.id, "not_going")}>
+                      <button className="button button-plain">Can&apos;t make it</button>
+                    </form>
+                  </>
+                ) : full ? (
+                  <strong>This event is full.</strong>
+                ) : (
+                  <>
+                    <form action={rsvp.bind(null, event.id, "going")}>
+                      <button className="button">I&apos;m going</button>
+                    </form>
+                    {mine?.status !== "not_going" && (
+                      <form action={rsvp.bind(null, event.id, "not_going")}>
+                        <button className="button button-plain">Not going</button>
+                      </form>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+        {photo && (
+          <figure className="event-photo">
+            <Image src={photo.src} alt={photo.alt} width={900} height={604} sizes="(min-width: 768px) 20rem, 100vw" />
+            <figcaption>{photo.label} · representative photo</figcaption>
+          </figure>
         )}
-      </section>
+      </div>
 
       <p className="mt-3 text-sm">
         <a href={`/e/${event.id}/calendar.ics`}>Add to calendar</a>

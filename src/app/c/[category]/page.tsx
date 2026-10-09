@@ -43,7 +43,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <p className="text-sm">
+      <p className="breadcrumb">
         <Link href="/browse">all categories</Link> ›
       </p>
       <h1>{category.name}</h1>
