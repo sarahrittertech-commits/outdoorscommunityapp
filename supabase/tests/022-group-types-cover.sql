@@ -132,6 +132,10 @@ select throws_ok(
          tests.id('g1') || '/coversix.webp'),
   '42501', null, 'PT-107 a sixth file is refused'
 );
+-- Hosted Supabase blocks direct SQL deletes on storage tables (the app goes
+-- through the Storage API, which applies these same policies); allow it for
+-- this transaction so the policy itself is what's tested.
+select set_config('storage.allow_delete_query', 'true', true);
 select lives_ok(
   format($$ delete from storage.objects where bucket_id = 'group-covers-v2' and name = %L $$,
          tests.id('g1') || '/coverfiv.webp'),
