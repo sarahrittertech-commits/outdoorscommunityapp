@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { EventList } from "@/components/Listings";
 import { pageFrom, Pagination } from "@/components/Pagination";
+import { archivedGroupEvents } from "@/lib/groupEvents";
 import { loadGroup } from "@/lib/groups";
 
 const PAGE_SIZE = 50;
@@ -22,13 +23,20 @@ export default async function PastEventsPage({ params, searchParams }: Props) {
   const { supabase, group } = await loadGroup((await params).slug);
   const page = pageFrom((await searchParams).page);
 
-  const { data: events, count } = await supabase
-    .from("event_listings")
-    .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps", { count: "exact" })
-    .eq("group_id", group.id)
-    .lte("ends_at", new Date().toISOString())
-    .order("starts_at", { ascending: false })
-    .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+  // event_listings holds active groups only (FR-GR-6); an archived group's
+  // past events are read directly.
+  const range = { from: (page - 1) * PAGE_SIZE, to: page * PAGE_SIZE - 1 };
+  const { events, count } =
+    group.status === "active"
+      ? await supabase
+          .from("event_listings")
+          .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps", { count: "exact" })
+          .eq("group_id", group.id)
+          .lte("ends_at", new Date().toISOString())
+          .order("starts_at", { ascending: false })
+          .range(range.from, range.to)
+          .then(({ data, count }) => ({ events: data ?? [], count: count ?? 0 }))
+      : await archivedGroupEvents(supabase, group, { upcoming: false, ...range });
 
   return (
     <>
@@ -37,8 +45,8 @@ export default async function PastEventsPage({ params, searchParams }: Props) {
       </p>
       <h1>Past events</h1>
       <p className="mt-1 mb-2 text-sm text-muted">Newest first.</p>
-      <EventList events={events ?? []} showGroup={false} />
-      <Pagination basePath={`/g/${group.slug}/past`} page={page} pageCount={Math.ceil((count ?? 0) / PAGE_SIZE)} />
+      <EventList events={events} showGroup={false} />
+      <Pagination basePath={`/g/${group.slug}/past`} page={page} pageCount={Math.ceil(count / PAGE_SIZE)} />
     </>
   );
 }
