@@ -24,7 +24,7 @@ export default async function PastEventsPage({ params, searchParams }: Props) {
 
   const { data: events, count } = await supabase
     .from("event_listings")
-    .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed", { count: "exact" })
+    .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps", { count: "exact" })
     .eq("group_id", group.id)
     .lte("ends_at", new Date().toISOString())
     .order("starts_at", { ascending: false })

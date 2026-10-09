@@ -6,6 +6,7 @@ import { updateEvent } from "@/app/actions/events";
 import { EventForm } from "@/components/EventForm";
 import { Notice } from "@/components/Notice";
 import { requireViewer } from "@/lib/auth";
+import { eventPhotoUrl } from "@/lib/eventPhotos";
 import { loadEvent } from "@/lib/events";
 import { loadGroup } from "@/lib/groups";
 
@@ -33,7 +34,13 @@ export default async function EditEventPage({ params, searchParams }: Props) {
       </p>
       <h1>Edit event</h1>
       <Notice params={await searchParams} />
-      <EventForm action={updateEvent.bind(null, event.id)} event={event} address={details?.address} submitLabel="Save changes" />
+      <EventForm
+        action={updateEvent.bind(null, event.id)}
+        event={event}
+        address={details?.address}
+        photoUrl={event.photo_path ? eventPhotoUrl(supabase, event.photo_path) : null}
+        submitLabel="Save changes"
+      />
     </>
   );
 }

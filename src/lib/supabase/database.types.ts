@@ -220,6 +220,15 @@ export type Database = {
           updated_at: string;
           search: unknown;
           source_url: string | null;
+          details: string | null;
+          photo_path: string | null;
+          photo_alt: string | null;
+          is_paid: boolean;
+          registration_fee: string | null;
+          total_cost: string | null;
+          takes_rsvps: boolean;
+          signup_url: string | null;
+          waitlist_enabled: boolean;
         };
         Insert: {
           id?: string;
@@ -237,6 +246,15 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           source_url?: string | null;
+          details?: string | null;
+          photo_path?: string | null;
+          photo_alt?: string | null;
+          is_paid?: boolean;
+          registration_fee?: string | null;
+          total_cost?: string | null;
+          takes_rsvps?: boolean;
+          signup_url?: string | null;
+          waitlist_enabled?: boolean;
         };
         Update: {
           id?: string;
@@ -254,6 +272,15 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           source_url?: string | null;
+          details?: string | null;
+          photo_path?: string | null;
+          photo_alt?: string | null;
+          is_paid?: boolean;
+          registration_fee?: string | null;
+          total_cost?: string | null;
+          takes_rsvps?: boolean;
+          signup_url?: string | null;
+          waitlist_enabled?: boolean;
         };
         Relationships: [
           Fk<"events_group_id_fkey", "group_id", "groups">,
@@ -310,6 +337,7 @@ export type Database = {
           status: Database["public"]["Enums"]["rsvp_status"];
           created_at: string;
           updated_at: string;
+          waitlisted_at: string | null;
         };
         Insert: {
           event_id: string;
@@ -317,6 +345,7 @@ export type Database = {
           status: Database["public"]["Enums"]["rsvp_status"];
           created_at?: string;
           updated_at?: string;
+          waitlisted_at?: string | null;
         };
         Update: {
           event_id?: string;
@@ -324,6 +353,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["rsvp_status"];
           created_at?: string;
           updated_at?: string;
+          waitlisted_at?: string | null;
         };
         Relationships: [
           Fk<"event_rsvps_event_id_fkey", "event_id", "events">,
@@ -586,6 +616,8 @@ export type Database = {
           search: unknown;
           is_unclaimed: boolean | null;
           source_url: string | null;
+          is_paid: boolean | null;
+          takes_rsvps: boolean | null;
         };
         Relationships: [];
       };
@@ -612,6 +644,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      move_from_waitlist: { Args: { p_event_id: string; p_user_id: string }; Returns: undefined };
       approve_member: { Args: { p_group_id: string; p_user_id: string }; Returns: undefined };
       decline_member: { Args: { p_group_id: string; p_user_id: string }; Returns: undefined };
       remove_member: {
@@ -683,7 +716,7 @@ export type Database = {
       member_status: "pending" | "active" | "banned";
       address_visibility: "public" | "members";
       event_status: "scheduled" | "cancelled";
-      rsvp_status: "going" | "not_going";
+      rsvp_status: "going" | "not_going" | "waitlisted";
       post_status: "visible" | "deleted_by_author" | "removed";
       report_target: "group" | "event" | "thread" | "reply" | "profile";
       report_reason: "spam" | "harassment" | "unsafe" | "off_topic" | "other";

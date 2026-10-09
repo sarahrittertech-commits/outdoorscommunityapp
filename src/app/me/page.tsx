@@ -29,7 +29,7 @@ export default async function MyStuffPage({ searchParams }: Props) {
   const { data: events } = eventIds.length
     ? await supabase
         .from("event_listings")
-        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed")
+        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps")
         .in("id", eventIds)
         .gt("ends_at", new Date().toISOString())
         .order("starts_at")

@@ -10,7 +10,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   const supabase = await createClient();
   const [{ data: event }, { data: details }] = await Promise.all([
-    supabase.from("events").select("id, title, description, starts_at, ends_at, location_name").eq("id", id).maybeSingle(),
+    supabase.from("events").select("id, title, description, details, starts_at, ends_at, location_name").eq("id", id).maybeSingle(),
     supabase.from("event_private_details").select("address").eq("event_id", id).maybeSingle(),
   ]);
   if (!event) return new Response("Not found", { status: 404 });
@@ -19,7 +19,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     {
       id: event.id,
       title: event.title,
-      description: event.description,
+      description: [event.description, event.details].filter(Boolean).join("\n\n"),
       startsAt: event.starts_at,
       endsAt: event.ends_at,
       location: [event.location_name, details?.address].filter(Boolean).join(", "),

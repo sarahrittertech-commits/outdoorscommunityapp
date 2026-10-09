@@ -62,7 +62,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
         .order("role"),
       supabase
         .from("event_listings")
-        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed")
+        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps")
         .eq("group_id", group.id)
         .gt("ends_at", now)
         .order("starts_at")

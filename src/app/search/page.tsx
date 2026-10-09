@@ -33,7 +33,7 @@ export default async function SearchPage({ searchParams }: Props) {
       .eq("status", "active");
     let eventQuery = supabase
       .from("event_listings")
-      .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed")
+      .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps")
       .eq("status", "scheduled")
       .gt("starts_at", new Date().toISOString());
     if (words) {
