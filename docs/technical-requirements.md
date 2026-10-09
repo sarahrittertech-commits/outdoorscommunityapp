@@ -153,7 +153,7 @@ Runs on GitHub Actions on every push and pull request, like the bike map.
 
 ## Proposed with the 8 October design (drafts)
 
-These apply when the draft use cases UC-10 to UC-24 are approved and
+These apply when the draft use cases UC-10 to UC-27 are approved and
 built. They extend the rules above rather than replacing them.
 
 | ID | Draft requirement |
@@ -168,6 +168,8 @@ built. They extend the rules above rather than replacing them.
 | TR-PE-4 | **The calendar, reminders, inbox and filters work without JavaScript.** The destinations map is the one exception, and its list carries the same information (ADR-0007). |
 | TR-DATA-7 | **Places and towns have coordinates.** The places list (FR-BR-16) and a bundled list of US towns and zip codes with coordinates; distance is calculated in the database. |
 | TR-DATA-8 | **Group type** and **event price** are stored as plain fields; prices are text, never amounts the board calculates with. |
+| TR-OPS-7 | **Sign-in and claim emails need the domain** (UC-25, UC-26): both are sent through Resend from the verified custom domain (TR-OPS-4), with Resend's open and click tracking off. Claim confirmations count against the 100-a-day cap with sign-ins. |
+| TR-PRIV-10 | **Claim confirmation addresses are temporary** (UC-26): kept only until the link is used or expires, then only the domain and date remain. |
 
 ## Existing subscriptions — what this project uses
 

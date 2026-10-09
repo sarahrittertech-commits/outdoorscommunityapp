@@ -293,7 +293,7 @@ without revealing the rows, so visitors see "12 members" but not who.
 
 ## Planned with the 8 October design (drafts, not built)
 
-What the draft use cases UC-10 to UC-24 would add. Field-level detail is
+What the draft use cases UC-10 to UC-27 would add. Field-level detail is
 written when each is approved, with its migration and permission tests.
 
 | Table or change | For | Notes |
@@ -313,7 +313,11 @@ written when each is approved, with its migration and permission tests.
 | `conversations`, `messages` | UC-20 | Two participants; request status; blocks |
 | `businesses`, `business_admins`, `business_places`, `business_groups` | UC-12 | Owner is the account that claimed it with the business email; admins are people's own accounts; places have role *its location* or *operates at*; linked groups keep their own roles. No events table of its own |
 
-Reminders (UC-23) and the calendar (UC-18) need no tables: they are read
+| `group_claims`: `confirmed_domain`, `confirmed_at`, plus a temporary address, link token, expiry and send count | UC-26 | The address and token are cleared once the link is used or the last one expires; only the domain and date stay |
+| `groups.review_status`: `pending`, `approved`, `declined`, with `review_reason` | UC-27 | Existing groups start as `approved`; a pending group is readable by its owner and the site admin only |
+
+The branded sign-in email (UC-25) needs no tables: it is Supabase Auth
+settings and template files. Reminders (UC-23) and the calendar (UC-18) need no tables: they are read
 from the tables above.
 
 ## Research workspace (not part of the app)

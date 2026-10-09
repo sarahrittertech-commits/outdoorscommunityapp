@@ -131,7 +131,7 @@ claimed the same way; its remaining admins and members are users here.
 
 ### Proposed with the 8 October design (drafts, not built)
 
-These follow the draft requirements for UC-10 to UC-24. Each becomes part
+These follow the draft requirements for UC-10 to UC-27. Each becomes part
 of the matrix above, with a permission test, once its use case is
 approved.
 
@@ -162,6 +162,11 @@ approved.
 | Edit a business page | ❌ | business owner and admins only | — | — | — | ✅ |
 | Add or remove a business page's admins | ❌ | business owner only | — | — | — | ✅ |
 | Link a group to a business page | ❌ | business owner, with the group owner's acceptance | — | — | ✅ accepts | ✅ |
+| Confirm a claim with a club email (UC-26) | ❌ | **own claim** | — | — | — | — |
+| See whether a claim was confirmed, and at which domain | ❌ | **own claim** | — | — | — | ✅ |
+| See a group waiting for review (UC-27) | ❌ | ❌ | — | — | ✅ | ✅ |
+| Join a group waiting for review | ❌ | ❌ | — | — | — | ❌ |
+| Approve or decline a new group | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
 Group admins never read members' private messages or saved events.
 
