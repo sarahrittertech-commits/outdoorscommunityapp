@@ -14,10 +14,12 @@ import { createClient } from "./supabase/server";
  */
 export const loadGroup = cache(async (slug: string) => {
   const supabase = await createClient();
-  const { data: group } = await supabase.from("groups").select("*").eq("slug", slug).maybeSingle();
+  const [{ data: group }, viewer] = await Promise.all([
+    supabase.from("groups").select("*").eq("slug", slug).maybeSingle(),
+    getViewer(),
+  ]);
   if (!group) notFound();
 
-  const viewer = await getViewer();
   const { data: membership } = viewer
     ? await supabase.from("group_members").select("role, status").eq("group_id", group.id).eq("user_id", viewer.id).maybeSingle()
     : { data: null };

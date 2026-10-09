@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 import { resolveReport } from "@/app/actions/moderation";
 import { Notice } from "@/components/Notice";
-import { ReportTarget } from "@/components/ReportTarget";
+import { ReportTargetLink, resolveReportTargets } from "@/components/ReportTarget";
 import { site } from "@/config/site";
 import { requireViewer } from "@/lib/auth";
 import { loadGroup } from "@/lib/groups";
@@ -31,6 +31,10 @@ export default async function GroupReportsPage({ params, searchParams }: Props) 
     .eq("status", "open")
     .order("created_at");
 
+  const targets = await resolveReportTargets(
+    supabase,
+    (reports ?? []).map((r) => ({ type: r.target_type, id: r.target_id, groupSlug: group.slug })),
+  );
   const path = `/g/${group.slug}/reports`;
 
   return (
@@ -52,7 +56,7 @@ export default async function GroupReportsPage({ params, searchParams }: Props) 
             <li key={r.id} className="py-3">
               <p>
                 <strong>{r.reason.replace("_", " ")}</strong> · {r.target_type} ·{" "}
-                <ReportTarget type={r.target_type} id={r.target_id} groupSlug={group.slug} />
+                <ReportTargetLink targets={targets} type={r.target_type} id={r.target_id} />
                 <span className="ml-2 text-sm text-muted">{formatPostDate(r.created_at, site.defaultTimezone)}</span>
               </p>
               {r.note && <p className="mt-1 text-sm">&ldquo;{r.note}&rdquo;</p>}
