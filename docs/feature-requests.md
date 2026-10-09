@@ -49,6 +49,7 @@ Requests from the 8 October Magic Patterns design are summarized in the
 | 9 Oct | Sarah | Generate a link to send to people to join the group | Tool | UC-31, FR-MB-14 to FR-MB-16 | Built (PR #28). |
 | 9 Oct | Sarah | Invite page that names the group and creates the account and joins in one place | Tool | UC-31, FR-MB-14 | Built (PR #28, after #27). |
 | 9 Oct | Sarah | Fix Catalyst Sports Asheville's activity (filed under mountain biking) | Board | — | Open: a data fix for the site admin. |
+| 9 Oct | Sarah | Build the ready use cases that don't need a domain or email: reply to a reply | Tool | UC-19, FR-DS-9 | Built (PR pending review). Migration to apply. |
 | 9 Oct | Sarah | Suggestions to the site admin: recommend a region, suggest a feature, a group to invite or an event to add | Tool | UC-32, FR-AD-4 to FR-AD-7 | Draft (PR #26). Members only, private to the site admin, statuses Planned / Done / Declined. |
 | 8 Oct | Magic Patterns design | Save an event for later | Tool | UC-22, FR-EV-18 | Built (approved 9 Oct). Migration to apply. |
 | 8 Oct | Magic Patterns design | Member list privacy per group | Tool | UC-16, FR-MB-10 | Built (approved 9 Oct). Migration to apply. |

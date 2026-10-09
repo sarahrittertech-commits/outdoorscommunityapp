@@ -44,6 +44,7 @@ records where each one came from.
 | member | join the waitlist when an event is full | I get a place if someone drops out | UC-30 | FR-EV-28 | Draft |
 | member | see what an event costs, the registration fee and the total | I know before I commit | UC-30 | FR-EV-25 | Draft |
 | member | save an event without RSVPing, and see it under Saved in My stuff | I keep track of things I might go to, and nobody else sees my list | UC-22 | FR-EV-18 | Built |
+| member | answer one person's reply in a thread, not the whole thread | side conversations stay together and readable | UC-19 | FR-DS-9 | Built |
 
 ## Running a group
 

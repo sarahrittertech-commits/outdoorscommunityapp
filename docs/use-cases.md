@@ -482,7 +482,8 @@ still add any event to their own calendar (FR-EV-7).
 
 ## UC-19 — Reply to a reply
 
-> **Draft, awaiting review.** Changes FR-DS-2 (flat replies).
+> **Approved and built 9 October 2026.** Changes FR-DS-2 (flat replies).
+> Role labels use the site's names: *page admin* and *page manager*.
 
 **Actor:** The regular
 
@@ -494,9 +495,9 @@ not the whole thread.
 1. Chooses *Reply* under that person's reply.
 2. Writes the answer; it appears indented under the reply it answers.
 3. Anyone reading the thread sees the exchange together. Organizers' posts
-   carry an *Organizer* or *Admin* label.
+   carry a *page admin* or *page manager* label.
 
-**Requirements:** to be written after review (draft FR-DS-9).
+**Requirements:** FR-DS-9 (changes FR-DS-2)
 
 **Succeeds when:** side conversations stay readable without becoming
 endless nesting.
@@ -775,11 +776,13 @@ report or message, on any page or through the API.
 
 1. Clicks *Join group* and is sent to *Sign in*, which has a *Create an
    account* link.
-2. Enters an email address and a password (twice), and clicks *Create
-   account*. Sees *Check your email to confirm your address*.
-3. Opens the confirmation email and clicks *Confirm my email*. Lands on
-   the welcome page, confirms they are 18 or older, accepts the terms and
-   sets a display name (FR-AC-2, FR-AC-3).
+2. Enters an email address and clicks *Email me the link*. Sees *Check
+   your email*.
+3. Opens the email and clicks *Confirm my email*. Lands on *Create your
+   password*, types a password and then types it again to confirm (Sarah,
+   9 October: the password is chosen after the email, not before). Then the
+   welcome page: confirms they are 18 or older, accepts the terms and sets a
+   display name (FR-AC-2, FR-AC-3).
 4. Lands back on the group page and joins.
 5. Next week, signs in with the same email and password from *Sign in*.
 6. Months later, has forgotten the password: clicks *Forgot password*,
@@ -872,7 +875,8 @@ regulars and co-organizers with them.
 4. A rider opens the link. The page says *Blue Ridge Dirt Skrrts is on
    Branch Outdoors*, explains that this is the board the club uses for its
    events and discussions, and offers *Create your account and join*
-   (email, password twice) or *Sign in*. She creates the account, confirms
+   (email only) or *Sign in*. She enters her email, follows the link to
+   create her password, confirms
    her email, and the link in that email brings her back to the same page;
    she adds her display name and accepts the terms, then presses *Join Blue
    Ridge Dirt Skrrts* and lands on the group page (*Welcome to Blue Ridge

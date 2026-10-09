@@ -59,9 +59,8 @@ export const signInSchema = z.object({
 
 const matching = { message: "password_mismatch", path: ["passwordAgain"] };
 
-export const signUpSchema = z
-  .object({ email, password: passwordSchema, passwordAgain: z.string(), next: z.string().optional() })
-  .refine((v) => v.password === v.passwordAgain, matching);
+/** UC-29: sign-up asks only for the email; the password is chosen after the confirmation link. */
+export const signUpSchema = z.object({ email, next: z.string().optional() });
 
 export const forgotPasswordSchema = z.object({ email });
 
@@ -198,6 +197,11 @@ export const threadSchema = z.object({
 
 export const replySchema = z.object({
   body: requiredText(1, 10000),
+});
+
+/** FR-DS-9: a new reply may answer another reply in the same thread. */
+export const newReplySchema = replySchema.extend({
+  parent_id: id.optional(),
 });
 
 export const reportSchema = z.object({

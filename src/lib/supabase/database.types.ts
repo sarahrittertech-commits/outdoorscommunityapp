@@ -429,6 +429,8 @@ export type Database = {
           status: Database["public"]["Enums"]["post_status"];
           created_at: string;
           edited_at: string | null;
+          parent_id: string | null;
+          answers_id: string | null;
         };
         Insert: {
           id?: string;
@@ -438,6 +440,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["post_status"];
           created_at?: string;
           edited_at?: string | null;
+          parent_id?: string | null;
+          answers_id?: string | null;
         };
         Update: {
           id?: string;
@@ -447,10 +451,14 @@ export type Database = {
           status?: Database["public"]["Enums"]["post_status"];
           created_at?: string;
           edited_at?: string | null;
+          parent_id?: string | null;
+          answers_id?: string | null;
         };
         Relationships: [
           Fk<"replies_thread_id_fkey", "thread_id", "threads">,
           Fk<"replies_author_id_fkey", "author_id", "profiles">,
+          Fk<"replies_parent_id_fkey", "parent_id", "replies">,
+          Fk<"replies_answers_id_fkey", "answers_id", "replies">,
         ];
       };
       reports: {

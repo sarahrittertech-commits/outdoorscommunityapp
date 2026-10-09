@@ -109,6 +109,16 @@ web app is not the thing enforcing the rule.
 | PT-87 | With *organizers only*, a member sees the organizers and their own row but no other member; counts stay; organizers and the site admin see everyone; a plain member can't change the setting, a page manager can (FR-MB-10) | Names leak through the API when the page hides them |
 | PT-88 | With *organizers only*, a member sees no names on who's going and only the waitlist count and their own place; organizers see the names (FR-MB-10, FR-EV-28) | Who's going leaks names the setting hides |
 | PT-89 | *Anyone signed in* opens the list and who's going to signed-in non-members but not visitors; values outside the three are refused; a removed group stays hidden (FR-MB-10) | The setting opens more than it says, or reopens removed groups |
+| PT-90 | A member answers a top-level reply; the answer sits under it (FR-DS-9) | Answers can't be posted, or float loose in the thread |
+| PT-91 | Answering an answer joins the same top-level reply and records who it answers; no reply ever has a nested parent (FR-DS-9) | Threads nest without limit |
+| PT-92 | An answer can't point at a reply in another thread, or one that doesn't exist (FR-DS-9) | Replies leak into, or are attached to, other threads |
+| PT-93 | Non-members, banned members and signed-out visitors can't answer a reply (FR-DS-6, FR-DS-9) | Outsiders post into a group's discussions |
+| PT-94 | Nobody answers a reply in a locked thread or while discussions are off (FR-DS-5, FR-GR-4) | Locks and the discussions switch are bypassed through answers |
+| PT-95 | Removing a reply leaves its answers readable (FR-DS-5, FR-DS-9) | A moderator's removal silently takes other people's posts with it |
+| PT-96 | A removed reply can't be answered (FR-DS-9) | Removed posts gain new answers |
+| PT-97 | An author can't move their reply to another parent (FR-DS-9) | Replies rearranged after the fact |
+| PT-98 | Answers count toward the posting rate limit (FR-MD-4, TR-SEC-8) | The rate limit is bypassed through answers |
+| PT-99 | Who a reply answers is set by the database only (FR-DS-9) | A post claims to answer someone it doesn't |
 
 ## Automated — unit
 
@@ -169,7 +179,6 @@ real tests, with requirements, once the use case is approved.
 | UC-15 Explore destinations | Every place is reachable from the list with the map off; place pages list only that place's groups and upcoming events |
 | UC-17 Approve who comes | A member can't approve their own RSVP; going never exceeds places with two admins acting at once; only admins open Manage RSVPs |
 | UC-18 My calendar | Shows only the user's going and saved events; works without JavaScript |
-| UC-19 Reply to a reply | Never more than one level of indent; role labels only on owner and admin posts |
 | UC-20 Message another member | A second message before acceptance is refused; a blocked user's message is refused; a third user, group admins included, reads nothing; the 11th request in a day is refused |
 | UC-21 Share trip photos | A non-member gets no photo from a members-only gallery, from the database or storage; uploads are re-encoded and stripped of location data; only the uploader and organizers remove photos |
 | UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |

@@ -255,10 +255,16 @@ can't take a freed place themselves.
 | `author_id` | uuid | |
 | `body` | text | plain text |
 | `status` | enum | `visible`, `deleted_by_author`, `removed` |
+| `parent_id` | uuid, optional | the top-level reply this one answers (FR-DS-9); always a top-level reply in the same thread, so nesting is one level |
+| `answers_id` | uuid, optional | set by the database when answering an answer: the nested reply being answered, so the page can name its author |
 | `created_at`, `edited_at` | timestamp | |
 
 The database refuses a thread or reply when the group has discussions off, the
-thread is locked, or the author is not an active member.
+thread is locked, or the author is not an active member. An answer to a reply
+is also refused when that reply is in another thread or has been removed or
+deleted; answering a nested reply attaches to its parent instead
+(`replies_before_insert`). `parent_id` and `answers_id` can't be changed after
+posting.
 
 ## Moderation
 
