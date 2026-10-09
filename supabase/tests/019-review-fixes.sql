@@ -253,7 +253,8 @@ select throws_ok(
 -- PT-77  The unused group-covers bucket takes no uploads (TR-SEC-9) ---------
 select tests.as_admin();
 select is(
-  (select count(*)::int from pg_policies where schemaname = 'storage' and policyname ilike '%cover%'), 0,
+  (select count(*)::int from pg_policies where schemaname = 'storage' and policyname ilike '%cover%'
+     and policyname not like '% v2'), 0,  -- UC-24's group-covers-v2 policies end in v2
   'PT-77 group-covers has no storage policies'
 );
 select is(
