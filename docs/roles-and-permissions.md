@@ -182,7 +182,7 @@ an organizer gives no access to anyone's suggestions.
 
 ### Proposed with the 8 October design (drafts, not built)
 
-These follow the draft requirements for UC-10 to UC-28 and UC-32. Each becomes part
+These follow the draft requirements for UC-10 to UC-13, UC-17, UC-18, UC-20, UC-21, UC-23 and UC-25 to UC-28. Each becomes part
 of the matrix above, with a permission test, once its use case is
 approved.
 

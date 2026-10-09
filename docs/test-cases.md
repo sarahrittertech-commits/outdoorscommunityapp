@@ -9,9 +9,9 @@ A solo build has no code review, so the tests are the safety net. They are
 weighted toward the thing most likely to go wrong silently in this project:
 **someone seeing or changing something they shouldn't.**
 
-:::note Status — 8 October 2026
-PT-1 to PT-27 are implemented in `supabase/tests/` (186 assertions) and pass.
-UT-1 to UT-5 are implemented in `src/lib/*.test.ts` (26 tests) and pass.
+:::note Status — 9 October 2026
+The PT cases are implemented in `supabase/tests/` (23 files, 548 assertions) and pass, locally and in CI.
+The UT cases are implemented in `src/lib/*.test.ts` (119 tests) and pass.
 E2E-1 to E2E-3 were walked in a real browser against a local database (43
 checks, all passing) but are not yet a CI job.
 MT-8 passed on 29 September 2026: all 26 pages at 390px wide, as a visitor,
@@ -185,7 +185,7 @@ Playwright in CI against the local stack with seed data.
 
 ## Planned — pending use case review
 
-Draft use cases UC-10 to UC-28 and UC-32 are not approved yet, so these have no
+Draft use cases UC-10 to UC-13, UC-17, UC-18, UC-20, UC-21, UC-23 and UC-25 to UC-28 are not approved yet, so these have no
 requirement numbers. They show what each would have to prove; they become
 real tests, with requirements, once the use case is approved.
 

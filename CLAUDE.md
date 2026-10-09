@@ -71,15 +71,16 @@ with unclaimed listings of real groups (FR-GR-9) that organizers can claim;
 a weekly research agent (UC-9, `scripts/research/agent.md`) suggests new
 ones for the site admin to list or skip; groups carry affinity tags
 (FR-GR-11). See the PRD's "Build status" for what is not built yet and the
-[runbook](docs/runbook.md) for operations. UC-29 (sign-in with email and a password), UC-30 (the
-event form: description, photo, price, optional RSVPs and a waitlist) and
-UC-31 (page admin and up to two page managers, invite link, email invites
-waiting on email setup) were approved and built on 9 October 2026; the
-emailed sign-in link is gone. Draft use cases awaiting review: UC-10 to
-UC-28 and UC-32, mostly from the 8 October Magic Patterns design (UC-25 to UC-28,
-drafted 9 October, are Sarah's own requests: branded sign-in email, claim
-confirmation by email, new-group approval, a demo member; UC-32, suggestions to the site admin); on that
-date Sarah brought direct messages, group photo galleries, event prices,
+[runbook](docs/runbook.md) for operations. Built on 9 October 2026, after
+Sarah's go: UC-14 and UC-15 (town search, Near you, destinations map),
+UC-16 (member list privacy), UC-19 (replies to replies), UC-22 (save for
+later), UC-24 (group types and cover photos), UC-29 (sign-up with email,
+then create a password from the link), UC-30 (the event form: description,
+photo, price, optional RSVPs and a waitlist), UC-31 (page admin and up to
+two page managers, invite link, email invites waiting on email setup) and
+UC-32 (suggestions to the site admin). Draft use cases awaiting review:
+UC-10 to UC-13, UC-17, UC-18, UC-20, UC-21, UC-23 and UC-25 to UC-28. UC-25 and UC-26 wait on a domain and email. On 8 October
+Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live
 from what's new.
