@@ -29,25 +29,36 @@ export default async function EventsPage({ searchParams }: Props) {
   const now = new Date();
   const until = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
 
-  const inWindow = () =>
+  // TR-SEC-12: the activity filter and the sidebar counts both go to the
+  // database. Filtering a truncated page in here used to hide events past the
+  // 300th and cap every count at whatever landed in those first rows.
+  const startsInWindow = { from: now.toISOString(), to: until.toISOString() };
+
+  let listing = supabase
+    .from("event_listings")
+    .select(
+      "id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed",
+    )
+    .eq("status", "scheduled")
+    .gt("starts_at", startsInWindow.from)
+    .lt("starts_at", startsInWindow.to);
+  if (category) listing = listing.eq("category_slug", category);
+
+  const [{ data: all }, { data: categories }, { data: countRows }] = await Promise.all([
+    listing.order("starts_at").limit(300),
+    supabase.from("categories").select("slug, name").order("sort_order"),
     supabase
       .from("event_listings")
-      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed")
+      .select("category_slug")
       .eq("status", "scheduled")
-      .gt("starts_at", now.toISOString())
-      .lt("starts_at", until.toISOString())
-      .order("starts_at")
-      .limit(300);
-
-  const [{ data: all }, { data: categories }] = await Promise.all([
-    inWindow(),
-    supabase.from("categories").select("slug, name").order("sort_order"),
+      .gt("starts_at", startsInWindow.from)
+      .lt("starts_at", startsInWindow.to),
   ]);
-  const events = (all ?? []).filter((e) => !category || e.category_slug === category);
+  const events = all ?? [];
 
-  // Counts per activity, for the sidebar.
+  // Counts per activity, for the sidebar: over the whole window, not the page.
   const counts = new Map<string, number>();
-  for (const e of all ?? []) counts.set(e.category_slug ?? "", (counts.get(e.category_slug ?? "") ?? 0) + 1);
+  for (const e of countRows ?? []) counts.set(e.category_slug ?? "", (counts.get(e.category_slug ?? "") ?? 0) + 1);
 
   // Group by month, in the board's time zone.
   const monthOf = (iso: string) =>
