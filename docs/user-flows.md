@@ -475,7 +475,8 @@ flowchart TD
 
 ## UC-32 — Suggest something to the site admin
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. The form is at /suggest, linked from
+the footer and My stuff; the site admin's list is on the admin page.*
 
 ```mermaid
 flowchart TD

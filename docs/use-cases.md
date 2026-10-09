@@ -886,9 +886,9 @@ and nobody but the page admin can hand the group to someone else.
 
 ## UC-32 — Suggest something to the site admin
 
-> **Draft, awaiting review.** Requested by Sarah on 9 October 2026: a way
+> **Approved and built 9 October 2026.** Requested by Sarah the same day: a way
 > for people to send the site admin recommendations: a region to cover, a
-> feature, a group to invite, or an event to add. Written with the
+> feature, a group to invite, or an event to add. Built with the
 > recommended choices: signed-in members only, private to the site admin,
 > never shown publicly or voted on.
 
@@ -909,7 +909,7 @@ and nobody but the page admin can hand the group to someone else.
    first, filtered by kind, and marks it *Planned*, *Done* or *Declined*,
    with an optional note back to the member.
 
-**Requirements:** to be written after review (drafts FR-AD-4 to FR-AD-7).
+**Requirements:** FR-AD-4 to FR-AD-7.
 
 **Succeeds when:** every suggestion reaches the site admin in one place,
 and the member can see what happened to it.

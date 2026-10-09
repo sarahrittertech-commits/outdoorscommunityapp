@@ -163,6 +163,10 @@ are not notifications and are always sent.
 | FR-AD-1 | Categories and subcategories are managed as seed data in a migration, not through a UI. | Must | Changing the list is a reviewed commit. |
 | FR-AD-2 | A site-admin report queue shows open reports across the board, oldest first. | Must | — |
 | FR-AD-3 | A site-admin stats page shows counts of users, groups, events and RSVPs, read from the database. | Could | — |
+| FR-AD-4 | **Suggest something** (UC-32, built 9 October 2026). A signed-in member sends a suggestion from /suggest: kind (*region*, *feature*, *group to invite*, *event to add*, *other*), title (3 to 120 characters), details (up to 2,000) and an optional http(s) link. Visitors are asked to sign in first (anonymous visitors never write, TR-SEC-2). The form works without JavaScript and says *Thanks, the site admin reads every suggestion.* The footer and *My stuff* link to it. | Should | Only signed-in, writable accounts can send one, as themselves; the kind must be one of the five. |
+| FR-AD-5 | **Private.** A suggestion is readable only by the member who sent it and the site admin. Never shown publicly, never voted on or ranked (product principles). | Must | No other member, organizer or visitor can read it. |
+| FR-AD-6 | **Site admin review.** The admin page lists suggestions newest first, filterable by kind, each with its sender (display name, linked to their profile), link and date. The site admin sets *Planned*, *Done* or *Declined*, with an optional note (up to 500 characters) the member can read, through one database function. | Should | Only the site admin can change a status; members can't set one when sending. |
+| FR-AD-7 | **Limits.** 5 suggestions per member per day, with the per-person lock and server time every other write has (TR-SEC-8). The member's own list (*My suggestions*) shows each one's status and note. | Should | A sixth suggestion in a day is refused. |
 
 ## Research agent — FR-RS
 
@@ -353,12 +357,3 @@ read-only demo.
 | FR-AC-14 | **Demo sign-in.** The sign-in page offers *Look around as a demo member*. It signs the visitor into one shared demo account without an email, through a server action; the account's password lives only in a Railway secret and never reaches the browser. The session lasts at most an hour. | Should | Anyone can open the demo without an email; nobody can sign in as the demo any other way. |
 | FR-AC-15 | **Read-only in the database.** The demo account is marked as a demo, and `can_write()` returns false for it, so every write the board has (post, reply, join, leave, RSVP, report, claim, message, profile edit, account deletion) is refused by the database whatever the page shows. Buttons explain that the demo can look but not change anything. | Should | A pgTAP test tries every write as the demo account and every one is refused. |
 | FR-AC-16 | **Demo groups only.** The demo account is a member only of groups marked as demo groups, whose content is sample content, so it never reads a real group's members-only discussions or member list. Demo groups are listed like any other but carry a *Demo* tag. | Should | The demo account belongs to no real group; every demo group is tagged. |
-
-### Suggestions to the site admin (UC-32)
-
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-AD-4 | **Suggest something.** A signed-in member sends a suggestion: kind (*region*, *feature*, *group to invite*, *event to add*, *other*), title (3 to 120 characters), details (up to 2,000) and an optional http(s) link. Visitors are asked to sign in first (anonymous visitors never write, TR-SEC-2). | Should | Only signed-in, writable accounts can send one; the kind must be one of the five. |
-| FR-AD-5 | **Private.** A suggestion is readable only by the member who sent it and the site admin. Never shown publicly, never voted on or ranked (product principles). | Must | No other member, organizer or visitor can read it. |
-| FR-AD-6 | **Site admin review.** The admin page lists suggestions newest first, filterable by kind, each with its sender, link and date. The site admin sets *Planned*, *Done* or *Declined*, with an optional note (up to 500 characters) the member can read. | Should | Only the site admin can change a status. |
-| FR-AD-7 | **Limits.** 5 suggestions per member per day, with the per-person lock and server time every other write has (TR-SEC-8). The member's own list (*My suggestions*) shows each one's status and note. | Should | A sixth suggestion in a day is refused. |

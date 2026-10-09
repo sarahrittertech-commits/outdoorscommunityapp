@@ -287,6 +287,31 @@ site admin.
 | `content_snapshot` | json, optional | the removed text, kept for the site admin only |
 | `created_at` | timestamp | |
 
+## Suggestions (UC-32)
+
+### suggestions
+
+Members' suggestions to the site admin (FR-AD-4 to FR-AD-7). Readable only
+by the sender and the site admin; never shown publicly, voted on or ranked.
+Members insert only `user_id`, `kind`, `title`, `details` and `link`;
+`status` and `admin_note` change only through `set_suggestion_status()`,
+which only the site admin can call. Nobody updates or deletes a row
+directly. Limited to 5 per member per day, with the per-person lock and
+server time (`a_limit_guard`, TR-SEC-8).
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `user_id` | uuid, optional | the sender; kept (as a nameless profile) if they delete their account |
+| `kind` | enum | `region`, `feature`, `group` (to invite), `event` (to add), `other` |
+| `title` | text | 3 to 120 characters |
+| `details` | text, optional | up to 2,000 characters |
+| `link` | text, optional | http(s) only, up to 500 characters |
+| `status` | enum | `new`, `planned`, `done`, `declined` |
+| `admin_note` | text, optional | up to 500 characters; the sender reads it under My suggestions |
+| `handled_at` | timestamp, optional | when the site admin last set the status |
+| `created_at` | timestamp | server time |
+
 ## Invites (UC-31)
 
 ### group_invite_links

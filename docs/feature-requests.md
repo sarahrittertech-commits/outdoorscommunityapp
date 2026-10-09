@@ -49,7 +49,7 @@ Requests from the 8 October Magic Patterns design are summarized in the
 | 9 Oct | Sarah | Generate a link to send to people to join the group | Tool | UC-31, FR-MB-14 to FR-MB-16 | Built (PR #28). |
 | 9 Oct | Sarah | Invite page that names the group and creates the account and joins in one place | Tool | UC-31, FR-MB-14 | Built (PR #28, after #27). |
 | 9 Oct | Sarah | Fix Catalyst Sports Asheville's activity (filed under mountain biking) | Board | — | Open: a data fix for the site admin. |
-| 9 Oct | Sarah | Suggestions to the site admin: recommend a region, suggest a feature, a group to invite or an event to add | Tool | UC-32, FR-AD-4 to FR-AD-7 | Draft (PR #26). Members only, private to the site admin, statuses Planned / Done / Declined. |
+| 9 Oct | Sarah | Suggestions to the site admin: recommend a region, suggest a feature, a group to invite or an event to add | Tool | UC-32, FR-AD-4 to FR-AD-7 | Built 9 Oct (drafted in PR #26 and #30). Members only, private to the site admin, statuses Planned / Done / Declined, 5 a day. Migration to apply. |
 
 ## How a request becomes a feature
 
