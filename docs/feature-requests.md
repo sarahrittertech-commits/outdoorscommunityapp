@@ -37,17 +37,18 @@ Requests from the 8 October Magic Patterns design are summarized in the
 | 9 Oct | Sarah | Research run for more cities, venues, guides, bike shops and trail hubs | Board | UC-9 (agent instructions) | Blocked: the cloud routine needs an allow rule for the intake call, set by Sarah on claude.ai. |
 | 9 Oct | Sarah | Mark likely duplicates from research for review; drop exact matches silently | Tool | FR-RS-3, FR-RS-10 | Built (PR #21). Migration to apply. |
 | 9 Oct | Code review | Research events reaching live listings without review | Tool | FR-RS-8 | Built (PR #21): only from the listing's own website. |
-| 9 Oct | Sarah | Sign up with an email invite and a password, not an emailed link | Tool | UC-29, FR-AC-17 to FR-AC-21, ADR-0009 | Draft (PR #22 merged as docs). Open sign-up with email confirmation; password only. Needs a domain for the emails. |
+| 9 Oct | Sarah | Sign up with an email invite and a password, not an emailed link | Tool | UC-29, FR-AC-17 to FR-AC-21, ADR-0009 | In review (PR #27). Open sign-up with email confirmation; password only. Needs a domain for the emails. |
 | 9 Oct | Sarah | Only her account is site admin | Board | — | Live. Admin can only be granted in the database. |
 | 9 Oct | Sarah | Link to the group's own website | Tool | FR-GR-23 | Built (PR #23). Migration to apply. |
 | 9 Oct | Sarah | More vertical space: 25px under breadcrumbs, at least 15px between items | Tool | docs/brand.md *Spacing* | Built (PR #23). |
 | 9 Oct | Sarah | Photos from the design on a couple of sample groups and their events | Brand | docs/brand.md *Representative photos* | Built (PR #23). Captioned as representative, never as the group's own. |
 | 9 Oct | Sarah | Real group photos and a photos page per group | Tool | UC-21, UC-24, FR-GR-12 to FR-GR-14 | Draft. |
-| 9 Oct | Sarah | Event form: description and details, a photo, Free or Paid with registration fee and total cost, optional RSVPs with a waitlist, or a sign-up link | Tool | UC-30, FR-EV-23 to FR-EV-28 | In review (PR #24). |
-| 9 Oct | Sarah | One page admin and up to two page managers; only the page admin transfers ownership | Tool (limit as a setting) | UC-31, FR-MB-11, FR-MB-12 | In review (PR #25). Roles exist today as owner and admins. |
-| 9 Oct | Sarah | Invite members by email, one address or many | Tool | UC-31, FR-MB-13, FR-MB-14, FR-MB-16 | In review (PR #25). Needs a domain. |
-| 9 Oct | Sarah | Generate a link to send to people to join the group | Tool | UC-31, FR-MB-14 to FR-MB-16 | In review (PR #25). No email needed, so it can ship first. |
+| 9 Oct | Sarah | Event form: description and details, a photo, Free or Paid with registration fee and total cost, optional RSVPs with a waitlist, or a sign-up link | Tool | UC-30, FR-EV-23 to FR-EV-28 | In review (PR #29). |
+| 9 Oct | Sarah | One page admin and up to two page managers; only the page admin transfers ownership | Tool (limit as a setting) | UC-31, FR-MB-11, FR-MB-12 | In review (PR #28). |
+| 9 Oct | Sarah | Invite members by email, one address or many | Tool | UC-31, FR-MB-13, FR-MB-14, FR-MB-16 | In review (PR #28). Forms switched off until email is set up. |
+| 9 Oct | Sarah | Generate a link to send to people to join the group | Tool | UC-31, FR-MB-14 to FR-MB-16 | In review (PR #28), with a combined sign-up and join page. |
 | 9 Oct | Sarah | Fix Catalyst Sports Asheville's activity (filed under mountain biking) | Board | — | Open: a data fix for the site admin. |
+| 9 Oct | Sarah | Suggestions to the site admin: recommend a region, suggest a feature, a group to invite or an event to add | Tool | UC-32, FR-AD-4 to FR-AD-7 | Draft (PR #26). Members only, private to the site admin, statuses Planned / Done / Declined. |
 
 ## How a request becomes a feature
 

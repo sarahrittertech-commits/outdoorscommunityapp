@@ -130,6 +130,12 @@ Requested by Sarah on 8 October; drafted 9 October.
 | **Invite members by email**, one or many addresses | Requested 9 Oct, awaiting review (needs email) | UC-31 | FR-MB-13, FR-MB-14, FR-MB-16 |
 | **Invite link** to share so people can join | Requested 9 Oct, awaiting review (no email needed) | UC-31 | FR-MB-14 to FR-MB-16 |
 
+### Suggestions
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Suggest something** to the site admin: a region, a feature, a group to invite, an event to add | Requested 9 Oct, awaiting review | UC-32 | FR-AD-4 to FR-AD-7 |
+
 ### Accounts
 
 | Feature | Status | Use case | Draft requirements |

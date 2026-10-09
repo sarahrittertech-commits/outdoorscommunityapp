@@ -460,3 +460,21 @@ flowchart TD
   join -->|no| member(["Member of the group, no approval needed"])
   join -->|yes| refuse(["This link doesn't work. Ask the group for a new one"])
 ```
+
+## UC-32 — Suggest something to the site admin
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  entry["Footer or My stuff: Suggest something"] --> signed{Signed in?}
+  signed -->|no| signin["Sign in"] --> form
+  signed -->|yes| form["Suggestion form<br/>kind: region, feature, group, event, other<br/>title, details, optional link"]
+  form -->|Send| thanks(["Thanks: listed under My suggestions as New"])
+  thanks --> admin["Admin page: Suggestions, newest first, by kind"]
+  admin --> decide{Site admin decides}
+  decide --> planned(["Planned"])
+  decide --> done(["Done"])
+  decide --> declined(["Declined"])
+  planned & done & declined --> back(["Member sees the status and note under My suggestions"])
+```

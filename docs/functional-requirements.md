@@ -168,7 +168,7 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 to UC-31 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 to UC-32 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built. Each moves into its area's table above, with a priority, once Sarah
 approves its use case and user flow. Priorities here are proposals.
@@ -385,3 +385,12 @@ a domain (ADR-0004). The invite link doesn't, so it can ship first.
 | FR-MB-14 | **Join by invite.** Opening a valid invite (email or link) signs the person up or in, then makes them a member at once, even in a group that asks people to request to join. Banned people can't join this way; removed or archived groups refuse it. | Should | A banned user's invite does nothing. |
 | FR-MB-15 | **Invite link.** The page admin or a manager creates one shareable link per group, valid for 30 days by default (7 days or until turned off as options). The Members page shows it with *Copy* and *Turn off*; turning it off or making a new one stops the old one at once. The link is a long random code, not guessable. | Should | A turned-off or expired link joins nobody. |
 | FR-MB-16 | **Invites are moderated like joins.** Joining by invite counts toward the 20-joins-a-day limit (TR-SEC-8), and the moderation log records who created each link and who sent each email invite. | Should | — |
+
+### Suggestions to the site admin (UC-32)
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-AD-4 | **Suggest something.** A signed-in member sends a suggestion: kind (*region*, *feature*, *group to invite*, *event to add*, *other*), title (3 to 120 characters), details (up to 2,000) and an optional http(s) link. Visitors are asked to sign in first (anonymous visitors never write, TR-SEC-2). | Should | Only signed-in, writable accounts can send one; the kind must be one of the five. |
+| FR-AD-5 | **Private.** A suggestion is readable only by the member who sent it and the site admin. Never shown publicly, never voted on or ranked (product principles). | Must | No other member, organizer or visitor can read it. |
+| FR-AD-6 | **Site admin review.** The admin page lists suggestions newest first, filterable by kind, each with its sender, link and date. The site admin sets *Planned*, *Done* or *Declined*, with an optional note (up to 500 characters) the member can read. | Should | Only the site admin can change a status. |
+| FR-AD-7 | **Limits.** 5 suggestions per member per day, with the per-person lock and server time every other write has (TR-SEC-8). The member's own list (*My suggestions*) shows each one's status and note. | Should | A sixth suggestion in a day is refused. |
