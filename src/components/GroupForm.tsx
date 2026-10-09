@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 
 type Group = Pick<
   Tables<"groups">,
-  "name" | "description" | "rules" | "subcategory_id" | "area" | "join_policy" | "join_question" | "discussions_enabled" | "affinity_tags"
+  "name" | "description" | "rules" | "subcategory_id" | "area" | "join_policy" | "join_question" | "discussions_enabled" | "affinity_tags" | "website"
 >;
 
 /** The fields shared by "start a group" and "edit group". Works without JavaScript. */
@@ -56,6 +56,11 @@ export async function GroupForm({
         Description <span className="hint">What you do, how often, who it&apos;s for. Plain text; links work.</span>
       </label>
       <textarea id="description" name="description" required minLength={10} maxLength={5000} defaultValue={group?.description} />
+
+      <label htmlFor="website">
+        Website <span className="hint">Optional. Your club&apos;s own site, shown on the group page.</span>
+      </label>
+      <input id="website" name="website" type="url" maxLength={500} placeholder="https://" defaultValue={group?.website ?? ""} />
 
       <label htmlFor="rules">
         Group rules <span className="hint">Optional. Shown before people join.</span>

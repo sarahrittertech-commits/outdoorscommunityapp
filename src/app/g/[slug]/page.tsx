@@ -99,13 +99,13 @@ export default async function GroupPage({ params, searchParams }: Props) {
     <>
       <Notice params={await searchParams} />
       {listing && (
-        <p className="text-sm">
+        <p className="breadcrumb">
           <Link href={`/c/${listing.category_slug}`}>{listing.category_name}</Link> ›{" "}
           <Link href={`/c/${listing.category_slug}/${listing.subcategory_slug}`}>{listing.subcategory_name}</Link> ›
         </p>
       )}
       <h1>{group.name}</h1>
-      <AffinityTags tags={group.affinity_tags} className="mb-1" />
+      <AffinityTags tags={group.affinity_tags} />
       <p className="text-sm text-muted">
         {group.area} ·{" "}
         {group.is_unclaimed ? (
@@ -117,6 +117,14 @@ export default async function GroupPage({ params, searchParams }: Props) {
           </>
         )}
       </p>
+      {group.website && !group.is_unclaimed && (
+        <p className="text-sm">
+          Website:{" "}
+          <a href={group.website} rel="nofollow ugc noopener" className="font-bold">
+            {hostOf(group.website)}
+          </a>
+        </p>
+      )}
 
       {group.status === "archived" && !group.needs_owner && (
         <div role="status" className="mt-3 rounded bg-warning px-3 py-2">

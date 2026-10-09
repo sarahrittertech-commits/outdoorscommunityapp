@@ -66,6 +66,7 @@ web app is not the thing enforcing the rule.
 | PT-37 | Authors delete only their own threads and replies, which are blanked rather than removed (FR-DS-4) | One member deletes another's posts, or a thread loses its replies |
 | PT-38 | Only the site admin unsuspends an account, after which it can write again (FR-MD-3) | Anyone lifts a suspension |
 | PT-39 | Every SECURITY DEFINER function in the public schema is on a reviewed list, and a new one fails by name | A function that skips RLS ships without review |
+| PT-42 | Only a group's owner and admins set its website, and only http(s) addresses are stored (FR-GR-23) | A member points the group's link somewhere else, or a script link is stored |
 
 ## Automated — unit
 

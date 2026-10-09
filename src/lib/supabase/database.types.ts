@@ -114,6 +114,7 @@ export type Database = {
           is_unclaimed: boolean;
           needs_owner: boolean;
           source_url: string | null;
+          website: string | null;
           affinity_tags: string[];
         };
         Insert: {
@@ -136,6 +137,7 @@ export type Database = {
           is_unclaimed?: boolean;
           needs_owner?: boolean;
           source_url?: string | null;
+          website?: string | null;
           affinity_tags?: string[];
         };
         Update: {
@@ -158,6 +160,7 @@ export type Database = {
           is_unclaimed?: boolean;
           needs_owner?: boolean;
           source_url?: string | null;
+          website?: string | null;
           affinity_tags?: string[];
         };
         Relationships: [
