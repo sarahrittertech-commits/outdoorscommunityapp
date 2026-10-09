@@ -217,6 +217,11 @@ location and distance search with *Near you* (UC-14), a destinations map
 (UC-18), replies to replies (UC-19), and group types with cover photos
 (UC-24). Event photos, series and sponsors were already drafted as UC-10.
 
+Sarah also asked on 8 October for three changes outside the design,
+drafted 9 October: a branded sign-in email (UC-25), email confirmation for
+claims (UC-26), and approval of new groups (UC-27). The first two wait on
+the domain; the third needs a decision (see the open questions).
+
 The [feature map](./feature-map) separates what is live in the branded app
 from every new feature, with its use case, requirements and status.
 
@@ -286,14 +291,24 @@ These need Sarah's decision before or during build:
   later as a clone of it — see [Cloning](./cloning).
 - ~~**Geography.**~~ Settled 25 September 2026: **one region**, Western North
   Carolina. The data model supports more regions later.
-- **Who can create groups.** Anyone signed in (Meetup/Facebook model), or
-  approved organizers only? Open is the default here with a per-user limit
-  (FR-GR-7); approval is FR-GR-8 at Could.
+- **Who can create groups (UC-27).** Three options, each keeping the limit
+  of 3 groups (FR-GR-7): approve every new group; approve only a person's
+  first group; or no approval (today). **Recommended: first group only.**
+  It stops throwaway accounts starting spam groups, and checked organizers
+  never wait again; the cost is a small build and one review per new
+  organizer. Approving every group holds up trusted organizers and makes
+  the site admin a bottleneck; no approval costs nothing but leaves spam
+  listed until reported. Either approval option changes success criterion
+  3 to "...once their first group is approved". Options and costs are in
+  [Functional requirements](./functional-requirements#group-creation-approval-uc-27).
+- **Who can receive a group's ownership.** Today only an admin (FR-MB-6).
+  Sarah may want any member to be eligible. Raised with UC-27; not drafted.
 - **Ship date.** None is set. The bike map showed a date is what gets a thing
   finished.
 - **Name and domain.** Name settled 29 September 2026: **Branch Outdoors**.
   The domain is still open, and is needed before phase 5 for email sending (a
-  verified domain is required).
+  verified domain is required). The branded sign-in email (UC-25) and
+  claim confirmation (UC-26) can't ship until it is chosen.
 - ~~**Railway account.**~~ Settled 25 September 2026: the Railway Hobby
   subscription is on Sarah's own account, so this project deploys there.
 - **n8n subscription.** This project does not use n8n ([ADR-0004](./architecture/adr-0004-background-jobs-and-email)).
