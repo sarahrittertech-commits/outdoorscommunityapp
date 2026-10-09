@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 
 import { sendSignInLink } from "@/app/actions/auth";
 import { Notice } from "@/components/Notice";
-import { getViewer, safeNext } from "@/lib/auth";
+import { getViewer } from "@/lib/auth";
+import { safeNext } from "@/lib/navigation";
 
 export const metadata: Metadata = { title: "Sign in", robots: { index: false } };
 

@@ -4,6 +4,7 @@
 import { z } from "zod";
 
 import { AFFINITY_TAGS } from "./affinity";
+import { safeNext } from "./navigation";
 import { isValidTimeZone, zonedLocalToUtc } from "./time";
 
 const requiredText = (min: number, max: number) => z.string().trim().min(min).max(max);
@@ -117,3 +118,14 @@ export const affinityTagsSchema = z
   .transform((tags) => [...new Set(tags)]);
 
 export const idSchema = id;
+
+// Arguments bound into server actions (`action.bind(null, ...)`) come back
+// from the browser like any form field, so they are checked too.
+
+/** A group slug as slugify() makes it, or a suffixed variant. */
+export const slugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80);
+
+/** A path on this site to return to after the action. */
+export const localPathSchema = z.string().max(2000).refine((value) => safeNext(value, "") === value);
+
+export const postTypeSchema = z.enum(["thread", "reply"]);

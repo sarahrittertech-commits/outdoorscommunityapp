@@ -1,13 +1,16 @@
 "use server";
 
-import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
+import { z } from "zod";
+
+import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
-import { eventSchema, formFields, idSchema } from "@/lib/validation";
+import { eventSchema, formFields, idSchema, slugSchema } from "@/lib/validation";
 
 /** FR-EV-1. The address goes in its own table so members-only ones stay private. */
 export async function createEvent(groupId: string, slug: string, formData: FormData) {
   const back = `/g/${slug}/events/new`;
   const { viewer, supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   const parsed = eventSchema.safeParse(formFields(formData));
   if (!idSchema.safeParse(groupId).success || !parsed.success) fail(back, "invalid");
   const event = parsed.data;
@@ -43,6 +46,7 @@ export async function createEvent(groupId: string, slug: string, formData: FormD
 export async function updateEvent(eventId: string, formData: FormData) {
   const back = `/e/${eventId}/edit`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema]), [eventId]);
   const parsed = eventSchema.safeParse(formFields(formData));
   if (!idSchema.safeParse(eventId).success || !parsed.success) fail(back, "invalid");
   const event = parsed.data;
@@ -76,6 +80,7 @@ export async function updateEvent(eventId: string, formData: FormData) {
 export async function cancelEvent(eventId: string) {
   const back = `/e/${eventId}`;
   const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema]), [eventId]);
   const { data, error } = await supabase.from("events").update({ status: "cancelled" }).eq("id", eventId).select("id");
   failOnError(back, error);
   if (!data?.length) fail(back, "not_allowed");
@@ -86,6 +91,7 @@ export async function cancelEvent(eventId: string) {
 export async function rsvp(eventId: string, status: "going" | "not_going") {
   const back = `/e/${eventId}`;
   const { viewer, supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, z.enum(["going", "not_going"])]), [eventId, status]);
 
   // Change an existing RSVP, or create one. (An upsert would also try to
   // rewrite event_id and user_id, which members are not allowed to change.)

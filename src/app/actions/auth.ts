@@ -4,8 +4,8 @@ import { redirect } from "next/navigation";
 
 import { site } from "@/config/site";
 import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
-import { getViewer, safeNext } from "@/lib/auth";
-import { withMessage } from "@/lib/navigation";
+import { getViewer } from "@/lib/auth";
+import { safeNext, withMessage } from "@/lib/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formFields, onboardingSchema, profileSchema, signInSchema } from "@/lib/validation";
 

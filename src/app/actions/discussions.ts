@@ -1,13 +1,16 @@
 "use server";
 
-import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
+import { z } from "zod";
+
+import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
-import { formFields, idSchema, replySchema, threadSchema } from "@/lib/validation";
+import { formFields, idSchema, localPathSchema, postTypeSchema, replySchema, slugSchema, threadSchema } from "@/lib/validation";
 
 /** FR-DS-1. */
 export async function createThread(groupId: string, slug: string, formData: FormData) {
   const back = `/g/${slug}/discussions`;
   const { viewer, supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   const parsed = threadSchema.safeParse(formFields(formData));
   if (!idSchema.safeParse(groupId).success || !parsed.success) fail(back, "invalid");
 
@@ -23,6 +26,7 @@ export async function createThread(groupId: string, slug: string, formData: Form
 /** FR-DS-2. */
 export async function postReply(threadId: string, path: string, formData: FormData) {
   const { viewer, supabase } = await actingUser(path);
+  checkArgs(path, z.tuple([idSchema, localPathSchema]), [threadId, path]);
   const parsed = replySchema.safeParse(formFields(formData));
   if (!idSchema.safeParse(threadId).success || !parsed.success) fail(path, "invalid");
 
@@ -36,6 +40,7 @@ export async function postReply(threadId: string, path: string, formData: FormDa
 /** FR-DS-4: authors edit their own posts. */
 export async function editThread(threadId: string, path: string, formData: FormData) {
   const { supabase } = await actingUser(path);
+  checkArgs(path, z.tuple([idSchema, localPathSchema]), [threadId, path]);
   const parsed = threadSchema.safeParse(formFields(formData));
   if (!parsed.success) fail(path, "invalid");
   const { data, error } = await supabase
@@ -50,6 +55,7 @@ export async function editThread(threadId: string, path: string, formData: FormD
 
 export async function editReply(replyId: string, path: string, formData: FormData) {
   const { supabase } = await actingUser(path);
+  checkArgs(path, z.tuple([idSchema, localPathSchema]), [replyId, path]);
   const parsed = replySchema.safeParse(formFields(formData));
   if (!parsed.success) fail(path, "invalid");
   const { data, error } = await supabase.from("replies").update({ body: parsed.data.body }).eq("id", replyId).select("id");
@@ -60,6 +66,7 @@ export async function editReply(replyId: string, path: string, formData: FormDat
 
 export async function deleteOwnPost(targetType: "thread" | "reply", targetId: string, path: string) {
   const { supabase } = await actingUser(path);
+  checkArgs(path, z.tuple([postTypeSchema, idSchema, localPathSchema]), [targetType, targetId, path]);
   const { error } = await supabase.rpc("delete_own_post", { p_target_type: targetType, p_target_id: targetId });
   failOnError(path, error);
   succeed(path, "post_deleted");
@@ -68,6 +75,7 @@ export async function deleteOwnPost(targetType: "thread" | "reply", targetId: st
 /** FR-DS-5: moderator removal. */
 export async function removePost(targetType: "thread" | "reply", targetId: string, path: string) {
   const { supabase } = await actingUser(path);
+  checkArgs(path, z.tuple([postTypeSchema, idSchema, localPathSchema]), [targetType, targetId, path]);
   const { error } = await supabase.rpc("remove_post", { p_target_type: targetType, p_target_id: targetId, p_reason: "" });
   failOnError(path, error);
   succeed(path, "post_removed");
@@ -75,6 +83,7 @@ export async function removePost(targetType: "thread" | "reply", targetId: strin
 
 export async function setThreadFlags(threadId: string, flags: { pinned?: boolean; locked?: boolean }, path: string) {
   const { supabase } = await actingUser(path);
+  checkArgs(path, z.tuple([idSchema, z.object({ pinned: z.boolean().optional(), locked: z.boolean().optional() }).strict(), localPathSchema]), [threadId, flags, path]);
   const { error } = await supabase.rpc("set_thread_flags", {
     p_thread_id: threadId,
     p_pinned: flags.pinned,

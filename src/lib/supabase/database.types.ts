@@ -595,6 +595,10 @@ export type Database = {
       is_group_owner: { Args: { p_group_id: string }; Returns: boolean };
       group_member_count: { Args: { p_group_id: string }; Returns: number };
       event_going_count: { Args: { p_event_id: string }; Returns: number };
+      join_answers: {
+        Args: { p_group_id: string };
+        Returns: { user_id: string; join_answer: string }[];
+      };
       complete_onboarding: {
         Args: {
           p_display_name: string;

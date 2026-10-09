@@ -1,12 +1,15 @@
 "use server";
 
-import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
-import { claimSchema, formFields, idSchema } from "@/lib/validation";
+import { z } from "zod";
+
+import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
+import { claimSchema, formFields, idSchema, slugSchema } from "@/lib/validation";
 
 /** FR-GR-10: ask to claim an unclaimed listing. The database checks it is one. */
 export async function requestClaim(groupId: string, slug: string, formData: FormData) {
   const back = `/g/${slug}`;
   const { viewer, supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
   const parsed = claimSchema.safeParse(formFields(formData));
   if (!idSchema.safeParse(groupId).success || !parsed.success) fail(back, "invalid");
 
@@ -19,6 +22,7 @@ export async function requestClaim(groupId: string, slug: string, formData: Form
 /** FR-GR-10: the site admin decides. The database refuses anyone else. */
 export async function approveClaim(claimId: string) {
   const { supabase } = await actingUser("/admin");
+  checkArgs("/admin", z.tuple([idSchema]), [claimId]);
   if (!idSchema.safeParse(claimId).success) fail("/admin", "invalid");
   const { error } = await supabase.rpc("approve_claim", {
     p_claim_id: claimId,
@@ -29,6 +33,7 @@ export async function approveClaim(claimId: string) {
 
 export async function declineClaim(claimId: string) {
   const { supabase } = await actingUser("/admin");
+  checkArgs("/admin", z.tuple([idSchema]), [claimId]);
   if (!idSchema.safeParse(claimId).success) fail("/admin", "invalid");
   const { error } = await supabase.rpc("decline_claim", {
     p_claim_id: claimId,

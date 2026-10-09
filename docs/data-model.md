@@ -147,8 +147,8 @@ The heart of the permission model.
 | `user_id` | uuid | part of the key |
 | `role` | enum | `owner`, `admin`, `member` |
 | `status` | enum | `pending`, `active`, `banned` |
-| `join_answer` | text, optional | answer to the join question |
-| `created_at` | timestamp | when they joined or asked |
+| `join_answer` | text, optional | answer to the join question; not readable through the API, organizers read it with `join_answers()` (FR-MB-9) |
+| `created_at` | timestamp | when they joined or asked; always the server's clock |
 | `updated_at` | timestamp | |
 
 Constraints:

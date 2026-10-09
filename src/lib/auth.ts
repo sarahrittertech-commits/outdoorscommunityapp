@@ -61,9 +61,3 @@ export async function requireSiteAdmin(): Promise<Viewer> {
   if (!viewer.isSiteAdmin) redirect("/?e=not_allowed");
   return viewer;
 }
-
-/** Only allow redirects back into this site. */
-export function safeNext(value: FormDataEntryValue | string | null | undefined, fallback = "/"): string {
-  const next = typeof value === "string" ? value : "";
-  return next.startsWith("/") && !next.startsWith("//") ? next : fallback;
-}
