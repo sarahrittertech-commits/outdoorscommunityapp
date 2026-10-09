@@ -59,6 +59,8 @@ web app is not the thing enforcing the rule.
 | PT-30 | A group that was removed when its owner deleted their account is marked as needing an owner, so restoring it never produces an active group with no owner (FR-GR-10) | A live group nobody can run, moderate or claim |
 | PT-31 | Claim requests are rate limited like every other write (TR-SEC-8) | One account floods the site admin's claim queue |
 | PT-32 | An RSVP in an archived group cannot be changed, not just created (FR-GR-6) | "Read-only" is not read-only |
+| PT-33 | Leaving a group clears the person's RSVPs to its future events and keeps past ones (FR-MB-3) | Someone who left still holds a place and shows as going |
+| PT-34 | No permission rule calls auth.uid() or is_site_admin() once per row (Supabase advisor auth_rls_initplan) | Listing pages slow down as the board grows |
 
 ## Automated — unit
 

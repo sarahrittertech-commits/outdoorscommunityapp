@@ -27,9 +27,11 @@ export default function TermsPage() {
           The service is provided as is, without warranties. We may change these terms and will post changes here.
         </li>
       </ol>
-      <p className="mt-6">
-        Contact: <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
-      </p>
+      {site.contactEmail && (
+        <p className="mt-6">
+          Contact: <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+        </p>
+      )}
     </article>
   );
 }

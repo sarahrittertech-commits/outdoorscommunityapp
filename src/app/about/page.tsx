@@ -24,7 +24,12 @@ export default function AboutPage() {
       <h2>Who it&apos;s for</h2>
       <p className="mt-2">{site.audience}</p>
       <p className="mt-6">
-        Questions? <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> · <Link href="/guidelines">Community guidelines</Link>
+        {site.contactEmail && (
+          <>
+            Questions? <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> ·{" "}
+          </>
+        )}
+        <Link href="/guidelines">Community guidelines</Link>
       </p>
     </article>
   );

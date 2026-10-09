@@ -5,6 +5,7 @@ import { cancelEvent, rsvp } from "@/app/actions/events";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
 import { site } from "@/config/site";
+import { getViewer } from "@/lib/auth";
 import { loadEvent } from "@/lib/events";
 import { loadGroup } from "@/lib/groups";
 import { formatEventTime } from "@/lib/time";
@@ -27,13 +28,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /** FR-BR-7 and FR-EV-*. Readable signed out; RSVPs for members. */
 export default async function EventPage({ params, searchParams }: Props) {
   const { id } = await params;
-  const { supabase, event, group } = await loadEvent(id);
-  const { viewer, isMember, canManage } = await loadGroup(group.slug);
+  // Two round trips, not five: the event and the viewer together, then the
+  // membership and everything on the page together. Row-level security
+  // decides what each query returns, so nothing here waits on isMember.
+  const [{ supabase, event, group }, viewer] = await Promise.all([loadEvent(id), getViewer()]);
 
-  const [{ data: details }, { data: listing }, { data: attendees }, { data: mine }] = await Promise.all([
+  const [{ isMember, canManage }, { data: details }, { data: listing }, { data: goingRows }, { data: mine }] = await Promise.all([
+    loadGroup(group.slug),
     supabase.from("event_private_details").select("address").eq("event_id", event.id).maybeSingle(),
     supabase.from("event_listings").select("going_count").eq("id", event.id).single(),
-    isMember
+    viewer
       ? supabase.from("event_rsvps").select("user_id, profiles(display_name)").eq("event_id", event.id).eq("status", "going")
       : Promise.resolve({ data: null }),
     viewer
@@ -41,6 +45,8 @@ export default async function EventPage({ params, searchParams }: Props) {
       : Promise.resolve({ data: null }),
   ]);
 
+  // Non-members can read only their own RSVP, so the list is for members only (FR-EV-6).
+  const attendees = isMember ? goingRows : null;
   const going = listing?.going_count ?? 0;
   const started = new Date(event.starts_at) <= new Date();
   const cancelled = event.status === "cancelled";

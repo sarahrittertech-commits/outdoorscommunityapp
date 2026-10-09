@@ -44,9 +44,11 @@ export default function PrivacyPage() {
         Resend.
       </p>
 
-      <p className="mt-6">
-        Questions: <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
-      </p>
+      {site.contactEmail && (
+        <p className="mt-6">
+          Questions: <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+        </p>
+      )}
     </article>
   );
 }

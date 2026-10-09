@@ -44,7 +44,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   return (
     <>
       <p className="text-sm">
-        <Link href="/">all categories</Link> ›
+        <Link href="/browse">all categories</Link> ›
       </p>
       <h1>{category.name}</h1>
       <p className="mt-2 flex flex-wrap gap-x-4 text-sm">

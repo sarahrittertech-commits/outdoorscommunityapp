@@ -6,7 +6,7 @@ import { approveClaim, declineClaim } from "@/app/actions/claims";
 import { removeGroup, resolveReport, suspendUser, unsuspendUser } from "@/app/actions/moderation";
 import { AffinityTags } from "@/components/AffinityTags";
 import { Notice } from "@/components/Notice";
-import { ReportTarget } from "@/components/ReportTarget";
+import { ReportTargetLink, resolveReportTargets } from "@/components/ReportTarget";
 import { site } from "@/config/site";
 import { requireSiteAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -44,6 +44,12 @@ export default async function AdminPage({ searchParams }: Props) {
     supabase.rpc("admin_candidate_counts"),
   ]);
 
+  // Every report target and suspended profile in one batch, not one query per row.
+  const targets = await resolveReportTargets(supabase, [
+    ...(reports ?? []).map((r) => ({ type: r.target_type, id: r.target_id, groupSlug: r.groups?.slug })),
+    ...(suspended ?? []).map((s) => ({ type: "profile" as const, id: s.id })),
+  ]);
+
   const tz = site.defaultTimezone;
 
   return (
@@ -58,7 +64,7 @@ export default async function AdminPage({ searchParams }: Props) {
           <li key={r.id} className="py-3">
             <p>
               <strong>{r.reason.replace("_", " ")}</strong> · {r.target_type} ·{" "}
-              <ReportTarget type={r.target_type} id={r.target_id} groupSlug={r.groups?.slug} />
+              <ReportTargetLink targets={targets} type={r.target_type} id={r.target_id} />
               {r.groups && (
                 <span className="text-sm text-muted">
                   {" "}
@@ -168,7 +174,7 @@ export default async function AdminPage({ searchParams }: Props) {
       <ul className="mt-2">
         {suspended?.map((s) => (
           <li key={s.id} className="flex items-baseline gap-3">
-            <ReportTarget type="profile" id={s.id} />
+            <ReportTargetLink targets={targets} type="profile" id={s.id} />
             <form action={unsuspendUser.bind(null, s.id)}>
               <button className="link-button text-sm">unsuspend</button>
             </form>
