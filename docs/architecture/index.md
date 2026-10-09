@@ -29,6 +29,7 @@ Each record has a status:
 | [0005](./adr-0005-discussions) | Forum-style discussion threads, not real-time chat | Accepted |
 | [0006](./adr-0006-direct-messages) | Direct messages as requests, on plain pages | Proposed |
 | [0007](./adr-0007-destinations-map) | How to draw the destinations map | Proposed |
+| [0008](./adr-0008-brand-separation) | Keep the brand out of shared code so a cloned board can merge | Proposed |
 
 :::note Accepted 25 September 2026
 Drafted as Proposed in the morning; accepted the same day when Sarah

@@ -1,0 +1,34 @@
+# Files a cloned board owns outright (ADR-0008, docs/cloning.md).
+#
+# On the upstream board this changes nothing: nothing is ever merged in.
+# On a clone, `git merge upstream/main` keeps the clone's own version of
+# these instead of raising a conflict on every color, drawing and name.
+#
+# A clone enables it once, per the cloning guide:
+#   git config merge.ours.driver true
+#
+# Everything else — pages, components, schema, product docs — merges
+# normally, which is how a clone picks up the tool's new features.
+
+# The brand: colors, logo, favicon, category drawings, brand guide.
+src/brand/tokens.css      merge=ours
+src/brand/Mark.tsx        merge=ours
+src/brand/ActivityIcon.tsx merge=ours
+src/app/icon.svg          merge=ours
+docs/brand.md             merge=ours
+
+# The audience: who the board is for and what it is called.
+src/config/site.ts        merge=ours
+src/app/about/page.tsx    merge=ours
+src/app/guidelines/page.tsx merge=ours
+src/app/terms/page.tsx    merge=ours
+src/app/privacy/page.tsx  merge=ours
+docs/prd.md               merge=ours
+docs/personas.md          merge=ours
+CLAUDE.md                 merge=ours
+README.md                 merge=ours
+
+# This board's directory and its seed listings.
+supabase/migrations/20260925000005_seed_directory.sql merge=ours
+supabase/seed.sql         merge=ours
+scripts/research/listings.sql merge=ours

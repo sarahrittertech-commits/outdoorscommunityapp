@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ActivityIcon } from "@/components/ActivityIcon";
+import { ActivityIcon } from "@/brand/ActivityIcon";
 import { site } from "@/config/site";
 import { createClient } from "@/lib/supabase/server";
 

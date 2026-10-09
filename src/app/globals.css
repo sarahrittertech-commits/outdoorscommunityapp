@@ -1,59 +1,15 @@
 @import "tailwindcss";
+/* This deployment's colors. A cloned board replaces that file and nothing
+   else here; see src/brand/tokens.css and docs/cloning.md. */
+@import "../brand/tokens.css";
 
 /*
-  Placeholder look, built to be replaced by the design (PRD "Design direction").
-  Text first, links look like links, visited links look visited. Every color
-  is a token here so the design pass (or a cloned deployment) can re-skin the
-  board without touching pages.
+  Everything below is shared by every board: the slots the colors fill, and
+  the rules that use them. Text first, links look like links, visited links
+  look visited. Pages never hard-code a color — add a slot in
+  src/brand/tokens.css instead, and the contract test will require every
+  board to define it.
 */
-
-/*
-  branch outdoors brand (docs/brand.md). Plum does the work: headings, links,
-  buttons. Ember, Marigold and Rust live in the leaves and small highlights;
-  they are below 4.5:1 on paper, so never use Ember or Marigold for text.
-  Pages stay mostly paper. A cloned deployment re-skins the board here.
-*/
-:root {
-  /* Palette */
-  --plum: #39204d; /* the logo's plum */
-  --plum-ui: #382a63; /* links, buttons, headings (8 October design) */
-  --ember: #dd7242;
-  --marigold: #e7a855;
-  --rust: #b43c34;
-  --lake: #50759f;
-
-  /* Roles */
-  --paper: #ffffff;
-  --ink: #2a2230;
-  --muted: #6b6072;
-  --rule: #e4dacb;
-  --panel: #faf6ef;
-  --subtle: #464b5e; /* readable secondary text under page titles */
-  --band: #efedf7; /* light purple section bars */
-  --heading: var(--plum-ui);
-  --link: var(--plum-ui);
-  --link-visited: #6a4c93;
-  --focus: var(--lake);
-  --accent: var(--plum-ui);
-  --search: #b94f1c; /* deep orange Search button, white text 5.0:1 (AA) */
-  --search-hover: #a2441a;
-  --accent-ink: var(--paper);
-  --danger: var(--rust);
-  --notice: #e1e9f2;
-  --warning: #f6e3c2;
-  --tag-new: #f6e3c2;
-  --tag-cancelled: #f5dad6;
-
-  /* Home page name band (RidgeBand): dusk over the Blue Ridge. */
-  --ridge-sky: #2f2356;
-  --ridge-haze: #43306b;
-  --ridge-1: #3a2b62;
-  --ridge-2: #332655;
-  --ridge-3: #2b2049;
-  --ridge-4: #231a3e;
-  --ridge-ink: #faf6ef;
-  --ridge-ink-muted: #d8cfe6;
-}
 
 /*
   No dark mode: the board is white paper in every setting (Sarah's call,
@@ -221,10 +177,10 @@
   .button-hero {
     border-color: var(--search);
     background: var(--search);
-    color: #ffffff;
+    color: var(--search-ink);
   }
   .button-hero:visited {
-    color: #ffffff;
+    color: var(--search-ink);
   }
   .button-hero:hover {
     filter: none;
@@ -332,13 +288,14 @@
     font-weight: 400;
   }
 
-  .branch-stem {
-    stroke: var(--plum);
+  /* The logo's stem, drawn by src/brand/Mark.tsx. */
+  .mark-stem {
+    stroke: var(--mark);
   }
-  /* The wordmark: lowercase Young Serif in the logo's plum. */
+  /* The wordmark: lowercase Young Serif in the logo's color. */
   .wordmark {
     font-family: var(--font-serif);
-    color: var(--plum);
+    color: var(--mark);
   }
   /* Text-styled button. min-height keeps the tap target at the WCAG 2.2 24px minimum. */
   .link-button {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ActivityIcon } from "@/components/ActivityIcon";
+import { ActivityIcon } from "@/brand/ActivityIcon";
 import { AffinityTags } from "@/components/AffinityTags";
 import { site } from "@/config/site";
 import type { Views } from "@/lib/supabase/database.types";
