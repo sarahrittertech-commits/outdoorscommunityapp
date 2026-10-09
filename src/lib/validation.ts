@@ -62,6 +62,14 @@ export const groupSchema = z.object({
   joinPolicy: z.enum(["open", "approval"]),
   joinQuestion: optionalText(280),
   discussionsEnabled: checkbox,
+  /** FR-GR-23: optional; a missing scheme is taken as https. */
+  website: z
+    .string()
+    .trim()
+    .max(500)
+    .optional()
+    .transform((v) => (!v ? null : /^https?:\/\//i.test(v) ? v : `https://${v}`))
+    .refine((v) => v === null || /^https?:\/\/[^\s/]+\.[^\s]+$/i.test(v), "Enter a web address like https://example.org"),
 });
 
 export const eventSchema = z

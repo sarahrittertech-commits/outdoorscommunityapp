@@ -50,7 +50,7 @@ export default async function SubcategoryPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <p className="text-sm">
+      <p className="breadcrumb">
         <Link href="/browse">all categories</Link> › <Link href={`/c/${category.slug}`}>{category.name}</Link> ›
       </p>
       <h1>{subcategory.name}</h1>

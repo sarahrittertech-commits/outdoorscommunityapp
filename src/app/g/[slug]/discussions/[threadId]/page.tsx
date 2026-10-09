@@ -64,7 +64,7 @@ export default async function ThreadPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <p className="text-sm">
+      <p className="breadcrumb">
         <Link href={`/g/${group.slug}`}>{group.name}</Link> › <Link href={`/g/${group.slug}/discussions`}>discussions</Link> ›
       </p>
       <Notice params={query} />
