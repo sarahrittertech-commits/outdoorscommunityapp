@@ -13,7 +13,7 @@ export default function PrivacyPage() {
 
       <h2>What we collect</h2>
       <ul className="mt-2 list-disc pl-6">
-        <li>Your email address, to send sign-in links and the emails you choose to get. Nobody else can see it.</li>
+        <li>Your email address, to sign you in, confirm your account, send password reset links and the emails you choose to get. Nobody else can see it. Your password is stored only as a one-way hash by Supabase; nobody, including us, can read it.</li>
         <li>Your display name, and your area and bio if you add them. These are public.</li>
         <li>What you do on the board: groups you join, events you RSVP to, posts you write, reports you send.</li>
       </ul>

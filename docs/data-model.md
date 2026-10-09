@@ -118,6 +118,7 @@ it except through the database functions (onboarding, suspend, delete).
 | `is_unclaimed` | boolean | FR-GR-9: an unclaimed listing, added from public information. Only SQL run by the operator sets it. |
 | `needs_owner` | boolean | FR-AC-6: its owner deleted their account. The group is archived until a claim is approved. Only database functions set it. |
 | `source_url` | text, optional | The organization's own website. Required for a listing. |
+| `website` | text, optional | FR-GR-23: the group's own site, http(s) only, set by owner and admins |
 | `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia`; empty by default |
 
 ### group_claims
@@ -313,7 +314,9 @@ the page admin sees open manager invites, without the address, through
 not callable through the API; schedule it with the other jobs once email is
 set up (runbook).
 
-Both kinds of invite are used through `join_by_invite(token)`, which checks
+The invite page names the group with `invite_preview(token)` (name and
+slug only, callable signed out, nothing for a bad code). Both kinds of
+invite are used through `join_by_invite(token)`, which checks
 the code, the group (active, not a listing), the person (can write, not
 banned) and, for a manager invite, that the account's email is the invited
 one, then adds an active member row, so the join limit applies.
@@ -344,7 +347,7 @@ without revealing the rows, so visitors see "12 members" but not who.
 
 ## Planned with the 8 October design (drafts, not built)
 
-What the draft use cases UC-10 to UC-30 would add. Field-level detail is
+What the draft use cases UC-10 to UC-28 and UC-30 would add. Field-level detail is
 written when each is approved, with its migration and permission tests.
 
 | Table or change | For | Notes |

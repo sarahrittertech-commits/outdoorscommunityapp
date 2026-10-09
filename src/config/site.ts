@@ -53,7 +53,7 @@ export const site = {
    * forms are shown disabled and the invite link is the way to invite.
    */
   emailEnabled: false as boolean,
-  /** Canonical origin, used for sitemaps, link previews and sign-in links. */
+  /** Canonical origin, used for sitemaps, link previews and the links in confirmation and reset emails. */
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, ""),
 } as const;
 

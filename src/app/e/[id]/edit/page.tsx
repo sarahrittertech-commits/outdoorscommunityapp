@@ -28,7 +28,7 @@ export default async function EditEventPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <p className="text-sm">
+      <p className="breadcrumb">
         <Link href={`/g/${group.slug}`}>{group.name}</Link> › <Link href={`/e/${event.id}`}>{event.title}</Link> ›
       </p>
       <h1>Edit event</h1>

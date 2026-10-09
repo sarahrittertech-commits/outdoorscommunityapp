@@ -205,6 +205,7 @@ insert into definer_allowed values
   ('groups_before_update()'),
   ('handle_new_user()'),
   ('invite_manager(uuid, text)'),
+  ('invite_preview(text)'),
   ('invite_members(uuid, text[])'),
   ('is_group_admin(uuid)'),
   ('is_group_member(uuid)'),

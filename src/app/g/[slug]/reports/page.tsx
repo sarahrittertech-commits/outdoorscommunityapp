@@ -39,7 +39,7 @@ export default async function GroupReportsPage({ params, searchParams }: Props) 
 
   return (
     <>
-      <p className="text-sm">
+      <p className="breadcrumb">
         <Link href={`/g/${group.slug}`}>{group.name}</Link> ›
       </p>
       <h1>Reports</h1>

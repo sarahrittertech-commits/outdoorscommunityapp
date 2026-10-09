@@ -405,7 +405,7 @@ flowchart TD
 
 ## UC-29 — Sign up with an email and a password
 
-*Draft, awaiting review. Open sign-up with email confirmation; password only.*
+*Approved and built 9 October 2026. Open sign-up with email confirmation; password only.*
 
 ```mermaid
 flowchart TD
@@ -422,11 +422,29 @@ flowchart TD
   newpw --> back
 ```
 
+## UC-30 — Post an event people want to come to
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  start["Group page: Post an event"] --> form["Event form<br/>title, dates, place<br/>Description (required), Details (optional)<br/>Photo + its description (optional)"]
+  form --> price{Free or Paid?}
+  price -->|Free| rsvp{Take RSVPs on Branch Outdoors?}
+  price -->|Paid| cost["Registration fee, Total cost (text)"] --> rsvp
+  rsvp -->|yes| places["Places (optional)<br/>Waitlist when full (tick)"] --> publish
+  rsvp -->|no| link["Sign-up link (optional)"] --> publish
+  publish["Publish"] --> page(["Event page: photo, description, price, details,<br/>RSVP buttons and places left, or Sign up at …"])
+  page -->|full, waitlist on| wait["Members join the waitlist in order"]
+  wait -->|someone drops out| move(["Organizer moves the next person to going"])
+```
+
 ## UC-31 — Bring people into the group
 
 *Approved and built 9 October 2026. Email invites wait on the board's email
-setup; the forms show disabled until then. Opening a link shows an* Accept
-invite *button, so link previews never join anyone.*
+setup; the forms show disabled until then. The invite page (/join/<code>)
+names the group, creates the account and joins in one place; joining is
+always a button press, so link previews never join anyone.*
 
 ```mermaid
 flowchart TD
@@ -439,9 +457,18 @@ flowchart TD
   members --> link["Invite link: Create, copy, turn off"]
   sent --> open
   link --> open["Someone opens the link"]
-  open --> signed{Signed in?}
-  signed -->|no| signin["Sign up or sign in"] --> acceptbtn
-  signed -->|yes| acceptbtn["Accept invite"] --> join{Banned, or link off or expired?}
-  join -->|no| member(["Member of the group, no approval needed"])
-  join -->|yes| refuse(["This link doesn't work. Ask the group for a new one"])
+  open --> valid{Link working?}
+  valid -->|no: off, expired or made up| refuse(["This invite link isn't working. Ask the group for a new one"])
+  valid -->|yes| signed{Signed in?}
+  signed -->|no| landing["Group name is on Branch Outdoors<br/>Create your account and join: email, password twice<br/>or Sign in"]
+  landing -->|creates account| check(["Check your email: the link brings you back to join"])
+  check -->|confirms email| onboard
+  landing -->|signs in| onboard{Finished the welcome step?}
+  signed -->|yes| onboard
+  onboard -->|no| welcome["Welcome: display name, 18+, terms"] --> invites
+  onboard -->|yes| invites{Already a member?}
+  invites -->|yes| grouppage(["Group page"])
+  invites -->|no| joinbtn["Group name invites you: Join button"] --> join{Banned?}
+  join -->|no| member(["Group page: Welcome to the group, no approval needed"])
+  join -->|yes| refuse2(["You can't join this group"])
 ```

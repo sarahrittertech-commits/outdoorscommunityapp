@@ -83,7 +83,7 @@ Screens the design needs to cover, in priority order:
 5. Discussion board and a single thread
 6. Create/edit group and create/edit event forms
 7. "My stuff" (my groups, my upcoming RSVPs)
-8. Sign in (magic link) and profile
+8. Sign in, create an account, forgot password (email and password, UC-29) and profile
 9. Group admin: members, join requests, reports
 
 The brand (logo, color, type, voice) is set by the branch outdoors brand
@@ -180,6 +180,12 @@ public web for new groups and events and saves them as candidates; the
 site admin lists or skips each one from the admin page. Groups can carry
 the tags Women, Youth, BIPOC and LGBTQIA+, and women-only and youth groups
 are listed like any other.
+
+Added 9 October 2026: **email and password sign-in** (UC-29, FR-AC-17 to
+FR-AC-21, ADR-0009), replacing the emailed sign-in link (FR-AC-1). Open
+sign-up with a confirmed email; forgot and change password. New accounts
+and resets need email delivery, so they reach the public only once Resend's
+SMTP is set up.
 
 Not built yet:
 

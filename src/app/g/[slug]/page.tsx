@@ -4,6 +4,8 @@ import Link from "next/link";
 import { requestClaim } from "@/app/actions/claims";
 import { restoreGroup } from "@/app/actions/groups";
 import { joinGroup, leaveGroup } from "@/app/actions/membership";
+import { groupPhotos } from "@/brand/activityPhotos";
+import Image from "next/image";
 import { AffinityTags } from "@/components/AffinityTags";
 import { EventList } from "@/components/Listings";
 import { Notice } from "@/components/Notice";
@@ -43,6 +45,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
   const loaded = await loadGroup(slug);
   const { supabase, group, viewer, membership, isMember, isAdmin, isOwner, isActive, canManage } = loaded;
   const now = new Date().toISOString();
+  const query = await searchParams;
 
   const [{ data: listing }, { data: organizers }, { data: upcoming }, { count: pastCount }, { count: pendingCount }, { data: myClaim }] =
     await Promise.all([
@@ -81,14 +84,14 @@ export default async function GroupPage({ params, searchParams }: Props) {
       <p className="m-0 mt-1 text-sm text-muted">Your claim wasn&apos;t approved.</p>
     ) : !viewer ? (
       <p className="m-0 mt-1 text-sm">
-        <Link href={`/signin?next=/g/${group.slug}`}>Sign in</Link> to claim it. Once approved you&apos;ll run it here: post events,
-        take RSVPs and open a discussion board.
+        <Link href={`/signin?next=/g/${group.slug}`}>Sign in</Link> to claim it. Once approved you&apos;ll run it here: post events, take
+        RSVPs and open a discussion board.
       </p>
     ) : (
       <form action={requestClaim.bind(null, group.id, group.slug)}>
         <label htmlFor="claim-note" className="mt-1 text-sm font-normal">
-          Claim it: tell the site admin how you&apos;re connected to {group.name}, and how we can check (a club email address, your
-          role on their website).
+          Claim it: tell the site admin how you&apos;re connected to {group.name}, and how we can check (a club email address, your role on
+          their website).
         </label>
         <textarea id="claim-note" name="note" required minLength={10} maxLength={1000} className="min-h-20" />
         <button className="button mt-2">Ask to claim</button>
@@ -97,15 +100,21 @@ export default async function GroupPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <Notice params={await searchParams} />
+      {query.m === "joined_by_invite" ? (
+        <p role="status" className="mb-4 rounded bg-notice px-3 py-2">
+          Welcome to {group.name}. You&apos;re a member now.
+        </p>
+      ) : (
+        <Notice params={query} />
+      )}
       {listing && (
-        <p className="text-sm">
+        <p className="breadcrumb">
           <Link href={`/c/${listing.category_slug}`}>{listing.category_name}</Link> ›{" "}
           <Link href={`/c/${listing.category_slug}/${listing.subcategory_slug}`}>{listing.subcategory_name}</Link> ›
         </p>
       )}
       <h1>{group.name}</h1>
-      <AffinityTags tags={group.affinity_tags} className="mb-1" />
+      <AffinityTags tags={group.affinity_tags} />
       <p className="text-sm text-muted">
         {group.area} ·{" "}
         {group.is_unclaimed ? (
@@ -117,6 +126,27 @@ export default async function GroupPage({ params, searchParams }: Props) {
           </>
         )}
       </p>
+      {groupPhotos[group.slug] && (
+        <figure className="event-photo max-w-xl">
+          <Image
+            src={groupPhotos[group.slug].src}
+            alt={groupPhotos[group.slug].alt}
+            width={900}
+            height={604}
+            sizes="(min-width: 640px) 36rem, 100vw"
+            priority
+          />
+          <figcaption>{groupPhotos[group.slug].label} · representative photo</figcaption>
+        </figure>
+      )}
+      {group.website && !group.is_unclaimed && (
+        <p className="text-sm">
+          Website:{" "}
+          <a href={group.website} rel="nofollow ugc noopener" className="font-bold">
+            {hostOf(group.website)}
+          </a>
+        </p>
+      )}
 
       {group.status === "archived" && !group.needs_owner && (
         <div role="status" className="mt-3 rounded bg-warning px-3 py-2">

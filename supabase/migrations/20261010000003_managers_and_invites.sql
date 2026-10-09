@@ -9,7 +9,8 @@
 -- 3. group_invite_links: one shareable link per group.
 -- 4. invites.email_invites: member and manager invites by email (stored, not
 --    yet sent: email waits on Resend and a domain, ADR-0004).
--- 5. join_by_invite(): the one way to use either kind of invite.
+-- 5. join_by_invite(): the one way to use either kind of invite, and
+--    invite_preview(): the group's name for the invite page.
 -- 6. purge_old_invites(): deletes email invites after 30 days.
 
 -- ---------------------------------------------------------------------------
@@ -406,6 +407,31 @@ begin
   return query select v_group.slug, v_result;
 end
 $$;
+
+-- What the invite page shows before anyone signs in: the group's name and
+-- slug, and nothing else (not the address an email invite went to). Callable
+-- signed out, because holding a working code already proves the link was
+-- shared with you; a bad, turned-off or expired code returns no row. Read
+-- only.
+create or replace function public.invite_preview(p_token text)
+returns table (name text, slug text)
+language sql stable security definer set search_path = ''
+as $$
+  select g.name, g.slug
+    from public.groups g
+   where g.status = 'active' and not g.is_unclaimed
+     and p_token ~ '^[a-f0-9]{64}$'
+     and g.id = coalesce(
+       (select l.group_id from public.group_invite_links l
+         where l.token = p_token and l.revoked_at is null
+           and (l.expires_at is null or l.expires_at > now())),
+       (select i.group_id from invites.email_invites i
+         where i.token = p_token and i.accepted_at is null and i.cancelled_at is null
+           and i.expires_at > now()))
+$$;
+
+revoke execute on function public.invite_preview(text) from public;
+grant execute on function public.invite_preview(text) to anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- 6. Retention: email addresses are kept 30 days at most (FR-MB-13)

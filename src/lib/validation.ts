@@ -4,6 +4,7 @@
 import { z } from "zod";
 
 import { AFFINITY_TAGS } from "./affinity";
+import { isCommonPassword } from "./common-passwords";
 import { safeNext } from "./navigation";
 import { isValidTimeZone, zonedLocalToUtc } from "./time";
 
@@ -34,10 +35,55 @@ export function formFields(formData: FormData): Record<string, string> {
   return fields;
 }
 
+// UC-29 (FR-AC-17 to FR-AC-21). Passwords are never trimmed: a space is a
+// character like any other. The issue messages are error codes from
+// messages.ts, so the action can say exactly which rule was missed.
+
+const email = z.string().trim().pipe(z.email().max(254));
+
+/** bcrypt, which Supabase uses, reads only the first 72 bytes. */
+const MAX_PASSWORD_BYTES = 72;
+
+export const passwordSchema = z
+  .string()
+  .min(10, "password_length")
+  .refine((v) => new TextEncoder().encode(v).length <= MAX_PASSWORD_BYTES, "password_length")
+  .refine((v) => !isCommonPassword(v), "password_common");
+
+/** Sign-in checks only the password's size: the rules may have changed since it was set. */
 export const signInSchema = z.object({
-  email: z.email().max(254),
+  email,
+  password: z.string().min(1).max(200),
   next: z.string().optional(),
 });
+
+const matching = { message: "password_mismatch", path: ["passwordAgain"] };
+
+export const signUpSchema = z
+  .object({ email, password: passwordSchema, passwordAgain: z.string(), next: z.string().optional() })
+  .refine((v) => v.password === v.passwordAgain, matching);
+
+export const forgotPasswordSchema = z.object({ email });
+
+export const newPasswordSchema = z
+  .object({ password: passwordSchema, passwordAgain: z.string() })
+  .refine((v) => v.password === v.passwordAgain, matching);
+
+export const changePasswordSchema = z
+  .object({ currentPassword: z.string().min(1).max(200), password: passwordSchema, passwordAgain: z.string() })
+  .refine((v) => v.password === v.passwordAgain, matching);
+
+const PASSWORD_CODES = ["password_length", "password_common", "password_mismatch"] as const;
+type PasswordCode = (typeof PASSWORD_CODES)[number];
+
+/** The error code for the first password rule a form missed, or "invalid". */
+export function passwordErrorCode(error: z.ZodError): PasswordCode | "invalid" {
+  for (const issue of error.issues) {
+    const code = PASSWORD_CODES.find((c) => c === issue.message);
+    if (code) return code;
+  }
+  return "invalid";
+}
 
 export const onboardingSchema = z.object({
   displayName: requiredText(2, 40),
@@ -62,6 +108,14 @@ export const groupSchema = z.object({
   joinPolicy: z.enum(["open", "approval"]),
   joinQuestion: optionalText(280),
   discussionsEnabled: checkbox,
+  /** FR-GR-23: optional; a missing scheme is taken as https. */
+  website: z
+    .string()
+    .trim()
+    .max(500)
+    .optional()
+    .transform((v) => (!v ? null : /^https?:\/\//i.test(v) ? v : `https://${v}`))
+    .refine((v) => v === null || /^https?:\/\/[^\s/]+\.[^\s]+$/i.test(v), "Enter a web address like https://example.org"),
 });
 
 export const eventSchema = z

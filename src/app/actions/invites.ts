@@ -7,7 +7,6 @@ import { site } from "@/config/site";
 import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
 import { errorText } from "@/lib/messages";
-import { withMessage } from "@/lib/navigation";
 import {
   formFields,
   idSchema,
@@ -108,6 +107,6 @@ export async function joinByInvite(token: string) {
   const row = data?.[0];
   if (!row) fail(back, "invite_invalid");
   const group = `/g/${row.slug}`;
-  if (row.result === "already_member") redirect(withMessage(group, { e: "already_member" }));
+  if (row.result === "already_member") redirect(group);
   succeed(group, row.result === "manager" ? "manager_joined" : "joined_by_invite");
 }

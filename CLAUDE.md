@@ -73,10 +73,12 @@ ones for the site admin to list or skip; groups carry affinity tags
 (FR-GR-11). See the PRD's "Build status" for what is not built yet and the
 [runbook](docs/runbook.md) for operations. UC-31 (page admin and up to two
 page managers, invite link, email invites waiting on email setup) was
-approved and built on 9 October 2026. Draft use cases awaiting review:
-UC-10 to UC-30, mostly from the 8 October Magic Patterns design (UC-25 to
-UC-28, drafted 9 October, are Sarah's own requests: branded sign-in email,
-claim confirmation by email, new-group approval, a demo member, password sign-in as UC-29, the event form as UC-30); on that
+approved and built on 9 October 2026. Sign-in is email and password with a confirmed email (UC-29, ADR-0009,
+built 9 October 2026; the emailed sign-in link is gone). Draft use cases
+awaiting review: UC-10 to UC-28 and UC-30, mostly from the 8 October Magic Patterns
+design (UC-25 to UC-28, drafted 9 October, are Sarah's own requests:
+branded sign-in email, claim confirmation by email, new-group approval, a
+demo member; UC-30 is the event form); on that
 date Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live
@@ -121,7 +123,7 @@ src/config/site.ts     everything deployment-specific
 src/proxy.ts           session refresh + Content Security Policy
 src/lib/               auth, validation (Zod), time zones, plain-text rendering, .ics
 src/app/actions/       every form's server action, grouped by area
-src/app/               pages: / browse c/ g/ e/ events communities search post me u/ admin report signin welcome
+src/app/               pages: / browse c/ g/ e/ events communities search post me u/ admin report signin signup forgot-password reset-password welcome
 src/components/        listings, forms, notices, plain text
 ```
 

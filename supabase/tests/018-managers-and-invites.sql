@@ -3,7 +3,7 @@
 --
 -- In the UI the owner is the *page admin* and admins are *page managers*.
 begin;
-select plan(58);
+select plan(63);
 select tests.build_fixture();
 
 -- PT-60  at most two page managers (FR-MB-11) ------------------------------
@@ -184,6 +184,13 @@ select is(
   (select token from public.group_invite_links where group_id = tests.id('g2')), current_setting('t.link'),
   'PT-63 the page admin can read the link again to copy it'
 );
+select tests.as_anon();
+select is(
+  (select name || '|' || slug from public.invite_preview(current_setting('t.link'))), 'Group Two|g2',
+  'PT-65 a visitor holding the link sees only the group''s name and slug'
+);
+select is((select count(*)::int from public.invite_preview(repeat('0', 64))), 0, 'PT-66 a made-up code previews nothing');
+select is((select count(*)::int from public.invite_preview('badtoken')), 0, 'PT-66 a malformed code previews nothing');
 select tests.as('pending');
 select is((select count(*)::int from public.group_invite_links), 0, 'PT-63 someone waiting cannot read invite links');
 select tests.as('outsider');
@@ -258,6 +265,8 @@ select throws_ok(
 );
 select tests.as('owner2');
 select lives_ok(format($$ select public.turn_off_invite_link(%L) $$, tests.id('g2')), 'PT-64 the page admin turns off the link');
+select tests.as_anon();
+select is((select count(*)::int from public.invite_preview(current_setting('t.link'))), 0, 'PT-64 a turned-off link previews nothing');
 select tests.as('member');
 select throws_ok(
   $$ select * from public.join_by_invite(current_setting('t.link')) $$,
@@ -278,6 +287,7 @@ select throws_ok(
   'P0001', 'invite_invalid: That invite is not valid.',
   'PT-66 an expired link joins nobody'
 );
+select is((select count(*)::int from public.invite_preview(current_setting('t.g1link2'))), 0, 'PT-66 an expired link previews nothing');
 select tests.as('owner');
 select set_config('t.g3link', public.create_invite_link(tests.id('g3'), 30), true);
 select public.archive_group(tests.id('g3'));

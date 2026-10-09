@@ -114,6 +114,7 @@ export type Database = {
           is_unclaimed: boolean;
           needs_owner: boolean;
           source_url: string | null;
+          website: string | null;
           affinity_tags: string[];
         };
         Insert: {
@@ -136,6 +137,7 @@ export type Database = {
           is_unclaimed?: boolean;
           needs_owner?: boolean;
           source_url?: string | null;
+          website?: string | null;
           affinity_tags?: string[];
         };
         Update: {
@@ -158,6 +160,7 @@ export type Database = {
           is_unclaimed?: boolean;
           needs_owner?: boolean;
           source_url?: string | null;
+          website?: string | null;
           affinity_tags?: string[];
         };
         Relationships: [
@@ -645,6 +648,7 @@ export type Database = {
         Args: { p_group_id: string };
         Returns: { id: string; sent_at: string; expires_at: string }[];
       };
+      invite_preview: { Args: { p_token: string }; Returns: { name: string; slug: string }[] };
       cancel_manager_invite: { Args: { p_invite_id: string }; Returns: undefined };
       join_by_invite: {
         Args: { p_token: string };

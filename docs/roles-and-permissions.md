@@ -79,7 +79,8 @@ and fewer roles means fewer permission rules to get wrong. A separate
 | Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Make, see, copy or turn off the group's invite link | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ |
-| Join with an invite link or member email invite (skips approval) | ❌ sign in first | ✅ unless banned | ✅ approves the request | — | — | — | — |
+| See which group an invite is for (holding a working code) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Join with an invite link or member email invite (skips approval) | ❌ create an account on the invite page first | ✅ unless banned | ✅ approves the request | — | — | — | — |
 | Invite members by email (25 a send, 100 a day per group) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ |
 | Invite a page manager by email; see or cancel open manager invites | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
 | Accept a manager invite | ❌ | ✅ only the invited address | ✅ only the invited address | ✅ only the invited address | — | — | — |
@@ -149,7 +150,7 @@ claimed the same way; its remaining admins and members are users here.
 
 ### Proposed with the 8 October design (drafts, not built)
 
-These follow the draft requirements for UC-10 to UC-30. Each becomes part
+These follow the draft requirements for UC-10 to UC-28 and UC-30. Each becomes part
 of the matrix above, with a permission test, once its use case is
 approved.
 

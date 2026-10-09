@@ -58,14 +58,14 @@ the home page, never having been asked to sign in.
 **Flow:**
 
 1. Clicks *Join group*. Is asked to sign in.
-2. Enters an email address and receives a sign-in link.
-3. Clicks the link, confirms they are 18 or over, accepts the terms and sets a
-   display name.
+2. Creates an account with an email address and a password, and confirms
+   the address from the emailed link (UC-29).
+3. Confirms they are 18 or over, accepts the terms and sets a display name.
 4. Lands back on the group page. The group is open, so they are a member at
    once.
 5. Opens the next event and clicks *Going*.
 
-**Requirements:** FR-AC-1, FR-AC-2, FR-AC-3, FR-MB-1, FR-EV-3, FR-EV-4
+**Requirements:** FR-AC-17 to FR-AC-19, FR-AC-2, FR-AC-3, FR-MB-1, FR-EV-3, FR-EV-4
 
 **Succeeds when:** sign-up to RSVP takes under two minutes and they end on the
 page they started from.
@@ -187,7 +187,7 @@ listing*, added from its public web page.
 4. The organizer opens the group page and is now its owner: they can edit
    it, post events and open the discussion board.
 
-**Requirements:** FR-GR-9, FR-GR-10, FR-AC-1, FR-AC-2
+**Requirements:** FR-GR-9, FR-GR-10, FR-AC-17, FR-AC-2
 
 **Succeeds when:** a real organizer takes over their listing in one visit
 plus one admin review, and nobody else can take it over.
@@ -757,7 +757,7 @@ report or message, on any page or through the API.
 
 ## UC-29 — Sign up with an email and a password
 
-> **Draft, awaiting review.** Requested by Sarah on 9 October 2026:
+> **Approved and built 9 October 2026.** Requested by Sarah the same day:
 > people should sign up with an email address they confirm and a password
 > they choose, instead of the emailed one-time link (FR-AC-1, a Must, and
 > ADR-0002). Decided with Sarah the same day: **open sign-up with email
@@ -782,13 +782,58 @@ report or message, on any page or through the API.
 6. Months later, has forgotten the password: clicks *Forgot password*,
    gets an email, sets a new one and is signed in.
 
-**Requirements:** to be written after review (drafts FR-AC-17 to FR-AC-21,
-replacing FR-AC-1).
+**Requirements:** FR-AC-17 to FR-AC-21 (replacing FR-AC-1), FR-AC-2,
+FR-AC-3
 
 **Succeeds when:** nobody can use an account whose email they haven't
 confirmed, a returning member signs in without waiting for an email, and
 a forgotten password is never a dead end.
 
+
+## UC-30 — Post an event people want to come to
+
+> **Draft, awaiting review.** Requested by Sarah on 9 October 2026 after
+> testing *Post an event*: no photo, no price, every event forced to take
+> RSVPs, and one text box for everything. Decided with her the same day:
+> RSVPs are optional; with RSVPs, a place limit and an optional waitlist;
+> without, an optional sign-up link; a required Description plus optional
+> Details; Free or Paid, with the registration fee and the total cost as
+> text. Narrows the event parts of UC-10 and UC-17 to these; series, FAQ,
+> sponsors, RSVP approval and opening times stay drafts.
+
+**Actor:** A group organizer (owner or admin)
+
+**Trigger:** The group has a ride coming up and wants people to find it
+and come.
+
+**Flow:**
+
+1. From the group page, chooses *Post an event*.
+2. Enters the title, dates and place as today, then a **Description**
+   (what the event is and who it's for) and, optionally, **Details** (what
+   to bring, pace, difficulty).
+3. Adds a **photo** of the ride, with a short description of the picture
+   for people who can't see it.
+4. Marks it **Paid**, and enters the registration fee (*$25 registration*)
+   and the total cost (*about $60 with bike rental*). The board shows both;
+   it never takes payment.
+5. Ticks **Take RSVPs on Branch Outdoors**, sets **20 places** and ticks
+   **Waitlist when full**.
+6. Publishes. The page shows the photo, the description, the price, the
+   details and the RSVP buttons with places left.
+7. When it fills, members join the waitlist in order. When someone drops
+   out, the organizer moves the next person to *going* from the event page.
+
+**Alternatives** (in the requirements): a free event; an event without
+RSVPs that links to the organizer's own sign-up page instead.
+
+**Requirements:** to be written after review (drafts FR-EV-23 to FR-EV-28;
+FR-EV-12, FR-EV-13 and FR-EV-16 narrowed to these).
+
+**Succeeds when:** an event page answers *what is it, what does it cost,
+can I come, how do I sign up* without anyone leaving the page or asking.
+
+---
 
 ## UC-31 — Bring people into the group
 
@@ -821,9 +866,16 @@ regulars and co-organizers with them.
    with a join link.
 3. Under *Invite link*, clicks *Create a link*, copies it and shares it in
    the club's group chat. The link works for 30 days.
-4. A rider opens the link, signs up or signs in, presses *Accept invite*
-   and lands in the group as a member, even though the group asks people
-   to request to join.
+4. A rider opens the link. The page says *Blue Ridge Dirt Skrrts is on
+   Branch Outdoors*, explains that this is the board the club uses for its
+   events and discussions, and offers *Create your account and join*
+   (email, password twice) or *Sign in*. She creates the account, confirms
+   her email, and the link in that email brings her back to the same page;
+   she adds her display name and accepts the terms, then presses *Join Blue
+   Ridge Dirt Skrrts* and lands on the group page (*Welcome to Blue Ridge
+   Dirt Skrrts*) as a member, even though the group asks people to request
+   to join. Someone already signed in just sees *Blue Ridge Dirt Skrrts
+   invites you* and the Join button.
 5. Later, the page admin turns the link off; it stops working at once.
 
 **Requirements:** FR-MB-11 to FR-MB-16.

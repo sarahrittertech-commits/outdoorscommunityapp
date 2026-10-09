@@ -30,6 +30,7 @@ In full, what a clone replaces:
 | Colors                                                                                                                                      | `src/brand/tokens.css`                                                                                | Replace the whole file. Shared code only names slots, so this is the only place a color lives |
 | Logo and favicon                                                                                                                            | `src/brand/Mark.tsx` and `src/app/icon.svg`                                                           | Its own mark, keeping the name `Mark` and the `.mark-stem` class. `icon.svg` holds literal colors (a favicon can't read CSS variables), so match them to `tokens.css` by hand |
 | Category drawings                                                                                                                           | `src/brand/ActivityIcon.tsx` (keyed by category slug)                                                 | One drawing per new category; unknown slugs fall back to a plain circle                       |
+| Sample photos for a couple of groups | `src/brand/activityPhotos.ts` and `public/activities/` | Its own, keyed by its group slugs, or an empty list |
 | Brand guide                                                                                                                                 | `docs/brand.md`                                                                                       | Its own palette, with contrast ratios                                                         |
 | Name, description, audience, region, contact, home page headline and intro, map tiles and starting point, search example, example town and meeting place for form hints, default join setting | `src/config/site.ts`                                                                                  | New name and wording; `defaultJoinPolicy: "approval"` if groups should start approval-only    |
 | Region and category list                                                                                                                    | `supabase/migrations/20260925000005_seed_directory.sql`                                               | Replace the file's contents                                                                   |
@@ -103,6 +104,24 @@ second keeps them in sync.
    the catch-up list, not a change to the clone's own look: the brand files
    are kept as they are, and the merge only asks for a color when the tool
    has added a slot.
+
+## Features are built once, for every board
+
+New product features are built in this repository, in the shared tool, and
+documented in the shared product docs: [use cases](./use-cases),
+[user flows](./user-flows), [user stories](./user-stories), the
+[functional requirements](./functional-requirements) and the
+[feature request log](./feature-requests). Sage Women and later boards
+inherit them with each merge from upstream; nothing is rebuilt per board.
+
+Each request in the log is marked **tool**, **brand** or **board**. When a
+board needs a tool feature off or different (a demo login, how long invite
+links last, whether new groups need approval, how many page managers a
+group has), that becomes a setting in `src/config/site.ts`, so the code
+stays one product and each board only sets its values.
+
+Use case wording mentions Western North Carolina places as examples; the
+behavior it describes is the same on every board.
 
 ## Decisions to make before cloning
 

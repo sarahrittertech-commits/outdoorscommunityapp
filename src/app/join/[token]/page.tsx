@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { signUp } from "@/app/actions/auth";
 import { joinByInvite } from "@/app/actions/invites";
 import { Notice } from "@/components/Notice";
 import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
+import { loadGroup } from "@/lib/groups";
+import { createClient } from "@/lib/supabase/server";
 import { inviteTokenSchema } from "@/lib/validation";
 
 export const metadata: Metadata = { title: "Join by invite", robots: { index: false, follow: false } };
@@ -15,44 +18,106 @@ type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
+function NotWorking() {
+  return (
+    <>
+      <h1>That invite link isn&apos;t working</h1>
+      <p className="mt-2 max-w-prose">
+        Check that the whole link was copied. If it was, it may have been turned off or expired: ask the group for a new one.
+      </p>
+      <p className="mt-4">
+        <Link href="/browse">Browse groups</Link>
+      </p>
+    </>
+  );
+}
+
 /**
- * FR-MB-14: an invite link or email invite. Joining is a button, not the
- * page load, so link previews and prefetching never join anyone. The
- * database checks the code, the group and the person when it is pressed.
+ * FR-MB-14: one page for an invite link or an email invite.
+ *
+ * - Signed out: what the group is and where they are, and a form that
+ *   creates their account (Supabase Auth, UC-29's rules) with the
+ *   confirmation link pointing back here.
+ * - Signed in but not onboarded: the welcome step, then back here.
+ * - Signed in: a *Join* button. Joining is a POST, never the page load, so
+ *   link previews and prefetching never join anyone or use up an invite.
+ *
+ * invite_preview() returns only the group's name and slug, and nothing for
+ * a bad, turned-off or expired code. The database checks everything again
+ * when Join is pressed.
  */
 export default async function JoinPage({ params, searchParams }: Props) {
   const { token } = await params;
-  const valid = inviteTokenSchema.safeParse(token).success;
+  if (!inviteTokenSchema.safeParse(token).success) return <NotWorking />;
 
-  if (!valid) {
+  const supabase = await createClient();
+  const [{ data: preview }, viewer] = await Promise.all([
+    supabase.rpc("invite_preview", { p_token: token }),
+    getViewer(),
+  ]);
+  const group = preview?.[0];
+  if (!group) return <NotWorking />;
+
+  const here = `/join/${token}`;
+  const query = await searchParams;
+
+  if (!viewer) {
+    const checkEmail = query.m === "signup_sent";
     return (
       <>
-        <h1>That invite link isn&apos;t working</h1>
+        <h1>
+          {group.name} is on {site.name}
+        </h1>
         <p className="mt-2 max-w-prose">
-          Check that the whole link was copied. If it was, it may have been turned off or expired: ask the group for a new one.
+          {site.name} is the community board {group.name} uses for its events and discussions. You&apos;re creating a free
+          account and joining the group in one step.
         </p>
+        {checkEmail ? (
+          <p role="status" className="mt-4 rounded bg-notice px-3 py-2">
+            Check your email to confirm your address. The link brings you straight back to join {group.name}.
+          </p>
+        ) : (
+          <>
+            <Notice params={query} />
+            <h2>Create your account and join</h2>
+            <form action={signUp} className="mt-2">
+              <input type="hidden" name="next" value={here} />
+              <label htmlFor="email">
+                Email address <span className="hint">Never shown to anyone.</span>
+              </label>
+              <input id="email" name="email" type="email" required autoComplete="email" maxLength={254} />
+              <label htmlFor="password">
+                Password <span className="hint">At least 10 characters. A short sentence works well.</span>
+              </label>
+              <input id="password" name="password" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
+              <label htmlFor="passwordAgain">Password again</label>
+              <input id="passwordAgain" name="passwordAgain" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
+              <button className="button mt-3">Create your account and join</button>
+            </form>
+          </>
+        )}
         <p className="mt-4">
-          <Link href="/browse">Browse groups</Link>
+          Already have an account? <Link href={`/signin?next=${encodeURIComponent(here)}`}>Sign in</Link>
         </p>
       </>
     );
   }
 
-  const here = `/join/${token}`;
-  const viewer = await getViewer();
-  if (!viewer) redirect(`/signin?next=${encodeURIComponent(here)}`);
   if (!viewer.onboarded) redirect(`/welcome?next=${encodeURIComponent(here)}`);
+
+  // Already in: nothing to do but go there.
+  const { isMember } = await loadGroup(group.slug);
+  if (isMember) redirect(`/g/${group.slug}`);
 
   return (
     <>
-      <h1>You&apos;ve been invited to a group</h1>
-      <Notice params={await searchParams} />
+      <h1>{group.name} invites you</h1>
+      <Notice params={query} />
       <p className="mt-2 max-w-prose">
-        Someone who runs a group on {site.name} sent you this invite. Accept it to join the group straight away; you can leave
-        at any time.
+        Join to see the group&apos;s events and discussions on {site.name}. No approval needed; you can leave at any time.
       </p>
       <form action={joinByInvite.bind(null, token)} className="mt-4">
-        <button className="button">Accept invite</button>
+        <button className="button">Join {group.name}</button>
       </form>
     </>
   );
