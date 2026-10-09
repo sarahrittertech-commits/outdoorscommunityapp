@@ -75,7 +75,7 @@ ones for the site admin to list or skip; groups carry affinity tags
 page managers, invite link, email invites waiting on email setup) was
 approved and built on 9 October 2026. Sign-in is email and password with a confirmed email (UC-29, ADR-0009,
 built 9 October 2026; the emailed sign-in link is gone). Draft use cases
-awaiting review: UC-10 to UC-28 and UC-30 to UC-31, mostly from the 8 October Magic Patterns
+awaiting review: UC-10 to UC-28 and UC-30, mostly from the 8 October Magic Patterns
 design (UC-25 to UC-28, drafted 9 October, are Sarah's own requests:
 branded sign-in email, claim confirmation by email, new-group approval, a
 demo member; UC-30 is the event form); on that
