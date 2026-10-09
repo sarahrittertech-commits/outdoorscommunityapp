@@ -421,3 +421,20 @@ flowchart TD
   resetmail -->|clicks the link| newpw["Set a new password"]
   newpw --> back
 ```
+
+## UC-30 — Post an event people want to come to
+
+*Draft, awaiting review.*
+
+```mermaid
+flowchart TD
+  start["Group page: Post an event"] --> form["Event form<br/>title, dates, place<br/>Description (required), Details (optional)<br/>Photo + its description (optional)"]
+  form --> price{Free or Paid?}
+  price -->|Free| rsvp{Take RSVPs on Branch Outdoors?}
+  price -->|Paid| cost["Registration fee, Total cost (text)"] --> rsvp
+  rsvp -->|yes| places["Places (optional)<br/>Waitlist when full (tick)"] --> publish
+  rsvp -->|no| link["Sign-up link (optional)"] --> publish
+  publish["Publish"] --> page(["Event page: photo, description, price, details,<br/>RSVP buttons and places left, or Sign up at …"])
+  page -->|full, waitlist on| wait["Members join the waitlist in order"]
+  wait -->|someone drops out| move(["Organizer moves the next person to going"])
+```

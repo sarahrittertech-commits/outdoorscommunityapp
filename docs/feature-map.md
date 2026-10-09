@@ -5,6 +5,11 @@ title: Feature map
 
 # Feature map: what's live, what's new
 
+See also [User stories](./user-stories) for the same features as stories
+any board can use, and the [feature request log](./feature-requests) for
+where each request came from and whether it belongs to the shared tool or
+to one board.
+
 One page that separates the branded app as it runs today from the new
 features proposed in the 8 October Magic Patterns design or requested by
 Sarah the same day. Live features
@@ -110,6 +115,12 @@ Requested by Sarah on 8 October; drafted 9 October.
 | **Branded sign-in email**: plain wording from Branch Outdoors instead of Supabase's generic email; no images or tracking | Fits · Waits on domain | UC-25 | FR-AC-11 to FR-AC-13 |
 | **Confirm a claim by email** at the group's own website domain; the site admin sees *Confirmed at …* or *Not confirmed* | Fits · Waits on domain | UC-26 | FR-GR-18 to FR-GR-20 |
 | **Approval of a person's first group** (recommended of three options: every group, first group only, none) | Decision needed | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 |
+
+### Posting events
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Event form**: required description plus details, a photo, Free or Paid with fee and total cost, optional RSVPs with places and a waitlist, or a sign-up link | Requested 9 Oct, awaiting review | UC-30 | FR-EV-23 to FR-EV-28 |
 
 ### Accounts
 

@@ -173,7 +173,7 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 to UC-29 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 to UC-30 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built (UC-29, password sign-in, was approved and built on 9 October and
 its requirements, FR-AC-17 to FR-AC-21, are in the Accounts table). Each moves into its area's table above, with a priority, once Sarah
@@ -334,3 +334,17 @@ read-only demo.
 | FR-AC-15 | **Read-only in the database.** The demo account is marked as a demo, and `can_write()` returns false for it, so every write the board has (post, reply, join, leave, RSVP, report, claim, message, profile edit, account deletion) is refused by the database whatever the page shows. Buttons explain that the demo can look but not change anything. | Should | A pgTAP test tries every write as the demo account and every one is refused. |
 | FR-AC-16 | **Demo groups only.** The demo account is a member only of groups marked as demo groups, whose content is sample content, so it never reads a real group's members-only discussions or member list. Demo groups are listed like any other but carry a *Demo* tag. | Should | The demo account belongs to no real group; every demo group is tagged. |
 
+### Posting an event (UC-30)
+
+Narrows FR-EV-12 (photo), FR-EV-13 (price) and FR-EV-16 (waitlist) to what
+Sarah chose on 9 October, and adds the description, the RSVP choice and the
+sign-up link. Every form keeps working with JavaScript off.
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-EV-23 | **Description and Details.** *Description* is required (10 to 2,000 characters): what the event is and who it's for, shown first and used in link previews. *Details* stays optional (what to bring, pace, difficulty). Existing events keep their text as Details. Plain text, links work. | Must | An event can't be posted without a description. |
+| FR-EV-24 | **Photo.** One optional photo per event, uploaded by the owner or admins: JPEG, PNG or WebP, at most 5 MB, re-encoded and stripped of location data on upload (TR-SEC-9), with a required short description of the picture (alt text). Replaceable and removable. Shown at the top of the event page; events without one show no photo. | Should | Only a group's owner and admins can add or remove an event's photo; nothing but a re-encoded image is ever served. |
+| FR-EV-25 | **Free or Paid.** Every event is *Free* or *Paid*. A paid event has a *Registration fee* and a *Total cost*, each plain text up to 80 characters (*$25 registration*, *about $60 with bike rental*), shown together on the event page and in event lists as *Paid*. The board never takes payment. | Should | A paid event can't be posted without a registration fee. |
+| FR-EV-26 | **Take RSVPs or not.** *Take RSVPs on Branch Outdoors* is ticked by default. Unticked, the event shows no RSVP buttons and no going count, and takes no RSVPs (the database refuses them). | Should | An event without RSVPs refuses an RSVP made directly through the API. |
+| FR-EV-27 | **Sign-up link.** An event without RSVPs can give an optional *Sign up at* link (http or https) to the organizer's own page, shown on the event page with `rel="nofollow ugc noopener"`. | Should | — |
+| FR-EV-28 | **Waitlist when full.** An event with places can turn on a waitlist. When it is full, members can join the waitlist, in the order they joined; they see their place in line. The owner and admins move people from the waitlist to *going* on the event page, never automatically, and only while a place is free. Leaving the waitlist is always allowed. Replaces FR-EV-10 and narrows FR-EV-16. | Should | Nobody moves from the waitlist to going without an organizer, and going never exceeds the places. |
