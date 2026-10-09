@@ -7,7 +7,8 @@ development window starts with full project context without re-explaining it.
 
 A web-based community board for outdoor groups. People browse groups by
 category and subcategory, join them, RSVP to the events those groups host,
-and talk in group discussion boards. Groups are run by an owner and admins.
+and talk in group discussion boards. Groups are run by an owner and admins,
+shown on the site as the *page admin* and up to two *page managers*.
 
 Think Meetup's groups and events, a Facebook group's membership and roles,
 and an old forum's discussion threads, presented with the plainness of
@@ -70,10 +71,12 @@ with unclaimed listings of real groups (FR-GR-9) that organizers can claim;
 a weekly research agent (UC-9, `scripts/research/agent.md`) suggests new
 ones for the site admin to list or skip; groups carry affinity tags
 (FR-GR-11). See the PRD's "Build status" for what is not built yet and the
-[runbook](docs/runbook.md) for operations. Draft use cases awaiting review:
-UC-10 to UC-31, mostly from the 8 October Magic Patterns design (UC-25 to
+[runbook](docs/runbook.md) for operations. UC-31 (page admin and up to two
+page managers, invite link, email invites waiting on email setup) was
+approved and built on 9 October 2026. Draft use cases awaiting review:
+UC-10 to UC-30, mostly from the 8 October Magic Patterns design (UC-25 to
 UC-28, drafted 9 October, are Sarah's own requests: branded sign-in email,
-claim confirmation by email, new-group approval, a demo member, password sign-in as UC-29, the event form as UC-30, page managers and invites as UC-31); on that
+claim confirmation by email, new-group approval, a demo member, password sign-in as UC-29, the event form as UC-30); on that
 date Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live

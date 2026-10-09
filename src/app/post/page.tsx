@@ -51,7 +51,7 @@ export default async function PostPage() {
       )}
 
       <h2>A group</h2>
-      <p className="text-muted">Bring people together around an activity. You&apos;ll be its owner and can add admins later.</p>
+      <p className="text-muted">Bring people together around an activity. You&apos;ll be its page admin and can add up to two page managers later.</p>
       <p className="mt-3">
         <Link href="/groups/new" className="button">
           Start a group
