@@ -74,16 +74,18 @@ export async function declineMember(groupId: string, userId: string, slug: strin
   succeed(back, "member_declined");
 }
 
-/** FR-MB-7: removal is a ban. */
-export async function removeMember(groupId: string, userId: string, slug: string, formData: FormData) {
+/**
+ * FR-MB-7: removal is a ban. The members page asks for no reason, so the
+ * moderation log entry has none.
+ */
+export async function removeMember(groupId: string, userId: string, slug: string) {
   const back = `/g/${slug}/members`;
   const { supabase } = await actingUser(back);
   checkArgs(back, z.tuple([idSchema, idSchema, slugSchema]), [groupId, userId, slug]);
-  const reason = z.string().trim().max(500).safeParse(formData.get("reason") ?? "");
   const { error } = await supabase.rpc("remove_member", {
     p_group_id: groupId,
     p_user_id: userId,
-    p_reason: reason.success ? reason.data : "",
+    p_reason: "",
   });
   failOnError(back, error);
   succeed(back, "member_removed");
