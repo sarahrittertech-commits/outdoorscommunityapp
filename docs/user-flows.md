@@ -386,3 +386,19 @@ flowchart TD
   decide -->|no, Decline with a reason| declined(["Group page: not approved, with the reason"])
   listed -->|posts first event| done(["Group is live"])
 ```
+
+## UC-28 — Look around as a member
+
+*Draft, awaiting review. Decision needed: drawn for the read-only demo
+member on the live board.*
+
+```mermaid
+flowchart TD
+  signin["Sign-in page"] -->|Look around as a demo member| demo["Signed in as Demo member<br/>band: nothing you do here is saved"]
+  demo --> browse["Demo groups: discussions, members,<br/>who's going, My stuff"]
+  browse --> act{Tries to RSVP, post, join or report?}
+  act -->|yes| refuse["Button explains: the demo can look, not change<br/>link: sign in for real"]
+  act -->|no| browse
+  refuse --> browse
+  browse -->|Sign out, or one hour passes| out(["Signed out"])
+```

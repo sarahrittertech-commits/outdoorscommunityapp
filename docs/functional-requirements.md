@@ -166,7 +166,7 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 to UC-27 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 to UC-28 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built. Each moves into its area's table above, with a priority, once Sarah
 approves its use case and user flow. Priorities here are proposals.
@@ -313,3 +313,16 @@ listed as its own open question in the PRD.
 | FR-GR-8 | **First group waits for review.** *Replaces the Could.* A user's first group is created *waiting for review*: visible only to its owner and the site admin; absent from listings, search, Events and the home page; nobody can join it. The owner can edit it and post events, which stay hidden with it. A user skips review if they own, or have owned, an approved group, or had a claim approved (FR-GR-10); receiving an approved group by transfer counts too. Owners of groups that exist when this ships count as approved. A group waiting for review counts toward the limit of 3 (FR-GR-7). | Should | The database returns a group waiting for review to nobody but its owner and the site admin, and refuses every join. |
 | FR-GR-21 | **New groups queue.** A *New groups* section on the admin page lists groups waiting for review, oldest first: name, description, subcategory, area and the owner's display name (never their email, FR-AC-5). *Approve* lists the group. *Decline* needs a short reason, which the owner sees on the group page; a declined group stays read-only for its owner, who can delete it and start again. Both are logged (FR-MD-6). | Should | Only the site admin can approve or decline; the database refuses everyone else. |
 | FR-GR-22 | **Telling the organizer.** The form says before they submit that first groups are checked first. The group page states plainly that it is waiting, and later whether it was approved or declined and why. Once built, the reminders list (FR-AC-10) shows the decision; an email is sent only once the domain exists and the organizer hasn't switched it off (FR-NT-1). No promised waiting time. If the owner deletes their account while the group is waiting, the group is deleted with it, since nothing about it was ever public. | Should | — |
+
+
+### Demo member (UC-28)
+
+**Decision needed:** read-only demo member on the live board
+(recommended), a separate demo board, or none. These drafts are for the
+read-only demo.
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-AC-14 | **Demo sign-in.** The sign-in page offers *Look around as a demo member*. It signs the visitor into one shared demo account without an email, through a server action; the account's password lives only in a Railway secret and never reaches the browser. The session lasts at most an hour. | Should | Anyone can open the demo without an email; nobody can sign in as the demo any other way. |
+| FR-AC-15 | **Read-only in the database.** The demo account is marked as a demo, and `can_write()` returns false for it, so every write the board has (post, reply, join, leave, RSVP, report, claim, message, profile edit, account deletion) is refused by the database whatever the page shows. Buttons explain that the demo can look but not change anything. | Should | A pgTAP test tries every write as the demo account and every one is refused. |
+| FR-AC-16 | **Demo groups only.** The demo account is a member only of groups marked as demo groups, whose content is sample content, so it never reads a real group's members-only discussions or member list. Demo groups are listed like any other but carry a *Demo* tag. | Should | The demo account belongs to no real group; every demo group is tagged. |

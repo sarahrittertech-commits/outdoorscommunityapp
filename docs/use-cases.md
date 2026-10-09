@@ -709,6 +709,51 @@ FR-GR-22).
 site admin's yes, and an organizer who has been checked once is never
 held up again.
 
+
+## UC-28 — Look around as a member
+
+> **Draft, awaiting review. Decision needed.** Requested by Sarah on 9
+> October 2026, after the Magic Patterns prototype's *demo member* button.
+> The prototype simulated sign-in; the live board signs people in by email
+> link only, so a demo needs a real account. Written for the recommended
+> option, a **read-only demo member** on the live board; the alternatives
+> are below.
+
+**Actor:** The reviewer (a hiring manager or a peer looking at the
+portfolio)
+
+**Trigger:** Wants to see the signed-in side of the board (a group's
+discussions and member list, who's going, My stuff) without giving an
+email address.
+
+**Flow:**
+
+1. On the sign-in page, under the email form, picks *Look around as a
+   demo member*.
+2. Is signed in as **Demo member**, a member of a few demo groups, with
+   a band on every page: *You're looking around as a demo member. Nothing
+   you do here is saved.*
+3. Opens a group's discussions, its member list, an event's *who's going*
+   and My stuff.
+4. Tries to RSVP or post: the button explains that the demo can look but
+   not change anything, with a link to sign in for real.
+5. Signs out, or the demo session ends after an hour.
+
+**Requirements:** to be written after review (drafts FR-AC-14 to
+FR-AC-16).
+
+**Succeeds when:** a reviewer sees every signed-in page in under a minute
+without an email, and the demo account can never post, join, RSVP,
+report or message, on any page or through the API.
+
+**Options and their cost:**
+
+| Option | What it means | Cost and risk |
+| --- | --- | --- |
+| **Read-only demo member on the live board** (recommended) | One demo account, a member of a few demo groups on the live board. The database treats it like a suspended account: it can read what a member reads, never write. | Small: one setting on the account, one check in `can_write()`, one button. Demo groups have to be real-looking but clearly marked *demo*, or the demo sees real members' discussions, which it must not. |
+| A separate demo board | A second copy of the site with its own database, filled with sample groups and people, reset every night. Anyone can do anything there. | A second Railway service and a second Supabase project (the free plan allows two active projects; Sage Women uses the other), plus a nightly reset job. Two sites to keep deployed. |
+| Writable demo on the live board | The prototype's behaviour: the demo can post and RSVP. | Not recommended. Anyone on the internet could post on the real board as "Demo member"; the site admin would moderate it daily. |
+
 ---
 
 ## Journeys the seed data must cover

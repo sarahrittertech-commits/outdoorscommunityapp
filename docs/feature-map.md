@@ -111,6 +111,12 @@ Requested by Sarah on 8 October; drafted 9 October.
 | **Confirm a claim by email** at the group's own website domain; the site admin sees *Confirmed at …* or *Not confirmed* | Fits · Waits on domain | UC-26 | FR-GR-18 to FR-GR-20 |
 | **Approval of a person's first group** (recommended of three options: every group, first group only, none) | Decision needed | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 |
 
+### Demo
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Demo member sign-in**, read-only, so reviewers can see the signed-in pages without an email | Decision needed | UC-28 | FR-AC-14 to FR-AC-16 |
+
 ## Still out of scope
 
 Feeds and ranking, likes and follower counts, ads and sponsored placement,

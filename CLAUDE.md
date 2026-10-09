@@ -71,9 +71,9 @@ a weekly research agent (UC-9, `scripts/research/agent.md`) suggests new
 ones for the site admin to list or skip; groups carry affinity tags
 (FR-GR-11). See the PRD's "Build status" for what is not built yet and the
 [runbook](docs/runbook.md) for operations. Draft use cases awaiting review:
-UC-10 to UC-27, mostly from the 8 October Magic Patterns design (UC-25 to
-UC-27, drafted 9 October, are Sarah's own requests: branded sign-in email,
-claim confirmation by email, new-group approval); on that
+UC-10 to UC-28, mostly from the 8 October Magic Patterns design (UC-25 to
+UC-28, drafted 9 October, are Sarah's own requests: branded sign-in email,
+claim confirmation by email, new-group approval, a demo member); on that
 date Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live
