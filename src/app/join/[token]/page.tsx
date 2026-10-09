@@ -74,7 +74,8 @@ export default async function JoinPage({ params, searchParams }: Props) {
         </p>
         {checkEmail ? (
           <p role="status" className="mt-4 rounded bg-notice px-3 py-2">
-            Check your email to confirm your address. The link brings you straight back to join {group.name}.
+            Check your email. The link confirms your address, lets you create your password, and brings you straight back to
+            join {group.name}.
           </p>
         ) : (
           <>
@@ -86,13 +87,7 @@ export default async function JoinPage({ params, searchParams }: Props) {
                 Email address <span className="hint">Never shown to anyone.</span>
               </label>
               <input id="email" name="email" type="email" required autoComplete="email" maxLength={254} />
-              <label htmlFor="password">
-                Password <span className="hint">At least 10 characters. A short sentence works well.</span>
-              </label>
-              <input id="password" name="password" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
-              <label htmlFor="passwordAgain">Password again</label>
-              <input id="passwordAgain" name="passwordAgain" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
-              <button className="button mt-3">Create your account and join</button>
+              <button className="button mt-4">Email me the link</button>
             </form>
           </>
         )}

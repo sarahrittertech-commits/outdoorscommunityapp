@@ -55,8 +55,9 @@ and fewer roles means fewer permission rules to get wrong. A separate
 | See a group's type and cover photo (FR-GR-14, FR-GR-16) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See public event details | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See a members-only event address | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
-| See the member list | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
-| See who is going to an event | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| See the group's organizers | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See the member list and names on *who's going* (FR-MB-10) | ❌ | only if *anyone signed in* | only if *anyone signed in* | ✅ unless *organizers only* | ✅ | ✅ | ✅ |
+| See member, going and waitlist counts | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Read discussions | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | See an archived group's page | ✅ read-only | ✅ read-only | ✅ read-only | ✅ read-only | ✅ read-only | ✅ | ✅ |
 | See a removed group, its members, RSVPs or discussions | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
@@ -104,6 +105,7 @@ Email invites are stored but not sent until the board's email is set up
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Edit group details and affinity tags, turn discussions on/off, change join policy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Set the group's type; add, replace or remove its cover photo (FR-GR-14, FR-GR-16; active groups only, at most 5 cover files) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ type, and can take a cover down; can't upload |
+| Choose who sees the member list (FR-MB-10) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Archive / restore the group | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | Remove the group entirely | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
@@ -116,12 +118,15 @@ Email invites are stored but not sent until the board's email is set up
 | Join or leave an event's waitlist when it is full (FR-EV-28) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Add, replace or remove an event photo; set price, RSVPs, sign-up link, waitlist (FR-EV-24 to FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Move someone from the waitlist to going, while a place is free (FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Save an event they can see, unsave it, see their own saved events (FR-EV-18) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See someone else's saved events | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ### Discussions (only while discussions are on)
 
 | Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Start a thread, reply (unless locked) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Reply to a reply, one level (unless locked; UC-19, FR-DS-9) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Edit or delete a post | ❌ | ❌ | ❌ | **own** | **own** | **own** | — |
 | Pin, lock, remove threads; remove replies | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 
@@ -174,17 +179,14 @@ approved.
 | Search by town or zip and distance, see *Near you* | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See the destinations map and place pages | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Manage the places list | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Set the group's member list privacy (type and cover photo built with UC-24) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
-| See the member list and names on *who's going* | ❌ | per setting | per setting | ✅ | ✅ | ✅ |
 | Post an event series, sponsors, FAQ, RSVP opening time (photo and price built with UC-30) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Ask an event a question | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Read and answer questions, move answers to the FAQ | ❌ | ❌ own only | ❌ own only | ✅ | ✅ | ✅ |
 | RSVP to an approval event (request) (waitlist built with UC-30) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Approve, decline, waitlist or remove RSVPs | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
-| Save an event; see own saved events and calendar | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| See someone else's saved events | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| See own going and saved events on a calendar (saving built with UC-22) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See own reminders | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Reply to a reply | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Reply to a reply (built with UC-19; see Discussions) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Upload photos to the group gallery | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | See a members-only gallery | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | Remove a gallery photo | ❌ | ❌ | **own** | ✅ | ✅ | ✅ |

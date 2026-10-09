@@ -38,6 +38,7 @@ export async function createGroup(formData: FormData) {
       discussions_enabled: group.discussionsEnabled,
       affinity_tags: tags.data,
       website: group.website,
+      member_list_visibility: group.memberListVisibility,
       group_type: group.groupType,
       created_by: viewer.id,
     });
@@ -98,6 +99,7 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
       discussions_enabled: group.discussionsEnabled,
       affinity_tags: tags.data,
       website: group.website,
+      member_list_visibility: group.memberListVisibility,
       group_type: group.groupType,
       ...coverColumns,
     })

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { cancelEvent, leaveWaitlist, moveFromWaitlist, rsvp } from "@/app/actions/events";
+import { cancelEvent, leaveWaitlist, moveFromWaitlist, rsvp, saveEvent, unsaveEvent } from "@/app/actions/events";
 import { groupPhotos } from "@/brand/activityPhotos";
 import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
@@ -51,12 +51,20 @@ export default async function EventPage({ params, searchParams }: Props) {
   // decides what each query returns, so nothing here waits on isMember.
   const [{ supabase, event, group }, viewer] = await Promise.all([loadEvent(id), getViewer()]);
 
-  const [{ isMember, canManage }, { data: details }, { data: goingCount }, { data: rsvpRows }] = await Promise.all([
+  const [
+    { isMember, canManage, seesMemberList },
+    { data: details },
+    { data: goingCount },
+    { data: rsvpRows },
+    { data: waitlistPlace },
+    { data: saved },
+  ] = await Promise.all([
     loadGroup(group.slug),
     supabase.from("event_private_details").select("address").eq("event_id", event.id).maybeSingle(),
     // Not event_listings, which leaves out archived groups (FR-GR-6).
     supabase.rpc("event_going_count", { p_event_id: event.id }),
-    // Members read every RSVP to the event; anyone else reads only their own.
+    // Whoever the group's member list setting allows (FR-MB-10) reads every
+    // RSVP to the event; anyone else reads only their own.
     viewer
       ? supabase
           .from("event_rsvps")
@@ -64,13 +72,20 @@ export default async function EventPage({ params, searchParams }: Props) {
           .eq("event_id", event.id)
           .order("waitlisted_at", { ascending: true, nullsFirst: true })
       : Promise.resolve({ data: null }),
+    // How many are waiting and the viewer's own place, without names.
+    viewer ? supabase.rpc("event_waitlist_place", { p_event_id: event.id }).single() : Promise.resolve({ data: null }),
+    // FR-EV-18: only the viewer's own save is readable.
+    viewer ? supabase.from("saved_events").select("event_id").eq("event_id", event.id).maybeSingle() : Promise.resolve({ data: null }),
   ]);
   const mine = viewer ? (rsvpRows ?? []).find((r) => r.user_id === viewer.id) : undefined;
 
-  // Non-members can read only their own RSVP, so the lists are for members only (FR-EV-6).
-  const attendees = isMember ? (rsvpRows ?? []).filter((r) => r.status === "going") : null;
+  // Names on who's going follow the group's member list setting (FR-EV-6,
+  // FR-MB-10); anyone else reads only their own RSVP, so gets no list.
+  const attendees = seesMemberList ? (rsvpRows ?? []).filter((r) => r.status === "going") : null;
+  // Names for organizers; the count and your place for everyone (FR-EV-28).
   const waitlist = (rsvpRows ?? []).filter((r) => r.status === "waitlisted");
-  const waitlistPlace = viewer ? waitlist.findIndex((r) => r.user_id === viewer.id) + 1 : 0;
+  const waiting = waitlistPlace?.waiting ?? 0;
+  const myPlace = waitlistPlace?.my_place ?? 0;
   const going = goingCount ?? 0;
   // FR-EV-24: the event's own photo first; otherwise a representative photo
   // for a couple of sample groups (src/brand/activityPhotos.ts), unless the
@@ -82,7 +97,7 @@ export default async function EventPage({ params, searchParams }: Props) {
   const placeFree = event.capacity === null || going < event.capacity;
   // FR-EV-28: while anyone is waiting, places go to the waitlist first.
   const waitlistOpen = event.waitlist_enabled && event.capacity !== null;
-  const full = mine?.status !== "going" && (!placeFree || (waitlistOpen && waitlist.length > 0 && !canManage));
+  const full = mine?.status !== "going" && (!placeFree || (waitlistOpen && waiting > 0 && !canManage));
   const when = formatEventTime(event.starts_at, event.ends_at, event.timezone);
   const url = `${site.url}/e/${event.id}`;
   // FR-GR-9: a listed group's event points to the organizer's own page.
@@ -158,7 +173,7 @@ export default async function EventPage({ params, searchParams }: Props) {
                 <dd>
                   {going}
                   {event.capacity !== null && ` of ${event.capacity}`}
-                  {waitlistOpen && waitlist.length > 0 && isMember && `, ${waitlist.length} on the waitlist`}
+                  {waitlistOpen && waiting > 0 && isMember && `, ${waiting} on the waitlist`}
                 </dd>
               </>
             )}
@@ -209,7 +224,7 @@ export default async function EventPage({ params, searchParams }: Props) {
                   </>
                 ) : mine?.status === "waitlisted" ? (
                   <>
-                    <strong>You&apos;re #{waitlistPlace || "?"} on the waitlist.</strong>
+                    <strong>You&apos;re #{myPlace || "?"} on the waitlist.</strong>
                     <form action={leaveWaitlist.bind(null, event.id)}>
                       <button className="button button-plain">Leave the waitlist</button>
                     </form>
@@ -255,9 +270,21 @@ export default async function EventPage({ params, searchParams }: Props) {
         )}
       </div>
 
-      <p className="mt-3 text-sm">
+      <div className="mt-3 flex flex-wrap items-center gap-4 text-sm">
+        {/* FR-EV-18: save without RSVPing; nobody else can see it. */}
+        {viewer?.canWrite &&
+          (saved ? (
+            <form action={unsaveEvent.bind(null, event.id, "event")} className="flex items-center gap-2">
+              <span>Saved</span>
+              <button className="button button-plain">Unsave</button>
+            </form>
+          ) : (
+            <form action={saveEvent.bind(null, event.id)}>
+              <button className="button button-plain">Save for later</button>
+            </form>
+          ))}
         <a href={`/e/${event.id}/calendar.ics`}>Add to calendar</a>
-      </p>
+      </div>
 
       {canManage && !cancelled && (
         <nav aria-label="Page admin tools" className="mt-4 flex flex-wrap items-baseline gap-x-4 rounded bg-panel px-3 py-2 text-sm">
@@ -274,6 +301,10 @@ export default async function EventPage({ params, searchParams }: Props) {
           <h2>Details</h2>
           <PlainText text={event.details} className="mt-2" />
         </>
+      )}
+
+      {!attendees && isMember && going > 0 && (
+        <p className="mt-4 text-sm text-muted">This group shows who&apos;s going to its organizers only.</p>
       )}
 
       {attendees && attendees.length > 0 && (

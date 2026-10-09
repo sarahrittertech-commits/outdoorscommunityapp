@@ -14,7 +14,7 @@ import { Notice } from "@/components/Notice";
 import { PlainText } from "@/components/PlainText";
 import { site } from "@/config/site";
 import { requireViewer } from "@/lib/auth";
-import { loadGroup } from "@/lib/groups";
+import { loadGroup, roleLabel } from "@/lib/groups";
 import type { Enums } from "@/lib/supabase/database.types";
 import { formatPostDate } from "@/lib/time";
 import { idSchema } from "@/lib/validation";
@@ -32,7 +32,11 @@ function statusText(status: Enums<"post_status">): string | null {
   return null;
 }
 
-/** FR-DS-2, 4, 5: flat replies, oldest first. */
+/**
+ * FR-DS-2, 4, 5, 9: replies oldest first, each followed by the replies that
+ * answer it, indented one level (never deeper). Plain links and forms, so it
+ * all works without JavaScript.
+ */
 export default async function ThreadPage({ params, searchParams }: Props) {
   const { slug, threadId } = await params;
   const path = `/g/${slug}/discussions/${threadId}`;
@@ -41,7 +45,7 @@ export default async function ThreadPage({ params, searchParams }: Props) {
   if (!isMember && !viewer.isSiteAdmin) redirect(`/g/${slug}?e=not_allowed`);
   if (!idSchema.safeParse(threadId).success) notFound();
 
-  const [{ data: thread }, { data: replies }] = await Promise.all([
+  const [{ data: thread }, { data: replies }, { data: organizers }] = await Promise.all([
     supabase
       .from("threads")
       .select("id, title, body, status, is_pinned, is_locked, author_id, created_at, edited_at, profiles(display_name)")
@@ -50,9 +54,16 @@ export default async function ThreadPage({ params, searchParams }: Props) {
       .maybeSingle(),
     supabase
       .from("replies")
-      .select("id, body, status, author_id, created_at, edited_at, profiles(display_name)")
+      .select("id, body, status, author_id, created_at, edited_at, parent_id, answers_id, profiles(display_name)")
       .eq("thread_id", threadId)
       .order("created_at"),
+    // FR-DS-9: posts by the page admin and page managers carry a role label.
+    supabase
+      .from("group_members")
+      .select("user_id, role")
+      .eq("group_id", group.id)
+      .eq("status", "active")
+      .in("role", ["owner", "admin"]),
   ]);
   if (!thread) notFound();
 
@@ -61,6 +72,75 @@ export default async function ThreadPage({ params, searchParams }: Props) {
   const open = group.discussions_enabled && isActive && viewer.canWrite;
   const canReply = open && isMember && !thread.is_locked && thread.status === "visible";
   const tz = site.defaultTimezone;
+
+  const roles = new Map((organizers ?? []).map((m) => [m.user_id, m.role]));
+  const label = (authorId: string | null) => {
+    const role = authorId ? roles.get(authorId) : undefined;
+    return role ? <span className="ml-1 text-xs uppercase tracking-wide">[{roleLabel(role)}]</span> : null;
+  };
+  type Reply = NonNullable<typeof replies>[number];
+  const all: Reply[] = replies ?? [];
+  const byId = new Map(all.map((r) => [r.id, r]));
+  const nameOf = (r: Reply) => (r.author_id ? (r.profiles?.display_name ?? "deleted user") : "deleted user");
+  // A reply whose parent is missing (never expected) is shown at the top level.
+  const topLevel = all.filter((r) => !r.parent_id || !byId.has(r.parent_id));
+  const childrenOf = (id: string) => all.filter((r) => r.parent_id === id);
+  const latestId = all.at(-1)?.id;
+
+  // ?replyTo=<id>#reply-form opens a reply form under that reply's top-level
+  // parent; answering a nested reply names who it answers (FR-DS-9).
+  const replyToParam = typeof query.replyTo === "string" && idSchema.safeParse(query.replyTo).success ? query.replyTo : null;
+  const replyTo = canReply && replyToParam ? byId.get(replyToParam) : undefined;
+  const replyTarget = replyTo?.status === "visible" ? replyTo : undefined;
+  const replyFormUnder = replyTarget
+    ? replyTarget.parent_id && byId.has(replyTarget.parent_id)
+      ? replyTarget.parent_id
+      : replyTarget.id
+    : null;
+
+  const renderReply = (r: Reply, nested: boolean) => {
+    const answers = r.answers_id ? byId.get(r.answers_id) : undefined;
+    return (
+      <div id={`reply-${r.id}`} className={nested ? "mt-3 border-l-2 border-rule pl-4" : undefined}>
+        {/* postReply redirects to #latest; every reply keeps its own reply-<id> anchor for report links. */}
+        {r.id === latestId && <span id="latest" />}
+        <p className="text-sm text-muted">
+          {r.author_id ? <Link href={`/u/${r.author_id}`}>{nameOf(r)}</Link> : "deleted user"}
+          {label(r.author_id)} · {formatPostDate(r.created_at, tz)}
+          {r.edited_at && " · edited"}
+          {answers && (
+            <>
+              {" "}
+              · answering <Link href={`#reply-${answers.id}`}>{nameOf(answers)}</Link>
+            </>
+          )}
+        </p>
+        {statusText(r.status) ? (
+          <p className="mt-1 italic text-muted">{statusText(r.status)}</p>
+        ) : editing === r.id && r.author_id === viewer.id && open ? (
+          <form action={editReply.bind(null, r.id, path)} className="mt-1">
+            <label htmlFor={`body-${r.id}`} className="sr-only">
+              Reply
+            </label>
+            <textarea id={`body-${r.id}`} name="body" required maxLength={10000} defaultValue={r.body} />
+            <button className="button mt-2">Save</button> <Link href={path}>cancel</Link>
+          </form>
+        ) : (
+          <PlainText text={r.body} className="mt-1" />
+        )}
+        <PostTools
+          type="reply"
+          id={r.id}
+          path={path}
+          isAuthor={r.author_id === viewer.id}
+          visible={r.status === "visible"}
+          open={open}
+          canManage={canManage}
+          replyHref={canReply ? `${path}?replyTo=${r.id}#reply-form` : null}
+        />
+      </div>
+    );
+  };
 
   return (
     <>
@@ -75,7 +155,8 @@ export default async function ThreadPage({ params, searchParams }: Props) {
           {thread.is_locked && <span className="ml-2 text-base font-normal text-muted">[locked]</span>}
         </h1>
         <p className="text-sm text-muted">
-          {thread.author_id ? <Link href={`/u/${thread.author_id}`}>{thread.profiles?.display_name ?? "deleted user"}</Link> : "deleted user"} ·{" "}
+          {thread.author_id ? <Link href={`/u/${thread.author_id}`}>{thread.profiles?.display_name ?? "deleted user"}</Link> : "deleted user"}
+          {label(thread.author_id)} ·{" "}
           {formatPostDate(thread.created_at, tz)}
           {thread.edited_at && " · edited"}
         </p>
@@ -117,39 +198,32 @@ export default async function ThreadPage({ params, searchParams }: Props) {
 
       <h2>{replies?.length ?? 0} {replies?.length === 1 ? "reply" : "replies"}</h2>
       <ol className="mt-2 divide-y divide-rule border-y border-rule">
-        {replies?.map((r, i) => (
-          <li key={r.id} id={`reply-${r.id}`} className="py-3">
-            {/* postReply redirects to #latest; every reply keeps its own reply-<id> anchor for report links. */}
-            {i === replies.length - 1 && <span id="latest" />}
-            <p className="text-sm text-muted">
-              {r.author_id ? <Link href={`/u/${r.author_id}`}>{r.profiles?.display_name ?? "deleted user"}</Link> : "deleted user"} ·{" "}
-              {formatPostDate(r.created_at, tz)}
-              {r.edited_at && " · edited"}
-            </p>
-            {statusText(r.status) ? (
-              <p className="mt-1 italic text-muted">{statusText(r.status)}</p>
-            ) : editing === r.id && r.author_id === viewer.id && open ? (
-              <form action={editReply.bind(null, r.id, path)} className="mt-1">
-                <label htmlFor={`body-${r.id}`} className="sr-only">
-                  Reply
-                </label>
-                <textarea id={`body-${r.id}`} name="body" required maxLength={10000} defaultValue={r.body} />
-                <button className="button mt-2">Save</button> <Link href={path}>cancel</Link>
-              </form>
-            ) : (
-              <PlainText text={r.body} className="mt-1" />
-            )}
-            <PostTools
-              type="reply"
-              id={r.id}
-              path={path}
-              isAuthor={r.author_id === viewer.id}
-              visible={r.status === "visible"}
-              open={open}
-              canManage={canManage}
-            />
-          </li>
-        ))}
+        {topLevel.map((r) => {
+          const children = childrenOf(r.id);
+          const formHere = replyTarget && replyFormUnder === r.id;
+          return (
+            <li key={r.id} className="py-3">
+              {renderReply(r, false)}
+              {(children.length > 0 || formHere) && (
+                <ol className="ml-4">
+                  {children.map((c) => (
+                    <li key={c.id}>{renderReply(c, true)}</li>
+                  ))}
+                  {formHere && (
+                    <li className="mt-3 border-l-2 border-rule pl-4">
+                      <form id="reply-form" action={postReply.bind(null, thread.id, path)}>
+                        <input type="hidden" name="parent_id" value={replyTarget.id} />
+                        <label htmlFor="nested-reply">Reply to {nameOf(replyTarget)}</label>
+                        <textarea id="nested-reply" name="body" required maxLength={10000} />
+                        <button className="button mt-2">Post reply</button> <Link href={path}>cancel</Link>
+                      </form>
+                    </li>
+                  )}
+                </ol>
+              )}
+            </li>
+          );
+        })}
       </ol>
 
       {canReply ? (
@@ -175,6 +249,7 @@ function PostTools({
   visible,
   open,
   canManage,
+  replyHref = null,
 }: {
   type: "thread" | "reply";
   id: string;
@@ -183,10 +258,13 @@ function PostTools({
   visible: boolean;
   open: boolean;
   canManage: boolean;
+  /** FR-DS-9: opens the reply form under this reply. */
+  replyHref?: string | null;
 }) {
   if (!visible) return null;
   return (
     <div className="mt-1 flex flex-wrap gap-4 text-sm">
+      {replyHref && <Link href={replyHref}>reply</Link>}
       {isAuthor && open && <Link href={`${path}?edit=${id}`}>edit</Link>}
       {isAuthor && (
         <form action={deleteOwnPost.bind(null, type, id, path)}>
