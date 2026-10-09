@@ -34,7 +34,7 @@ permission enforced and tested in the database.
 | Membership and roles | Join, request, leave; page admin, up to two page managers, member; approve, remove, ban; transfer ownership | UC-2, UC-4, UC-31 | FR-MB-1 to FR-MB-9, FR-MB-11 |
 | Invites | Invite link (7 days, 30 days or until turned off) that joins people straight in; email invites for members and page managers built but waiting on the board's email setup | UC-31 | FR-MB-12 to FR-MB-16 |
 | Events and RSVPs | Post, edit, cancel; going or not going; places and "full"; who's going; past events | UC-2, UC-3 | FR-EV-1 to FR-EV-8 |
-| Discussions | Threads and flat replies, pin, lock, remove, edit and delete own | UC-5 | FR-DS-1 to FR-DS-7 |
+| Discussions | Threads and replies, with one level of answers to a reply and role labels; pin, lock, remove, edit and delete own | UC-5, UC-19 | FR-DS-1 to FR-DS-7, FR-DS-9 |
 | Moderation | Report anything; group and site queues; suspend; moderation log; rate limits | UC-6 | FR-MD-1 to FR-MD-6 |
 | Unclaimed listings and claims | 67 real groups listed from public information; organizers claim them; site admin approves | UC-8 | FR-GR-9, FR-GR-10 |
 | Affinity tags | Women, Youth, BIPOC, LGBTQIA+ on group pages and lists, set by owners | UC-9 | FR-GR-11 |
@@ -98,7 +98,7 @@ until the domain is chosen and email sending through Resend is set up.
 | **Member list privacy** | Fits | UC-16 | FR-MB-10 |
 | **Calendar** on the signed-in home page | Fits | UC-18 | FR-AC-9 |
 | **Reminders** list and unread-message count | In scope | UC-23 | FR-AC-10 |
-| **Replies to replies**, one level | Fits | UC-19 | FR-DS-9 |
+| **Replies to replies**, one level | Built 9 October 2026 | UC-19 | FR-DS-9 |
 | **Direct messages** that start as requests | In scope | UC-20 | FR-DM-1 to FR-DM-6, ADR-0006 |
 
 ### Businesses

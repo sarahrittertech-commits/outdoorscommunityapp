@@ -481,7 +481,8 @@ still add any event to their own calendar (FR-EV-7).
 
 ## UC-19 — Reply to a reply
 
-> **Draft, awaiting review.** Changes FR-DS-2 (flat replies).
+> **Approved and built 9 October 2026.** Changes FR-DS-2 (flat replies).
+> Role labels use the site's names: *page admin* and *page manager*.
 
 **Actor:** The regular
 
@@ -493,9 +494,9 @@ not the whole thread.
 1. Chooses *Reply* under that person's reply.
 2. Writes the answer; it appears indented under the reply it answers.
 3. Anyone reading the thread sees the exchange together. Organizers' posts
-   carry an *Organizer* or *Admin* label.
+   carry a *page admin* or *page manager* label.
 
-**Requirements:** to be written after review (draft FR-DS-9).
+**Requirements:** FR-DS-9 (changes FR-DS-2)
 
 **Succeeds when:** side conversations stay readable without becoming
 endless nesting.

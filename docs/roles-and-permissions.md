@@ -120,6 +120,7 @@ Email invites are stored but not sent until the board's email is set up
 | Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Start a thread, reply (unless locked) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Reply to a reply, one level (unless locked; UC-19, FR-DS-9) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Edit or delete a post | ❌ | ❌ | ❌ | **own** | **own** | **own** | — |
 | Pin, lock, remove threads; remove replies | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 
@@ -183,7 +184,7 @@ approved.
 | Save an event; see own saved events and calendar | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See someone else's saved events | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | See own reminders | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Reply to a reply | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Reply to a reply (built with UC-19; see Discussions) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Upload photos to the group gallery | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | See a members-only gallery | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | Remove a gallery photo | ❌ | ❌ | **own** | ✅ | ✅ | ✅ |
