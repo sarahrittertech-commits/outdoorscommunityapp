@@ -10,8 +10,6 @@ const regionName = "Western North Carolina";
 export const site = {
   /** Shown in the header, page titles and emails. Lowercase is the wordmark (docs/brand.md). */
   name: "branch outdoors",
-  /** One line under the name on the home page. */
-  tagline: "A plain, friendly board for finding people to go outside with.",
   /** The region the directory covers, shown above the categories. */
   regionName,
   /** Used for search engines and link previews. */
