@@ -754,6 +754,41 @@ report or message, on any page or through the API.
 | A separate demo board | A second copy of the site with its own database, filled with sample groups and people, reset every night. Anyone can do anything there. | A second Railway service and a second Supabase project (the free plan allows two active projects; Sage Women uses the other), plus a nightly reset job. Two sites to keep deployed. |
 | Writable demo on the live board | The prototype's behaviour: the demo can post and RSVP. | Not recommended. Anyone on the internet could post on the real board as "Demo member"; the site admin would moderate it daily. |
 
+
+## UC-29 — Sign up with an email and a password
+
+> **Draft, awaiting review.** Requested by Sarah on 9 October 2026:
+> people should sign up with an email address they confirm and a password
+> they choose, instead of the emailed one-time link (FR-AC-1, a Must, and
+> ADR-0002). Decided with Sarah the same day: **open sign-up with email
+> confirmation** (not invite-only) and **password only** (no emailed link
+> as a second way in). See [ADR-0009](./architecture/adr-0009-password-sign-in).
+
+**Actor:** The newcomer, later the regular
+
+**Trigger:** Wants to join a group (UC-2) and has no account yet.
+
+**Flow:**
+
+1. Clicks *Join group* and is sent to *Sign in*, which has a *Create an
+   account* link.
+2. Enters an email address and a password (twice), and clicks *Create
+   account*. Sees *Check your email to confirm your address*.
+3. Opens the confirmation email and clicks *Confirm my email*. Lands on
+   the welcome page, confirms they are 18 or older, accepts the terms and
+   sets a display name (FR-AC-2, FR-AC-3).
+4. Lands back on the group page and joins.
+5. Next week, signs in with the same email and password from *Sign in*.
+6. Months later, has forgotten the password: clicks *Forgot password*,
+   gets an email, sets a new one and is signed in.
+
+**Requirements:** to be written after review (drafts FR-AC-17 to FR-AC-21,
+replacing FR-AC-1).
+
+**Succeeds when:** nobody can use an account whose email they haven't
+confirmed, a returning member signs in without waiting for an email, and
+a forgotten password is never a dead end.
+
 ---
 
 ## Journeys the seed data must cover
