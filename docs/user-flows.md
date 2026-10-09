@@ -222,7 +222,7 @@ flowchart TD
 
 ## UC-16 — Keep our member list private
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. Set by the page admin or a page manager.*
 
 ```mermaid
 flowchart TD
@@ -303,7 +303,7 @@ flowchart TD
 
 ## UC-22 — Save it for later
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. The reminder step waits on UC-10 and UC-23.*
 
 ```mermaid
 flowchart TD

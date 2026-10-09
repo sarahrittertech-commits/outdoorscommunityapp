@@ -99,6 +99,16 @@ web app is not the thing enforcing the rule.
 | PT-77 | The unused group-covers bucket has no upload policies and, when empty, is gone (TR-SEC-9) | Unlimited uploads into an unused public bucket |
 | PT-78 | Event listings show only active groups' events; restoring a group lists them again (FR-GR-6) | Archived groups' events still appear on Events and in search |
 | PT-79 | Signed-in users can't call raise_rule and a bad time zone still gets its message; the missing indexes exist; approving a claim keeps the claimant's RSVPs | Internal helpers in the API; slow admin pages; a claim drops the new owner's RSVPs |
+| PT-80 | A signed-in user, member or not, saves an event they can see, without an RSVP (FR-EV-18) | Saving needs an RSVP or membership |
+| PT-81 | Saved events are readable only by the person who saved them, not by the organizer or the site admin; visitors read none (FR-EV-18) | Organizers see who is interested in their events |
+| PT-82 | Nobody saves on someone else's behalf; visitors never save (FR-EV-18) | Writes for other people; anonymous writes |
+| PT-83 | A suspended account can't save; an event in a removed group can't be saved (FR-EV-18) | Saving bypasses can_write or event visibility |
+| PT-84 | Only the saver unsaves; a save can't be edited; the same event can't be saved twice (FR-EV-18) | Other people clear your saves |
+| PT-85 | The 501st save is refused (FR-EV-18, TR-SEC-8) | One account fills the table |
+| PT-86 | By default members see the member list and a non-member sees only the organizers (FR-MB-10) | The default changes who sees names |
+| PT-87 | With *organizers only*, a member sees the organizers and their own row but no other member; counts stay; organizers and the site admin see everyone; a plain member can't change the setting, a page manager can (FR-MB-10) | Names leak through the API when the page hides them |
+| PT-88 | With *organizers only*, a member sees no names on who's going and only the waitlist count and their own place; organizers see the names (FR-MB-10, FR-EV-28) | Who's going leaks names the setting hides |
+| PT-89 | *Anyone signed in* opens the list and who's going to signed-in non-members but not visitors; values outside the three are refused; a removed group stays hidden (FR-MB-10) | The setting opens more than it says, or reopens removed groups |
 
 ## Automated — unit
 
@@ -157,13 +167,11 @@ real tests, with requirements, once the use case is approved.
 | UC-13 A local chapter of a national club | Only a chapter's owner links it to a national organization; the national page lists only chapters that linked themselves |
 | UC-14 What's near me? | A zip code finds results with no outside request; distance shown on each result; the *Near you* town is never stored on the server; filtered links reopen the same list |
 | UC-15 Explore destinations | Every place is reachable from the list with the map off; place pages list only that place's groups and upcoming events |
-| UC-16 Keep our member list private | With *organizers only*, a member gets no other members' names from the database, on the members tab or on *who's going* |
 | UC-17 Approve who comes | A member can't approve their own RSVP; going never exceeds places with two admins acting at once; only admins open Manage RSVPs |
 | UC-18 My calendar | Shows only the user's going and saved events; works without JavaScript |
 | UC-19 Reply to a reply | Never more than one level of indent; role labels only on owner and admin posts |
 | UC-20 Message another member | A second message before acceptance is refused; a blocked user's message is refused; a third user, group admins included, reads nothing; the 11th request in a day is refused |
 | UC-21 Share trip photos | A non-member gets no photo from a members-only gallery, from the database or storage; uploads are re-encoded and stripped of location data; only the uploader and organizers remove photos |
-| UC-22 Save it for later | No other user, organizer included, can read someone's saved events |
 | UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |
 | UC-24 Tell groups apart | A type outside the list is refused; only the owner sets type and photo; the type filter matches the type shown |
 | UC-25 A sign-in email that sounds like us | The email comes from the board's domain with no images or tracked links; an expired or used link signs nobody in |

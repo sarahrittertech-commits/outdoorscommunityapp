@@ -54,8 +54,9 @@ and fewer roles means fewer permission rules to get wrong. A separate
 | See categories, listings, active group pages | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See public event details | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See a members-only event address | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
-| See the member list | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
-| See who is going to an event | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| See the group's organizers | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See the member list and names on *who's going* (FR-MB-10) | ❌ | only if *anyone signed in* | only if *anyone signed in* | ✅ unless *organizers only* | ✅ | ✅ | ✅ |
+| See member, going and waitlist counts | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Read discussions | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | See an archived group's page | ✅ read-only | ✅ read-only | ✅ read-only | ✅ read-only | ✅ read-only | ✅ | ✅ |
 | See a removed group, its members, RSVPs or discussions | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
@@ -102,6 +103,7 @@ Email invites are stored but not sent until the board's email is set up
 | Action | Visitor | User (not a member) | Pending | Member | Page manager | Page admin | Site admin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Edit group details and affinity tags, turn discussions on/off, change join policy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Choose who sees the member list (FR-MB-10) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Archive / restore the group | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | Remove the group entirely | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
@@ -114,6 +116,8 @@ Email invites are stored but not sent until the board's email is set up
 | Join or leave an event's waitlist when it is full (FR-EV-28) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Add, replace or remove an event photo; set price, RSVPs, sign-up link, waitlist (FR-EV-24 to FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Move someone from the waitlist to going, while a place is free (FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Save an event they can see, unsave it, see their own saved events (FR-EV-18) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See someone else's saved events | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ### Discussions (only while discussions are on)
 
@@ -173,15 +177,13 @@ approved.
 | See the destinations map and place pages | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Manage the places list | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | See a group's type and photo | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Set the group's type, photo and member list privacy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
-| See the member list and names on *who's going* | ❌ | per setting | per setting | ✅ | ✅ | ✅ |
+| Set the group's type and photo | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | Post an event series, sponsors, FAQ, RSVP opening time (photo and price built with UC-30) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Ask an event a question | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Read and answer questions, move answers to the FAQ | ❌ | ❌ own only | ❌ own only | ✅ | ✅ | ✅ |
 | RSVP to an approval event (request) (waitlist built with UC-30) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Approve, decline, waitlist or remove RSVPs | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
-| Save an event; see own saved events and calendar | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| See someone else's saved events | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| See own going and saved events on a calendar (saving built with UC-22) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See own reminders | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Reply to a reply | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Upload photos to the group gallery | ❌ | ❌ | ✅ | ✅ | ✅ | — |

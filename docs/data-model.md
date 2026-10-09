@@ -120,6 +120,7 @@ it except through the database functions (onboarding, suspend, delete).
 | `source_url` | text, optional | The organization's own website. Required for a listing. |
 | `website` | text, optional | FR-GR-23: the group's own site, http(s) only, set by owner and admins |
 | `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia`; empty by default |
+| `member_list_visibility` | enum | FR-MB-10: `organizers`, `members` (default), `signed_in`. Decides who reads the full `group_members` list and other people's `event_rsvps`; set by owner and admins |
 
 ### group_claims
 
@@ -167,6 +168,11 @@ Constraints:
 row, `user_id`, `group_id`, `created_at`, each time a membership row is
 created. The 20-joins-a-day limit counts it, so leaving a group doesn't hand
 the join back (TR-SEC-8). Rows older than two days are pruned.
+
+Who reads which rows (FR-MB-10): your own row, the site admin, and a visible
+group's active organizers always; the group's organizers see every row; the
+rest of the active list follows `groups.member_list_visibility`, checked by
+`member_list_visible()`. `group_member_count()` gives the count to everyone.
 
 ## Events
 
@@ -377,8 +383,7 @@ written when each is approved, with its migration and permission tests.
 | `event_faq` | UC-10, UC-11 | Question, answer, order |
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
 | `event_rsvps.status` gains `requested`, `declined` (`waitlisted` built with UC-30) | UC-17 | Places counted on `going` only |
-| `saved_events` | UC-22 | User and event; private to the user |
-| `groups`: `group_type`, `cover_photo_path`, `member_list_visibility`, `organization_id` | UC-24, UC-16, UC-13 | Type from a fixed list |
+| `groups`: `group_type`, `cover_photo_path`, `organization_id` (`member_list_visibility` built with UC-16) | UC-24, UC-13 | Type from a fixed list |
 | `group_photos` | UC-21 | Uploader, path, alt text, status |
 | `places` | UC-15, UC-12 | Name, kind, activities, coordinates, description; seeded from the research workspace's places |
 | `towns` | UC-14 | Bundled US towns and zip codes with coordinates |
