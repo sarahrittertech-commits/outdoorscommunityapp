@@ -36,11 +36,13 @@ const dateFormat = new Intl.DateTimeFormat("en-US", { month: "long", day: "numer
 export default async function MembersPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const viewer = await requireViewer(`/g/${slug}/members`);
-  const { supabase, group, isMember, isAdmin, isOwner, isActive, canManage } = await loadGroup(slug);
+  const { supabase, group, isMember, isAdmin, isOwner, isActive, canManage, seesMemberList } = await loadGroup(slug);
   const canInvite = Boolean(viewer.canWrite && isActive && isAdmin);
-  if (!isMember && !viewer.isSiteAdmin) redirect(`/g/${slug}?e=not_allowed`);
+  // FR-MB-10: members always reach this page (with organizers only, they see
+  // the organizers and the count); "anyone signed in" opens it to everyone.
+  if (!isMember && !seesMemberList) redirect(`/g/${slug}?e=not_allowed`);
 
-  const [{ data: rows }, { data: answerRows }, { data: link }, { data: managerInvites }] = await Promise.all([
+  const [{ data: rows }, { data: answerRows }, { data: link }, { data: managerInvites }, { data: memberCount }] = await Promise.all([
     supabase
       .from("group_members")
       .select("user_id, role, status, created_at, profiles(display_name)")
@@ -51,6 +53,8 @@ export default async function MembersPage({ params, searchParams }: Props) {
     // Page admin and managers only (RLS); null for everyone else.
     supabase.from("group_invite_links").select("token, expires_at, revoked_at").eq("group_id", group.id).maybeSingle(),
     isOwner ? supabase.rpc("open_manager_invites", { p_group_id: group.id }) : Promise.resolve({ data: [] }),
+    // Counts are always shown, whatever the list shows (FR-MB-10).
+    supabase.rpc("group_member_count", { p_group_id: group.id }),
   ]);
   const now = new Date();
   const linkWorks = link && !link.revoked_at && (!link.expires_at || new Date(link.expires_at) > now);
@@ -99,7 +103,12 @@ export default async function MembersPage({ params, searchParams }: Props) {
         </section>
       )}
 
-      <h2>{active.length} {active.length === 1 ? "member" : "members"}</h2>
+      <h2>
+        {memberCount ?? active.length} {(memberCount ?? active.length) === 1 ? "member" : "members"}
+      </h2>
+      {!seesMemberList && (
+        <p className="mt-1 text-sm text-muted">This group shows its member list to organizers only.</p>
+      )}
       <ul className="mt-2 divide-y divide-rule border-y border-rule">
         {active.map((m) => (
           <li key={m.user_id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">

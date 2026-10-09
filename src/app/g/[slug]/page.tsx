@@ -44,7 +44,7 @@ function hostOf(url: string): string {
 export default async function GroupPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const loaded = await loadGroup(slug);
-  const { supabase, group, viewer, membership, isMember, isAdmin, isOwner, isActive, canManage } = loaded;
+  const { supabase, group, viewer, membership, isMember, isAdmin, isOwner, isActive, canManage, seesMemberList } = loaded;
   const now = new Date().toISOString();
   const query = await searchParams;
 
@@ -285,7 +285,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
           </li>
         ))}
       </ul>
-      {isMember && (
+      {(isMember || seesMemberList) && (
         <p className="mt-2 text-sm">
           <Link href={`/g/${group.slug}/members`}>All members</Link>
         </p>

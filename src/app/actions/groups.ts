@@ -36,6 +36,7 @@ export async function createGroup(formData: FormData) {
       discussions_enabled: group.discussionsEnabled,
       affinity_tags: tags.data,
       website: group.website,
+      member_list_visibility: group.memberListVisibility,
       created_by: viewer.id,
     });
     if (!error) succeed(`/g/${slug}`, "group_created");
@@ -67,6 +68,7 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
       discussions_enabled: group.discussionsEnabled,
       affinity_tags: tags.data,
       website: group.website,
+      member_list_visibility: group.memberListVisibility,
     })
     .eq("id", groupId)
     .select("id");

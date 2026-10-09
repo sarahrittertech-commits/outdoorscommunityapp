@@ -38,6 +38,17 @@ export const loadGroup = cache(async (slug: string) => {
     isAdmin,
     isOwner,
     isActive,
+    /**
+     * Sees the full member list and names on who's going (FR-MB-10). Mirrors
+     * public.member_list_visible(), which is what actually decides.
+     */
+    seesMemberList: Boolean(
+      viewer &&
+        (viewer.isSiteAdmin ||
+          isAdmin ||
+          (group.member_list_visibility === "members" && isMember) ||
+          group.member_list_visibility === "signed_in"),
+    ),
     /** Can manage events, members and posts in this group right now. */
     canManage: Boolean(viewer?.canWrite && isActive && (isAdmin || viewer.isSiteAdmin)),
   };
