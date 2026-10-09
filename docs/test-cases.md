@@ -67,6 +67,8 @@ web app is not the thing enforcing the rule.
 | PT-38 | Only the site admin unsuspends an account, after which it can write again (FR-MD-3) | Anyone lifts a suspension |
 | PT-39 | Every SECURITY DEFINER function in the public schema is on a reviewed list, and a new one fails by name | A function that skips RLS ships without review |
 | PT-42 | Only a group's owner and admins set its website, and only http(s) addresses are stored (FR-GR-23) | A member points the group's link somewhere else, or a script link is stored |
+| PT-40 | A find with a similar name or the same website as something already known is kept and tagged as a possible duplicate; an exact name match is dropped; shared sites like Facebook never count as the same website (FR-RS-10) | Near duplicates listed twice, or real groups lost |
+| PT-41 | Events found for an unclaimed listing publish without review only from a group find whose event links are on the listing's own website (FR-RS-8) | A web page tricks the agent into putting a phishing link on a live listing |
 
 ## Automated — unit
 
@@ -110,7 +112,7 @@ Playwright in CI against the local stack with seed data.
 
 ## Planned — pending use case review
 
-Draft use cases UC-10 to UC-28 are not approved yet, so these have no
+Draft use cases UC-10 to UC-29 are not approved yet, so these have no
 requirement numbers. They show what each would have to prove; they become
 real tests, with requirements, once the use case is approved.
 

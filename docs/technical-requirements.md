@@ -153,7 +153,7 @@ Runs on GitHub Actions on every push and pull request, like the bike map.
 
 ## Proposed with the 8 October design (drafts)
 
-These apply when the draft use cases UC-10 to UC-28 are approved and
+These apply when the draft use cases UC-10 to UC-29 are approved and
 built. They extend the rules above rather than replacing them.
 
 | ID | Draft requirement |

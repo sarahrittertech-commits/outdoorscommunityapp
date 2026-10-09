@@ -38,7 +38,7 @@ Who is allowed to do each action is defined once, in
 
 | ID | Requirement | Priority | Accepted when |
 | --- | --- | --- | --- |
-| FR-AC-1 | Sign up and sign in with an emailed one-time link. No passwords. | Must | A new address receives a link that signs it in; the same flow signs in an existing user. |
+| FR-AC-1 | Sign up and sign in with an emailed one-time link. No passwords. *(To be replaced by FR-AC-17 to FR-AC-21 if UC-29 is approved.)* | Must | A new address receives a link that signs it in; the same flow signs in an existing user. |
 | FR-AC-2 | On first sign-in, the user confirms they are 18 or older and accepts the terms and community guidelines before doing anything else. | Must | A user who hasn't confirmed cannot join, post or RSVP. |
 | FR-AC-3 | Profile: display name (required, 2–40 characters), short bio (optional, 280 characters), general area (optional). No profile photos. Required means the database refuses to store a missing or blank one, and an account without a name cannot post, join or RSVP — a member must always be nameable, reportable and reachable by a moderator. | Must | Display name is required at first sign-in and editable later. Clearing it through the API is refused, not silently accepted. |
 | FR-AC-4 | A public profile page shows display name, bio and area. | Should | Reachable from any post author's name. |
@@ -160,14 +160,15 @@ other, with affinity tags.)
 | FR-RS-4 | A group candidate carries its upcoming events: title, date, start time, place, time zone and link. Events without a published start time, or already past, are not saved. If no end time is published, the event lasts three hours and says "End time not listed." | Should | — |
 | FR-RS-5 | A *Candidates* section on the site admin page lists new group candidates, oldest first, each with its source link, activity, area, affinity tags, out-of-region flag and number of upcoming events, and counts the guides, businesses and venues kept for later. | Should | Only the site admin can see it; the database refuses everyone else. |
 | FR-RS-6 | *List it* turns a group candidate into an unclaimed listing (FR-GR-9) with its upcoming events and affinity tags, and marks the candidate listed. *Skip* marks it skipped. | Should | Only the site admin can do either; the database refuses everyone else. |
-| FR-RS-8 | New events found later for a group that is still an unclaimed listing are added to it automatically, because the group itself was already approved. Once a group is claimed, its owner runs its events and the agent adds none. | Should | — |
+| FR-RS-8 | New events found later for a group that is still an unclaimed listing are added to it automatically, because the group itself was already approved, but only when the find is a group and each event's link is on the listing's own website (not a shared site such as Facebook). Other events wait with the candidate for the site admin. Once a group is claimed, its owner runs its events and the agent adds none. | Should | An event whose link is elsewhere never reaches the board without the site admin. |
+| FR-RS-10 | **Possible duplicates.** A find with exactly the same name as a candidate, research organization or board group is still dropped silently (FR-RS-3). A find that only looks like one (a similar name, or the same website, shared sites such as Facebook or Meetup excepted) is kept and tagged *possible duplicate* on the admin page, naming what it may duplicate and linking to it, so the site admin compares the two before listing or skipping. | Should | A near match is never listed without review and never silently lost. |
 | FR-RS-9 | The agent adds candidates only through one database function that validates every field. It has no database access of its own: it calls an intake (an Edge Function) with a token, and the intake can only list what the board knows and add a candidate. | Should | The function rejects a missing source link, a bad activity or an over-long field. |
 
 ## Draft requirements — pending use case review
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 to UC-28 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 to UC-29 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built. Each moves into its area's table above, with a priority, once Sarah
 approves its use case and user flow. Priorities here are proposals.
@@ -327,3 +328,17 @@ read-only demo.
 | FR-AC-14 | **Demo sign-in.** The sign-in page offers *Look around as a demo member*. It signs the visitor into one shared demo account without an email, through a server action; the account's password lives only in a Railway secret and never reaches the browser. The session lasts at most an hour. | Should | Anyone can open the demo without an email; nobody can sign in as the demo any other way. |
 | FR-AC-15 | **Read-only in the database.** The demo account is marked as a demo, and `can_write()` returns false for it, so every write the board has (post, reply, join, leave, RSVP, report, claim, message, profile edit, account deletion) is refused by the database whatever the page shows. Buttons explain that the demo can look but not change anything. | Should | A pgTAP test tries every write as the demo account and every one is refused. |
 | FR-AC-16 | **Demo groups only.** The demo account is a member only of groups marked as demo groups, whose content is sample content, so it never reads a real group's members-only discussions or member list. Demo groups are listed like any other but carry a *Demo* tag. | Should | The demo account belongs to no real group; every demo group is tagged. |
+
+### Email and password sign-in (UC-29, ADR-0009)
+
+**Replaces FR-AC-1** once approved. Open sign-up, email confirmed before
+the account can be used, password the only way in. Every form keeps
+working with JavaScript off.
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-AC-17 | **Create an account.** Email address and a password entered twice. Password: at least 10 characters, at most 72 (the bcrypt limit), no other composition rules; a short list of the most common passwords is refused. The page never says whether an address already has an account: it always answers *Check your email*, and an existing address gets a "you already have an account, sign in or reset your password" email instead. | Must | Signing up with an address that already has an account reveals nothing on the page. |
+| FR-AC-18 | **Confirm the email first.** A new account can do nothing until its address is confirmed through the emailed link (Supabase *Confirm email* on). The link works once, for 24 hours; an expired one offers to send another. Then FR-AC-2 and FR-AC-3 as today. | Must | An unconfirmed account cannot sign in. |
+| FR-AC-19 | **Sign in.** Email and password. A wrong address or password gets one message for both ("That email and password don't match"). After 5 failed tries for an address in 15 minutes, sign-in for it pauses for 15 minutes (Supabase Auth's limits plus a check in the sign-in action), with that said plainly. | Must | Repeated wrong passwords are slowed and the page never says which part was wrong. |
+| FR-AC-20 | **Forgot password.** Enter the email; the page always answers *If that address has an account, we've sent a link*. The link works once, for 1 hour, and leads to *Set a new password*, which signs the person in. Changing a password signs out every other session. | Must | A reset link is single use and expires; other devices are signed out. |
+| FR-AC-21 | **Change password** on the profile page: current password, new password twice. | Should | A wrong current password changes nothing. |

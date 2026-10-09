@@ -663,6 +663,8 @@ export type Database = {
           out_of_region: boolean;
           upcoming_events: number;
           found_at: string;
+          possible_duplicate_of: string | null;
+          possible_duplicate_url: string | null;
         }[];
       };
       admin_candidate_counts: { Args: never; Returns: { kind: string; kept: number }[] };
