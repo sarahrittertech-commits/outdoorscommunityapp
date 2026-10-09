@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { AFFINITY_TAGS } from "./affinity";
 import { isCommonPassword } from "./common-passwords";
+import { GROUP_TYPES } from "./groupTypes";
 import { safeNext } from "./navigation";
 import { isValidTimeZone, zonedLocalToUtc } from "./time";
 
@@ -59,9 +60,8 @@ export const signInSchema = z.object({
 
 const matching = { message: "password_mismatch", path: ["passwordAgain"] };
 
-export const signUpSchema = z
-  .object({ email, password: passwordSchema, passwordAgain: z.string(), next: z.string().optional() })
-  .refine((v) => v.password === v.passwordAgain, matching);
+/** UC-29: sign-up asks only for the email; the password is chosen after the confirmation link. */
+export const signUpSchema = z.object({ email, next: z.string().optional() });
 
 export const forgotPasswordSchema = z.object({ email });
 
@@ -108,6 +108,8 @@ export const groupSchema = z.object({
   joinPolicy: z.enum(["open", "approval"]),
   joinQuestion: optionalText(280),
   discussionsEnabled: checkbox,
+  /** FR-MB-10: who sees the member list and names on who's going. */
+  memberListVisibility: z.enum(["organizers", "members", "signed_in"]).default("members"),
   /** FR-GR-23: optional; a missing scheme is taken as https. */
   website: z
     .string()
@@ -116,6 +118,16 @@ export const groupSchema = z.object({
     .optional()
     .transform((v) => (!v ? null : /^https?:\/\//i.test(v) ? v : `https://${v}`))
     .refine((v) => v === null || /^https?:\/\/[^\s/]+\.[^\s]+$/i.test(v), "Enter a web address like https://example.org"),
+  /** FR-GR-16: one of the five types, or none yet. */
+  groupType: z
+    .string()
+    .optional()
+    .transform((v) => v || null)
+    .pipe(z.enum(GROUP_TYPES.map((t) => t.value) as [string, ...string[]]).nullable())
+    .transform((v) => v as (typeof GROUP_TYPES)[number]["value"] | null),
+  /** FR-GR-14: the cover photo's alt text (edit form only), and Remove. */
+  coverAlt: optionalText(200),
+  removeCover: checkbox,
 });
 
 /** An http(s) link, or null when empty (FR-EV-27). */
@@ -196,6 +208,11 @@ export const threadSchema = z.object({
 
 export const replySchema = z.object({
   body: requiredText(1, 10000),
+});
+
+/** FR-DS-9: a new reply may answer another reply in the same thread. */
+export const newReplySchema = replySchema.extend({
+  parent_id: id.optional(),
 });
 
 export const reportSchema = z.object({

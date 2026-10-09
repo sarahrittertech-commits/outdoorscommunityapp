@@ -1,5 +1,7 @@
 "use server";
 
+import { randomBytes } from "node:crypto";
+
 import type { AuthError } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -8,7 +10,7 @@ import { site } from "@/config/site";
 import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
 import { getViewer } from "@/lib/auth";
 import { safeNext, withMessage } from "@/lib/navigation";
-import { RESET_COOKIE, RESET_PATH } from "@/lib/password-reset";
+import { SET_PASSWORD_PATH, RESET_COOKIE, RESET_PATH } from "@/lib/password-reset";
 import { signInLimiter } from "@/lib/sign-in-limiter";
 import { createClient, createDetachedClient } from "@/lib/supabase/server";
 import {
@@ -40,21 +42,22 @@ export async function signUp(formData: FormData) {
   // UC-31: the invite page has its own sign-up form and shows the answer itself.
   const back = JOIN_PATH.test(next) ? next : `/signup?next=${encodeURIComponent(next)}`;
   const parsed = signUpSchema.safeParse(formFields(formData));
-  if (!parsed.success) fail(back, passwordErrorCode(parsed.error));
+  if (!parsed.success) fail(back, "invalid");
 
   const supabase = await createClient();
-  // With *Confirm email* on, Supabase answers the same way for a new address
-  // and an existing one (FR-AC-17): it resends the confirmation to an
-  // unconfirmed address and sends nothing to a confirmed one.
+  // UC-29 (Sarah, 9 October): sign-up asks only for the email. The account is
+  // created with a long random password nobody ever sees, and the
+  // confirmation link opens *Create your password* (FR-AC-18). With *Confirm
+  // email* on, Supabase answers the same way for a new address and an
+  // existing one (FR-AC-17): it resends to an unconfirmed address and sends
+  // nothing to a confirmed one, so the page never reveals who has an account.
   const { error } = await supabase.auth.signUp({
     email: parsed.data.email,
-    password: parsed.data.password,
-    options: { emailRedirectTo: callbackUrl(next) },
+    password: randomBytes(32).toString("base64url"),
+    options: { emailRedirectTo: callbackUrl(`${SET_PASSWORD_PATH}?next=${encodeURIComponent(next)}`) },
   });
   if (error) {
     if (isRateLimited(error)) fail(back, "rate_limited");
-    // Supabase's own password policy, if it is stricter than ours.
-    if (error.code === "weak_password") fail(back, "password_common");
     fail(back, "email_failed");
   }
   succeed(back, "signup_sent");
@@ -105,7 +108,11 @@ export async function sendPasswordReset(formData: FormData) {
  * out every other session.
  */
 export async function setNewPassword(formData: FormData) {
-  const back = RESET_PATH;
+  // UC-29: the same action sets a first password after sign-up (mode=create)
+  // and a new one after a reset link; both need the link's cookie.
+  const creating = formData.get("mode") === "create";
+  const next = safeNext(formData.get("next"));
+  const back = creating ? `${SET_PASSWORD_PATH}?next=${encodeURIComponent(next)}` : RESET_PATH;
   const viewer = await getViewer();
   const cookieStore = await cookies();
   if (!viewer || cookieStore.get(RESET_COOKIE)?.value !== viewer.id) {
@@ -124,6 +131,8 @@ export async function setNewPassword(formData: FormData) {
   }
   await supabase.auth.signOut({ scope: "others" });
   cookieStore.delete(RESET_COOKIE);
+  // A new account goes on to the welcome step (FR-AC-2), then where it was headed.
+  if (creating) redirect(withMessage(`/welcome?next=${encodeURIComponent(next)}`, { m: "password_created" }));
   redirect(withMessage("/me/profile", { m: "password_reset" }));
 }
 

@@ -111,7 +111,9 @@ it except through the database functions (onboarding, suspend, delete).
 | `join_policy` | enum | `open`, `approval` |
 | `join_question` | text, optional | FR-MB-9 |
 | `discussions_enabled` | boolean | FR-GR-4 |
-| `cover_image_path` | text, optional | unused, always null (the `group-covers` bucket was dropped; UC-24 will revisit) |
+| `cover_image_path` | text, optional | FR-GR-14: the cover photo, a file in the `group-covers-v2` bucket, always `<id>/<random>.webp` (checked). Cleared on creation; set on the edit form. The old `group-covers` bucket stays retired. |
+| `cover_alt` | text, optional | FR-GR-14: the cover's description (1 to 200 characters), required whenever there is a cover |
+| `group_type` | enum, optional | FR-GR-16: `club`, `meetup`, `volunteer`, `nonprofit`, `chapter`; null until an organizer picks one |
 | `status` | enum | `active`, `archived`, `removed` |
 | `created_by` | uuid | |
 | `created_at`, `updated_at` | timestamp | |
@@ -120,6 +122,7 @@ it except through the database functions (onboarding, suspend, delete).
 | `source_url` | text, optional | The organization's own website. Required for a listing. |
 | `website` | text, optional | FR-GR-23: the group's own site, http(s) only, set by owner and admins |
 | `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia`; empty by default |
+| `member_list_visibility` | enum | FR-MB-10: `organizers`, `members` (default), `signed_in`. Decides who reads the full `group_members` list and other people's `event_rsvps`; set by owner and admins |
 
 ### group_claims
 
@@ -167,6 +170,11 @@ Constraints:
 row, `user_id`, `group_id`, `created_at`, each time a membership row is
 created. The 20-joins-a-day limit counts it, so leaving a group doesn't hand
 the join back (TR-SEC-8). Rows older than two days are pruned.
+
+Who reads which rows (FR-MB-10): your own row, the site admin, and a visible
+group's active organizers always; the group's organizers see every row; the
+rest of the active list follows `groups.member_list_visibility`, checked by
+`member_list_visible()`. `group_member_count()` gives the count to everyone.
 
 ## Events
 
@@ -249,10 +257,16 @@ can't take a freed place themselves.
 | `author_id` | uuid | |
 | `body` | text | plain text |
 | `status` | enum | `visible`, `deleted_by_author`, `removed` |
+| `parent_id` | uuid, optional | the top-level reply this one answers (FR-DS-9); always a top-level reply in the same thread, so nesting is one level |
+| `answers_id` | uuid, optional | set by the database when answering an answer: the nested reply being answered, so the page can name its author |
 | `created_at`, `edited_at` | timestamp | |
 
 The database refuses a thread or reply when the group has discussions off, the
-thread is locked, or the author is not an active member.
+thread is locked, or the author is not an active member. An answer to a reply
+is also refused when that reply is in another thread or has been removed or
+deleted; answering a nested reply attaches to its parent instead
+(`replies_before_insert`). `parent_id` and `answers_id` can't be changed after
+posting.
 
 ## Moderation
 
@@ -402,8 +416,7 @@ written when each is approved, with its migration and permission tests.
 | `event_faq` | UC-10, UC-11 | Question, answer, order |
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
 | `event_rsvps.status` gains `requested`, `declined` (`waitlisted` built with UC-30) | UC-17 | Places counted on `going` only |
-| `saved_events` | UC-22 | User and event; private to the user |
-| `groups`: `group_type`, `cover_photo_path`, `member_list_visibility`, `organization_id` | UC-24, UC-16, UC-13 | Type from a fixed list |
+| `groups`: `organization_id` (`group_type` and the cover built with UC-24, `member_list_visibility` with UC-16) | UC-13 | |
 | `group_photos` | UC-21 | Uploader, path, alt text, status |
 | `places` | UC-15, UC-12 | Name, kind, activities, coordinates, description; seeded from the research workspace's places |
 | `towns` | UC-14 | Bundled US towns and zip codes with coordinates |

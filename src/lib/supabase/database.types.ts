@@ -116,6 +116,9 @@ export type Database = {
           source_url: string | null;
           website: string | null;
           affinity_tags: string[];
+          member_list_visibility: Database["public"]["Enums"]["member_list_visibility"];
+          group_type: Database["public"]["Enums"]["group_type"] | null;
+          cover_alt: string | null;
         };
         Insert: {
           id?: string;
@@ -139,6 +142,9 @@ export type Database = {
           source_url?: string | null;
           website?: string | null;
           affinity_tags?: string[];
+          member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
+          group_type?: Database["public"]["Enums"]["group_type"] | null;
+          cover_alt?: string | null;
         };
         Update: {
           id?: string;
@@ -162,6 +168,9 @@ export type Database = {
           source_url?: string | null;
           website?: string | null;
           affinity_tags?: string[];
+          member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
+          group_type?: Database["public"]["Enums"]["group_type"] | null;
+          cover_alt?: string | null;
         };
         Relationships: [
           Fk<"groups_subcategory_id_fkey", "subcategory_id", "subcategories">,
@@ -324,6 +333,15 @@ export type Database = {
           Fk<"group_claims_decided_by_fkey", "decided_by", "profiles">,
         ];
       };
+      saved_events: {
+        Row: { user_id: string; event_id: string; created_at: string };
+        Insert: { user_id: string; event_id: string; created_at?: string };
+        Update: { user_id?: string; event_id?: string; created_at?: string };
+        Relationships: [
+          Fk<"saved_events_user_id_fkey", "user_id", "profiles">,
+          Fk<"saved_events_event_id_fkey", "event_id", "events">,
+        ];
+      };
       event_private_details: {
         Row: { event_id: string; address: string };
         Insert: { event_id: string; address: string };
@@ -417,6 +435,8 @@ export type Database = {
           status: Database["public"]["Enums"]["post_status"];
           created_at: string;
           edited_at: string | null;
+          parent_id: string | null;
+          answers_id: string | null;
         };
         Insert: {
           id?: string;
@@ -426,6 +446,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["post_status"];
           created_at?: string;
           edited_at?: string | null;
+          parent_id?: string | null;
+          answers_id?: string | null;
         };
         Update: {
           id?: string;
@@ -435,10 +457,14 @@ export type Database = {
           status?: Database["public"]["Enums"]["post_status"];
           created_at?: string;
           edited_at?: string | null;
+          parent_id?: string | null;
+          answers_id?: string | null;
         };
         Relationships: [
           Fk<"replies_thread_id_fkey", "thread_id", "threads">,
           Fk<"replies_author_id_fkey", "author_id", "profiles">,
+          Fk<"replies_parent_id_fkey", "parent_id", "replies">,
+          Fk<"replies_answers_id_fkey", "answers_id", "replies">,
         ];
       };
       reports: {
@@ -618,6 +644,9 @@ export type Database = {
           is_unclaimed: boolean | null;
           source_url: string | null;
           affinity_tags: string[] | null;
+          group_type: Database["public"]["Enums"]["group_type"] | null;
+          cover_image_path: string | null;
+          cover_alt: string | null;
         };
         Relationships: [];
       };
@@ -669,6 +698,11 @@ export type Database = {
       is_group_owner: { Args: { p_group_id: string }; Returns: boolean };
       group_member_count: { Args: { p_group_id: string }; Returns: number };
       event_going_count: { Args: { p_event_id: string }; Returns: number };
+      member_list_visible: { Args: { p_group_id: string }; Returns: boolean };
+      event_waitlist_place: {
+        Args: { p_event_id: string };
+        Returns: { waiting: number; my_place: number }[];
+      };
       join_answers: {
         Args: { p_group_id: string };
         Returns: { user_id: string; join_answer: string }[];
@@ -770,10 +804,12 @@ export type Database = {
       join_policy: "open" | "approval";
       group_status: "active" | "archived" | "removed";
       member_role: "owner" | "admin" | "member";
+      member_list_visibility: "organizers" | "members" | "signed_in";
       member_status: "pending" | "active" | "banned";
       address_visibility: "public" | "members";
       event_status: "scheduled" | "cancelled";
       rsvp_status: "going" | "not_going" | "waitlisted";
+      group_type: "club" | "meetup" | "volunteer" | "nonprofit" | "chapter";
       post_status: "visible" | "deleted_by_author" | "removed";
       report_target: "group" | "event" | "thread" | "reply" | "profile";
       report_reason: "spam" | "harassment" | "unsafe" | "off_topic" | "other";

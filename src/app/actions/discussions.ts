@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
-import { formFields, idSchema, localPathSchema, postTypeSchema, replySchema, slugSchema, threadSchema } from "@/lib/validation";
+import { formFields, idSchema, localPathSchema, newReplySchema, postTypeSchema, replySchema, slugSchema, threadSchema } from "@/lib/validation";
 
 /** FR-DS-1. */
 export async function createThread(groupId: string, slug: string, formData: FormData) {
@@ -23,18 +23,21 @@ export async function createThread(groupId: string, slug: string, formData: Form
   succeed(`/g/${slug}/discussions/${data.id}`, "thread_created");
 }
 
-/** FR-DS-2. */
+/** FR-DS-2; FR-DS-9 when the form names a parent reply. */
 export async function postReply(threadId: string, path: string, formData: FormData) {
   const { viewer, supabase } = await actingUser(path);
   checkArgs(path, z.tuple([idSchema, localPathSchema]), [threadId, path]);
-  const parsed = replySchema.safeParse(formFields(formData));
+  const parsed = newReplySchema.safeParse(formFields(formData));
   if (!parsed.success) fail(path, "invalid");
 
-  const { error } = await supabase
+  const parentId = parsed.data.parent_id ?? null;
+  const { data, error } = await supabase
     .from("replies")
-    .insert({ thread_id: threadId, author_id: viewer.id, body: parsed.data.body });
+    .insert({ thread_id: threadId, author_id: viewer.id, body: parsed.data.body, parent_id: parentId })
+    .select("id")
+    .single();
   failOnError(path, error);
-  succeed(`${path}#latest`, "reply_posted");
+  succeed(parentId && data ? `${path}#reply-${data.id}` : `${path}#latest`, "reply_posted");
 }
 
 /** FR-DS-4: authors edit their own posts. */

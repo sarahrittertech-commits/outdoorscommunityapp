@@ -193,3 +193,24 @@ export async function moveFromWaitlist(eventId: string, userId: string) {
   failOnError(back, error);
   succeed(back, "moved_to_going");
 }
+
+/** FR-EV-18: save an event for later, without RSVPing. Private to the user. */
+export async function saveEvent(eventId: string) {
+  const back = `/e/${eventId}`;
+  const { viewer, supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema]), [eventId]);
+  const { error } = await supabase.from("saved_events").insert({ event_id: eventId, user_id: viewer.id });
+  // Already saved (a second click, or another tab) is not an error.
+  if (error && error.code !== "23505") fail(back, errorCode(error));
+  succeed(back, "saved_for_later");
+}
+
+/** FR-EV-18: unsaving is always allowed. */
+export async function unsaveEvent(eventId: string, from: "event" | "me" = "event") {
+  const back = from === "me" ? "/me" : `/e/${eventId}`;
+  const { viewer, supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, z.enum(["event", "me"])]), [eventId, from]);
+  const { error } = await supabase.from("saved_events").delete().eq("event_id", eventId).eq("user_id", viewer.id);
+  failOnError(back, error);
+  succeed(back, "unsaved");
+}

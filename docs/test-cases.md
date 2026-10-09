@@ -99,6 +99,36 @@ web app is not the thing enforcing the rule.
 | PT-77 | The unused group-covers bucket has no upload policies and, when empty, is gone (TR-SEC-9) | Unlimited uploads into an unused public bucket |
 | PT-78 | Event listings show only active groups' events; restoring a group lists them again (FR-GR-6) | Archived groups' events still appear on Events and in search |
 | PT-79 | Signed-in users can't call raise_rule and a bad time zone still gets its message; the missing indexes exist; approving a claim keeps the claimant's RSVPs | Internal helpers in the API; slow admin pages; a claim drops the new owner's RSVPs |
+| PT-80 | A signed-in user, member or not, saves an event they can see, without an RSVP (FR-EV-18) | Saving needs an RSVP or membership |
+| PT-81 | Saved events are readable only by the person who saved them, not by the organizer or the site admin; visitors read none (FR-EV-18) | Organizers see who is interested in their events |
+| PT-82 | Nobody saves on someone else's behalf; visitors never save (FR-EV-18) | Writes for other people; anonymous writes |
+| PT-83 | A suspended account can't save; an event in a removed group can't be saved (FR-EV-18) | Saving bypasses can_write or event visibility |
+| PT-84 | Only the saver unsaves; a save can't be edited; the same event can't be saved twice (FR-EV-18) | Other people clear your saves |
+| PT-85 | The 501st save is refused (FR-EV-18, TR-SEC-8) | One account fills the table |
+| PT-86 | By default members see the member list and a non-member sees only the organizers (FR-MB-10) | The default changes who sees names |
+| PT-87 | With *organizers only*, a member sees the organizers and their own row but no other member; counts stay; organizers and the site admin see everyone; a plain member can't change the setting, a page manager can (FR-MB-10) | Names leak through the API when the page hides them |
+| PT-88 | With *organizers only*, a member sees no names on who's going and only the waitlist count and their own place; organizers see the names (FR-MB-10, FR-EV-28) | Who's going leaks names the setting hides |
+| PT-89 | *Anyone signed in* opens the list and who's going to signed-in non-members but not visitors; values outside the three are refused; a removed group stays hidden (FR-MB-10) | The setting opens more than it says, or reopens removed groups |
+| PT-90 | A member answers a top-level reply; the answer sits under it (FR-DS-9) | Answers can't be posted, or float loose in the thread |
+| PT-91 | Answering an answer joins the same top-level reply and records who it answers; no reply ever has a nested parent (FR-DS-9) | Threads nest without limit |
+| PT-92 | An answer can't point at a reply in another thread, or one that doesn't exist (FR-DS-9) | Replies leak into, or are attached to, other threads |
+| PT-93 | Non-members, banned members and signed-out visitors can't answer a reply (FR-DS-6, FR-DS-9) | Outsiders post into a group's discussions |
+| PT-94 | Nobody answers a reply in a locked thread or while discussions are off (FR-DS-5, FR-GR-4) | Locks and the discussions switch are bypassed through answers |
+| PT-95 | Removing a reply leaves its answers readable (FR-DS-5, FR-DS-9) | A moderator's removal silently takes other people's posts with it |
+| PT-96 | A removed reply can't be answered (FR-DS-9) | Removed posts gain new answers |
+| PT-97 | An author can't move their reply to another parent (FR-DS-9) | Replies rearranged after the fact |
+| PT-98 | Answers count toward the posting rate limit (FR-MD-4, TR-SEC-8) | The rate limit is bypassed through answers |
+| PT-99 | Who a reply answers is set by the database only (FR-DS-9) | A post claims to answer someone it doesn't |
+| PT-100 | The owner and admins set a group's type (FR-GR-16) | Organizers can't describe their group |
+| PT-101 | A type outside the five is refused by the database (FR-GR-16) | Made-up types appear in lists and filters |
+| PT-102 | Members, outsiders and visitors can't change a group's type (FR-GR-16) | Anyone relabels someone else's group |
+| PT-103 | Visitors read type and cover from group_listings; the view still runs as the caller and nobody writes through it (FR-GR-16, FR-GR-17) | The listing view leaks or accepts writes |
+| PT-104 | Only the group's owner and admins upload a cover; members, outsiders and other groups' owners can't, and members can't list the folder (FR-GR-14) | Anyone puts pictures on someone else's group |
+| PT-105 | A suspended admin can't upload a cover (FR-GR-14, FR-MD-3) | Suspension doesn't stop uploads |
+| PT-106 | Covers go only to `<group_id>/<random>.webp`, no other names or folders (FR-GR-14, TR-SEC-9) | Arbitrary files under a group's folder |
+| PT-107 | A group's cover folder holds at most 5 files; old ones can be removed (FR-GR-14, TR-SEC-8) | Unlimited uploads into a public bucket |
+| PT-108 | An archived group takes no new cover (FR-GR-14, FR-GR-6) | A read-only group still changes |
+| PT-109 | A group points only at a cover in its own folder, and a cover needs alt text (FR-GR-14) | A group shows another group's photo, or a photo with no description |
 | PT-110 | A member sends a suggestion; it starts as *new* with no note (FR-AD-4) | Members can't reach the site admin |
 | PT-111 | Visitors, suspended accounts and accounts that haven't accepted the terms can't send one (FR-AD-4, TR-SEC-2) | Anonymous or suspended accounts write |
 | PT-112 | A member sends only as themselves and can't set a status or the admin's note (FR-AD-4, FR-AD-6) | Suggestions in someone else's name, or self-approved |
@@ -120,7 +150,7 @@ Run by the unit test command in CI. Pure functions only.
 | UT-2 | Event time formatting | An event stored in UTC displays in its own time zone, including across a daylight-saving change |
 | UT-3 | `.ics` generator | Output has the correct start, end, time zone, title and location |
 | UT-4 | Slug generator | Two groups called "Trail Friends" get distinct slugs; slugs are lowercase and URL-safe |
-| UT-5 | Zod schemas | Each form schema rejects missing required fields and over-length text; affinity tags accept only the four on the list |
+| UT-5 | Zod schemas | Each form schema rejects missing required fields and over-length text; affinity tags accept only the four on the list; a group type only the five, or none |
 | UT-6 | Page number parser | A page beyond the last is clamped, so no query asks for a huge offset (TR-SEC-12) |
 | UT-7 | `.ics` line folding | Folding counts UTF-8 bytes, not characters, and never splits an emoji in a title |
 | UT-8 | Password rules (FR-AC-17) | Under 10 characters or over 72 bytes is refused; passwords are never trimmed; the common-password list is refused whatever the case; both copies must match; each failure names its rule |
@@ -167,15 +197,11 @@ real tests, with requirements, once the use case is approved.
 | UC-13 A local chapter of a national club | Only a chapter's owner links it to a national organization; the national page lists only chapters that linked themselves |
 | UC-14 What's near me? | A zip code finds results with no outside request; distance shown on each result; the *Near you* town is never stored on the server; filtered links reopen the same list |
 | UC-15 Explore destinations | Every place is reachable from the list with the map off; place pages list only that place's groups and upcoming events |
-| UC-16 Keep our member list private | With *organizers only*, a member gets no other members' names from the database, on the members tab or on *who's going* |
 | UC-17 Approve who comes | A member can't approve their own RSVP; going never exceeds places with two admins acting at once; only admins open Manage RSVPs |
 | UC-18 My calendar | Shows only the user's going and saved events; works without JavaScript |
-| UC-19 Reply to a reply | Never more than one level of indent; role labels only on owner and admin posts |
 | UC-20 Message another member | A second message before acceptance is refused; a blocked user's message is refused; a third user, group admins included, reads nothing; the 11th request in a day is refused |
 | UC-21 Share trip photos | A non-member gets no photo from a members-only gallery, from the database or storage; uploads are re-encoded and stripped of location data; only the uploader and organizers remove photos |
-| UC-22 Save it for later | No other user, organizer included, can read someone's saved events |
 | UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |
-| UC-24 Tell groups apart | A type outside the list is refused; only the owner sets type and photo; the type filter matches the type shown |
 | UC-25 A sign-in email that sounds like us | The email comes from the board's domain with no images or tracked links; an expired or used link signs nobody in |
 | UC-26 Prove it's my club | A confirmation at a domain other than the group's website is refused; a used or expired link confirms nothing; no full address is kept afterwards; a confirmed claim is never approved automatically |
 | UC-27 Start your first group | A group waiting for review is returned to nobody but its owner and the site admin; joins are refused; only the site admin approves or declines; a person with an approved group skips review |

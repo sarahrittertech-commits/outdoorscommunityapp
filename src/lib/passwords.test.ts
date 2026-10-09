@@ -52,14 +52,14 @@ describe("password rules", () => {
 describe("password forms", () => {
   const good = "a river runs by";
 
-  it("signs up with a matching pair", () => {
-    const parsed = signUpSchema.parse({ email: " Sam@Example.org ", password: good, passwordAgain: good });
+  it("signs up with just an email; the password comes after the link", () => {
+    const parsed = signUpSchema.parse({ email: " Sam@Example.org " });
     expect(parsed.email).toBe("Sam@Example.org");
   });
 
-  it("names the rule a sign-up missed", () => {
+  it("names the rule a new password missed", () => {
     const code = (input: Record<string, string>) => {
-      const result = signUpSchema.safeParse({ email: "sam@example.org", ...input });
+      const result = newPasswordSchema.safeParse(input);
       return result.success ? null : passwordErrorCode(result.error);
     };
     expect(code({ password: "short", passwordAgain: "short" })).toBe("password_length");
@@ -68,7 +68,7 @@ describe("password forms", () => {
   });
 
   it("refuses a bad email as plain invalid", () => {
-    const result = signUpSchema.safeParse({ email: "not an email", password: good, passwordAgain: good });
+    const result = signUpSchema.safeParse({ email: "not an email" });
     expect(result.success).toBe(false);
     if (!result.success) expect(passwordErrorCode(result.error)).toBe("invalid");
     expect(forgotPasswordSchema.safeParse({ email: "nope" }).success).toBe(false);

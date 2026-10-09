@@ -13,7 +13,19 @@ export const metadata: Metadata = { title: "My stuff", robots: { index: false } 
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
-/** FR-AC-7: two lists, not a feed. */
+/** Upcoming events from a list of ids, soonest first. */
+async function upcoming(supabase: Awaited<ReturnType<typeof createClient>>, ids: string[]) {
+  if (!ids.length) return [];
+  const { data } = await supabase
+    .from("event_listings")
+    .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps")
+    .in("id", ids)
+    .gt("ends_at", new Date().toISOString())
+    .order("starts_at");
+  return data ?? [];
+}
+
+/** FR-AC-7 and FR-EV-18: plain lists, not a feed. */
 export default async function MyStuffPage({ searchParams }: Props) {
   const viewer = await requireViewer("/me");
   const supabase = await createClient();
@@ -27,16 +39,14 @@ export default async function MyStuffPage({ searchParams }: Props) {
     .filter((m) => m.groups && m.status !== "banned")
     .sort((a, b) => a.groups!.name.localeCompare(b.groups!.name));
 
-  const { data: rsvps } = await supabase.from("event_rsvps").select("event_id").eq("user_id", viewer.id).eq("status", "going");
-  const eventIds = (rsvps ?? []).map((r) => r.event_id);
-  const { data: events } = eventIds.length
-    ? await supabase
-        .from("event_listings")
-        .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps")
-        .in("id", eventIds)
-        .gt("ends_at", new Date().toISOString())
-        .order("starts_at")
-    : { data: [] };
+  const [{ data: rsvps }, { data: saves }] = await Promise.all([
+    supabase.from("event_rsvps").select("event_id").eq("user_id", viewer.id).eq("status", "going"),
+    // FR-EV-18: the user's own saves; nobody else can read them.
+    supabase.from("saved_events").select("event_id").eq("user_id", viewer.id),
+  ]);
+  const goingIds = (rsvps ?? []).map((r) => r.event_id);
+  const savedIds = (saves ?? []).map((r) => r.event_id);
+  const [events, saved] = await Promise.all([upcoming(supabase, goingIds), upcoming(supabase, savedIds)]);
 
   // FR-AD-7: only the viewer's own; the database returns nobody else's.
   const { data: suggestions } = await supabase
@@ -56,7 +66,13 @@ export default async function MyStuffPage({ searchParams }: Props) {
 
       <h2>Upcoming events I&apos;m going to</h2>
       <div className="mt-2">
-        <EventList events={events ?? []} />
+        <EventList events={events} />
+      </div>
+
+      <h2>Saved</h2>
+      <p className="mt-1 text-sm text-muted">Events you saved for later. Only you can see this list.</p>
+      <div className="mt-2">
+        <EventList events={saved} />
       </div>
 
       <h2>My groups</h2>

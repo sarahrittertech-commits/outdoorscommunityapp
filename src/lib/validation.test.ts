@@ -37,6 +37,16 @@ describe("form validation", () => {
     expect(groupSchema.safeParse({ ...validGroup, joinPolicy: "secret" }).success).toBe(false);
   });
 
+  // FR-GR-16, FR-GR-14
+  it("takes one of the five group types, or none, and optional cover alt text", () => {
+    expect(groupSchema.parse(validGroup).groupType).toBeNull();
+    expect(groupSchema.parse({ ...validGroup, groupType: "" }).groupType).toBeNull();
+    expect(groupSchema.parse({ ...validGroup, groupType: "volunteer" }).groupType).toBe("volunteer");
+    expect(groupSchema.safeParse({ ...validGroup, groupType: "cult" }).success).toBe(false);
+    expect(groupSchema.parse({ ...validGroup, coverAlt: "  " }).coverAlt).toBeNull();
+    expect(groupSchema.safeParse({ ...validGroup, coverAlt: "x".repeat(201) }).success).toBe(false);
+  });
+
   const validEvent = {
     title: "Saturday paddle",
     startsLocal: "2026-10-03T09:00",

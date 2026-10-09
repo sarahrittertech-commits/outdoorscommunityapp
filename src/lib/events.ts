@@ -12,7 +12,7 @@ export const loadEvent = cache(async (id: string) => {
   const supabase = await createClient();
   const { data: event } = await supabase
     .from("events")
-    .select("*, groups(id, slug, name, status, is_unclaimed, source_url)")
+    .select("*, groups(id, slug, name, status, is_unclaimed, source_url, cover_image_path)")
     .eq("id", id)
     .maybeSingle();
   if (!event?.groups) notFound();

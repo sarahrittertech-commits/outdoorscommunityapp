@@ -222,7 +222,7 @@ flowchart TD
 
 ## UC-16 — Keep our member list private
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. Set by the page admin or a page manager.*
 
 ```mermaid
 flowchart TD
@@ -263,11 +263,12 @@ flowchart TD
 
 ## UC-19 — Reply to a reply
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. The* reply *link opens the form under
+that reply (`?replyTo=<id>#reply-form`), so it works without JavaScript.*
 
 ```mermaid
 flowchart TD
-  thread["Thread page"] -->|Reply under a reply| form["Reply form, quoting who it answers"]
+  thread["Thread page"] -->|reply under a reply| form["Reply form, naming who it answers"]
   form -->|Post| nested["Reply shown indented under the one it answers"]
   nested --> deeper{Reply to that reply?}
   deeper -->|yes| same(["Shown at the same indent: one level only"])
@@ -303,7 +304,7 @@ flowchart TD
 
 ## UC-22 — Save it for later
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. The reminder step waits on UC-10 and UC-23.*
 
 ```mermaid
 flowchart TD
@@ -315,13 +316,15 @@ flowchart TD
 
 ## UC-24 — Tell groups apart
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026.* The photo is uploaded in group
+settings (no gallery yet, UC-21); a group without one shows no photo, or a
+sample group's representative photo.
 
 ```mermaid
 flowchart TD
   list["Communities<br/>photo · type icon and label · activity icons"] -->|filter: Volunteer group| filtered["Communities: volunteer groups"]
   filtered -->|opens one| group["Group page<br/>photo · type · area · members"]
-  owner["Group settings (owner)"] -->|sets type and photo| group
+  owner["Group settings (page admin or manager)<br/>type · cover photo and its description"] -->|saves| group
   group --> done(["Knows what kind of group it is"])
 ```
 
@@ -410,9 +413,10 @@ flowchart TD
 ```mermaid
 flowchart TD
   join["Group page: Join group"] --> signin["Sign in<br/>email + password<br/>links: Create an account · Forgot password"]
-  signin -->|Create an account| signup["Create an account<br/>email, password, password again"]
-  signup -->|Create account| check(["Check your email to confirm your address"])
-  check -->|clicks Confirm my email| welcome["Welcome: 18+, terms, display name"]
+  signin -->|Create an account| signup["Create an account<br/>email only"]
+  signup -->|Email me the link| check(["Check your email"])
+  check -->|clicks Confirm my email| create["Create your password<br/>password, password again"]
+  create --> welcome["Welcome: 18+, terms, display name"]
   welcome --> back["Back on the group page: Join"]
   signin -->|correct email + password| back
   signin -->|wrong, or email not confirmed| signin
@@ -460,7 +464,7 @@ flowchart TD
   open --> valid{Link working?}
   valid -->|no: off, expired or made up| refuse(["This invite link isn't working. Ask the group for a new one"])
   valid -->|yes| signed{Signed in?}
-  signed -->|no| landing["Group name is on Branch Outdoors<br/>Create your account and join: email, password twice<br/>or Sign in"]
+  signed -->|no| landing["Group name is on Branch Outdoors<br/>Create your account and join: email, then the link to create a password<br/>or Sign in"]
   landing -->|creates account| check(["Check your email: the link brings you back to join"])
   check -->|confirms email| onboard
   landing -->|signs in| onboard{Finished the welcome step?}

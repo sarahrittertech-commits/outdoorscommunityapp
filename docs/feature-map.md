@@ -34,7 +34,7 @@ permission enforced and tested in the database.
 | Membership and roles | Join, request, leave; page admin, up to two page managers, member; approve, remove, ban; transfer ownership | UC-2, UC-4, UC-31 | FR-MB-1 to FR-MB-9, FR-MB-11 |
 | Invites | Invite link (7 days, 30 days or until turned off) that joins people straight in; email invites for members and page managers built but waiting on the board's email setup | UC-31 | FR-MB-12 to FR-MB-16 |
 | Events and RSVPs | Post, edit, cancel; going or not going; places and "full"; who's going; past events | UC-2, UC-3 | FR-EV-1 to FR-EV-8 |
-| Discussions | Threads and flat replies, pin, lock, remove, edit and delete own | UC-5 | FR-DS-1 to FR-DS-7 |
+| Discussions | Threads and replies, with one level of answers to a reply and role labels; pin, lock, remove, edit and delete own | UC-5, UC-19 | FR-DS-1 to FR-DS-7, FR-DS-9 |
 | Moderation | Report anything; group and site queues; suspend; moderation log; rate limits | UC-6 | FR-MD-1 to FR-MD-6 |
 | Unclaimed listings and claims | 67 real groups listed from public information; organizers claim them; site admin approves | UC-8 | FR-GR-9, FR-GR-10 |
 | Affinity tags | Women, Youth, BIPOC, LGBTQIA+ on group pages and lists, set by owners | UC-9 | FR-GR-11 |
@@ -65,8 +65,8 @@ until the domain is chosen and email sending through Resend is set up.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Group types:** *Club*, *Meetup*, *Volunteer group*, *Nonprofit*, *Chapter*, with a type icon on lists and group pages, and a type filter | Fits | UC-24 | FR-GR-16, FR-GR-17 |
-| **Group cover photo** on the group page and in the Communities list | Fits | UC-24 | FR-GR-14 |
+| **Group types:** *Club*, *Meetup*, *Volunteer group*, *Nonprofit*, *Chapter*, with a type icon on Communities and group pages, and a type filter on Communities | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-16, FR-GR-17 |
+| **Group cover photo** on the group page and in the Communities list, uploaded in group settings | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-14 (narrowed) |
 | **Event photo**, one per event or series | Fits | UC-10 | FR-EV-12 |
 | **Group photo galleries**, members-only by default, removable and reportable | In scope | UC-21 | FR-GR-12, FR-GR-13 |
 | **Chapters** of national organizations (for example the American Alpine Club) | Decision needed | UC-13 | FR-GR-15 |
@@ -89,16 +89,16 @@ until the domain is chosen and email sending through Resend is set up.
 | **FAQ** and **RSVPs open at** | Fits / In scope | UC-10 | FR-EV-19, FR-EV-20 |
 | **Ask a question** and answer into the FAQ | Fits | UC-11 | FR-EV-21, FR-EV-22 |
 | **Approve RSVPs**, **waitlist**, **Manage RSVPs** page | Fits / In scope | UC-17 | FR-EV-15 to FR-EV-17 |
-| **Save for later** | In scope | UC-22 | FR-EV-18 |
+| **Save for later** | **Built 9 Oct** (Saved in My stuff; not on a calendar or in reminders yet) | UC-22 | FR-EV-18 |
 
 ### Members
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Member list privacy** | Fits | UC-16 | FR-MB-10 |
+| **Member list privacy** | **Built 9 Oct** (set by the page admin or a manager) | UC-16 | FR-MB-10 |
 | **Calendar** on the signed-in home page | Fits | UC-18 | FR-AC-9 |
 | **Reminders** list and unread-message count | In scope | UC-23 | FR-AC-10 |
-| **Replies to replies**, one level | Fits | UC-19 | FR-DS-9 |
+| **Replies to replies**, one level | Built 9 October 2026 | UC-19 | FR-DS-9 |
 | **Direct messages** that start as requests | In scope | UC-20 | FR-DM-1 to FR-DM-6, ADR-0006 |
 
 ### Businesses
