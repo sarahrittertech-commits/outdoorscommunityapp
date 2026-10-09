@@ -170,7 +170,8 @@ Constraints:
 | `id` | uuid | |
 | `group_id` | uuid | host group |
 | `title` | text | |
-| `description` | text | |
+| `description` | text | FR-EV-23: what it is and who it's for, at most 2,000 characters; the form requires 10 or more |
+| `details` | text, optional | FR-EV-23: what to bring, pace, difficulty |
 | `starts_at`, `ends_at` | timestamp (UTC) | `ends_at` after `starts_at` |
 | `timezone` | text | IANA zone the event is shown in |
 | `location_name` | text | "Pisgah Fish Hatchery parking lot" — always public |
@@ -180,6 +181,12 @@ Constraints:
 | `created_by` | uuid | |
 | `created_at`, `updated_at` | timestamp | |
 | `source_url` | text, optional | FR-GR-9: the organizer's own page for a listed event. Only SQL run by the operator sets it. |
+| `photo_path`, `photo_alt` | text, optional | FR-EV-24: a file in the `event-photos` bucket, always in this event's own folder `<group_id>/<id>/`; alt text (at most 200) required with a photo |
+| `is_paid` | boolean | FR-EV-25: `false` (Free) by default |
+| `registration_fee`, `total_cost` | text, optional | FR-EV-25: at most 80 characters each; a paid event needs a registration fee |
+| `takes_rsvps` | boolean | FR-EV-26: `true` by default; when `false` the database refuses RSVPs |
+| `signup_url` | text, optional | FR-EV-27: http or https only |
+| `waitlist_enabled` | boolean | FR-EV-28: only meaningful with a capacity |
 
 ### event_private_details
 
@@ -198,11 +205,16 @@ to live in a row that only members may read.
 | --- | --- | --- |
 | `event_id` | uuid | part of the key |
 | `user_id` | uuid | part of the key |
-| `status` | enum | `going`, `not_going` |
+| `status` | enum | `going`, `not_going`, `waitlisted` |
+| `waitlisted_at` | timestamp, optional | FR-EV-28: set by the database when the person joins the waitlist; the waitlist's order |
 | `updated_at` | timestamp | |
 
 The database refuses an RSVP after the event starts, for a cancelled event,
-or one that would push `going` past `capacity`.
+for an event that takes no RSVPs, or one that would push `going` past
+`capacity`. Waitlisted people don't count as going. Only an owner or admin
+moves someone from the waitlist to going (`move_from_waitlist`, which locks
+the event row and needs a free place); while anyone is waiting, members
+can't take a freed place themselves.
 
 ## Discussions
 
@@ -299,12 +311,12 @@ written when each is approved, with its migration and permission tests.
 
 | Table or change | For | Notes |
 | --- | --- | --- |
-| `events`: `series_id`, `photo_path`, `price_text`, `rsvp_opens_at`, `requires_approval`, `place_id` | UC-10, UC-17, UC-15 | A series row holds the repeat rule; each date stays its own event |
+| `events`: `series_id`, `rsvp_opens_at`, `requires_approval`, `place_id` | UC-10, UC-17, UC-15 | A series row holds the repeat rule; each date stays its own event |
 | `event_series` | UC-10 | Repeat rule and end date; edits apply to later dates |
 | `event_sponsors` | UC-10 | Name, logo path, website, optional business or group it links to |
 | `event_faq` | UC-10, UC-11 | Question, answer, order |
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
-| `event_rsvps.status` gains `requested`, `waitlisted`, `declined` | UC-17 | Places counted on `going` only |
+| `event_rsvps.status` gains `requested`, `declined` (`waitlisted` built with UC-30) | UC-17 | Places counted on `going` only |
 | `saved_events` | UC-22 | User and event; private to the user |
 | `groups`: `group_type`, `cover_photo_path`, `member_list_visibility`, `organization_id` | UC-24, UC-16, UC-13 | Type from a fixed list |
 | `group_photos` | UC-21 | Uploader, path, alt text, status |

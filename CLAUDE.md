@@ -73,7 +73,7 @@ ones for the site admin to list or skip; groups carry affinity tags
 [runbook](docs/runbook.md) for operations. Draft use cases awaiting review:
 UC-10 to UC-30, mostly from the 8 October Magic Patterns design (UC-25 to
 UC-28, drafted 9 October, are Sarah's own requests: branded sign-in email,
-claim confirmation by email, new-group approval, a demo member, password sign-in as UC-29, the event form as UC-30); on that
+claim confirmation by email, new-group approval, a demo member, password sign-in as UC-29, and the event form as UC-30, approved and built the same day); on that
 date Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live

@@ -424,7 +424,7 @@ flowchart TD
 
 ## UC-30 — Post an event people want to come to
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026.*
 
 ```mermaid
 flowchart TD

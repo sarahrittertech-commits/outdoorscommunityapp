@@ -84,6 +84,9 @@ and fewer roles means fewer permission rules to get wrong. A separate
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Create, edit, cancel events | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | RSVP going / not going | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Join or leave an event's waitlist when it is full (FR-EV-28) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Add, replace or remove an event photo; set price, RSVPs, sign-up link, waitlist (FR-EV-24 to FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Move someone from the waitlist to going, while a place is free (FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 
 ### Discussions (only while discussions are on)
 
@@ -143,10 +146,10 @@ approved.
 | See a group's type and photo | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Set the group's type, photo and member list privacy | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | See the member list and names on *who's going* | ❌ | per setting | per setting | ✅ | ✅ | ✅ |
-| Post an event series, photo, price, sponsors, FAQ, RSVP opening time | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Post an event series, sponsors, FAQ, RSVP opening time (photo and price built with UC-30) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Ask an event a question | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Read and answer questions, move answers to the FAQ | ❌ | ❌ own only | ❌ own only | ✅ | ✅ | ✅ |
-| RSVP to an approval event (request) or join a waitlist | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| RSVP to an approval event (request) (waitlist built with UC-30) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Approve, decline, waitlist or remove RSVPs | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Save an event; see own saved events and calendar | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See someone else's saved events | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |

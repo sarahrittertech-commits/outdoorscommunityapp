@@ -82,7 +82,7 @@ Who is allowed to do each action is defined once, in
 
 | ID | Requirement | Priority | Accepted when |
 | --- | --- | --- | --- |
-| FR-EV-1 | Owner and admins create events: title, description, start, end, time zone, location name, address, optional capacity and address visibility (*public* or *members only*). | Must | A members-only address is not readable by non-members through any route, including the database API. |
+| FR-EV-1 | Owner and admins create events: title, description (FR-EV-23), start, end, time zone, location name, address, optional capacity and address visibility (*public* or *members only*). | Must | A members-only address is not readable by non-members through any route, including the database API. |
 | FR-EV-2 | Owner and admins can edit or cancel an event. A cancelled event stays visible, marked cancelled, and accepts no RSVPs. | Must | — |
 | FR-EV-3 | Members RSVP *going* or *not going* and can change it until the event starts. | Must | RSVPs are refused after the start time. |
 | FR-EV-4 | Only active members of the host group can RSVP. | Must | A visitor clicking *Going* is taken to sign in and join first. |
@@ -91,7 +91,13 @@ Who is allowed to do each action is defined once, in
 | FR-EV-7 | *Add to calendar* downloads an `.ics` file. | Should | The file opens correctly in Apple, Google and Outlook calendars. |
 | FR-EV-8 | Past events remain listed on the group page, newest first. | Should | — |
 | FR-EV-9 | *Duplicate event* copies an event's details into a new draft with no date. | Could | — |
-| FR-EV-10 | Waitlist for full events. | Could | — |
+| FR-EV-10 | ~~Waitlist for full events.~~ Replaced by FR-EV-28 (built 9 October 2026). | — | — |
+| FR-EV-23 | **Description and Details.** *Description* is required (10 to 2,000 characters): what the event is and who it's for, shown first and used in link previews. *Details* stays optional (what to bring, pace, difficulty). Existing events keep their text as Details. Plain text, links work. | Must | An event can't be posted without a description. |
+| FR-EV-24 | **Photo.** One optional photo per event, uploaded by the owner or admins: JPEG, PNG or WebP, at most 5 MB, re-encoded and stripped of location data on upload (TR-SEC-9), with a required short description of the picture (alt text). Replaceable and removable. Shown at the top of the event page; events without one show no photo. | Should | Only a group's owner and admins can add or remove an event's photo; nothing but a re-encoded image is ever served. |
+| FR-EV-25 | **Free or Paid.** Every event is *Free* or *Paid*. A paid event has a *Registration fee* and a *Total cost*, each plain text up to 80 characters (*$25 registration*, *about $60 with bike rental*), shown together on the event page and in event lists as *Paid*. The board never takes payment. | Should | A paid event can't be posted without a registration fee. |
+| FR-EV-26 | **Take RSVPs or not.** *Take RSVPs on Branch Outdoors* is ticked by default. Unticked, the event shows no RSVP buttons and no going count, and takes no RSVPs (the database refuses them). | Should | An event without RSVPs refuses an RSVP made directly through the API. |
+| FR-EV-27 | **Sign-up link.** An event without RSVPs can give an optional *Sign up at* link (http or https) to the organizer's own page, shown on the event page with `rel="nofollow ugc noopener"`. | Should | — |
+| FR-EV-28 | **Waitlist when full.** An event with places can turn on a waitlist. When it is full, members can join the waitlist, in the order they joined; they see their place in line. The owner and admins move people from the waitlist to *going* on the event page, never automatically, and only while a place is free. Leaving the waitlist is always allowed. Replaces FR-EV-10 and narrows FR-EV-16. | Should | Nobody moves from the waitlist to going without an organizer, and going never exceeds the places. |
 
 ## Discussions — FR-DS
 
@@ -179,11 +185,11 @@ approves its use case and user flow. Priorities here are proposals.
 | ID | Draft requirement | Proposed | Accepted when |
 | --- | --- | --- | --- |
 | FR-EV-11 | **Series.** An event can repeat weekly or every two weeks, on chosen days, until an end date (at most a year). Each date is its own event with its own RSVPs and places left. Editing the series offers *this date only* or *this and every later date*; past dates never change. Cancelling one date leaves the rest. | Should | Editing "this and later" changes no date that has started. |
-| FR-EV-12 | **Event photo.** One photo per event or series: JPEG, PNG or WebP, at most 5 MB, re-encoded on upload (TR-SEC-9), with required alt text. Without one, the activity's drawing shows. | Should | No original upload is ever served. |
-| FR-EV-13 | **Price.** Optional plain text up to 60 characters (*Free*, *$10 trail fee*). The board never takes payment or links to checkout on its own behalf; a link to the organizer's page is allowed in the description. | Should | — |
+| FR-EV-12 | **Event photo.** One photo per event or series: JPEG, PNG or WebP, at most 5 MB, re-encoded on upload (TR-SEC-9), with required alt text. Without one, the activity's drawing shows. *For single events, narrowed to FR-EV-24 and built 9 October 2026; series photos stay draft.* | Should | No original upload is ever served. |
+| FR-EV-13 | **Price.** Optional plain text up to 60 characters (*Free*, *$10 trail fee*). The board never takes payment or links to checkout on its own behalf; a link to the organizer's page is allowed in the description. *Narrowed to FR-EV-25 (Free or Paid, fee and total cost) and built 9 October 2026.* | Should | — |
 | FR-EV-14 | **Sponsors.** Up to 5 per event: name, logo (same rules as photos, at most 1 MB), website link with `rel="sponsored noopener"`. Shown in a *Sponsored by* section with the sponsors' logos, below the event details, on the event page only: never in lists, never affecting order or search. A sponsor can link to a business or group page on the board. | Should | A sponsored event lists in exactly the same place as an unsponsored one. |
 | FR-EV-15 | **RSVP approval.** Owner and admins can set an event to *Approve RSVPs*. A member's RSVP is then a request; only admins approve or decline it. Approved RSVPs count against places; requests don't. | Should | The database refuses a member setting their own RSVP to approved. |
-| FR-EV-16 | **Waitlist.** When an event with places is full, members can join the waitlist, in order. An admin moves people from the waitlist to going; there is no automatic move. Replaces FR-EV-10. | Should | Going never exceeds places, even when two admins act at once. |
+| FR-EV-16 | **Waitlist.** When an event with places is full, members can join the waitlist, in order. An admin moves people from the waitlist to going; there is no automatic move. Replaces FR-EV-10. *Narrowed to FR-EV-28 and built 9 October 2026; the Manage RSVPs page (FR-EV-17) stays draft.* | Should | Going never exceeds places, even when two admins act at once. |
 | FR-EV-17 | **Manage RSVPs page.** Lists requests, going, waitlist and declined, with approve, decline, waitlist and remove. Removing someone is logged like other moderation. | Should | Only the group's owner and admins can open it. |
 | FR-EV-18 | **Save.** A signed-in user can save any event they can see, without RSVPing. Saved events are private to that user and listed under *Saved* in My stuff and on their calendar. | Should | No other user, organizer included, can read someone's saved events. |
 | FR-EV-19 | **FAQ.** Owner and admins add up to 15 questions and answers to an event or series, in their chosen order. Plain text. | Should | — |
@@ -343,17 +349,3 @@ working with JavaScript off.
 | FR-AC-20 | **Forgot password.** Enter the email; the page always answers *If that address has an account, we've sent a link*. The link works once, for 1 hour, and leads to *Set a new password*, which signs the person in. Changing a password signs out every other session. | Must | A reset link is single use and expires; other devices are signed out. |
 | FR-AC-21 | **Change password** on the profile page: current password, new password twice. | Should | A wrong current password changes nothing. |
 
-### Posting an event (UC-30)
-
-Narrows FR-EV-12 (photo), FR-EV-13 (price) and FR-EV-16 (waitlist) to what
-Sarah chose on 9 October, and adds the description, the RSVP choice and the
-sign-up link. Every form keeps working with JavaScript off.
-
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-EV-23 | **Description and Details.** *Description* is required (10 to 2,000 characters): what the event is and who it's for, shown first and used in link previews. *Details* stays optional (what to bring, pace, difficulty). Existing events keep their text as Details. Plain text, links work. | Must | An event can't be posted without a description. |
-| FR-EV-24 | **Photo.** One optional photo per event, uploaded by the owner or admins: JPEG, PNG or WebP, at most 5 MB, re-encoded and stripped of location data on upload (TR-SEC-9), with a required short description of the picture (alt text). Replaceable and removable. Shown at the top of the event page; events without one show no photo. | Should | Only a group's owner and admins can add or remove an event's photo; nothing but a re-encoded image is ever served. |
-| FR-EV-25 | **Free or Paid.** Every event is *Free* or *Paid*. A paid event has a *Registration fee* and a *Total cost*, each plain text up to 80 characters (*$25 registration*, *about $60 with bike rental*), shown together on the event page and in event lists as *Paid*. The board never takes payment. | Should | A paid event can't be posted without a registration fee. |
-| FR-EV-26 | **Take RSVPs or not.** *Take RSVPs on Branch Outdoors* is ticked by default. Unticked, the event shows no RSVP buttons and no going count, and takes no RSVPs (the database refuses them). | Should | An event without RSVPs refuses an RSVP made directly through the API. |
-| FR-EV-27 | **Sign-up link.** An event without RSVPs can give an optional *Sign up at* link (http or https) to the organizer's own page, shown on the event page with `rel="nofollow ugc noopener"`. | Should | — |
-| FR-EV-28 | **Waitlist when full.** An event with places can turn on a waitlist. When it is full, members can join the waitlist, in the order they joined; they see their place in line. The owner and admins move people from the waitlist to *going* on the event page, never automatically, and only while a place is free. Leaving the waitlist is always allowed. Replaces FR-EV-10 and narrows FR-EV-16. | Should | Nobody moves from the waitlist to going without an organizer, and going never exceeds the places. |

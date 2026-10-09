@@ -69,6 +69,16 @@ web app is not the thing enforcing the rule.
 | PT-40 | A find with a similar name or the same website as something already known is kept and tagged as a possible duplicate; an exact name match is dropped; shared sites like Facebook never count as the same website (FR-RS-10) | Near duplicates listed twice, or real groups lost |
 | PT-41 | Events found for an unclaimed listing publish without review only from a group find whose event links are on the listing's own website (FR-RS-8) | A web page tricks the agent into putting a phishing link on a live listing |
 | PT-42 | Only a group's owner and admins set its website, and only http(s) addresses are stored (FR-GR-23) | A member points the group's link somewhere else, or a script link is stored |
+| PT-50 | Owner and admins set an event's description, details, price, RSVP choice, sign-up link and waitlist; members can't (FR-EV-23 to FR-EV-28) | A member edits an event's price or turns off its RSVPs |
+| PT-51 | A paid event needs a registration fee; sign-up links are http(s) only; a description is at most 2,000 characters (FR-EV-25, FR-EV-27) | A paid event with no price, or a script link on an event page |
+| PT-52 | An event that takes no RSVPs refuses new and changed RSVPs (FR-EV-26) | RSVPs made through the API to an event that says it takes none |
+| PT-53 | The waitlist opens only when the event is full, keeps join order set by the database, and waitlisted people don't count as going (FR-EV-28) | A member jumps the queue by sending their own join time |
+| PT-54 | Only an owner or admin moves someone from the waitlist to going, only into a free place; a waitlisted member can't move themselves; going never exceeds places (FR-EV-28) | Members skip the waitlist, or an event goes over capacity |
+| PT-55 | Leaving the waitlist is always allowed (FR-EV-28) | Someone is stuck on a waitlist |
+| PT-56 | Only the group's owner and admins upload event photos; members and outsiders can't (FR-EV-24) | Anyone puts pictures on someone else's event |
+| PT-57 | A photo path must name an event of the same group (FR-EV-24) | An admin of one group writes into another group's folder |
+| PT-58 | An archived group takes no new event photos (FR-EV-24, FR-GR-6) | A read-only group still changes |
+| PT-59 | An event points only at a photo in its own folder, and a photo needs alt text (FR-EV-24) | An event shows another event's photo, or a photo with no description |
 
 ## Automated — unit
 
@@ -112,7 +122,7 @@ Playwright in CI against the local stack with seed data.
 
 ## Planned — pending use case review
 
-Draft use cases UC-10 to UC-30 are not approved yet, so these have no
+Draft use cases UC-10 to UC-29 are not approved yet, so these have no
 requirement numbers. They show what each would have to prove; they become
 real tests, with requirements, once the use case is approved.
 

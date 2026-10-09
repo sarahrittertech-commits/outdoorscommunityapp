@@ -792,7 +792,7 @@ a forgotten password is never a dead end.
 
 ## UC-30 — Post an event people want to come to
 
-> **Draft, awaiting review.** Requested by Sarah on 9 October 2026 after
+> **Approved and built 9 October 2026.** Requested by Sarah on 9 October 2026 after
 > testing *Post an event*: no photo, no price, every event forced to take
 > RSVPs, and one text box for everything. Decided with her the same day:
 > RSVPs are optional; with RSVPs, a place limit and an optional waitlist;
@@ -827,8 +827,8 @@ and come.
 **Alternatives** (in the requirements): a free event; an event without
 RSVPs that links to the organizer's own sign-up page instead.
 
-**Requirements:** to be written after review (drafts FR-EV-23 to FR-EV-28;
-FR-EV-12, FR-EV-13 and FR-EV-16 narrowed to these).
+**Requirements:** FR-EV-23 to FR-EV-28 (FR-EV-12, FR-EV-13 and FR-EV-16
+narrowed to these; FR-EV-10 replaced). Tests PT-50 to PT-59.
 
 **Succeeds when:** an event page answers *what is it, what does it cost,
 can I come, how do I sign up* without anyone leaving the page or asking.

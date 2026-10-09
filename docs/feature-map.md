@@ -115,7 +115,7 @@ Requested by Sarah on 8 October; drafted 9 October.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Event form**: required description plus details, a photo, Free or Paid with fee and total cost, optional RSVPs with places and a waitlist, or a sign-up link | Requested 9 Oct, awaiting review | UC-30 | FR-EV-23 to FR-EV-28 |
+| **Event form**: required description plus details, a photo, Free or Paid with fee and total cost, optional RSVPs with places and a waitlist, or a sign-up link | Built 9 Oct (migration `20261010000002` to apply) | UC-30 | FR-EV-23 to FR-EV-28 |
 
 ### Accounts
 
