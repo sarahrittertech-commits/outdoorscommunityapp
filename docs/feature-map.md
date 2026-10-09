@@ -122,6 +122,14 @@ Requested by Sarah on 8 October; drafted 9 October.
 | --- | --- | --- | --- |
 | **Event form**: required description plus details, a photo, Free or Paid with fee and total cost, optional RSVPs with places and a waitlist, or a sign-up link | Requested 9 Oct, awaiting review | UC-30 | FR-EV-23 to FR-EV-28 |
 
+### Running a group
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Page admin and up to two page managers**; manager invites by email | Requested 9 Oct, awaiting review | UC-31 | FR-MB-11, FR-MB-12 |
+| **Invite members by email**, one or many addresses | Requested 9 Oct, awaiting review (needs email) | UC-31 | FR-MB-13, FR-MB-14, FR-MB-16 |
+| **Invite link** to share so people can join | Requested 9 Oct, awaiting review (no email needed) | UC-31 | FR-MB-14 to FR-MB-16 |
+
 ### Accounts
 
 | Feature | Status | Use case | Draft requirements |
