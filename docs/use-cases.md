@@ -595,8 +595,10 @@ for.
 
 ## UC-24 — Tell groups apart
 
-> **Draft, awaiting review.** From the 8 October design (grouping
-> differentiation and photos).
+> **Approved and built 9 October 2026.** From the 8 October design (grouping
+> differentiation and photos). Built narrowed: the page admin or a page
+> manager uploads the cover photo in group settings (no gallery to pick
+> from until UC-21), and the type filter is on Communities only.
 
 **Actor:** The newcomer
 
@@ -611,10 +613,11 @@ free Saturday meetup or a volunteer trail crew.
 2. Filters to *Volunteer group* to find trail work they can just show up
    to.
 3. Opens a group: its page shows the same photo and type under the name.
-4. The group's owner set the type and photo in group settings.
+4. The group's page admin or a page manager set the type and photo in
+   group settings.
 
-**Requirements:** to be written after review (drafts FR-GR-14, FR-GR-16,
-FR-GR-17).
+**Requirements:** FR-GR-14 (narrowed), FR-GR-16 and FR-GR-17, in
+the Groups table of the functional requirements.
 
 **Succeeds when:** a newcomer can tell what kind of group it is, and
 whether it's active, before opening it.

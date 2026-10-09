@@ -117,6 +117,8 @@ export type Database = {
           website: string | null;
           affinity_tags: string[];
           member_list_visibility: Database["public"]["Enums"]["member_list_visibility"];
+          group_type: Database["public"]["Enums"]["group_type"] | null;
+          cover_alt: string | null;
         };
         Insert: {
           id?: string;
@@ -141,6 +143,8 @@ export type Database = {
           website?: string | null;
           affinity_tags?: string[];
           member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
+          group_type?: Database["public"]["Enums"]["group_type"] | null;
+          cover_alt?: string | null;
         };
         Update: {
           id?: string;
@@ -165,6 +169,8 @@ export type Database = {
           website?: string | null;
           affinity_tags?: string[];
           member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
+          group_type?: Database["public"]["Enums"]["group_type"] | null;
+          cover_alt?: string | null;
         };
         Relationships: [
           Fk<"groups_subcategory_id_fkey", "subcategory_id", "subcategories">,
@@ -613,6 +619,9 @@ export type Database = {
           is_unclaimed: boolean | null;
           source_url: string | null;
           affinity_tags: string[] | null;
+          group_type: Database["public"]["Enums"]["group_type"] | null;
+          cover_image_path: string | null;
+          cover_alt: string | null;
         };
         Relationships: [];
       };
@@ -771,6 +780,7 @@ export type Database = {
       address_visibility: "public" | "members";
       event_status: "scheduled" | "cancelled";
       rsvp_status: "going" | "not_going" | "waitlisted";
+      group_type: "club" | "meetup" | "volunteer" | "nonprofit" | "chapter";
       post_status: "visible" | "deleted_by_author" | "removed";
       report_target: "group" | "event" | "thread" | "reply" | "profile";
       report_reason: "spam" | "harassment" | "unsafe" | "off_topic" | "other";

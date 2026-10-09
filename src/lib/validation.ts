@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { AFFINITY_TAGS } from "./affinity";
 import { isCommonPassword } from "./common-passwords";
+import { GROUP_TYPES } from "./groupTypes";
 import { safeNext } from "./navigation";
 import { isValidTimeZone, zonedLocalToUtc } from "./time";
 
@@ -117,6 +118,16 @@ export const groupSchema = z.object({
     .optional()
     .transform((v) => (!v ? null : /^https?:\/\//i.test(v) ? v : `https://${v}`))
     .refine((v) => v === null || /^https?:\/\/[^\s/]+\.[^\s]+$/i.test(v), "Enter a web address like https://example.org"),
+  /** FR-GR-16: one of the five types, or none yet. */
+  groupType: z
+    .string()
+    .optional()
+    .transform((v) => v || null)
+    .pipe(z.enum(GROUP_TYPES.map((t) => t.value) as [string, ...string[]]).nullable())
+    .transform((v) => v as (typeof GROUP_TYPES)[number]["value"] | null),
+  /** FR-GR-14: the cover photo's alt text (edit form only), and Remove. */
+  coverAlt: optionalText(200),
+  removeCover: checkbox,
 });
 
 /** An http(s) link, or null when empty (FR-EV-27). */

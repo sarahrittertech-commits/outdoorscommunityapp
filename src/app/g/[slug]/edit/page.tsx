@@ -6,6 +6,7 @@ import { archiveGroup, updateGroup } from "@/app/actions/groups";
 import { GroupForm } from "@/components/GroupForm";
 import { Notice } from "@/components/Notice";
 import { requireViewer } from "@/lib/auth";
+import { groupCoverUrl } from "@/lib/groupCovers";
 import { loadGroup } from "@/lib/groups";
 
 export const metadata: Metadata = { title: "Edit group", robots: { index: false } };
@@ -19,7 +20,7 @@ type Props = {
 export default async function EditGroupPage({ params, searchParams }: Props) {
   const { slug } = await params;
   await requireViewer(`/g/${slug}/edit`);
-  const { group, isOwner, canManage } = await loadGroup(slug);
+  const { supabase, group, isOwner, canManage } = await loadGroup(slug);
   if (!canManage) redirect(`/g/${slug}?e=not_allowed`);
 
   return (
@@ -29,7 +30,10 @@ export default async function EditGroupPage({ params, searchParams }: Props) {
       </p>
       <h1>Edit group</h1>
       <Notice params={await searchParams} />
-      <GroupForm action={updateGroup.bind(null, group.id, group.slug)} group={group} submitLabel="Save changes" />
+      <GroupForm action={updateGroup.bind(null, group.id, group.slug)} group={group}
+        coverUrl={group.cover_image_path ? groupCoverUrl(supabase, group.cover_image_path) : null}
+        submitLabel="Save changes"
+      />
 
       {isOwner && (
         <section className="mt-12 border-t border-rule pt-4">

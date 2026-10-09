@@ -1,17 +1,19 @@
 import type { NextConfig } from "next";
 
-// FR-EV-24: event photos are served from Supabase Storage's public
-// event-photos bucket, and only from there.
+// FR-EV-24, FR-GR-14: event photos and group covers are served from Supabase
+// Storage's public event-photos and group-covers-v2 buckets, and only from there.
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const eventPhotoPattern = supabaseUrl ? [new URL("/storage/v1/object/public/event-photos/**", supabaseUrl)] : [];
+const photoPatterns = supabaseUrl
+  ? ["event-photos", "group-covers-v2"].map((bucket) => new URL(`/storage/v1/object/public/${bucket}/**`, supabaseUrl))
+  : [];
 
 const nextConfig: NextConfig = {
   // A small self-contained server for Railway (ADR-0003).
   output: "standalone",
   poweredByHeader: false,
-  images: { remotePatterns: eventPhotoPattern },
+  images: { remotePatterns: photoPatterns },
   experimental: {
-    // An event photo may be up to 5 MB (FR-EV-24), plus the rest of the form.
+    // An event photo or group cover may be up to 5 MB (FR-EV-24, FR-GR-14), plus the rest of the form.
     serverActions: { bodySizeLimit: "6mb" },
   },
   async headers() {

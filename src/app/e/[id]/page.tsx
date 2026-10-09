@@ -88,9 +88,10 @@ export default async function EventPage({ params, searchParams }: Props) {
   const myPlace = waitlistPlace?.my_place ?? 0;
   const going = goingCount ?? 0;
   // FR-EV-24: the event's own photo first; otherwise a representative photo
-  // for a couple of sample groups (src/brand/activityPhotos.ts).
+  // for a couple of sample groups (src/brand/activityPhotos.ts), unless the
+  // group has its own cover now (FR-GR-14).
   const ownPhoto = event.photo_path ? { src: eventPhotoUrl(supabase, event.photo_path), alt: event.photo_alt ?? "" } : null;
-  const samplePhoto = ownPhoto ? null : groupPhotos[group.slug];
+  const samplePhoto = ownPhoto || group.cover_image_path ? null : groupPhotos[group.slug];
   const started = new Date(event.starts_at) <= new Date();
   const cancelled = event.status === "cancelled";
   const placeFree = event.capacity === null || going < event.capacity;

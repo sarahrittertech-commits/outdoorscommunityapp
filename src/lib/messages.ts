@@ -79,6 +79,7 @@ export const errors = {
   photo_invalid: "That photo couldn't be used. Choose a JPEG, PNG or WebP image of at most 5 MB.",
   photo_alt_required: "Describe the photo in a few words for people who can't see it.",
   photo_failed: "The event is saved, but the photo didn't upload. Try adding it again.",
+  cover_failed: "The cover photo didn't upload, so nothing was saved. Try again.",
   invalid_timezone: "That time zone isn't recognized.",
   terms_required: "You need to confirm you're 18 or older and accept the terms.",
   cannot_join: "You can't join this group.",

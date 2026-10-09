@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { ActivityIcon } from "@/brand/ActivityIcon";
+import { GroupTypeIcon } from "@/brand/GroupTypeIcon";
 import { AffinityTags } from "@/components/AffinityTags";
 import { pageFrom, Pagination } from "@/components/Pagination";
 import { site } from "@/config/site";
+import { groupCoverUrl } from "@/lib/groupCovers";
+import { GROUP_TYPES, isGroupType } from "@/lib/groupTypes";
 import { createClient } from "@/lib/supabase/server";
 import { formatShortDate } from "@/lib/time";
 
@@ -17,10 +21,19 @@ const PAGE_SIZE = 50;
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
-/** Every active group in one table, A to Z, filterable by activity. */
+/** /communities with the given filters; empty ones are left out. */
+function communitiesHref(filters: { category?: string; type?: string }): string {
+  const query = new URLSearchParams();
+  if (filters.category) query.set("category", filters.category);
+  if (filters.type) query.set("type", filters.type);
+  return query.size ? `/communities?${query}` : "/communities";
+}
+
+/** Every active group in one table, A to Z, filterable by activity and type (FR-GR-17). */
 export default async function CommunitiesPage({ searchParams }: Props) {
   const params = await searchParams;
   const category = typeof params.category === "string" ? params.category : undefined;
+  const type = isGroupType(params.type) ? params.type : undefined;
   const asked = pageFrom(params.page);
 
   const supabase = await createClient();
@@ -28,13 +41,14 @@ export default async function CommunitiesPage({ searchParams }: Props) {
     let query = supabase
       .from("group_listings")
       .select(
-        "slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags",
+        "slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags, group_type, cover_image_path, cover_alt",
         { count: "exact" },
       )
       .eq("status", "active")
       .order("name")
       .range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
     if (category) query = query.eq("category_slug", category);
+    if (type) query = query.eq("group_type", type);
     return query;
   };
 
@@ -60,18 +74,37 @@ export default async function CommunitiesPage({ searchParams }: Props) {
       <h2 className="filter-heading mt-0">activity</h2>
       <ul className="mt-1 space-y-0.5">
         <li>
-          {category ? <Link href="/communities">all</Link> : <strong>all</strong>} <span className="text-muted">({total})</span>
+          {category ? <Link href={communitiesHref({ type })}>all</Link> : <strong>all</strong>}{" "}
+          {!type && <span className="text-muted">({total})</span>}
         </li>
         {categories?.map((c) => (
           <li key={c.slug}>
             {c.slug === category ? (
               <strong>{c.name}</strong>
             ) : (
-              <Link href={`/communities?category=${c.slug}`} prefetch={false}>
+              <Link href={communitiesHref({ category: c.slug, type })} prefetch={false}>
                 {c.name}
               </Link>
             )}{" "}
-            <span className="text-muted">({perCategory.get(c.slug) ?? 0})</span>
+            {!type && <span className="text-muted">({perCategory.get(c.slug) ?? 0})</span>}
+          </li>
+        ))}
+      </ul>
+      {/* FR-GR-17: plain links, so the filter works without JavaScript. */}
+      <h2 className="filter-heading">type</h2>
+      <ul className="mt-1 space-y-0.5">
+        <li>{type ? <Link href={communitiesHref({ category })}>any</Link> : <strong>any</strong>}</li>
+        {GROUP_TYPES.map((t) => (
+          <li key={t.value}>
+            {t.value === type ? (
+              <strong>
+                <GroupTypeIcon type={t.value} />
+              </strong>
+            ) : (
+              <Link href={communitiesHref({ category, type: t.value })} prefetch={false}>
+                <GroupTypeIcon type={t.value} />
+              </Link>
+            )}
           </li>
         ))}
       </ul>
@@ -88,6 +121,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
         <h1 className="m-0 flex items-center gap-3">
           {current && <ActivityIcon slug={current.slug} />}
           {current ? `${current.name} communities` : "Communities"}
+          {type && <span className="text-subtle"> · {GROUP_TYPES.find((t) => t.value === type)?.label}</span>}
         </h1>
         <p className="mt-2 border-b border-rule pb-3 text-subtle">
           Local groups and clubs in {site.regionName}, A to Z. Anyone can look; sign in to join.
@@ -107,6 +141,16 @@ export default async function CommunitiesPage({ searchParams }: Props) {
               {groups.map((g) => (
                 <tr key={g.slug} className="border-b border-rule align-top">
                   <td className="py-3 pr-4">
+                    {/* FR-GR-14: the group's own cover as a thumbnail. */}
+                    {g.cover_image_path && (
+                      <Image
+                        src={groupCoverUrl(supabase, g.cover_image_path)}
+                        alt={g.cover_alt ?? ""}
+                        width={96}
+                        height={64}
+                        className="float-right ml-3 h-16 w-24 rounded border border-rule object-cover"
+                      />
+                    )}
                     <Link href={`/g/${g.slug}`} className="font-bold">
                       {g.name}
                     </Link>
@@ -114,6 +158,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
                       {g.category_slug && <ActivityIcon slug={g.category_slug} className="h-4 w-4" />}
                       {g.subcategory_name}
                     </span>
+                    <GroupTypeIcon type={g.group_type} className="ml-2 align-middle text-sm text-muted" />
                     <AffinityTags tags={g.affinity_tags} className="ml-2 align-middle" />
                     {g.description && <p className="m-0 mt-1 line-clamp-2 max-w-prose text-sm text-muted">{g.description}</p>}
                     <p className="m-0 text-sm text-muted sm:hidden">{g.area}</p>
@@ -135,19 +180,27 @@ export default async function CommunitiesPage({ searchParams }: Props) {
           </table>
         ) : (
           <p className="mt-4 text-muted">
-            No groups here yet. <Link href="/groups/new">Start the first one</Link>.
+            {type ? (
+              <>
+                No groups of this type here yet. <Link href={communitiesHref({ category })}>Show every type</Link>.
+              </>
+            ) : (
+              <>
+                No groups here yet. <Link href="/groups/new">Start the first one</Link>.
+              </>
+            )}
           </p>
         )}
         <Pagination
           page={page}
           pageCount={Math.ceil((count ?? 0) / PAGE_SIZE)}
-          basePath={category ? `/communities?${new URLSearchParams({ category })}` : "/communities"}
+          basePath={communitiesHref({ category, type })}
         />
       </div>
 
       {/* Phones: the filters fold into a card above the list, open until a filter is picked. Computers: a side column. */}
-      <details className="filter-card order-first text-sm md:hidden" open={!category}>
-        <summary>{!category ? "Browse by activity" : "Change activity"}</summary>
+      <details className="filter-card order-first text-sm md:hidden" open={!category && !type}>
+        <summary>{!category && !type ? "Browse by activity or type" : "Change filters"}</summary>
         <div>{filters}</div>
       </details>
       <aside aria-label="Filters" className="hidden text-sm md:col-start-1 md:row-start-1 md:block">
