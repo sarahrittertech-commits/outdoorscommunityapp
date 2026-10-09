@@ -47,7 +47,7 @@ export const site = {
   defaultJoinPolicy: "open" as "open" | "approval",
   /** Public contact for the site admin. null hides every contact line until there is a real address. */
   contactEmail: null as string | null,
-  /** Canonical origin, used for sitemaps, link previews and sign-in links. */
+  /** Canonical origin, used for sitemaps, link previews and the links in confirmation and reset emails. */
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, ""),
 } as const;
 
