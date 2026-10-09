@@ -411,9 +411,10 @@ flowchart TD
 ```mermaid
 flowchart TD
   join["Group page: Join group"] --> signin["Sign in<br/>email + password<br/>links: Create an account · Forgot password"]
-  signin -->|Create an account| signup["Create an account<br/>email, password, password again"]
-  signup -->|Create account| check(["Check your email to confirm your address"])
-  check -->|clicks Confirm my email| welcome["Welcome: 18+, terms, display name"]
+  signin -->|Create an account| signup["Create an account<br/>email only"]
+  signup -->|Email me the link| check(["Check your email"])
+  check -->|clicks Confirm my email| create["Create your password<br/>password, password again"]
+  create --> welcome["Welcome: 18+, terms, display name"]
   welcome --> back["Back on the group page: Join"]
   signin -->|correct email + password| back
   signin -->|wrong, or email not confirmed| signin
@@ -461,7 +462,7 @@ flowchart TD
   open --> valid{Link working?}
   valid -->|no: off, expired or made up| refuse(["This invite link isn't working. Ask the group for a new one"])
   valid -->|yes| signed{Signed in?}
-  signed -->|no| landing["Group name is on Branch Outdoors<br/>Create your account and join: email, password twice<br/>or Sign in"]
+  signed -->|no| landing["Group name is on Branch Outdoors<br/>Create your account and join: email, then the link to create a password<br/>or Sign in"]
   landing -->|creates account| check(["Check your email: the link brings you back to join"])
   check -->|confirms email| onboard
   landing -->|signs in| onboard{Finished the welcome step?}

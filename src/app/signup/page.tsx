@@ -22,21 +22,15 @@ export default async function SignUpPage({ searchParams }: Props) {
     <>
       <h1>Create an account</h1>
       <p className="mt-1 max-w-prose text-muted">
-        We&apos;ll email you a link to confirm your address before you can sign in. Your email address is never shown to
-        anyone. Already have an account? <Link href={signInHref}>Sign in</Link>.
+        Enter your email and we&apos;ll send you a link. It confirms your address and takes you to create your password.
+        Your email address is never shown to anyone. Already have an account? <Link href={signInHref}>Sign in</Link>.
       </p>
       <Notice params={params} />
       <form action={signUp} className="mt-2">
         <input type="hidden" name="next" value={next} />
         <label htmlFor="email">Email address</label>
         <input id="email" name="email" type="email" required autoComplete="email" maxLength={254} />
-        <label htmlFor="password">
-          Password <span className="hint">At least 10 characters. A short sentence works well.</span>
-        </label>
-        <input id="password" name="password" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
-        <label htmlFor="passwordAgain">Password again</label>
-        <input id="passwordAgain" name="passwordAgain" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
-        <button className="button mt-3">Create account</button>
+        <button className="button mt-4">Email me the link</button>
       </form>
     </>
   );
