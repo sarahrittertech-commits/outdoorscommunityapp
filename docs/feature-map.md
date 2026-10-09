@@ -5,6 +5,11 @@ title: Feature map
 
 # Feature map: what's live, what's new
 
+See also [User stories](./user-stories) for the same features as stories
+any board can use, and the [feature request log](./feature-requests) for
+where each request came from and whether it belongs to the shared tool or
+to one board.
+
 One page that separates the branded app as it runs today from the new
 features proposed in the 8 October Magic Patterns design or requested by
 Sarah the same day. Live features
@@ -116,6 +121,14 @@ Requested by Sarah on 8 October; drafted 9 October.
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
 | **Event form**: required description plus details, a photo, Free or Paid with fee and total cost, optional RSVPs with places and a waitlist, or a sign-up link | Built 9 Oct (migration `20261010000002` to apply) | UC-30 | FR-EV-23 to FR-EV-28 |
+
+### Running a group
+
+| Feature | Status | Use case | Draft requirements |
+| --- | --- | --- | --- |
+| **Page admin and up to two page managers**; manager invites by email | Requested 9 Oct, awaiting review | UC-31 | FR-MB-11, FR-MB-12 |
+| **Invite members by email**, one or many addresses | Requested 9 Oct, awaiting review (needs email) | UC-31 | FR-MB-13, FR-MB-14, FR-MB-16 |
+| **Invite link** to share so people can join | Requested 9 Oct, awaiting review (no email needed) | UC-31 | FR-MB-14 to FR-MB-16 |
 
 ### Accounts
 

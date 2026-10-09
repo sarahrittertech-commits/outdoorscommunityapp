@@ -105,6 +105,24 @@ second keeps them in sync.
    are kept as they are, and the merge only asks for a color when the tool
    has added a slot.
 
+## Features are built once, for every board
+
+New product features are built in this repository, in the shared tool, and
+documented in the shared product docs: [use cases](./use-cases),
+[user flows](./user-flows), [user stories](./user-stories), the
+[functional requirements](./functional-requirements) and the
+[feature request log](./feature-requests). Sage Women and later boards
+inherit them with each merge from upstream; nothing is rebuilt per board.
+
+Each request in the log is marked **tool**, **brand** or **board**. When a
+board needs a tool feature off or different (a demo login, how long invite
+links last, whether new groups need approval, how many page managers a
+group has), that becomes a setting in `src/config/site.ts`, so the code
+stays one product and each board only sets its values.
+
+Use case wording mentions Western North Carolina places as examples; the
+behavior it describes is the same on every board.
+
 ## Decisions to make before cloning
 
 These are product questions for the women's app, not engineering ones, and
