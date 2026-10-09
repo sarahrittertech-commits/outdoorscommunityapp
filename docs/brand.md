@@ -106,6 +106,14 @@ first, no pressure. Plain, calm, local, welcoming.
 - **Pages are white, not paper.** Paper (`#FAF6EF`) is used for panels, and
   there is no dark mode: the board looks the same in every setting.
 
+## Spacing
+
+Stacked blocks on a page (headings, paragraphs, tags, sections) sit at
+least 1rem (16px) apart by default, and a breadcrumb sits 1.5rem (24px)
+above its page title (Sarah, 9 October 2026). The rule lives in
+`src/app/globals.css` at zero specificity, so a page can still set its own
+spacing on purpose.
+
 ## Alternate names
 
 If the domain isn't available, the guide's system also works for

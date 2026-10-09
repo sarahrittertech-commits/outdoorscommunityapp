@@ -78,7 +78,7 @@ export default async function EventPage({ params, searchParams }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <Notice params={await searchParams} />
-      <p className="text-sm">
+      <p className="breadcrumb">
         <Link href={`/g/${group.slug}`}>{group.name}</Link> ›
       </p>
       <h1>

@@ -23,7 +23,7 @@ export default async function NewEventPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <p className="text-sm">
+      <p className="breadcrumb">
         <Link href={`/g/${group.slug}`}>{group.name}</Link> ›
       </p>
       <h1>Post an event</h1>
