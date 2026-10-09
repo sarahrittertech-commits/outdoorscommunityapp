@@ -198,6 +198,11 @@ export const replySchema = z.object({
   body: requiredText(1, 10000),
 });
 
+/** FR-DS-9: a new reply may answer another reply in the same thread. */
+export const newReplySchema = replySchema.extend({
+  parent_id: id.optional(),
+});
+
 export const reportSchema = z.object({
   targetType: z.enum(["group", "event", "thread", "reply", "profile"]),
   targetId: id,
