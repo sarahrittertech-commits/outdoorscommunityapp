@@ -23,16 +23,22 @@ export const site = {
   defaultTimezone: "America/New_York",
   /** Who the board is for, shown on the about and guidelines pages. */
   audience: "Adults (18+) who want to find outdoor groups near them.",
-  /** The home page headline, over the search box. */
-  heroTitle: "Find your people outside.",
+  /** The home page headline, over the line drawing. A newline breaks the line. */
+  heroTitle: "find your people.\nfind your outdoors.",
   /** One or two sentences under the headline. */
   heroIntro: `Groups, meetups and events for getting outside in ${regionName}. Join a group, show up, try something new.`,
   /**
-   * Optional image behind the home page band, a path under public/ (e.g.
-   * "/hero.svg"). When set it replaces the ridge drawing; keep it dark on the
-   * left so the headline stays readable. null keeps the ridges.
+   * Map tiles for the destinations map (ADR-0007). OpenStreetMap's own tiles
+   * are fine for a small board; move to a tile provider's free tier before
+   * traffic grows. The CSP allows images from this host only.
    */
-  heroImage: null as string | null,
+  mapTiles: {
+    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    host: "https://tile.openstreetmap.org",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  },
+  /** Where the map starts when there is nothing to show. */
+  mapCenter: { lat: 35.6, lng: -82.55 },
   /** Example searches shown in the home page search box. */
   searchPlaceholder: "waterfall hike, beginner climbing, Brevard…",
   /** Whether the create-group form starts on "anyone can join" or "approval". */

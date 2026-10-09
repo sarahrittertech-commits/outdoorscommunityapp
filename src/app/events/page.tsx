@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ActivityIcon } from "@/brand/ActivityIcon";
 import { EventList } from "@/components/Listings";
 import { site } from "@/config/site";
+import { distances, towns } from "@/config/towns";
+import { findTown, milesBetween, townForArea } from "@/lib/geo";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -24,6 +26,9 @@ export default async function EventsPage({ searchParams }: Props) {
   const params = await searchParams;
   const category = typeof params.category === "string" ? params.category : undefined;
   const days = WINDOWS.find((w) => String(w.days) === params.days)?.days ?? 30;
+  // UC-14: near a town the visitor picks, never their device's location.
+  const near = findTown(typeof params.near === "string" ? params.near : undefined);
+  const within = distances.find((d) => String(d) === params.within) ?? 50;
 
   const supabase = await createClient();
   const now = new Date();
@@ -44,21 +49,32 @@ export default async function EventsPage({ searchParams }: Props) {
     .lt("starts_at", startsInWindow.to);
   if (category) listing = listing.eq("category_slug", category);
 
-  const [{ data: all }, { data: categories }, { data: countRows }] = await Promise.all([
+  const [{ data: all }, { data: categories }, { data: countRows }, { data: groupAreas }] = await Promise.all([
     listing.order("starts_at").limit(300),
     supabase.from("categories").select("slug, name").order("sort_order"),
     supabase
       .from("event_listings")
-      .select("category_slug")
+      .select("category_slug, group_slug")
       .eq("status", "scheduled")
       .gt("starts_at", startsInWindow.from)
       .lt("starts_at", startsInWindow.to),
+    near ? supabase.from("groups").select("slug, area") : Promise.resolve({ data: [] as { slug: string; area: string | null }[] }),
   ]);
-  const events = all ?? [];
+
+  // Distance from the chosen town to each event's group town.
+  const milesOf = new Map<string, number>();
+  if (near) {
+    for (const g of groupAreas ?? []) {
+      const t = townForArea(g.area);
+      if (t) milesOf.set(g.slug, milesBetween(near, t));
+    }
+  }
+  const inRange = (groupSlug: string | null) => !near || (milesOf.get(groupSlug ?? "") ?? Infinity) <= within;
+  const events = (all ?? []).filter((e) => inRange(e.group_slug));
 
   // Counts per activity, for the sidebar: over the whole window, not the page.
   const counts = new Map<string, number>();
-  for (const e of countRows ?? []) counts.set(e.category_slug ?? "", (counts.get(e.category_slug ?? "") ?? 0) + 1);
+  for (const e of (countRows ?? []).filter((r) => inRange(r.group_slug))) counts.set(e.category_slug ?? "", (counts.get(e.category_slug ?? "") ?? 0) + 1);
 
   // Group by month, in the board's time zone.
   const monthOf = (iso: string) =>
@@ -76,6 +92,10 @@ export default async function EventsPage({ searchParams }: Props) {
     const d = next.days ?? days;
     if (c) q.set("category", c);
     if (d !== 30) q.set("days", String(d));
+    if (near) {
+      q.set("near", near.name);
+      q.set("within", String(within));
+    }
     const s = q.toString();
     return s ? `/events?${s}` : "/events";
   };
@@ -94,11 +114,41 @@ export default async function EventsPage({ searchParams }: Props) {
         </div>
       </form>
 
+      <h2 className="filter-heading">location</h2>
+      <form action="/events" className="mt-1 space-y-1">
+        {category && <input type="hidden" name="category" value={category} />}
+        {days !== 30 && <input type="hidden" name="days" value={days} />}
+        <label htmlFor={`events-near-${where}`} className="sr-only">
+          Town
+        </label>
+        <select id={`events-near-${where}`} name="near" defaultValue={near?.name ?? ""} className="w-full py-1 text-sm">
+          <option value="">Anywhere</option>
+          {towns
+            .toSorted((a, b) => a.name.localeCompare(b.name))
+            .map((t) => (
+              <option key={t.name} value={t.name}>
+                {t.name}, {t.state}
+              </option>
+            ))}
+        </select>
+        <label htmlFor={`events-within-${where}`} className="sr-only">
+          Distance
+        </label>
+        <select id={`events-within-${where}`} name="within" defaultValue={String(within)} className="w-full py-1 text-sm">
+          {distances.map((d) => (
+            <option key={d} value={d}>
+              within {d} miles
+            </option>
+          ))}
+        </select>
+        <button className="button px-2 py-1 text-sm">show</button>
+      </form>
+
       <h2 className="filter-heading">activity</h2>
       <ul className="mt-1 space-y-0.5">
         <li>
           {category ? <Link href={href({ category: undefined })}>all</Link> : <strong>all</strong>}{" "}
-          <span className="text-muted">({all?.length ?? 0})</span>
+          <span className="text-muted">({events.length})</span>
         </li>
         {categories?.map((c) => (
           <li key={c.slug}>
@@ -138,9 +188,11 @@ export default async function EventsPage({ searchParams }: Props) {
         <h1 className="m-0 flex items-center gap-3">
           {current && <ActivityIcon slug={current.slug} />}
           {current ? `${current.name} events` : "Events"}
+          {near ? ` near ${near.name}` : ""}
         </h1>
         <p className="mt-2 border-b border-rule pb-3 text-subtle">
-          {events.length} upcoming in the {WINDOWS.find((w) => w.days === days)!.label}, soonest first
+          {events.length} upcoming in the {WINDOWS.find((w) => w.days === days)!.label}
+          {near ? `, within ${within} miles of ${near.name}` : ""}, soonest first
         </p>
         {months.length ? (
           months.map((m) => (

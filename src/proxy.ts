@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 import type { Database } from "@/lib/supabase/database.types";
+import { site } from "@/config/site";
 import { sessionCookieOptions, supabaseAnonKey, supabaseUrl } from "@/lib/supabase/env";
 
 /**
@@ -56,7 +57,7 @@ function contentSecurityPolicy(nonce: string): string {
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${dev ? " 'unsafe-eval'" : ""}`,
     `style-src 'self'${dev ? " 'unsafe-inline'" : ` 'nonce-${nonce}'`}`,
-    `img-src 'self' data: ${storage}`,
+    `img-src 'self' data: ${storage} ${site.mapTiles.host}`,
     "font-src 'self'",
     "object-src 'none'",
     "base-uri 'self'",

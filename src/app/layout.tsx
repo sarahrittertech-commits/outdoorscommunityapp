@@ -36,18 +36,18 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           Skip to content
         </a>
         <header className="border-b border-rule">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3">
             <Link href="/" className="wordmark flex items-center gap-1.5 text-xl no-underline sm:text-2xl">
               <Mark className="h-[1.5em] w-[0.94em] shrink-0" />
               {site.name}
             </Link>
-            <nav aria-label="Main" className="flex items-baseline gap-x-4">
+            <nav aria-label="Main" className="flex items-baseline gap-x-4 text-base">
               <Link href="/">explore</Link>
               <Link href="/events">events</Link>
               <Link href="/communities">communities</Link>
             </nav>
-            <div className="ml-auto flex flex-wrap items-center gap-x-4 gap-y-2">
-              <form action="/search" role="search" className="hidden md:block">
+            <div className="ml-auto flex flex-wrap items-center gap-x-4 gap-y-2 text-base">
+              <form action="/search" role="search" className="hidden lg:block">
                 <label htmlFor="site-search" className="sr-only">
                   Search events, places, groups
                 </label>
@@ -56,7 +56,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                   name="q"
                   type="search"
                   placeholder="search events, places, groups"
-                  className="mt-0 w-64 py-1.5 text-base"
+                  className="mt-0 w-60 py-1 text-sm"
                 />
               </form>
               <Link href="/post" className="button py-1.5">

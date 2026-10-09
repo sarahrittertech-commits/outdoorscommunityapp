@@ -49,13 +49,7 @@
   --tag-new: #f6e3c2;
   --tag-cancelled: #f5dad6;
 
-  /* Home page name band (RidgeBand): dusk over the Blue Ridge. */
-  --ridge-sky: #2f2356;
-  --ridge-haze: #43306b;
-  --ridge-1: #3a2b62;
-  --ridge-2: #332655;
-  --ridge-3: #2b2049;
-  --ridge-4: #231a3e;
-  --ridge-ink: #faf6ef;
-  --ridge-ink-muted: #d8cfe6;
+  /* Home page line drawing (Ridgeline): plum ridges and an ember sun. */
+  --ridgeline: var(--plum-ui);
+  --sun: var(--ember);
 }

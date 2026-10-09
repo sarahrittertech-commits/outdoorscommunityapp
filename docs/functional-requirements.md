@@ -190,6 +190,18 @@ approves its use case and user flow. Priorities here are proposals.
 
 ### Location, distance and destinations (UC-14, UC-15)
 
+:::info Built 9 October 2026
+Sarah directed the 8 October design onto the live board, so these were
+built ahead of their review. What shipped, against the drafts below:
+FR-BR-12 takes a town from a list in `src/config/towns.ts` (no zip codes
+yet) on the home page and Events (not Communities yet); FR-BR-13 offers
+10, 25, 50, 100 and 250 miles, measured from town center to the group's
+town, shown rounded on the home page cards; FR-BR-14 uses 100 miles and
+keeps the town in the page address, not the browser; FR-BR-15 covers
+Events; FR-BR-17 maps **towns with upcoming events** rather than places,
+because FR-BR-16 (places) isn't built. FR-BR-18 waits on FR-BR-16.
+:::
+
 | ID | Draft requirement | Proposed | Accepted when |
 | --- | --- | --- | --- |
 | FR-BR-12 | **Location search.** Search and the Events and Communities pages take a town or a US zip code, matched against a built-in list of places with coordinates. No device location is ever requested (TR-PRIV-1). An unknown place says so and suggests nearby matches. | Should | Typing a zip code finds results without any request to an outside service. |
