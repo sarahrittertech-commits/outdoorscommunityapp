@@ -180,6 +180,22 @@ an organizer gives no access to anyone's suggestions.
 | Set planned, done or declined, with a note | ❌ | ❌ | ✅ through `set_suggestion_status` only |
 | Edit or delete a suggestion | ❌ | ❌ | ❌ |
 
+### Direct messages (UC-20, FR-DM-1 to FR-DM-6)
+
+Built 9 October 2026. Group roles give nothing here: a page admin or page
+manager is a user like any other, and can't read members' messages.
+
+| Action | Visitor | User | Suspended | Site admin |
+| --- | --- | --- | --- | --- |
+| Send a first message (a request) | ❌ signs in first | ✅ 10 a day | ❌ | ✅ as a user |
+| Write in an accepted conversation | ❌ | **own**, 20 in 10 minutes | ❌ | **own** |
+| Accept a request | ❌ | **own** (as recipient) | ❌ | **own** |
+| Decline a request, block or unblock someone | ❌ | **own** | ✅ **own** | **own** |
+| Read a conversation | ❌ | **own** | ✅ **own** | **own**, and any with a reported message |
+| See who blocked them, or when the other person read | ❌ | ❌ | ❌ | ❌ |
+| Report a message | ❌ | **own conversations** | ❌ | **own conversations** |
+| See message reports | ❌ | ❌ | ❌ | ✅ (no group's organizers) |
+
 ### Proposed with the 8 October design (drafts, not built)
 
 These follow the draft requirements for UC-10 to UC-13, UC-17, UC-18, UC-20, UC-21, UC-23 and UC-25 to UC-28. Each becomes part
@@ -202,9 +218,6 @@ approved.
 | Upload photos to the group gallery | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | See a members-only gallery | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | Remove a gallery photo | ❌ | ❌ | **own** | ✅ | ✅ | ✅ |
-| Send a message request | ❌ | ✅ (10 a day) | ✅ | ✅ | ✅ | ✅ |
-| Accept, decline or block a request | ❌ | **own** | **own** | **own** | **own** | **own** |
-| Read a conversation | ❌ | **own** | **own** | **own** | **own** | reported only |
 | Link a group to a national organization | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | Edit a business page | ❌ | business owner and admins only | — | — | — | ✅ |
 | Add or remove a business page's admins | ❌ | business owner only | — | — | — | ✅ |
@@ -220,7 +233,9 @@ Group admins never read members' private messages or saved events.
 ## Cross-cutting rules
 
 - **Suspended users** keep the read access their group roles give them and
-  lose every write: no posting, joining, RSVPing, creating or reporting.
+  lose every write: no posting, joining, RSVPing, creating, reporting or
+  sending messages. They can still read their messages, decline requests
+  and block (UC-20).
 - **Archived groups** are read-only for everyone except the owner (who can
   restore) and the site admin.
 - **Users who haven't accepted the terms** (FR-AC-2) are treated as visitors

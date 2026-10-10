@@ -276,7 +276,7 @@ flowchart TD
 
 ## UC-20 — Message another member
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026.*
 
 ```mermaid
 flowchart TD
@@ -284,9 +284,10 @@ flowchart TD
   first -->|Send| request["Their inbox: Requests"]
   request --> decide{Accept?}
   decide -->|Accept| inbox["Conversation in both inboxes<br/>unread count in header"]
-  decide -->|Decline| declined(["Sender can't message again"])
-  decide -->|Block| blocked(["Blocked; can also report"])
+  decide -->|Decline| declined(["Sender can't message again<br/>and sees only 'waiting'"])
+  decide -->|Block| blocked(["Blocked; unblock from Messages"])
   inbox -->|replies, page by page| inbox
+  inbox -->|report a message| report(["Site admin only; can read that conversation"])
 ```
 
 ## UC-21 — Share trip photos

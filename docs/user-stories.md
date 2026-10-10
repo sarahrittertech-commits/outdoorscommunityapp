@@ -47,6 +47,8 @@ records where each one came from.
 | member | see what an event costs, the registration fee and the total | I know before I commit | UC-30 | FR-EV-25 | Draft |
 | member | save an event without RSVPing, and see it under Saved in My stuff | I keep track of things I might go to, and nobody else sees my list | UC-22 | FR-EV-18 | Built |
 | member | answer one person's reply in a thread, not the whole thread | side conversations stay together and readable | UC-19 | FR-DS-9 | Built |
+| member | message another member privately from their profile | we can arrange things like a carpool or a borrowed bike rack without posting them in a group | UC-20 | FR-DM-1, FR-DM-3, FR-DM-4 | Built |
+| member | accept, decline or block a first message from someone new, and report one | nobody can keep messaging me without my saying yes, and abuse reaches the site admin | UC-20 | FR-DM-2, FR-DM-5, FR-DM-6 | Built |
 
 ## Running a group
 

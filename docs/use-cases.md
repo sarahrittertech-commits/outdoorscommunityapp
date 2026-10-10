@@ -504,8 +504,9 @@ endless nesting.
 
 ## UC-20 — Message another member
 
-> **Draft, awaiting review.** Brought into scope on 8 October 2026; see
-> the PRD's decisions and [ADR-0006](./architecture/adr-0006-direct-messages).
+> **Approved and built 9 October 2026.** Brought into scope on 8 October
+> 2026; see the PRD's decisions and
+> [ADR-0006](./architecture/adr-0006-direct-messages).
 
 **Actor:** The regular, then another member
 
@@ -521,7 +522,7 @@ bike rack.
 4. Once accepted, the two write back and forth in their inbox. The header
    shows how many conversations have unread messages.
 
-**Requirements:** to be written after review (drafts FR-DM-1 to FR-DM-6).
+**Requirements:** FR-DM-1 to FR-DM-6, TR-SEC-13.
 
 **Succeeds when:** members can arrange things privately, nobody can be
 messaged repeatedly without saying yes, and abuse can be blocked and

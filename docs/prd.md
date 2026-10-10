@@ -208,7 +208,7 @@ can be changed at review.
 
 | Now in scope | Was | Use case | Proposed guardrails |
 | --- | --- | --- | --- |
-| **Direct messages** | Out (ADR-0005) | UC-20 | First message is a request the other person accepts; decline and block; report; plain pages, no live updates, read receipts or online status; only the two people can read it. See [ADR-0006](./architecture/adr-0006-direct-messages). |
+| **Direct messages** | Out (ADR-0005) | UC-20 | First message is a request the other person accepts; decline and block; report; plain pages, no live updates, read receipts or online status; only the two people can read it. See [ADR-0006](./architecture/adr-0006-direct-messages). **Built 9 October 2026.** |
 | **Group photo galleries** | Out (P5) | UC-21 | Inside a group only, members-only by default; images re-encoded; uploader and organizers can remove; reportable. |
 | **Event prices** | Out ("no prices") | UC-10 | Plain text only (*Free*, *$10 trail fee*); the board never takes payment. |
 | **Save for later** | Out ("RSVP is the save") | UC-22 | Private to the user; separate from *going*. |

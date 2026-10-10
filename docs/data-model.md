@@ -276,7 +276,7 @@ posting.
 | --- | --- | --- |
 | `id` | uuid | |
 | `reporter_id` | uuid | |
-| `target_type` | enum | `group`, `event`, `thread`, `reply`, `profile` |
+| `target_type` | enum | `group`, `event`, `thread`, `reply`, `profile`, `message` (UC-20; always the site admin's, never a group's) |
 | `target_id` | uuid | |
 | `group_id` | uuid, optional | set for content inside a group, so the report reaches that group's admins |
 | `reason` | enum | `spam`, `harassment`, `unsafe`, `off_topic`, `other` |
@@ -325,6 +325,66 @@ server time (`a_limit_guard`, TR-SEC-8).
 | `admin_note` | text, optional | up to 500 characters; the sender reads it under My suggestions |
 | `handled_at` | timestamp, optional | when the site admin last set the status |
 | `created_at` | timestamp | server time |
+
+## Direct messages (UC-20)
+
+Built 9 October 2026 (FR-DM-1 to FR-DM-6, ADR-0006, TR-SEC-13). Members
+never insert, change or delete conversations or messages directly: every
+send goes through `send_message(p_to, p_body)`, which applies the request
+rule, blocks, deleted accounts and the limits (10 new requests a day, 20
+messages in 10 minutes) under the per-person lock and server time, and
+`answer_message_request(p_conversation_id, p_accept)` accepts or declines.
+`unread_conversation_count()` runs as the caller, so it counts only their
+own conversations.
+
+### conversations
+
+One per pair of people, whoever started it (a unique index on the pair).
+Readable by the two people, and by the site admin once a message in it has
+been reported.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `starter_id` | uuid | who sent the request |
+| `recipient_id` | uuid | who answers it; never the same as `starter_id` |
+| `status` | enum | `requested`, `accepted`, `declined` |
+| `reported_at` | timestamp, optional | set when a message in it is reported; opens it to the site admin |
+| `last_message_at` | timestamp | server time; orders the inbox |
+| `created_at` | timestamp | server time; counts toward the daily request limit |
+
+### messages
+
+Readable exactly when its conversation is.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `conversation_id` | uuid | |
+| `sender_id` | uuid | shown as *deleted user* once the account is deleted |
+| `body` | text | plain text, 1 to 2,000 characters |
+| `created_at` | timestamp | server time |
+
+### message_blocks
+
+Who has blocked whom. Each person reads, adds and removes only their own
+blocks; the blocked person can't see the row.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `blocker_id`, `blocked_id` | uuid | primary key together; never the same person |
+| `created_at` | timestamp | |
+
+### conversation_reads
+
+Each person's own last-read time per conversation, for their unread count
+(FR-DM-4). Readable and writable only by that person, so it is never a read
+receipt for the other.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `conversation_id`, `user_id` | uuid | primary key together |
+| `last_read_at` | timestamp | set when they open the conversation or send in it |
 
 ## Invites (UC-31)
 
@@ -421,7 +481,6 @@ written when each is approved, with its migration and permission tests.
 | `places` | UC-15, UC-12 | Name, kind, activities, coordinates, description; seeded from the research workspace's places |
 | `towns` | UC-14 | Bundled US towns and zip codes with coordinates |
 | `organizations` | UC-13 | National organizations that chapters link to |
-| `conversations`, `messages` | UC-20 | Two participants; request status; blocks |
 | `businesses`, `business_admins`, `business_places`, `business_groups` | UC-12 | Owner is the account that claimed it with the business email; admins are people's own accounts; places have role *its location* or *operates at*; linked groups keep their own roles. No events table of its own |
 
 | `group_claims`: `confirmed_domain`, `confirmed_at`, plus a temporary address, link token, expiry and send count | UC-26 | The address and token are cleared once the link is used or the last one expires; only the domain and date stay |
