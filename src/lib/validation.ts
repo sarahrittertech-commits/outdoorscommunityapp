@@ -65,6 +65,13 @@ export const signUpSchema = z.object({ email, next: z.string().optional() });
 
 export const forgotPasswordSchema = z.object({ email });
 
+/** UC-29: an emailed token_hash link, used from /auth/confirm. */
+export const emailLinkSchema = z.object({
+  token_hash: z.string().regex(/^[A-Za-z0-9_-]{8,200}$/),
+  type: z.enum(["signup", "recovery", "email", "invite", "magiclink", "email_change"]),
+  next: z.string().optional(),
+});
+
 export const newPasswordSchema = z
   .object({ password: passwordSchema, passwordAgain: z.string() })
   .refine((v) => v.password === v.passwordAgain, matching);

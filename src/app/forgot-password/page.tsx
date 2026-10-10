@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { sendPasswordReset } from "@/app/actions/auth";
 import { Notice } from "@/components/Notice";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export const metadata: Metadata = { title: "Forgot password", robots: { index: false } };
 
@@ -23,7 +24,7 @@ export default async function ForgotPasswordPage({ searchParams }: Props) {
       <form action={sendPasswordReset} className="mt-2">
         <label htmlFor="email">Email address</label>
         <input id="email" name="email" type="email" required autoComplete="email" maxLength={254} />
-        <button className="button mt-3">Email me a link</button>
+        <SubmitButton className="button mt-3" pendingText="Sending…">Email me a link</SubmitButton>
       </form>
       <p className="mt-4 text-sm">
         <Link href="/signin">Back to sign in</Link>
