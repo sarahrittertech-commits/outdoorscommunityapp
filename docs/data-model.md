@@ -203,6 +203,8 @@ rest of the active list follows `groups.member_list_visibility`, checked by
 | `takes_rsvps` | boolean | FR-EV-26: `true` by default; when `false` the database refuses RSVPs |
 | `signup_url` | text, optional | FR-EV-27: http or https only |
 | `waitlist_enabled` | boolean | FR-EV-28: only meaningful with a capacity |
+| `approve_rsvps` | boolean | FR-EV-15: members ask to go; organizers approve |
+| `rsvps_open_at` | timestamp, optional | FR-EV-20: members can't RSVP before it; must be before `starts_at` |
 
 ### event_private_details
 
@@ -221,7 +223,7 @@ to live in a row that only members may read.
 | --- | --- | --- |
 | `event_id` | uuid | part of the key |
 | `user_id` | uuid | part of the key |
-| `status` | enum | `going`, `not_going`, `waitlisted` |
+| `status` | enum | `going`, `not_going`, `waitlisted`, `requested` (FR-EV-15), `declined` (set by organizers only) |
 | `waitlisted_at` | timestamp, optional | FR-EV-28: set by the database when the person joins the waitlist; the waitlist's order |
 | `updated_at` | timestamp | |
 
@@ -231,6 +233,42 @@ for an event that takes no RSVPs, or one that would push `going` past
 moves someone from the waitlist to going (`move_from_waitlist`, which locks
 the event row and needs a free place); while anyone is waiting, members
 can't take a freed place themselves.
+
+FR-EV-15 and FR-EV-17: on an event with `approve_rsvps`, a member's RSVP is
+`requested` and only organizers set `going` or `declined`, through
+`manage_rsvp` (approve, decline, waitlist, remove; removals are logged as
+`remove_rsvp`), which keeps the event row lock. A declined member can't change
+or delete the row. Requests and declines are visible only to the person and
+the organizers. FR-EV-20: before `rsvps_open_at`, members' RSVPs are refused.
+
+### event_faqs
+
+FR-EV-19. Written only through `set_event_faq`, which replaces the list.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `event_id` | uuid | part of the key |
+| `position` | smallint | part of the key; 1 to 15, the order shown |
+| `question` | text | 3 to 200 characters |
+| `answer` | text | 1 to 2,000 characters |
+
+Readable wherever the event is.
+
+### event_sponsors
+
+FR-EV-14. At most 5 per event (a trigger counts under the event row lock).
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `event_id` | uuid | |
+| `group_id` | uuid | must be the event's group; organizers of it add and remove |
+| `name` | text | 2 to 100 characters |
+| `website_url` | text, optional | http or https, shown with `rel="sponsored noopener"` |
+| `logo_path` | text, optional | `event-photos/<group_id>/<event_id>/sponsors/<random>.webp` |
+| `created_at` | timestamp | display order |
+
+Readable wherever the event is; shown on the event page only.
 
 ## Discussions
 
@@ -438,12 +476,10 @@ written when each is approved, with its migration and permission tests.
 
 | Table or change | For | Notes |
 | --- | --- | --- |
-| `events`: `series_id`, `rsvp_opens_at`, `requires_approval`, `place_id` | UC-10, UC-17, UC-15 | A series row holds the repeat rule; each date stays its own event |
+| `events`: `series_id`, `place_id` (`approve_rsvps` and `rsvps_open_at` built 9 October 2026) | UC-10, UC-15 | A series row holds the repeat rule; each date stays its own event |
 | `event_series` | UC-10 | Repeat rule and end date; edits apply to later dates |
-| `event_sponsors` | UC-10 | Name, logo path, website, optional business or group it links to |
-| `event_faq` | UC-10, UC-11 | Question, answer, order |
+| `event_faqs` for a series | UC-10, UC-11 | Built for single events 9 October 2026 |
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
-| `event_rsvps.status` gains `requested`, `declined` (`waitlisted` built with UC-30) | UC-17 | Places counted on `going` only |
 | `groups`: `organization_id` (`group_type` and the cover built with UC-24, `member_list_visibility` with UC-16) | UC-13 | |
 | `places` | UC-15, UC-12 | Name, kind, activities, coordinates, description; seeded from the research workspace's places |
 | `towns` | UC-14 | Bundled US towns and zip codes with coordinates |

@@ -3,10 +3,13 @@ import Link from "next/link";
 import { ActivityIcon } from "@/brand/ActivityIcon";
 import { Ridgeline } from "@/brand/Ridgeline";
 import { DestinationMap, type MapPoint } from "@/components/DestinationMap";
+import { MyCalendar } from "@/components/MyCalendar";
 import { Notice } from "@/components/Notice";
 import { site } from "@/config/site";
 import { TownSelect } from "@/components/TownSelect";
 import { defaultTown, distances, type Town } from "@/config/towns";
+import { getViewer } from "@/lib/auth";
+import { parseCalendarParams } from "@/lib/calendar";
 import { aboutMiles, countWithin, findTown, milesBetween, townForArea } from "@/lib/geo";
 import { createClient } from "@/lib/supabase/server";
 import { dateParts } from "@/lib/time";
@@ -22,7 +25,8 @@ const DEST_DAYS = 90;
  * The front door (8 October design): search by activity and town, the
  * activities as line drawings, events near a town you choose, and the
  * destinations map. The full Craigslist-style directory is one click away
- * at /browse.
+ * at /browse. Signed in, the calendar of what you're going to and saved
+ * comes first (UC-18); signed out, it isn't there.
  */
 export default async function Home({ searchParams }: Props) {
   const params = await searchParams;
@@ -30,6 +34,8 @@ export default async function Home({ searchParams }: Props) {
   const nearTown = findTown(str("near")) ?? findTown(defaultTown)!;
   const dest = str("dest");
   const where = str("where")?.trim().slice(0, 60) ?? "";
+
+  const viewer = await getViewer();
 
   const supabase = await createClient();
   const [{ data: categories }, { data: events }, { data: groups }] = await Promise.all([
@@ -125,6 +131,20 @@ export default async function Home({ searchParams }: Props) {
               <TownSelect id="hero-near" name="near" defaultValue="" anywhere />
             </div>
             <div>
+              {/* FR-BR-12: a zip code, if given, wins over the town. */}
+              <label htmlFor="hero-zip">or zip code</label>
+              <input
+                id="hero-zip"
+                name="zip"
+                type="text"
+                inputMode="numeric"
+                autoComplete="postal-code"
+                pattern="\d{5}(-\d{4})?"
+                maxLength={10}
+                placeholder="28712"
+              />
+            </div>
+            <div>
               <label htmlFor="hero-within">Distance</label>
               <select id="hero-within" name="within" defaultValue="50">
                 {distances.map((d) => (
@@ -138,6 +158,15 @@ export default async function Home({ searchParams }: Props) {
           </form>
         </div>
       </section>
+
+      {viewer?.onboarded && (
+        <MyCalendar
+          viewerId={viewer.id}
+          params={parseCalendarParams(str)}
+          keep={{ near: str("near"), dest, where: where || undefined }}
+          categoryName={categoryName}
+        />
+      )}
 
       <section aria-labelledby="by-activity" className="border-b border-rule py-10">
         <h2 id="by-activity" className="mt-0 text-center">

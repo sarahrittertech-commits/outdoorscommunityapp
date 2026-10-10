@@ -65,7 +65,7 @@ until the domain is chosen and email sending through Resend is set up.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Group types:** *Club*, *Meetup*, *Volunteer group*, *Nonprofit*, *Chapter*, with a type icon on Communities and group pages, and a type filter on Communities | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-16, FR-GR-17 |
+| **Group types:** *Club*, *Meetup*, *Volunteer group*, *Nonprofit*, *Chapter*, with a type icon on Communities and group pages, and a type filter on Communities and Events | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-16, FR-GR-17 |
 | **Group cover photo** on the group page and in the Communities list, uploaded in group settings | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-14 (narrowed) |
 | **Event photo**, one per event or series | Fits | UC-10 | FR-EV-12 |
 | **Group photo galleries**, members-only by default (the page admin can make one public), removable and reportable | Built 9 Oct (migration `20261010000011` to apply) | UC-21 | FR-GR-12, FR-GR-13 |
@@ -75,7 +75,7 @@ until the domain is chosen and email sending through Resend is set up.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Location and distance search** by town or zip, with distance on results and shareable filtered links | **Built 9 Oct** (towns, home and Events; no zip codes or Communities yet) | UC-14 | FR-BR-12, FR-BR-13, FR-BR-15 |
+| **Location and distance search** by town or zip, with distance on results and shareable filtered links | **Built 9 Oct** (towns and zip codes from built-in lists, on home, Events and Communities) | UC-14 | FR-BR-12, FR-BR-13, FR-BR-15 |
 | **Near you** row on the home page | **Built 9 Oct** | UC-14 | FR-BR-14 |
 | **Destinations map** and place pages | **Map built 9 Oct** (towns with events); place pages wait on places | UC-15 | FR-BR-16 to FR-BR-18, ADR-0007 |
 
@@ -85,18 +85,18 @@ until the domain is chosen and email sending through Resend is set up.
 | --- | --- | --- | --- |
 | **Repeating series** | Decision needed | UC-10 | FR-EV-11 |
 | **Price** shown as text, never payment | In scope | UC-10 | FR-EV-13 |
-| **Sponsors**: a *Sponsored by* section with logos below the event details, event page only | In scope | UC-10 | FR-EV-14 |
-| **FAQ** and **RSVPs open at** | Fits / In scope | UC-10 | FR-EV-19, FR-EV-20 |
+| **Sponsors**: a *Sponsored by* section with logos below the event details, event page only | **Built 9 Oct** (migration `20261010000009` applied 10 Oct; links to board businesses wait on UC-12) | UC-10 | FR-EV-14 |
+| **FAQ** and **RSVPs open at** | **Built 9 Oct** for single events (migration `20261010000009` applied 10 Oct) | UC-10 | FR-EV-19, FR-EV-20 |
 | **Ask a question** and answer into the FAQ | Fits | UC-11 | FR-EV-21, FR-EV-22 |
-| **Approve RSVPs**, **waitlist**, **Manage RSVPs** page | Fits / In scope | UC-17 | FR-EV-15 to FR-EV-17 |
-| **Save for later** | **Built 9 Oct** (Saved in My stuff; not on a calendar or in reminders yet) | UC-22 | FR-EV-18 |
+| **Approve RSVPs**, **waitlist**, **Manage RSVPs** page | **Built 9 Oct** (waitlist with UC-30; migration `20261010000009` applied 10 Oct) | UC-17 | FR-EV-15 to FR-EV-17 |
+| **Save for later** | **Built 9 Oct** (Saved in My stuff and on My calendar; not in reminders yet) | UC-22 | FR-EV-18 |
 
 ### Members
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
 | **Member list privacy** | **Built 9 Oct** (set by the page admin or a manager) | UC-16 | FR-MB-10 |
-| **Calendar** on the signed-in home page | Fits | UC-18 | FR-AC-9 |
+| **Calendar** on the signed-in home page | **Built 9 Oct** (month or week, going / saved / my groups filters) | UC-18 | FR-AC-9 |
 | **Reminders** list and unread-message count | In scope | UC-23 | FR-AC-10 |
 | **Replies to replies**, one level | Built 9 October 2026 | UC-19 | FR-DS-9 |
 | **Direct messages** that start as requests | In scope | UC-20 | FR-DM-1 to FR-DM-6, ADR-0006 |

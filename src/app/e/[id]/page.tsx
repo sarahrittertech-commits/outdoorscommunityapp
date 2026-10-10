@@ -11,7 +11,7 @@ import { getViewer } from "@/lib/auth";
 import { eventPhotoUrl } from "@/lib/eventPhotos";
 import { loadEvent } from "@/lib/events";
 import { loadGroup } from "@/lib/groups";
-import { formatEventTime } from "@/lib/time";
+import { formatEventTime, formatOpensAt } from "@/lib/time";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -58,6 +58,8 @@ export default async function EventPage({ params, searchParams }: Props) {
     { data: rsvpRows },
     { data: waitlistPlace },
     { data: saved },
+    { data: faqs },
+    { data: sponsors },
   ] = await Promise.all([
     loadGroup(group.slug),
     supabase.from("event_private_details").select("address").eq("event_id", event.id).maybeSingle(),
@@ -76,6 +78,10 @@ export default async function EventPage({ params, searchParams }: Props) {
     viewer ? supabase.rpc("event_waitlist_place", { p_event_id: event.id }).single() : Promise.resolve({ data: null }),
     // FR-EV-18: only the viewer's own save is readable.
     viewer ? supabase.from("saved_events").select("event_id").eq("event_id", event.id).maybeSingle() : Promise.resolve({ data: null }),
+    // FR-EV-19: readable wherever the event is.
+    supabase.from("event_faqs").select("position, question, answer").eq("event_id", event.id).order("position"),
+    // FR-EV-14: on this page only, never in lists.
+    supabase.from("event_sponsors").select("id, name, website_url, logo_path").eq("event_id", event.id).order("created_at"),
   ]);
   const mine = viewer ? (rsvpRows ?? []).find((r) => r.user_id === viewer.id) : undefined;
 
@@ -105,6 +111,10 @@ export default async function EventPage({ params, searchParams }: Props) {
   const organizerUrl = group.is_unclaimed && !cancelled ? (event.source_url ?? group.source_url) : null;
   // The database refuses RSVPs to an archived group's events, so offer none.
   const archived = group.status === "archived";
+  // FR-EV-20: closed to members until the opening time; organizers can always RSVP.
+  const opensLater = event.rsvps_open_at && new Date(event.rsvps_open_at) > new Date() && !canManage ? event.rsvps_open_at : null;
+  // FR-EV-15: members ask to go; organizers approve.
+  const needsApproval = event.approve_rsvps && !canManage;
 
   // TR-SEO-3: schema.org Event data for search engines.
   const jsonLd = {
@@ -213,9 +223,23 @@ export default async function EventPage({ params, searchParams }: Props) {
               <p>
                 <Link href={`/g/${group.slug}`}>Join {group.name}</Link> to RSVP.
               </p>
+            ) : mine?.status === "declined" ? (
+              <p>The organizers declined your RSVP to this event.</p>
+            ) : opensLater ? (
+              // FR-EV-20: stated plainly, in the event's time zone; no countdown.
+              <p>
+                <strong>RSVPs open {formatOpensAt(opensLater, event.timezone)}.</strong>
+              </p>
             ) : (
               <div className="flex flex-wrap items-center gap-3">
-                {mine?.status === "going" ? (
+                {mine?.status === "requested" ? (
+                  <>
+                    <strong>You&apos;ve asked to go. The organizers will approve or decline.</strong>
+                    <form action={rsvp.bind(null, event.id, "not_going")}>
+                      <button className="button button-plain">Withdraw</button>
+                    </form>
+                  </>
+                ) : mine?.status === "going" ? (
                   <>
                     <strong>You&apos;re going.</strong>
                     <form action={rsvp.bind(null, event.id, "not_going")}>
@@ -242,9 +266,15 @@ export default async function EventPage({ params, searchParams }: Props) {
                   )
                 ) : (
                   <>
-                    <form action={rsvp.bind(null, event.id, "going")}>
-                      <button className="button">I&apos;m going</button>
-                    </form>
+                    {needsApproval ? (
+                      <form action={rsvp.bind(null, event.id, "requested")}>
+                        <button className="button">Ask to go</button>
+                      </form>
+                    ) : (
+                      <form action={rsvp.bind(null, event.id, "going")}>
+                        <button className="button">I&apos;m going</button>
+                      </form>
+                    )}
                     {mine?.status !== "not_going" && (
                       <form action={rsvp.bind(null, event.id, "not_going")}>
                         <button className="button button-plain">Not going</button>
@@ -290,6 +320,8 @@ export default async function EventPage({ params, searchParams }: Props) {
         <nav aria-label="Page admin tools" className="mt-4 flex flex-wrap items-baseline gap-x-4 rounded bg-panel px-3 py-2 text-sm">
           <strong>Page admin tools:</strong>
           <Link href={`/e/${event.id}/edit`}>edit event</Link>
+          {event.takes_rsvps && <Link href={`/e/${event.id}/rsvps`}>manage RSVPs</Link>}
+          <Link href={`/e/${event.id}/sponsors`}>sponsors</Link>
           <form action={cancelEvent.bind(null, event.id)} className="inline">
             <button className="link-button text-danger">cancel event</button>
           </form>
@@ -300,6 +332,50 @@ export default async function EventPage({ params, searchParams }: Props) {
         <>
           <h2>Details</h2>
           <PlainText text={event.details} className="mt-2" />
+        </>
+      )}
+
+      {/* FR-EV-14: below the details, on this page only. */}
+      {sponsors && sponsors.length > 0 && (
+        <section aria-labelledby="sponsored-by">
+          <h2 id="sponsored-by">Sponsored by</h2>
+          <ul className="mt-2 flex flex-wrap items-center gap-6">
+            {sponsors.map((s) => {
+              const label = s.logo_path ? (
+                <Image src={eventPhotoUrl(supabase, s.logo_path)} alt={s.name} width={160} height={80} className="h-16 w-auto object-contain" />
+              ) : (
+                s.name
+              );
+              return (
+                <li key={s.id}>
+                  {s.website_url ? (
+                    <a href={s.website_url} rel="sponsored noopener">
+                      {label}
+                    </a>
+                  ) : (
+                    label
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
+      {/* FR-EV-19: in the organizers' order, as plain text. */}
+      {faqs && faqs.length > 0 && (
+        <>
+          <h2>FAQ</h2>
+          <dl className="mt-2">
+            {faqs.map((f) => (
+              <div key={f.position} className="mt-3">
+                <dt className="font-semibold">{f.question}</dt>
+                <dd>
+                  <PlainText text={f.answer} />
+                </dd>
+              </div>
+            ))}
+          </dl>
         </>
       )}
 
