@@ -45,13 +45,15 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <Mark className="h-[1.5em] w-[0.94em] shrink-0" />
               {site.name}
             </Link>
-            <nav aria-label="Main" className="flex items-baseline gap-x-4 text-base">
+            <nav aria-label="Main" className="flex items-baseline gap-x-4 whitespace-nowrap text-base">
               <Link href="/">explore</Link>
               <Link href="/events">events</Link>
               <Link href="/communities">communities</Link>
             </nav>
-            <div className="ml-auto flex flex-wrap items-center gap-x-4 gap-y-2 text-base">
-              <form action="/search" role="search" className="hidden lg:block">
+            {/* The search box takes whatever room is left and shrinks first, so
+                the header stays on one row when signed-in links are added. */}
+            <div className="ml-auto flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-base whitespace-nowrap lg:min-w-0 lg:flex-1 lg:flex-nowrap lg:gap-x-3 xl:gap-x-4">
+              <form action="/search" role="search" className="hidden min-w-32 max-w-60 flex-1 xl:block">
                 <label htmlFor="site-search" className="sr-only">
                   Search events, places, groups
                 </label>
@@ -60,7 +62,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                   name="q"
                   type="search"
                   placeholder="search events, places, groups"
-                  className="mt-0 w-60 py-1 text-sm"
+                  className="mt-0 w-full py-1 text-sm"
                 />
               </form>
               <Link href="/post" className="button py-1.5">
