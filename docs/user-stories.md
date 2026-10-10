@@ -45,6 +45,8 @@ records where each one came from.
 | member | join through an invite link a group shared with me, creating my account on the same page | I'm in without waiting for approval | UC-31 | FR-MB-14, FR-MB-15 | Built |
 | member | join the waitlist when an event is full | I get a place if someone drops out | UC-30 | FR-EV-28 | Draft |
 | member | see what an event costs, the registration fee and the total | I know before I commit | UC-30 | FR-EV-25 | Draft |
+| member | add photos from our trip to the group's gallery, with a description for each | the group keeps a record of what we did | UC-21 | FR-GR-12 | Built |
+| member | delete a photo I added, or report someone else's | I stay in control of what's shared | UC-21 | FR-GR-13 | Built |
 | member | save an event without RSVPing, and see it under Saved in My stuff | I keep track of things I might go to, and nobody else sees my list | UC-22 | FR-EV-18 | Built |
 | member | answer one person's reply in a thread, not the whole thread | side conversations stay together and readable | UC-19 | FR-DS-9 | Built |
 
@@ -62,6 +64,7 @@ records where each one came from.
 | page admin or manager | choose who sees our member list: members, organizers only or anyone signed in | members who want privacy aren't listed for everyone | UC-16 | FR-MB-10 | Built |
 | organizer | add our group's website | members can find our own site | — | FR-GR-23 | Built |
 | organizer | set our group's type and a cover photo with its description | newcomers can tell us apart from other groups | UC-24 | FR-GR-16, FR-GR-14 | Built |
+| page admin | remove a photo that breaks our rules, and choose whether the gallery is public | the gallery stays ours and appropriate | UC-21 | FR-GR-12, FR-GR-13 | Built |
 | organizer | claim a listing of our real group | I run it here instead of starting over | UC-8 | FR-GR-9, FR-GR-10 | Live |
 | organizer | prove a claim with an email at our club's domain | the site admin can approve it quickly | UC-26 | FR-GR-18 to FR-GR-20 | Draft (needs a domain) |
 

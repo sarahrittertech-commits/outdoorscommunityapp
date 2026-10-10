@@ -529,7 +529,9 @@ reported.
 
 ## UC-21 — Share trip photos
 
-> **Draft, awaiting review.** Brought into scope on 8 October 2026.
+> **Approved and built 9 October 2026.** Brought into scope on 8 October
+> 2026. Members only by default; the page admin can make the gallery
+> public. Picking the cover photo from the gallery (FR-GR-14) is not built.
 
 **Actor:** A member
 
@@ -542,7 +544,8 @@ reported.
 3. The member removes one later; an organizer removes one that breaks the
    group's rules.
 
-**Requirements:** to be written after review (drafts FR-GR-12 to FR-GR-14).
+**Requirements:** FR-GR-12 and FR-GR-13, in the Groups table of the
+functional requirements.
 
 **Succeeds when:** a group keeps a simple record of its trips, visible to
 members, with nothing algorithmic about it.

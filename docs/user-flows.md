@@ -291,15 +291,19 @@ flowchart TD
 
 ## UC-21 — Share trip photos
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026.* The Photos page is linked from the
+group page; each photo needs a description. A non-member sees "The photos
+are for members" unless the page admin made the gallery public.
 
 ```mermaid
 flowchart TD
-  group["Group page: Photos tab"] -->|Upload| upload["Choose up to 10 photos"]
-  upload -->|Post| gallery["Gallery, newest first"]
-  gallery -->|open one| full["Photo full size"]
-  full -->|author removes| removed(["Gone from the gallery"])
+  group["Group page: Photos"] --> photos["Photos page<br/>thumbnails, newest first"]
+  photos -->|Add photos| upload["Up to 10 photos, a description for each"]
+  upload -->|Add photos| photos
+  photos -->|open one| full["Photo full size<br/>who added it, when"]
+  full -->|uploader deletes| removed(["Gone from the gallery"])
   full -->|organizer removes| modded(["Removed, logged as moderation"])
+  full -->|Report this photo| report(["Report to the group's organizers"])
 ```
 
 ## UC-22 — Save it for later
