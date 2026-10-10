@@ -251,7 +251,10 @@ flowchart TD
 
 ## UC-18 — My calendar
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. Every choice (view, date, filters) is
+a link or a GET form in the page address (`/?cal=week&date=2026-10-09&show=going#calendar`),
+so it works without JavaScript. With no view chosen, the screen width
+decides: month on a computer, week on a phone.*
 
 ```mermaid
 flowchart TD
