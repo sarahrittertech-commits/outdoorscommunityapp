@@ -98,3 +98,11 @@ export function dateParts(iso: string, timeZone: string): { day: string; weekday
     time: part({ hour: "numeric", minute: "2-digit" }),
   };
 }
+
+/** FR-EV-20: "Tue 14 Oct, 9:00 am", in the event's time zone. */
+export function formatOpensAt(iso: string, timeZone: string): string {
+  const date = new Date(iso);
+  const part = (options: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("en-GB", { timeZone, ...options }).format(date);
+  const time = new Intl.DateTimeFormat("en-US", { timeZone, hour: "numeric", minute: "2-digit" }).format(date).toLowerCase();
+  return `${part({ weekday: "short" })} ${part({ day: "numeric" })} ${part({ month: "short" })}, ${time}`;
+}

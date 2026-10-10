@@ -309,6 +309,20 @@ export default async function GroupPage({ params, searchParams }: Props) {
         </>
       )}
 
+      {/* FR-GR-12: the gallery, members only unless the page admin made it public. */}
+      {!group.is_unclaimed && (
+        <>
+          <h2>Photos</h2>
+          <p className="mt-2">
+            {isMember || group.photos_public || viewer?.isSiteAdmin ? (
+              <Link href={`/g/${group.slug}/photos`}>See the group&apos;s photos</Link>
+            ) : (
+              <span className="text-muted">The photos are for members.</span>
+            )}
+          </p>
+        </>
+      )}
+
       {!group.is_unclaimed && <h2>Run by</h2>}
       <ul className="mt-2">
         {organizers?.map((o) => (

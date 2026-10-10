@@ -235,8 +235,11 @@ details or private notes are ever stored or shown.
 
 ## UC-10 — Post a ride series
 
-> **Draft, awaiting review.** Nothing is built until Sarah approves this
-> use case and its [user flow](./user-flows#uc-10--post-a-ride-series).
+> **Approved and built 9 October 2026, except the series.** Sponsors
+> (FR-EV-14), the FAQ (FR-EV-19) and *RSVPs open at* (FR-EV-20) are built for
+> single events; pictures and price were built with UC-30. Repeating series
+> (step 3, step 8 and FR-EV-11) stay a draft, awaiting review; see the
+> [user flow](./user-flows#uc-10--post-a-ride-series).
 
 **Actor:** A group admin
 
@@ -270,8 +273,8 @@ group, editing by group admins only.
 *signup opens* time: until then the page says "RSVPs open Tue 14 Oct,
 9:00 am" and the RSVP button is closed.
 
-**Requirements:** to be written after review (drafts FR-EV-11 to FR-EV-14,
-FR-EV-19, FR-EV-20).
+**Requirements:** FR-EV-14, FR-EV-19, FR-EV-20 (built), FR-EV-24 and FR-EV-25
+(UC-30); draft FR-EV-11 (series).
 
 **Succeeds when:** a season of rides is posted in one go, people RSVP to
 the Thursday they're coming, and one edit changes every date still to come.
@@ -437,7 +440,8 @@ by the database, not just hidden on the page.
 
 ## UC-17 — Approve who comes
 
-> **Draft, awaiting review.**
+> **Approved and built 9 October 2026.** Step 4 uses the waitlist from
+> UC-30 (FR-EV-28): approving a waitlisted rider moves them to going.
 
 **Actor:** A group admin
 
@@ -453,15 +457,17 @@ right experience.
 4. When someone going cancels, the admin moves the waitlisted rider to
    going.
 
-**Requirements:** to be written after review (drafts FR-EV-15 to FR-EV-17,
-replacing FR-EV-10).
+**Requirements:** FR-EV-15, FR-EV-17, FR-EV-28 (which replaced FR-EV-10 and
+narrowed FR-EV-16).
 
 **Succeeds when:** the organizer decides who comes, and the place count is
 always right.
 
 ## UC-18 — My calendar
 
-> **Draft, awaiting review.**
+> **Approved and built 9 October 2026.** The calendar sits on the home
+> page above *Browse by activity*, only when signed in. Filters add
+> *everything from my groups*.
 
 **Actor:** The regular
 
@@ -475,7 +481,7 @@ always right.
    be filtered to one group or to *going only*.
 3. Opens Thursday's ride from the calendar.
 
-**Requirements:** to be written after review (draft FR-AC-9).
+**Requirements:** FR-AC-9
 
 **Succeeds when:** a member sees their outdoor week at a glance and can
 still add any event to their own calendar (FR-EV-7).
@@ -529,7 +535,9 @@ reported.
 
 ## UC-21 — Share trip photos
 
-> **Draft, awaiting review.** Brought into scope on 8 October 2026.
+> **Approved and built 9 October 2026.** Brought into scope on 8 October
+> 2026. Members only by default; the page admin can make the gallery
+> public. Picking the cover photo from the gallery (FR-GR-14) is not built.
 
 **Actor:** A member
 
@@ -542,7 +550,8 @@ reported.
 3. The member removes one later; an organizer removes one that breaks the
    group's rules.
 
-**Requirements:** to be written after review (drafts FR-GR-12 to FR-GR-14).
+**Requirements:** FR-GR-12 and FR-GR-13, in the Groups table of the
+functional requirements.
 
 **Succeeds when:** a group keeps a simple record of its trips, visible to
 members, with nothing algorithmic about it.
@@ -550,8 +559,8 @@ members, with nothing algorithmic about it.
 ## UC-22 — Save it for later
 
 > **Approved and built 9 October 2026.** Brought into scope on 8 October
-> 2026. Steps 1 and 2 are built; step 3 waits on UC-10 (RSVP opening time)
-> and UC-23 (reminders).
+> 2026. Steps 1 to 3 are built except the reminders in step 3, which
+> wait on UC-23.
 
 **Actor:** The newcomer
 

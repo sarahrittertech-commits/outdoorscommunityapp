@@ -10,7 +10,9 @@ import { site } from "@/config/site";
 import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
 import { getViewer } from "@/lib/auth";
 import { safeNext, withMessage } from "@/lib/navigation";
-import { SET_PASSWORD_PATH, RESET_COOKIE, RESET_PATH } from "@/lib/password-reset";
+import { afterEmailLink } from "@/lib/email-links";
+import { SET_PASSWORD_PATH, RESET_COOKIE, RESET_COOKIE_MAX_AGE, RESET_PATH } from "@/lib/password-reset";
+import { sessionCookieOptions } from "@/lib/supabase/env";
 import { signInLimiter } from "@/lib/sign-in-limiter";
 import { createClient, createDetachedClient } from "@/lib/supabase/server";
 import {
@@ -22,6 +24,7 @@ import {
   passwordErrorCode,
   profileSchema,
   signInSchema,
+  emailLinkSchema,
   signUpSchema,
 } from "@/lib/validation";
 
@@ -227,4 +230,28 @@ export async function deleteAccount(formData: FormData) {
   failOnError(back, error);
   await supabase.auth.signOut();
   redirect(withMessage("/", { m: "account_deleted" }));
+}
+
+/**
+ * UC-29: use an emailed token_hash link, only when the person presses
+ * Continue on /auth/confirm. Works in any browser; a scanner opening the
+ * link can't use it up.
+ */
+export async function confirmEmailLink(formData: FormData) {
+  const next = safeNext(formData.get("next"));
+  const parsed = emailLinkSchema.safeParse(formFields(formData));
+  const failed = (type?: string): never =>
+    redirect(type === "recovery" ? "/forgot-password?e=link_failed" : `/signin?e=link_failed&next=${encodeURIComponent(next)}`);
+  if (!parsed.success) return failed();
+  const link = parsed.data;
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.verifyOtp({ token_hash: link.token_hash, type: link.type });
+  if (error || !data.user) return failed(link.type);
+
+  const after = afterEmailLink(link.type, next);
+  if (after.passwordCookie) {
+    (await cookies()).set(RESET_COOKIE, data.user.id, { ...sessionCookieOptions, maxAge: RESET_COOKIE_MAX_AGE });
+  }
+  redirect(after.path);
 }

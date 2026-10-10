@@ -139,6 +139,32 @@ web app is not the thing enforcing the rule.
 | PT-117 | set_suggestion_status refuses *new* and a note over 500 characters (FR-AD-6) | Bad data through the admin function |
 | PT-118 | Five suggestions a day are allowed and the sixth is refused (FR-AD-7, TR-SEC-8) | One account floods the admin queue |
 | PT-119 | A member can't backdate a suggestion to slip past the daily limit (FR-AD-7, TR-SEC-8) | The limit is bypassed with an old date |
+| PT-120 | Only organizers turn on Approve RSVPs (FR-EV-15) | A member opens their own event to themselves |
+| PT-121 | On an approval event a member's RSVP is a request, and a request takes no place (FR-EV-15) | Members walk in without approval |
+| PT-122 | A member can't set their own RSVP to going or declined, or request on an event without approval (FR-EV-15) | A member approves themselves through the API |
+| PT-123 | Requests are seen by the person and the organizers only (FR-EV-15) | Other members learn who asked |
+| PT-124 | Only organizers call manage_rsvp; visitors can't; unknown actions are refused (FR-EV-17) | A member approves or removes someone |
+| PT-125 | Approving takes a place, organizers RSVP directly, and approving into a full event is refused (FR-EV-15, FR-EV-17) | Going exceeds the places |
+| PT-126 | An organizer waitlists a request; the database sets the waitlist place (FR-EV-17, FR-EV-28) | The waitlist order is forged |
+| PT-127 | A declined member can't ask again or delete the decline (FR-EV-15) | Declines are undone by the member |
+| PT-128 | Removing an RSVP deletes it and writes remove_rsvp to the moderation log (FR-EV-17) | Removals leave no trace |
+| PT-129 | RSVPs open before the start; before the opening time a member's RSVP is refused; after it, accepted (FR-EV-20) | Early RSVPs through the API |
+| PT-130 | Organizers set the FAQ, visitors read it in order; members can't edit it or write the table; at most 15 (FR-EV-19) | A member rewrites the FAQ |
+| PT-131 | An organizer adds a sponsor with a link and uploads its logo to the event's folder; visitors see it (FR-EV-14) | Sponsors can't be added |
+| PT-132 | A member can't add or remove a sponsor (FR-EV-14) | A member advertises on an event |
+| PT-133 | Sponsor links are http(s) only, logos live in their own event's folder, and a sponsor's group is its event's group (FR-EV-14) | A script link, or a logo from another group |
+| PT-134 | At most 5 sponsors per event; organizers remove one (FR-EV-14) | Unlimited sponsors |
+| PT-135 | A sponsored event lists like any other (FR-EV-14) | Sponsorship changes lists |
+| PT-150 | Members add photos and files into their own folder; outsiders, banned members, visitors and other people's folders are refused (FR-GR-12) | Anyone puts pictures in a group's gallery |
+| PT-151 | A members-only gallery's rows and files reach members and the site admin only; the bucket is private (FR-GR-12, TR-SEC-12) | Members-only photos leak to the public |
+| PT-152 | A photo needs alt text and a `.webp` path in its own group's folder; nobody updates or deletes rows directly (FR-GR-12) | Undescribed photos, or a row pointing at another group's file |
+| PT-153 | 20 uploads per member per group a day; 200 photos per gallery (FR-GR-12, TR-SEC-8) | One account fills the storage |
+| PT-154 | The uploader deletes their own photo and file; others can't; deleting doesn't reset the day's limit (FR-GR-13) | Members delete each other's photos |
+| PT-155 | The page admin and managers remove any photo, logged with its description (FR-GR-13, FR-MD-6) | Removals leave no record |
+| PT-156 | A visible photo can be reported and the report reaches its group; a report about an organizer's photo goes to the site admin (FR-GR-13, FR-MD-2) | Reports on photos go nowhere, or organizers clear complaints about themselves |
+| PT-157 | Only the page admin makes a gallery public, and a public gallery's rows and files reach visitors (FR-GR-12) | A manager exposes members' photos |
+| PT-158 | An archived group takes no new photos and its uploaders can't delete; members still see it (FR-GR-12, FR-GR-6) | A read-only group still changes |
+| PT-159 | A suspended member can't upload a photo (FR-GR-12, FR-MD-3) | Suspension doesn't stop uploads |
 | PT-160 | A first-time organizer's group starts waiting for review; groups made outside the app are approved (FR-GR-8) | Spam groups list at once |
 | PT-161 | Someone with an approved group, or an approved claim, skips review (FR-GR-8) | Checked organizers wait every time |
 | PT-162 | A group waiting for review is readable only by its owner, its page managers and the site admin (FR-GR-8) | Unreviewed groups leak to visitors |
@@ -165,6 +191,7 @@ Run by the unit test command in CI. Pure functions only.
 | UT-7 | `.ics` line folding | Folding counts UTF-8 bytes, not characters, and never splits an emoji in a title |
 | UT-8 | Password rules (FR-AC-17) | Under 10 characters or over 72 bytes is refused; passwords are never trimmed; the common-password list is refused whatever the case; both copies must match; each failure names its rule |
 | UT-9 | Sign-in limiter (FR-AC-19) | 5 failures for an address in 15 minutes pause it, case and spaces ignored; the pause lifts 15 minutes later; spread-out failures and a successful sign-in reset it; memory stays bounded |
+| UT-10 | Calendar dates (FR-AC-9) | The month grid is whole Sunday-first weeks (four to six rows); weeks and month steps cross month and year ends; an event sits on the day it starts in its own zone (11 pm in Los Angeles stays on Friday); the query window covers every zone; unknown view, date, filter or group values fall back to the defaults |
 
 ## Automated — end to end
 
@@ -184,7 +211,7 @@ Playwright in CI against the local stack with seed data.
 | --- | --- |
 | MT-1 | Walk every approved use case on the production site with seed data |
 | MT-2 | Confirmation and password reset emails arrive in Gmail and Outlook inboxes, not spam |
-| MT-10 | UC-29 on production: sign up with a new address (page says *Check your email*), and again with the same address (same page, nothing revealed); an unconfirmed account cannot sign in; 5 wrong passwords pause sign-in for that address; *Forgot password* answers the same for an unknown address; the reset link sets a new password and signs out a second browser; *Set a new password* without the link sends you to *Forgot password*; a wrong current password on the profile page changes nothing |
+| MT-10 | UC-29 on production: sign up with a new address (page says *Check your email*), and again with the same address (same page, nothing revealed); an unconfirmed account cannot sign in; 5 wrong passwords pause sign-in for that address; *Forgot password* answers the same for an unknown address; the reset link sets a new password and signs out a second browser; *Set a new password* without the link sends you to *Forgot password*; a sign-up or reset link opened in a different browser or mail app still works after *Continue*; every *Email me the link* button greys out and says *Sending…* when pressed; a wrong current password on the profile page changes nothing |
 | MT-3 | Lighthouse mobile: performance and accessibility at or above target (TR-PERF-3, TR-A11Y) |
 | MT-4 | Keyboard-only pass through join, RSVP and post |
 | MT-5 | Supabase security advisor reports no errors (TR-SEC-10) |
@@ -210,7 +237,6 @@ real tests, with requirements, once the use case is approved.
 | UC-17 Approve who comes | A member can't approve their own RSVP; going never exceeds places with two admins acting at once; only admins open Manage RSVPs |
 | UC-18 My calendar | Shows only the user's going and saved events; works without JavaScript |
 | UC-20 Message another member | A second message before acceptance is refused; a blocked user's message is refused; a third user, group admins included, reads nothing; the 11th request in a day is refused |
-| UC-21 Share trip photos | A non-member gets no photo from a members-only gallery, from the database or storage; uploads are re-encoded and stripped of location data; only the uploader and organizers remove photos |
 | UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |
 | UC-25 A sign-in email that sounds like us | The email comes from the board's domain with no images or tracked links; an expired or used link signs nobody in |
 | UC-26 Prove it's my club | A confirmation at a domain other than the group's website is refused; a used or expired link confirms nothing; no full address is kept afterwards; a confirmed claim is never approved automatically |
