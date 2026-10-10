@@ -196,7 +196,7 @@ approved.
 | Read and answer questions, move answers to the FAQ | ❌ | ❌ own only | ❌ own only | ✅ | ✅ | ✅ |
 | RSVP to an approval event (request) (waitlist built with UC-30) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Approve, decline, waitlist or remove RSVPs | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
-| See own going and saved events on a calendar (saving built with UC-22) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See own going and saved events on a calendar (built with UC-18; saving with UC-22) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See own reminders | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Reply to a reply (built with UC-19; see Discussions) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Upload photos to the group gallery | ❌ | ❌ | ✅ | ✅ | ✅ | — |

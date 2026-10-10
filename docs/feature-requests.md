@@ -52,6 +52,7 @@ Requests from the 8 October Magic Patterns design are summarized in the
 | 9 Oct | Sarah | Fix Catalyst Sports Asheville's activity (filed under mountain biking) | Board | — | Open: a data fix for the site admin. |
 | 9 Oct | Sarah | Build the ready use cases that don't need a domain or email: reply to a reply | Tool | UC-19, FR-DS-9 | Built (PR pending review). Migration to apply. |
 | 9 Oct | Sarah | Suggestions to the site admin: recommend a region, suggest a feature, a group to invite or an event to add | Tool | UC-32, FR-AD-4 to FR-AD-7 | Built 9 Oct (drafted in PR #26 and #30). Members only, private to the site admin, statuses Planned / Done / Declined, 5 a day. Migration to apply. |
+| 8 Oct | Magic Patterns design | My calendar on the signed-in home page: month or week, going and saved | Tool | UC-18, FR-AC-9 | Built (approved 9 Oct). No migration. |
 | 8 Oct | Magic Patterns design | Save an event for later | Tool | UC-22, FR-EV-18 | Built (approved 9 Oct). Migration to apply. |
 | 8 Oct | Magic Patterns design | Member list privacy per group | Tool | UC-16, FR-MB-10 | Built (approved 9 Oct). Migration to apply. |
 

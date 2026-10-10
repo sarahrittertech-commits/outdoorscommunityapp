@@ -47,6 +47,7 @@ records where each one came from.
 | member | see what an event costs, the registration fee and the total | I know before I commit | UC-30 | FR-EV-25 | Draft |
 | member | save an event without RSVPing, and see it under Saved in My stuff | I keep track of things I might go to, and nobody else sees my list | UC-22 | FR-EV-18 | Built |
 | member | answer one person's reply in a thread, not the whole thread | side conversations stay together and readable | UC-19 | FR-DS-9 | Built |
+| member | see the events I'm going to and saved on a calendar when I sign in, a month or a week at a time | I see my outdoor week at a glance and open any event from it | UC-18 | FR-AC-9 | Built |
 
 ## Running a group
 
