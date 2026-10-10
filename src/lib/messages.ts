@@ -59,6 +59,11 @@ export const notices = {
   candidate_skipped: "Skipped. It won't be suggested again.",
   suggestion_sent: "Thanks, the site admin reads every suggestion.",
   suggestion_updated: "Suggestion updated.",
+  photos_added: "Photos added to the gallery.",
+  photo_deleted: "Photo deleted.",
+  photo_removed: "Photo removed. It's in the moderation log.",
+  photos_public: "The gallery is public now: anyone can see these photos.",
+  photos_members: "The gallery is for members only now.",
 } as const;
 
 export const errors = {
@@ -104,6 +109,10 @@ export const errors = {
   reset_link_needed: "Open the link in your password reset email first. If it has expired, ask for a new one.",
   suspended: "Your account is suspended. You can read but not post.",
   claim_exists: "You've already asked to claim this group.",
+  gallery_full: "This gallery has 200 photos, the most it can hold. An organizer can remove some first.",
+  photos_none: "Choose at least one photo, and describe each one.",
+  photos_too_many: "Add at most 10 photos at a time, 25 MB together.",
+  photos_failed: "Some photos didn't upload. The ones listed in the gallery are saved; try the rest again.",
 } as const;
 
 export type NoticeCode = keyof typeof notices;

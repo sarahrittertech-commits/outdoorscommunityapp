@@ -296,7 +296,8 @@ $$;
 -- short-lived signed URLs that the server creates as the viewer, so reading
 -- a file needs the same right as reading its row. Only the app's re-encoded
 -- WebP goes in, at <group_id>/<uploader_id>/<random>.webp, into a group the
--- uploader can add to, while the group's folder holds fewer than 200 files.
+-- uploader can add to, while the group's folder holds fewer than 400 files
+-- (each photo is a full-size file and a 400px thumbnail, <random>_t.webp).
 -- ---------------------------------------------------------------------------
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
@@ -352,7 +353,7 @@ create policy "Members upload group photos" on storage.objects
   with check (
     bucket_id = 'group-photos'
     and public.can_write_group_photo_file(name)
-    and public.group_photo_file_count(name) < 200
+    and public.group_photo_file_count(name) < 400
   );
 
 -- The uploader removes their own file while the group is active; organizers
