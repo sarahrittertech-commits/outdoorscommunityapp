@@ -175,7 +175,7 @@ Playwright in CI against the local stack with seed data.
 | --- | --- |
 | MT-1 | Walk every approved use case on the production site with seed data |
 | MT-2 | Confirmation and password reset emails arrive in Gmail and Outlook inboxes, not spam |
-| MT-10 | UC-29 on production: sign up with a new address (page says *Check your email*), and again with the same address (same page, nothing revealed); an unconfirmed account cannot sign in; 5 wrong passwords pause sign-in for that address; *Forgot password* answers the same for an unknown address; the reset link sets a new password and signs out a second browser; *Set a new password* without the link sends you to *Forgot password*; a wrong current password on the profile page changes nothing |
+| MT-10 | UC-29 on production: sign up with a new address (page says *Check your email*), and again with the same address (same page, nothing revealed); an unconfirmed account cannot sign in; 5 wrong passwords pause sign-in for that address; *Forgot password* answers the same for an unknown address; the reset link sets a new password and signs out a second browser; *Set a new password* without the link sends you to *Forgot password*; a sign-up or reset link opened in a different browser or mail app still works after *Continue*; every *Email me the link* button greys out and says *Sending…* when pressed; a wrong current password on the profile page changes nothing |
 | MT-3 | Lighthouse mobile: performance and accessibility at or above target (TR-PERF-3, TR-A11Y) |
 | MT-4 | Keyboard-only pass through join, RSVP and post |
 | MT-5 | Supabase security advisor reports no errors (TR-SEC-10) |
