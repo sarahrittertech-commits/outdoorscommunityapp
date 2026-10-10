@@ -3,17 +3,18 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { site } from "@/config/site";
 import { safeNext } from "@/lib/navigation";
-import { RESET_COOKIE, RESET_COOKIE_MAX_AGE, RESET_PATH, SET_PASSWORD_PATH } from "@/lib/password-reset";
+import { afterEmailLink } from "@/lib/email-links";
+import { RESET_COOKIE, RESET_COOKIE_MAX_AGE, RESET_PATH } from "@/lib/password-reset";
 import { sessionCookieOptions } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 
 /**
  * Where emailed links land (UC-29): *Confirm my email* after signing up
  * (FR-AC-18), which goes on to *Create your password*, and the password
- * reset link (FR-AC-20). Handles both link
- * styles Supabase can send: a PKCE `code` (the default, which only works in
- * the browser that asked) or a `token_hash` (custom email template, works in
- * any browser), with type `signup`, `email` or `recovery`.
+ * reset link (FR-AC-20). Handles both link styles Supabase can send: a
+ * PKCE `code` (the default, which only works in the browser that asked) is
+ * used here; a `token_hash` (our email templates, works in any browser) is
+ * handed to /auth/confirm, which uses it only when Continue is pressed.
  *
  * Redirects are built on the public site URL, not the request's origin:
  * behind Railway's proxy the server sees itself as 0.0.0.0:8080.
@@ -24,28 +25,34 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
-  const nextPath = new URL(next, site.url).pathname;
-  const isReset = type === "recovery" || nextPath === RESET_PATH;
-  // UC-29: the sign-up confirmation link goes on to *Create your password*.
-  const isNewAccount = !isReset && nextPath === SET_PASSWORD_PATH;
 
+  // A token_hash link is used only when the person presses Continue on
+  // /auth/confirm (a POST). Opening it here does nothing, so email scanners
+  // and link previews (Outlook Safe Links, chat apps) can't use it up, and it
+  // works in any browser, not only the one that asked for it.
+  if (tokenHash && type) {
+    const confirm = new URL("/auth/confirm", site.url);
+    confirm.searchParams.set("token_hash", tokenHash);
+    confirm.searchParams.set("type", type);
+    confirm.searchParams.set("next", next);
+    return NextResponse.redirect(confirm);
+  }
+
+  const isReset = type === "recovery" || new URL(next, site.url).pathname === RESET_PATH;
   const supabase = await createClient();
   const { data, error } = code
     ? await supabase.auth.exchangeCodeForSession(code)
-    : tokenHash && type
-      ? await supabase.auth.verifyOtp({ token_hash: tokenHash, type })
-      : { data: { user: null }, error: new Error("missing code") };
+    : { data: { user: null }, error: new Error("missing code") };
 
   if (error || !data.user) {
     const back = isReset ? "/forgot-password?e=link_failed" : `/signin?e=link_failed&next=${encodeURIComponent(next)}`;
     return NextResponse.redirect(new URL(back, site.url));
   }
 
-  if (isReset || isNewAccount) {
-    const response = NextResponse.redirect(new URL(isReset ? RESET_PATH : next, site.url));
+  const after = afterEmailLink(type, next);
+  const response = NextResponse.redirect(new URL(after.path, site.url));
+  if (after.passwordCookie) {
     response.cookies.set(RESET_COOKIE, data.user.id, { ...sessionCookieOptions, maxAge: RESET_COOKIE_MAX_AGE });
-    return response;
   }
-  // New users finish onboarding first; /welcome sends everyone else on.
-  return NextResponse.redirect(new URL(`/welcome?next=${encodeURIComponent(next)}`, site.url));
+  return response;
 }

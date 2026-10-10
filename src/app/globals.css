@@ -133,6 +133,13 @@
     color: var(--muted);
   }
 
+  /* A submit button while its form is sending (SubmitButton): visibly pressed. */
+  .button:disabled,
+  .button[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
   /* Breadcrumbs above a page title: small, with about 25px before the heading. */
   .breadcrumb {
     margin: 0 0 1.5rem;

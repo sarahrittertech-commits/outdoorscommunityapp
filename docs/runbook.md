@@ -256,3 +256,23 @@ Remove it immediately from the site-admin page (remove the post or the
 group), suspend the account, and record the reason. The moderation log keeps
 a copy of removed text for the site admin; if law enforcement is involved,
 export it from `moderation_actions` before anything else.
+
+## Email links that work in any browser (UC-29)
+
+Supabase's default email links only work in the browser that asked for
+them, and email scanners (Outlook Safe Links, Gmail previews) can use them
+up before the person clicks. The app's `/auth/confirm` page fixes both: the
+link opens a page with a **Continue** button, and the link is used only when
+the button is pressed. For the emails to point there, change two templates
+in the Supabase dashboard, **Authentication → Emails → Templates**:
+
+- **Confirm signup**, replace the link with:
+  `<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=signup">Confirm my email and create my password</a>`
+- **Reset password**, replace the link with:
+  `<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=recovery">Set a new password</a>`
+
+`{{ .RedirectTo }}` is the app's `/auth/callback?next=…` address, which
+is already in the allowed redirect URLs; the callback hands token_hash
+links to `/auth/confirm` without using them. Until the templates are
+changed, links still work, but only when opened in the same browser that
+requested them.
