@@ -238,7 +238,7 @@ manager is a user like any other, and can't read members' messages.
 
 ### Proposed with the 8 October design (drafts, not built)
 
-These follow the draft requirements for UC-10 to UC-13, UC-17, UC-18, UC-20, UC-21, UC-23 and UC-25 to UC-28. Each becomes part
+These follow the draft requirements for UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28. Each becomes part
 of the matrix above, with a permission test, once its use case is
 approved.
 

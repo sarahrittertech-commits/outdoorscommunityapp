@@ -78,8 +78,13 @@ later), UC-24 (group types and cover photos), UC-29 (sign-up with email,
 then create a password from the link), UC-30 (the event form: description,
 photo, price, optional RSVPs and a waitlist), UC-31 (page admin and up to
 two page managers, invite link, email invites waiting on email setup) and
-UC-32 (suggestions to the site admin). Draft use cases awaiting review:
-UC-10 to UC-13, UC-17, UC-18, UC-20, UC-21, UC-23 and UC-25 to UC-28. UC-25 and UC-26 wait on a domain and email. On 8 October
+UC-32 (suggestions to the site admin). Built on 10 October 2026: UC-17
+(approve RSVPs, Manage RSVPs), UC-10 for single events (FAQ, sponsors,
+RSVPs open at), UC-18 (My calendar), UC-20 (direct messages, starting as
+requests), UC-21 (group photo galleries), UC-27 (a person's first group
+waits for the site admin) and email links that work in any browser.
+Draft use cases awaiting review:
+UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28. UC-25 and UC-26 wait on a domain and email. On 8 October
 Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live
