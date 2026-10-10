@@ -25,7 +25,10 @@ export default async function EditEventPage({ params, searchParams }: Props) {
   const { canManage } = await loadGroup(group.slug);
   if (!canManage) redirect(`/e/${id}?e=not_allowed`);
 
-  const { data: details } = await supabase.from("event_private_details").select("address").eq("event_id", event.id).maybeSingle();
+  const [{ data: details }, { data: faqs }] = await Promise.all([
+    supabase.from("event_private_details").select("address").eq("event_id", event.id).maybeSingle(),
+    supabase.from("event_faqs").select("question, answer").eq("event_id", event.id).order("position"),
+  ]);
 
   return (
     <>
@@ -39,6 +42,7 @@ export default async function EditEventPage({ params, searchParams }: Props) {
         event={event}
         address={details?.address}
         photoUrl={event.photo_path ? eventPhotoUrl(supabase, event.photo_path) : null}
+        faqs={faqs ?? []}
         submitLabel="Save changes"
       />
     </>

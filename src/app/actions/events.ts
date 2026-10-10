@@ -5,7 +5,7 @@ import { z } from "zod";
 import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
 import { eventPhotoPath, reencodeEventPhoto, removeEventPhoto, uploadEventPhoto } from "@/lib/eventPhotos";
-import { eventPhotoSchema, eventSchema, formFields, idSchema, slugSchema } from "@/lib/validation";
+import { eventPhotoSchema, eventSchema, faqSchema, formFields, idSchema, rsvpActionSchema, slugSchema } from "@/lib/validation";
 
 type ParsedEvent = z.infer<typeof eventSchema>;
 
@@ -27,6 +27,8 @@ function eventColumns(event: ParsedEvent) {
     takes_rsvps: event.takesRsvps,
     signup_url: event.signupUrl,
     waitlist_enabled: event.waitlistEnabled,
+    approve_rsvps: event.approveRsvps,
+    rsvps_open_at: event.rsvpsOpenAt,
   };
 }
 
@@ -34,6 +36,8 @@ function eventColumns(event: ParsedEvent) {
 async function parseEventForm(back: string, formData: FormData) {
   const parsed = eventSchema.safeParse(formFields(formData));
   if (!parsed.success) fail(back, "invalid");
+  const faq = faqSchema.safeParse(formFields(formData));
+  if (!faq.success) fail(back, "faq_invalid");
   const photoFile = eventPhotoSchema.safeParse(formData.get("photo"));
   if (!photoFile.success) fail(back, "photo_invalid");
   let photo: Buffer | null = null;
@@ -43,7 +47,7 @@ async function parseEventForm(back: string, formData: FormData) {
     photo = await reencodeEventPhoto(photoFile.data);
     if (!photo) fail(back, "photo_invalid");
   }
-  return { event: parsed.data, photo };
+  return { event: parsed.data, photo, faq: faq.data };
 }
 
 /** FR-EV-1. The address goes in its own table so members-only ones stay private. */
@@ -51,7 +55,7 @@ export async function createEvent(groupId: string, slug: string, formData: FormD
   const back = `/g/${slug}/events/new`;
   const { viewer, supabase } = await actingUser(back);
   checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
-  const { event, photo } = await parseEventForm(back, formData);
+  const { event, photo, faq } = await parseEventForm(back, formData);
 
   const { data, error } = await supabase
     .from("events")
@@ -66,6 +70,12 @@ export async function createEvent(groupId: string, slug: string, formData: FormD
       .from("event_private_details")
       .insert({ event_id: data.id, address: event.address });
     failOnError(edit, addressError);
+  }
+
+  // FR-EV-19: the questions and answers, in the order given.
+  if (faq.questions.length) {
+    const { error: faqError } = await supabase.rpc("set_event_faq", { p_event_id: data.id, p_questions: faq.questions, p_answers: faq.answers });
+    failOnError(edit, faqError);
   }
 
   // FR-EV-24: the photo goes in the new event's own folder, then the event points at it.
@@ -90,7 +100,7 @@ export async function updateEvent(eventId: string, formData: FormData) {
   const back = `/e/${eventId}/edit`;
   const { supabase } = await actingUser(back);
   checkArgs(back, z.tuple([idSchema]), [eventId]);
-  const { event, photo } = await parseEventForm(back, formData);
+  const { event, photo, faq } = await parseEventForm(back, formData);
 
   const { data: current } = await supabase.from("events").select("group_id, photo_path").eq("id", eventId).maybeSingle();
   if (!current) fail(back, "not_found");
@@ -127,6 +137,10 @@ export async function updateEvent(eventId: string, formData: FormData) {
     : await supabase.from("event_private_details").delete().eq("event_id", eventId);
   failOnError(back, addressError);
 
+  // FR-EV-19: the whole list is replaced, so emptied rows are removed.
+  const { error: faqError } = await supabase.rpc("set_event_faq", { p_event_id: eventId, p_questions: faq.questions, p_answers: faq.answers });
+  failOnError(back, faqError);
+
   succeed(`/e/${eventId}`, "event_saved");
 }
 
@@ -141,17 +155,22 @@ export async function cancelEvent(eventId: string) {
   succeed(back, "event_cancelled");
 }
 
-const rsvpNotice = { going: "rsvp_going", not_going: "rsvp_not_going", waitlisted: "waitlist_joined" } as const;
+const rsvpNotice = {
+  going: "rsvp_going",
+  not_going: "rsvp_not_going",
+  waitlisted: "waitlist_joined",
+  requested: "rsvp_requested",
+} as const;
 
 /**
  * FR-EV-3, and joining the waitlist (FR-EV-28). Capacity, start time,
  * cancellation, RSVPs being off and the waitlist order are all enforced by
  * the database.
  */
-export async function rsvp(eventId: string, status: "going" | "not_going" | "waitlisted") {
+export async function rsvp(eventId: string, status: keyof typeof rsvpNotice) {
   const back = `/e/${eventId}`;
   const { viewer, supabase } = await actingUser(back);
-  checkArgs(back, z.tuple([idSchema, z.enum(["going", "not_going", "waitlisted"])]), [eventId, status]);
+  checkArgs(back, z.tuple([idSchema, z.enum(["going", "not_going", "waitlisted", "requested"])]), [eventId, status]);
 
   // Change an existing RSVP, or create one. (An upsert would also try to
   // rewrite event_id and user_id, which members are not allowed to change.)
@@ -213,4 +232,25 @@ export async function unsaveEvent(eventId: string, from: "event" | "me" = "event
   const { error } = await supabase.from("saved_events").delete().eq("event_id", eventId).eq("user_id", viewer.id);
   failOnError(back, error);
   succeed(back, "unsaved");
+}
+
+const manageNotice = {
+  approve: "rsvp_approved",
+  decline: "rsvp_declined_done",
+  waitlist: "rsvp_waitlisted",
+  remove: "rsvp_removed",
+} as const;
+
+/**
+ * FR-EV-17: approve, decline, waitlist or remove someone's RSVP. Only the
+ * group's organizers can (manage_rsvp checks); places are never exceeded and
+ * removals are logged by the database.
+ */
+export async function manageRsvp(eventId: string, userId: string, action: keyof typeof manageNotice) {
+  const back = `/e/${eventId}/rsvps`;
+  const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, idSchema, rsvpActionSchema]), [eventId, userId, action]);
+  const { error } = await supabase.rpc("manage_rsvp", { p_event_id: eventId, p_user_id: userId, p_action: action });
+  failOnError(back, error);
+  succeed(back, manageNotice[action]);
 }

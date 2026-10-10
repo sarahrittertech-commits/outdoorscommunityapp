@@ -155,6 +155,13 @@ export const eventSchema = z
       z.number().int().positive().max(10000).nullable(),
     ),
     waitlistEnabled: checkbox,
+    /** FR-EV-15 and FR-EV-20. */
+    approveRsvps: checkbox,
+    rsvpsOpenLocal: z
+      .string()
+      .optional()
+      .transform((v) => v || null)
+      .pipe(localDateTime.nullable()),
     signupUrl: optionalHttpUrl(500),
     photoAlt: optionalText(200),
     removePhoto: checkbox,
@@ -164,6 +171,11 @@ export const eventSchema = z
     const endsAt = zonedLocalToUtc(event.endsLocal, event.timezone);
     if (endsAt <= startsAt) {
       ctx.addIssue({ code: "custom", path: ["endsLocal"], message: "The event must end after it starts." });
+      return z.NEVER;
+    }
+    const rsvpsOpenAt = event.takesRsvps && event.rsvpsOpenLocal ? zonedLocalToUtc(event.rsvpsOpenLocal, event.timezone) : null;
+    if (rsvpsOpenAt && rsvpsOpenAt >= startsAt) {
+      ctx.addIssue({ code: "custom", path: ["rsvpsOpenLocal"], message: "RSVPs must open before the event starts." });
       return z.NEVER;
     }
     const isPaid = event.price === "paid";
@@ -182,6 +194,8 @@ export const eventSchema = z
       // A waitlist needs places; a sign-up link is for events without RSVPs.
       waitlistEnabled: event.takesRsvps && event.capacity !== null && event.waitlistEnabled,
       signupUrl: event.takesRsvps ? null : event.signupUrl,
+      approveRsvps: event.takesRsvps && event.approveRsvps,
+      rsvpsOpenAt: rsvpsOpenAt ? rsvpsOpenAt.toISOString() : null,
     };
   });
 
@@ -297,3 +311,32 @@ export function parseInviteEmails(text: string): { valid: string[]; invalid: str
 export const inviteEmailsSchema = z.object({ emails: z.string().max(10_000) });
 
 export const managerInviteSchema = z.object({ email: oneEmail });
+
+/** FR-EV-19: the event form's FAQ has this many question and answer rows. */
+export const FAQ_ROWS = 15;
+
+/**
+ * FR-EV-19: rows faqQ1/faqA1 to faqQ15/faqA15, in order. Empty rows are
+ * skipped; a question without an answer (or the reverse) is an error.
+ */
+export const faqSchema = z
+  .record(z.string(), z.string())
+  .transform((fields, ctx) => {
+    const questions: string[] = [];
+    const answers: string[] = [];
+    for (let n = 1; n <= FAQ_ROWS; n++) {
+      const q = (fields[`faqQ${n}`] ?? "").trim();
+      const a = (fields[`faqA${n}`] ?? "").trim();
+      if (!q && !a) continue;
+      if (q.length < 3 || q.length > 200 || !a || a.length > 2000) {
+        ctx.addIssue({ code: "custom", path: [`faqQ${n}`], message: "Each question needs an answer." });
+        return z.NEVER;
+      }
+      questions.push(q);
+      answers.push(a);
+    }
+    return { questions, answers };
+  });
+
+/** FR-EV-17: what an organizer can do to an RSVP. */
+export const rsvpActionSchema = z.enum(["approve", "decline", "waitlist", "remove"]);
