@@ -42,7 +42,7 @@ export const notices = {
   report_resolved: "Report closed.",
   profile_saved: "Profile saved.",
   welcome: "Welcome aboard.",
-  signup_sent: "Check your email. The link confirms your address and takes you to create your password. It works for 24 hours.",
+  signup_sent: "Check your email. The link confirms your address and takes you to create your password. It works for 24 hours. Nothing arrived? If you've signed up before, you already have an account: use Forgot password to set a new password.",
   password_created: "Your password is set. One last step: tell us your name.",
   reset_sent: "If that address has an account, we've sent a link to set a new password. It works for 1 hour.",
   password_reset: "Your new password is set. Any other devices signed in to your account have been signed out.",
