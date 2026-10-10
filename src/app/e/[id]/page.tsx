@@ -59,6 +59,7 @@ export default async function EventPage({ params, searchParams }: Props) {
     { data: waitlistPlace },
     { data: saved },
     { data: faqs },
+    { data: sponsors },
   ] = await Promise.all([
     loadGroup(group.slug),
     supabase.from("event_private_details").select("address").eq("event_id", event.id).maybeSingle(),
@@ -79,6 +80,8 @@ export default async function EventPage({ params, searchParams }: Props) {
     viewer ? supabase.from("saved_events").select("event_id").eq("event_id", event.id).maybeSingle() : Promise.resolve({ data: null }),
     // FR-EV-19: readable wherever the event is.
     supabase.from("event_faqs").select("position, question, answer").eq("event_id", event.id).order("position"),
+    // FR-EV-14: on this page only, never in lists.
+    supabase.from("event_sponsors").select("id, name, website_url, logo_path").eq("event_id", event.id).order("created_at"),
   ]);
   const mine = viewer ? (rsvpRows ?? []).find((r) => r.user_id === viewer.id) : undefined;
 
@@ -318,6 +321,7 @@ export default async function EventPage({ params, searchParams }: Props) {
           <strong>Page admin tools:</strong>
           <Link href={`/e/${event.id}/edit`}>edit event</Link>
           {event.takes_rsvps && <Link href={`/e/${event.id}/rsvps`}>manage RSVPs</Link>}
+          <Link href={`/e/${event.id}/sponsors`}>sponsors</Link>
           <form action={cancelEvent.bind(null, event.id)} className="inline">
             <button className="link-button text-danger">cancel event</button>
           </form>
@@ -329,6 +333,33 @@ export default async function EventPage({ params, searchParams }: Props) {
           <h2>Details</h2>
           <PlainText text={event.details} className="mt-2" />
         </>
+      )}
+
+      {/* FR-EV-14: below the details, on this page only. */}
+      {sponsors && sponsors.length > 0 && (
+        <section aria-labelledby="sponsored-by">
+          <h2 id="sponsored-by">Sponsored by</h2>
+          <ul className="mt-2 flex flex-wrap items-center gap-6">
+            {sponsors.map((s) => {
+              const label = s.logo_path ? (
+                <Image src={eventPhotoUrl(supabase, s.logo_path)} alt={s.name} width={160} height={80} className="h-16 w-auto object-contain" />
+              ) : (
+                s.name
+              );
+              return (
+                <li key={s.id}>
+                  {s.website_url ? (
+                    <a href={s.website_url} rel="sponsored noopener">
+                      {label}
+                    </a>
+                  ) : (
+                    label
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
       )}
 
       {/* FR-EV-19: in the organizers' order, as plain text. */}

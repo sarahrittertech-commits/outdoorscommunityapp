@@ -4,8 +4,18 @@ import { z } from "zod";
 
 import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
-import { eventPhotoPath, reencodeEventPhoto, removeEventPhoto, uploadEventPhoto } from "@/lib/eventPhotos";
-import { eventPhotoSchema, eventSchema, faqSchema, formFields, idSchema, rsvpActionSchema, slugSchema } from "@/lib/validation";
+import { eventPhotoPath, reencodeEventPhoto, removeEventPhoto, sponsorLogoPath, uploadEventPhoto } from "@/lib/eventPhotos";
+import {
+  eventPhotoSchema,
+  eventSchema,
+  faqSchema,
+  formFields,
+  idSchema,
+  rsvpActionSchema,
+  slugSchema,
+  sponsorLogoSchema,
+  sponsorSchema,
+} from "@/lib/validation";
 
 type ParsedEvent = z.infer<typeof eventSchema>;
 
@@ -232,6 +242,62 @@ export async function unsaveEvent(eventId: string, from: "event" | "me" = "event
   const { error } = await supabase.from("saved_events").delete().eq("event_id", eventId).eq("user_id", viewer.id);
   failOnError(back, error);
   succeed(back, "unsaved");
+}
+
+/**
+ * FR-EV-14: add a sponsor, with an optional logo re-encoded to WebP
+ * (TR-SEC-9). The database allows only the group's organizers, at most 5.
+ */
+export async function addSponsor(eventId: string, formData: FormData) {
+  const back = `/e/${eventId}/sponsors`;
+  const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema]), [eventId]);
+  const parsed = sponsorSchema.safeParse(formFields(formData));
+  if (!parsed.success) fail(back, "invalid");
+  const logoFile = sponsorLogoSchema.safeParse(formData.get("logo"));
+  if (!logoFile.success) fail(back, "logo_invalid");
+
+  const { data: event } = await supabase.from("events").select("group_id").eq("id", eventId).maybeSingle();
+  if (!event) fail(back, "not_found");
+
+  let logoPath: string | null = null;
+  if (logoFile.data) {
+    const logo = await reencodeEventPhoto(logoFile.data, 400);
+    if (!logo) fail(back, "logo_invalid");
+    logoPath = sponsorLogoPath(event.group_id, eventId);
+    const { error: uploadError } = await uploadEventPhoto(supabase, logoPath, logo);
+    if (uploadError) fail(back, "not_allowed");
+  }
+
+  const { error } = await supabase.from("event_sponsors").insert({
+    event_id: eventId,
+    group_id: event.group_id,
+    name: parsed.data.name,
+    website_url: parsed.data.websiteUrl,
+    logo_path: logoPath,
+  });
+  if (error) {
+    await removeEventPhoto(supabase, logoPath);
+    fail(back, errorCode(error));
+  }
+  succeed(back, "sponsor_added");
+}
+
+/** FR-EV-14: remove a sponsor and its logo. */
+export async function removeSponsor(eventId: string, sponsorId: string) {
+  const back = `/e/${eventId}/sponsors`;
+  const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, idSchema]), [eventId, sponsorId]);
+  const { data, error } = await supabase
+    .from("event_sponsors")
+    .delete()
+    .eq("id", sponsorId)
+    .eq("event_id", eventId)
+    .select("logo_path");
+  failOnError(back, error);
+  if (!data?.length) fail(back, "not_allowed");
+  await removeEventPhoto(supabase, data[0].logo_path);
+  succeed(back, "sponsor_removed");
 }
 
 const manageNotice = {

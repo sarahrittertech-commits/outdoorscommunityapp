@@ -348,6 +348,39 @@ export type Database = {
           Fk<"saved_events_event_id_fkey", "event_id", "events">,
         ];
       };
+      event_sponsors: {
+        Row: {
+          id: string;
+          event_id: string;
+          group_id: string;
+          name: string;
+          website_url: string | null;
+          logo_path: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          event_id: string;
+          group_id: string;
+          name: string;
+          website_url?: string | null;
+          logo_path?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          event_id?: string;
+          group_id?: string;
+          name?: string;
+          website_url?: string | null;
+          logo_path?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          Fk<"event_sponsors_event_id_fkey", "event_id", "events">,
+          Fk<"event_sponsors_group_id_fkey", "group_id", "groups">,
+        ];
+      };
       event_faqs: {
         Row: { event_id: string; position: number; question: string; answer: string };
         Insert: { event_id: string; position: number; question: string; answer: string };

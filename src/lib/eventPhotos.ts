@@ -17,8 +17,9 @@ const MAX_EDGE = 1600;
  * orientation first; sharp then writes no metadata (no location, no camera).
  * Returns null when the file isn't a JPEG, PNG or WebP image, whatever its
  * name or declared type say.
+ * Sponsor logos (FR-EV-14) pass a smaller maxEdge.
  */
-export async function reencodeEventPhoto(file: File): Promise<Buffer | null> {
+export async function reencodeEventPhoto(file: File, maxEdge = MAX_EDGE): Promise<Buffer | null> {
   try {
     const input = Buffer.from(await file.arrayBuffer());
     const image = sharp(input, { failOn: "error", limitInputPixels: 50_000_000 });
@@ -26,12 +27,17 @@ export async function reencodeEventPhoto(file: File): Promise<Buffer | null> {
     if (format !== "jpeg" && format !== "png" && format !== "webp") return null;
     return await image
       .rotate()
-      .resize({ width: MAX_EDGE, height: MAX_EDGE, fit: "inside", withoutEnlargement: true })
+      .resize({ width: maxEdge, height: maxEdge, fit: "inside", withoutEnlargement: true })
       .webp({ quality: 80 })
       .toBuffer();
   } catch {
     return null;
   }
+}
+
+/** event-photos/<group_id>/<event_id>/sponsors/<random>.webp (FR-EV-14). */
+export function sponsorLogoPath(groupId: string, eventId: string): string {
+  return `${groupId}/${eventId}/sponsors/${randomBytes(12).toString("hex")}.webp`;
 }
 
 /** event-photos/<group_id>/<event_id>/<random>.webp, the layout the storage policies expect. */

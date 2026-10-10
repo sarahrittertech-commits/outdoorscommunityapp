@@ -340,3 +340,18 @@ export const faqSchema = z
 
 /** FR-EV-17: what an organizer can do to an RSVP. */
 export const rsvpActionSchema = z.enum(["approve", "decline", "waitlist", "remove"]);
+
+/** FR-EV-14: a sponsor's name and optional website. The logo is checked by sponsorLogoSchema. */
+export const sponsorSchema = z.object({
+  name: requiredText(2, 100),
+  websiteUrl: optionalHttpUrl(500),
+});
+
+export const SPONSOR_LOGO_MAX_BYTES = 1024 * 1024;
+
+/** FR-EV-14: an optional logo, at most 1 MB, re-encoded like event photos. */
+export const sponsorLogoSchema = z
+  .union([z.instanceof(File), z.null(), z.undefined(), z.string()])
+  .transform((value) => (value instanceof File && value.size > 0 ? value : null))
+  .refine((file) => file === null || file.size <= SPONSOR_LOGO_MAX_BYTES, "At most 1 MB.")
+  .refine((file) => file === null || (EVENT_PHOTO_TYPES as readonly string[]).includes(file.type), "Use a JPEG, PNG or WebP image.");
