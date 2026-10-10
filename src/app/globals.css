@@ -416,16 +416,6 @@
       border-left: 1px solid var(--rule);
     }
   }
-  .map-pin {
-    display: grid;
-    place-items: center;
-    border: 2px solid var(--sun);
-    border-radius: 999px;
-    background: var(--paper);
-    color: var(--heading);
-    font-size: 0.8125rem;
-    font-weight: 700;
-  }
 
   /* Small tags, e.g. "outside the region" on research candidates. */
   .tag {
@@ -618,4 +608,24 @@
     font-size: 1rem;
     font-weight: 700;
   }
+}
+
+/* Destination map pins and labels. Outside any layer on purpose: Leaflet's
+   own stylesheet is unlayered, so it beats every layered rule (it sets
+   markers to display: block, which pushed the numbers off center). */
+.destination-map.leaflet-container {
+  font-family: var(--font-sans);
+}
+.leaflet-marker-icon.map-pin {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  border: 2px solid var(--sun);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--heading);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
