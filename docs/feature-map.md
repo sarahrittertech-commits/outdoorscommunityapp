@@ -85,10 +85,10 @@ until the domain is chosen and email sending through Resend is set up.
 | --- | --- | --- | --- |
 | **Repeating series** | Decision needed | UC-10 | FR-EV-11 |
 | **Price** shown as text, never payment | In scope | UC-10 | FR-EV-13 |
-| **Sponsors**: a *Sponsored by* section with logos below the event details, event page only | In scope | UC-10 | FR-EV-14 |
-| **FAQ** and **RSVPs open at** | Fits / In scope | UC-10 | FR-EV-19, FR-EV-20 |
+| **Sponsors**: a *Sponsored by* section with logos below the event details, event page only | **Built 9 Oct** (migration `20261010000009` to apply; links to board businesses wait on UC-12) | UC-10 | FR-EV-14 |
+| **FAQ** and **RSVPs open at** | **Built 9 Oct** for single events (migration `20261010000009` to apply) | UC-10 | FR-EV-19, FR-EV-20 |
 | **Ask a question** and answer into the FAQ | Fits | UC-11 | FR-EV-21, FR-EV-22 |
-| **Approve RSVPs**, **waitlist**, **Manage RSVPs** page | Fits / In scope | UC-17 | FR-EV-15 to FR-EV-17 |
+| **Approve RSVPs**, **waitlist**, **Manage RSVPs** page | **Built 9 Oct** (waitlist with UC-30; migration `20261010000009` to apply) | UC-17 | FR-EV-15 to FR-EV-17 |
 | **Save for later** | **Built 9 Oct** (Saved in My stuff; not on a calendar or in reminders yet) | UC-22 | FR-EV-18 |
 
 ### Members
