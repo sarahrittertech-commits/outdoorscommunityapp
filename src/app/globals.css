@@ -308,6 +308,7 @@
     color: var(--muted);
   }
   .hero-search select,
+  .hero-search input,
   .hero-search .button {
     width: 100%;
     max-width: none;
@@ -320,7 +321,7 @@
   }
   @media (min-width: 48rem) {
     .hero-search {
-      grid-template-columns: 1fr 1.3fr 1fr auto;
+      grid-template-columns: 1fr 1.3fr 0.8fr 1fr auto;
       align-items: end;
       gap: 0;
       padding: 0.375rem;
@@ -331,7 +332,8 @@
     }
     .hero-search label { padding-top: 0.25rem; }
     .hero-search > div + div { border-left: 1px solid var(--rule); }
-    .hero-search select {
+    .hero-search select,
+    .hero-search input {
       border: 0;
       border-radius: 0;
       background-color: transparent;

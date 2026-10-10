@@ -125,6 +125,20 @@ export default async function Home({ searchParams }: Props) {
               <TownSelect id="hero-near" name="near" defaultValue="" anywhere />
             </div>
             <div>
+              {/* FR-BR-12: a zip code, if given, wins over the town. */}
+              <label htmlFor="hero-zip">or zip code</label>
+              <input
+                id="hero-zip"
+                name="zip"
+                type="text"
+                inputMode="numeric"
+                autoComplete="postal-code"
+                pattern="\d{5}(-\d{4})?"
+                maxLength={10}
+                placeholder="28712"
+              />
+            </div>
+            <div>
               <label htmlFor="hero-within">Distance</label>
               <select id="hero-within" name="within" defaultValue="50">
                 {distances.map((d) => (
