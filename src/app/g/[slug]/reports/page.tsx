@@ -8,6 +8,7 @@ import { ReportTargetLink, resolveReportTargets } from "@/components/ReportTarge
 import { site } from "@/config/site";
 import { requireViewer } from "@/lib/auth";
 import { loadGroup } from "@/lib/groups";
+import { siteAdminOnlyReports } from "@/lib/reports";
 import { formatPostDate } from "@/lib/time";
 
 export const metadata: Metadata = { title: "Reports", robots: { index: false } };
@@ -20,13 +21,13 @@ type Props = {
 /** FR-MD-2: a group's own report queue, oldest first. */
 export default async function GroupReportsPage({ params, searchParams }: Props) {
   const { slug } = await params;
-  await requireViewer(`/g/${slug}/reports`);
+  const viewer = await requireViewer(`/g/${slug}/reports`);
   const { supabase, group, canManage } = await loadGroup(slug);
   if (!canManage) redirect(`/g/${slug}?e=not_allowed`);
 
   const { data: reports } = await supabase
     .from("reports")
-    .select("id, target_type, target_id, reason, note, created_at")
+    .select("id, target_type, target_id, group_id, reason, note, created_at")
     .eq("group_id", group.id)
     .eq("status", "open")
     .order("created_at");
@@ -36,6 +37,9 @@ export default async function GroupReportsPage({ params, searchParams }: Props) 
     (reports ?? []).map((r) => ({ type: r.target_type, id: r.target_id, groupSlug: group.slug })),
   );
   const path = `/g/${group.slug}/reports`;
+  // Reports about an organizer's own post: the database refuses page admins
+  // and managers (own_content), so they see who handles it instead.
+  const forSiteAdmin = viewer.isSiteAdmin ? new Set<string>() : await siteAdminOnlyReports(supabase, reports ?? [], viewer.id);
 
   return (
     <>
@@ -60,14 +64,18 @@ export default async function GroupReportsPage({ params, searchParams }: Props) 
                 <span className="ml-2 text-sm text-muted">{formatPostDate(r.created_at, site.defaultTimezone)}</span>
               </p>
               {r.note && <p className="mt-1 text-sm">&ldquo;{r.note}&rdquo;</p>}
-              <div className="mt-2 flex gap-3 text-sm">
-                <form action={resolveReport.bind(null, r.id, "actioned", path)}>
-                  <button className="button">Dealt with</button>
-                </form>
-                <form action={resolveReport.bind(null, r.id, "dismissed", path)}>
-                  <button className="button button-plain">Dismiss</button>
-                </form>
-              </div>
+              {forSiteAdmin.has(r.id) ? (
+                <p className="mt-2 text-sm text-muted">Goes to the site admin: it&apos;s about a page admin&apos;s or page manager&apos;s own post.</p>
+              ) : (
+                <div className="mt-2 flex gap-3 text-sm">
+                  <form action={resolveReport.bind(null, r.id, "actioned", path)}>
+                    <button className="button">Dealt with</button>
+                  </form>
+                  <form action={resolveReport.bind(null, r.id, "dismissed", path)}>
+                    <button className="button button-plain">Dismiss</button>
+                  </form>
+                </div>
+              )}
             </li>
           ))}
         </ul>

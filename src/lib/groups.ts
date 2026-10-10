@@ -27,7 +27,10 @@ export const loadGroup = cache(async (slug: string) => {
   const isMember = membership?.status === "active";
   const isOwner = isMember && membership?.role === "owner";
   const isAdmin = isMember && (membership?.role === "owner" || membership?.role === "admin");
-  const isActive = group.status === "active";
+  // UC-27: a group waiting for review, or declined, is not listed. A declined
+  // one is read-only, like an archived one (public.group_is_active()).
+  const isListed = group.review_status === "approved";
+  const isActive = group.status === "active" && group.review_status !== "declined";
 
   return {
     supabase,
@@ -38,6 +41,7 @@ export const loadGroup = cache(async (slug: string) => {
     isAdmin,
     isOwner,
     isActive,
+    isListed,
     /**
      * Sees the full member list and names on who's going (FR-MB-10). Mirrors
      * public.member_list_visible(), which is what actually decides.

@@ -42,7 +42,11 @@ export async function createGroup(formData: FormData) {
       group_type: group.groupType,
       created_by: viewer.id,
     });
-    if (!error) succeed(`/g/${slug}`, "group_created");
+    if (!error) {
+      // UC-27: a first-time organizer's group waits for the site admin.
+      const { data: created } = await supabase.from("groups").select("review_status").eq("slug", slug).maybeSingle();
+      succeed(`/g/${slug}`, created?.review_status === "pending" ? "group_waiting" : "group_created");
+    }
     if (error.code !== "23505") fail(back, errorCode(error));
   }
   fail(back, "generic");
@@ -131,4 +135,14 @@ export async function restoreGroup(groupId: string, slug: string) {
   const { error } = await supabase.rpc("restore_group", { p_group_id: groupId });
   failOnError(back, error);
   succeed(back, "group_restored");
+}
+
+/** FR-GR-21: the owner deletes a group the site admin declined, to start again. */
+export async function deleteDeclinedGroup(groupId: string, slug: string) {
+  const back = `/g/${slug}`;
+  const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema, slugSchema]), [groupId, slug]);
+  const { error } = await supabase.rpc("delete_declined_group", { p_group_id: groupId });
+  failOnError(back, error);
+  succeed("/groups/new", "group_deleted");
 }
