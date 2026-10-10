@@ -31,7 +31,7 @@ The project succeeds if all five are true on launch day:
 2. A new user can sign up, join a group and RSVP to an event in under two
    minutes.
 3. An organizer can create a group, add a co-admin and post an event without
-   help.
+   help, once their first group is approved (UC-27).
 4. Every permission in the [roles matrix](./roles-and-permissions) is enforced
    by the database and covered by an automated test.
 5. The repository, documentation and live site are public and coherent.
@@ -187,6 +187,10 @@ sign-up with a confirmed email; forgot and change password. New accounts
 and resets need email delivery, so they reach the public only once Resend's
 SMTP is set up.
 
+Added 9 October 2026: **a person's first group waits for review**
+(UC-27, FR-GR-8, FR-GR-21, FR-GR-22). The site admin approves or declines
+it from *New groups* on the admin page; later groups list at once.
+
 Not built yet:
 
 | Item | Requirement | Why it waits |
@@ -196,7 +200,7 @@ Not built yet:
 | Deleting sign-in records of deleted accounts | TR-PRIV-4 | A small scheduled job; manual step documented in the runbook until then. |
 | Short caching of listing pages | TR-PERF-5 | Pages are fast without it at this size. Revisit with real traffic. |
 | Browser tests and accessibility checks in CI | TR-TEST-3, TR-A11Y-5 | The use cases were walked in a real browser (43 checks); turning that into a CI job needs the Docker-based local stack. |
-| Coulds | FR-AC-8, FR-GR-8, FR-EV-9, FR-EV-10, FR-DS-8, FR-MD-7, FR-AD-3 | By definition. |
+| Coulds | FR-AC-8, FR-EV-9, FR-EV-10, FR-DS-8, FR-MD-7, FR-AD-3 | By definition. |
 
 ## Decisions — 8 October 2026
 
@@ -226,7 +230,8 @@ location and distance search with *Near you* (UC-14), a destinations map
 Sarah also asked on 8 October for three changes outside the design,
 drafted 9 October: a branded sign-in email (UC-25), email confirmation for
 claims (UC-26), and approval of new groups (UC-27). The first two wait on
-the domain; the third needs a decision (see the open questions).
+the domain; the third was decided (first group only) and built on 9
+October.
 
 The [feature map](./feature-map) separates what is live in the branded app
 from every new feature, with its use case, requirements and status.
@@ -297,15 +302,12 @@ These need Sarah's decision before or during build:
   later as a clone of it — see [Cloning](./cloning).
 - ~~**Geography.**~~ Settled 25 September 2026: **one region**, Western North
   Carolina. The data model supports more regions later.
-- **Who can create groups (UC-27).** Three options, each keeping the limit
-  of 3 groups (FR-GR-7): approve every new group; approve only a person's
-  first group; or no approval (today). **Recommended: first group only.**
-  It stops throwaway accounts starting spam groups, and checked organizers
-  never wait again; the cost is a small build and one review per new
-  organizer. Approving every group holds up trusted organizers and makes
-  the site admin a bottleneck; no approval costs nothing but leaves spam
-  listed until reported. Either approval option changes success criterion
-  3 to "...once their first group is approved". Options and costs are in
+- ~~**Who can create groups (UC-27).**~~ Settled 9 October 2026: **option
+  B, approve only a person's first group**, built the same day. Anyone
+  signed in can still start up to 3 groups (FR-GR-7); their first waits for
+  the site admin before it is listed, and once one is approved (or they had
+  a claim approved) the rest list at once. Success criterion 3 now reads
+  "...once their first group is approved". The options weighed are in
   [Functional requirements](./functional-requirements#group-creation-approval-uc-27).
 - **Who can receive a group's ownership.** Today only an admin (FR-MB-6).
   Sarah may want any member to be eligible. Raised with UC-27; not drafted.

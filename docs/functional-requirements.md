@@ -63,7 +63,9 @@ Who is allowed to do each action is defined once, in
 | FR-GR-5 | Group rules text, shown on the group page and before joining. | Should | — |
 | FR-GR-6 | The owner can archive a group: it and its events leave the listings (Events, search, home page, sitemap), becomes read-only (its organizers can't moderate it either), and can be restored. Read-only covers changing an answer already given, not just making a new one: an RSVP in an archived group cannot be changed either. | Should | An archived group's URL still works and says it is archived. Flipping an existing RSVP through the API is refused. |
 | FR-GR-7 | A user can own at most 3 active groups. | Should | Creating a fourth is refused with an explanation, and so are a transfer or an approved claim that would make a fourth. |
-| FR-GR-8 | A user's first group is held for site-admin approval before it is listed. | Could | — *(Draft revision with UC-27, below.)* |
+| FR-GR-8 | **First group waits for review.** *Revised with UC-27 (option B), built 9 October 2026; was a Could.* A user's first group is created *waiting for review*: visible only to its owner, its page managers and the site admin; absent from listings, search, Events, Communities, browse counts, the sitemap and the home page; nobody can join it, by the button or an invite link. The owner can edit it and post events, which stay hidden with it. A user skips review if they started, or own, an approved group (an ownership transfer counts), or had a claim approved (FR-GR-10); a group the site admin removed doesn't count. Groups that existed when this shipped count as approved, as do groups made outside the app (the operator's SQL) and the site admin's. A group waiting for review counts toward the limit of 3 (FR-GR-7); a declined one doesn't. | Should | The database returns a group waiting for review to nobody but its owner, its page managers and the site admin, and refuses every join. |
+| FR-GR-21 | **New groups queue.** *Built 9 October 2026 (UC-27).* A *New groups* section on the admin page lists groups waiting for review, oldest first: name, description, subcategory, area and the owner's display name (never their email, FR-AC-5). *Approve* lists the group. *Decline* needs a reason (at most 500 characters), which the owner sees on the group page; a declined group is read-only for its organizers, and its page admin can delete it and start again. Both are logged (FR-MD-6). | Should | Only the site admin can approve or decline; the database refuses everyone else. |
+| FR-GR-22 | **Telling the organizer.** *Built 9 October 2026 (UC-27), except the reminders line and the email.* The *Start a group* form says, to a first-time organizer only, that their first group is checked before it's listed. The group page states plainly that it is *Waiting for review*, or *Not approved* with the reason. Once built, the reminders list (FR-AC-10) shows the decision; an email is sent only once the domain exists and the organizer hasn't switched it off (FR-NT-1). No promised waiting time. If the owner deletes their account while the group is waiting or declined, the group is deleted with it, since nothing about it was ever public. | Should | — |
 | FR-GR-9 | **Unclaimed listings.** Real local groups can be listed from public information before their organizers join, so the board isn't empty at launch. A listing holds only a name, a neutral description, an area and a link to the organization's own website, plus upcoming events that link to the organizer's own page. Nobody runs it here, so it has no owner and nobody can join it, RSVP to its events or post in it. Listings are added by the operator in SQL, never through the app. | Must | A listing's page says it is unclaimed and links to the source; no Join or RSVP is offered and the database refuses both. |
 | FR-GR-11 | **Affinity tags.** A group can carry any of these tags: *Women*, *Youth*, *BIPOC*, *LGBTQIA+*. They show on the group page and in group lists. The owner and admins can change them on the group's edit form; listings get them from the import or the research agent. | Should | A tag outside the list is refused by the database. |
 | FR-GR-23 | **Website.** A group can have its own website address, set by the owner and admins on the group form and shown on its own line on the group page ("Website: dirtskrrts.com"), as a link with `rel="nofollow ugc noopener"`. Only http and https addresses are stored; a missing scheme is taken as https. A listing that is claimed keeps the website it was listed with. | Should | Members can't change it; nothing but a web address is accepted. |
@@ -322,32 +324,30 @@ claims (FR-BZ-2), which already ask for the business's own email.
 
 ### Group creation approval (UC-27)
 
-**Decision needed.** The PRD's open question *Who can create groups*.
-Today anyone signed in can start up to 3 groups (FR-GR-7), listed at
-once, with rate limits (FR-MD-4) and reports (FR-MD-1) as the safety
-net. All three options keep the limit of 3.
+**Decided 9 October 2026: option B, built the same day.** FR-GR-8,
+FR-GR-21 and FR-GR-22 moved into the Groups table above. The options
+Sarah weighed are kept here for the record. Before, anyone signed in
+could start up to 3 groups (FR-GR-7), listed at once, with rate limits
+(FR-MD-4) and reports (FR-MD-1) as the safety net. All three options keep
+the limit of 3.
 
 | Option | What it means | Consequences | Cost |
 | --- | --- | --- | --- |
 | **A. Approve every new group** | Every group waits for the site admin before it's listed. | Nothing reaches the listings unchecked. Every organizer waits every time, including people the site admin already trusts; when Sarah is away, nothing new goes live. The most ongoing work for the site admin. | Same build as B. Ongoing: one review per group. |
-| **B. Approve only a person's first group** *(recommended)* | A first group waits; once someone has an approved group (or an approved claim), their later groups list at once. | Stops the likely abuse: a throwaway account starting a fake or spam group. Checked organizers are never held up again. Someone approved once could still post a bad group later; reports, suspension and the limit of 3 cover that. | Small: a review status on groups, a *New groups* section on the admin page, one database rule, and its permission tests. Ongoing: one review per new organizer. |
+| **B. Approve only a person's first group** *(recommended; chosen)* | A first group waits; once someone has an approved group (or an approved claim), their later groups list at once. | Stops the likely abuse: a throwaway account starting a fake or spam group. Checked organizers are never held up again. Someone approved once could still post a bad group later; reports, suspension and the limit of 3 cover that. | Small: a review status on groups, a *New groups* section on the admin page, one database rule, and its permission tests. Ongoing: one review per new organizer. |
 | **C. No approval** (today) | Groups list at once. | Nothing to build or run. A spam group stays listed until someone reports it and the site admin removes it. At the board's current size that risk is low; it grows with traffic. | None. FR-GR-8 is cut. |
 
 Either A or B changes success criterion 3 (*an organizer can create a
 group, add a co-admin and post an event without help*): a co-admin has
 to join first, and nobody can join a group waiting for review. The
 proposed wording is "...without help, once their first group is
-approved." The drafts below are written for B.
+approved." Adopted with B.
 
 Related, not in this scope: ownership can only be transferred to an
 admin (FR-MB-6). Sarah may want any member to be eligible; that is
 listed as its own open question in the PRD.
 
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-GR-8 | **First group waits for review.** *Replaces the Could.* A user's first group is created *waiting for review*: visible only to its owner and the site admin; absent from listings, search, Events and the home page; nobody can join it. The owner can edit it and post events, which stay hidden with it. A user skips review if they own, or have owned, an approved group, or had a claim approved (FR-GR-10); receiving an approved group by transfer counts too. Owners of groups that exist when this ships count as approved. A group waiting for review counts toward the limit of 3 (FR-GR-7). | Should | The database returns a group waiting for review to nobody but its owner and the site admin, and refuses every join. |
-| FR-GR-21 | **New groups queue.** A *New groups* section on the admin page lists groups waiting for review, oldest first: name, description, subcategory, area and the owner's display name (never their email, FR-AC-5). *Approve* lists the group. *Decline* needs a short reason, which the owner sees on the group page; a declined group stays read-only for its owner, who can delete it and start again. Both are logged (FR-MD-6). | Should | Only the site admin can approve or decline; the database refuses everyone else. |
-| FR-GR-22 | **Telling the organizer.** The form says before they submit that first groups are checked first. The group page states plainly that it is waiting, and later whether it was approved or declined and why. Once built, the reminders list (FR-AC-10) shows the decision; an email is sent only once the domain exists and the organizer hasn't switched it off (FR-NT-1). No promised waiting time. If the owner deletes their account while the group is waiting, the group is deleted with it, since nothing about it was ever public. | Should | — |
+The requirements are in the Groups table: FR-GR-8, FR-GR-21, FR-GR-22.
 
 ### Demo member (UC-28)
 

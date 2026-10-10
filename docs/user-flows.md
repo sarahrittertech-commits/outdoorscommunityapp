@@ -375,8 +375,8 @@ flowchart TD
 
 ## UC-27 — Start your first group
 
-*Draft, awaiting review. Decision needed: drawn for "approve only a
-person's first group".*
+*Approved (option B) and built 9 October 2026: approve only a person's
+first group. A declined group's page admin can delete it and start again.*
 
 ```mermaid
 flowchart TD

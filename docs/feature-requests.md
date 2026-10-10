@@ -31,7 +31,7 @@ Requests from the 8 October Magic Patterns design are summarized in the
 | --- | --- | --- | --- | --- | --- |
 | 8 Oct | Sarah | Branded sign-in email instead of Supabase's | Tool (wording per board in templates) | UC-25, FR-AC-11 to FR-AC-13 | Draft. Needs a domain and Resend. |
 | 8 Oct | Sarah | Email check when someone claims a group | Tool | UC-26, FR-GR-18 to FR-GR-20 | Draft. Needs a domain. |
-| 8 Oct | Sarah | Approval for new groups | Tool (policy as a setting) | UC-27, FR-GR-8, FR-GR-21, FR-GR-22 | Decision needed: every group, first group only (recommended), or none. |
+| 8 Oct | Sarah | Approval for new groups | Tool (policy as a setting) | UC-27, FR-GR-8, FR-GR-21, FR-GR-22 | Built 9 Oct. Sarah chose first group only (option B); later groups list at once. |
 | 9 Oct | Sarah | Bring the 8 October design's home page to the live site: line-drawn ridgeline hero, town and distance search, Near you, Explore destinations map | Tool (layout and search), Brand (drawing, colors), Board (towns list) | UC-14, UC-15, FR-BR-12 to FR-BR-18, ADR-0007 | Live. Towns not zip codes; destinations are towns until places exist. |
 | 9 Oct | Sarah | A demo login like the prototype's | Tool (on/off per board) | UC-28, FR-AC-14 to FR-AC-16 | Decision needed: read-only demo member (recommended), separate demo board, or none. |
 | 9 Oct | Sarah | Research run for more cities, venues, guides, bike shops and trail hubs | Board | UC-9 (agent instructions) | Blocked: the cloud routine needs an allow rule for the intake call, set by Sarah on claude.ai. |

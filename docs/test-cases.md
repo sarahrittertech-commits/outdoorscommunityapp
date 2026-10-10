@@ -139,6 +139,16 @@ web app is not the thing enforcing the rule.
 | PT-117 | set_suggestion_status refuses *new* and a note over 500 characters (FR-AD-6) | Bad data through the admin function |
 | PT-118 | Five suggestions a day are allowed and the sixth is refused (FR-AD-7, TR-SEC-8) | One account floods the admin queue |
 | PT-119 | A member can't backdate a suggestion to slip past the daily limit (FR-AD-7, TR-SEC-8) | The limit is bypassed with an old date |
+| PT-160 | A first-time organizer's group starts waiting for review; groups made outside the app are approved (FR-GR-8) | Spam groups list at once |
+| PT-161 | Someone with an approved group, or an approved claim, skips review (FR-GR-8) | Checked organizers wait every time |
+| PT-162 | A group waiting for review is readable only by its owner, its page managers and the site admin (FR-GR-8) | Unreviewed groups leak to visitors |
+| PT-163 | The owner edits it and posts events, which stay out of group and event listings and browse counts, even for the owner (FR-GR-8) | Unreviewed groups or events reach the listings |
+| PT-164 | Nobody can join a group waiting for review (FR-GR-8) | People join a group nobody has checked |
+| PT-165 | Groups waiting for review count toward the limit of 3 (FR-GR-7, FR-GR-8) | One account queues unlimited groups |
+| PT-166 | Only the site admin approves, once, and it is logged; the group is then listed and joinable, and the organizer's next group lists at once (FR-GR-21) | Owners approve themselves |
+| PT-167 | Declining needs a reason of at most 500 characters, is site admin only and logged; the owner reads the reason; a declined group can't be edited or post events (FR-GR-21, FR-GR-22) | Declines with no explanation, or a declined group keeps changing |
+| PT-168 | Only the page admin deletes a declined group, never an approved one, and can then start again (FR-GR-21) | Anyone deletes groups, or a declined group blocks the limit |
+| PT-169 | Deleting an account deletes its groups waiting for review, and nobody else's (FR-GR-22) | Unreviewed groups linger with no owner |
 
 ## Automated — unit
 
@@ -204,5 +214,4 @@ real tests, with requirements, once the use case is approved.
 | UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |
 | UC-25 A sign-in email that sounds like us | The email comes from the board's domain with no images or tracked links; an expired or used link signs nobody in |
 | UC-26 Prove it's my club | A confirmation at a domain other than the group's website is refused; a used or expired link confirms nothing; no full address is kept afterwards; a confirmed claim is never approved automatically |
-| UC-27 Start your first group | A group waiting for review is returned to nobody but its owner and the site admin; joins are refused; only the site admin approves or declines; a person with an approved group skips review |
 

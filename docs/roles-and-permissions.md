@@ -159,6 +159,24 @@ claimed the same way; its remaining admins and members are users here.
 | Approve or decline a claim | ❌ | ❌ | ✅ |
 | Add a listing or set a source link | ❌ | ❌ | ❌ operator SQL only |
 
+### A person's first group (UC-27, FR-GR-8, FR-GR-21)
+
+Built 9 October 2026. A first-time organizer's group waits for the site
+admin before it is listed. It has no members yet but its page admin and
+any page managers.
+
+| Action | Visitor | User | Page manager | Page admin | Site admin |
+| --- | --- | --- | --- | --- | --- |
+| See a group waiting for review, or declined, and its events | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Join it, by the button or an invite link | ❌ | ❌ | — | — | ❌ |
+| Edit it and post events while it waits | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Edit a declined group or post in it | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Delete a declined group | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Approve or decline a new group (logged) | ❌ | ❌ | ❌ | ❌ | ✅ |
+
+A person skips review once they started or own an approved group, or had
+a claim approved.
+
 ### Research candidates (FR-RS-5, FR-RS-6)
 
 | Action | Visitor | User | Site admin |
@@ -211,9 +229,6 @@ approved.
 | Link a group to a business page | ❌ | business owner, with the group owner's acceptance | — | — | ✅ accepts | ✅ |
 | Confirm a claim with a club email (UC-26) | ❌ | **own claim** | — | — | — | — |
 | See whether a claim was confirmed, and at which domain | ❌ | **own claim** | — | — | — | ✅ |
-| See a group waiting for review (UC-27) | ❌ | ❌ | — | — | ✅ | ✅ |
-| Join a group waiting for review | ❌ | ❌ | — | — | — | ❌ |
-| Approve or decline a new group | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
 Group admins never read members' private messages or saved events.
 

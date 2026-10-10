@@ -71,7 +71,7 @@ records where each one came from.
 | --- | --- | --- | --- | --- | --- |
 | site admin | have new groups and events suggested from public sources | the board fills up without me searching | UC-9 | FR-RS-1 to FR-RS-9 | Live (cloud permission pending) |
 | site admin | see suggestions that look like something already listed, tagged *possible duplicate* | I don't list the same group twice; exact matches never reach me | UC-9 | FR-RS-3, FR-RS-10 | Built |
-| site admin | review a person's first group before it's listed | spam never reaches the listings | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 | Decision needed |
+| site admin | review a person's first group before it's listed | spam never reaches the listings | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 | Built |
 | member | report anything that breaks the rules | moderators can act on it | UC-6 | FR-MD-1 to FR-MD-6 | Live |
 | member | suggest a region, a feature, a group to invite or an event to add | the board grows where people want it | UC-32 | FR-AD-4, FR-AD-5, FR-AD-7 | Built |
 | site admin | see every suggestion in one place and mark it planned, done or declined | nothing gets lost and members hear back | UC-32 | FR-AD-6 | Built |
