@@ -119,6 +119,9 @@ export type Database = {
           member_list_visibility: Database["public"]["Enums"]["member_list_visibility"];
           group_type: Database["public"]["Enums"]["group_type"] | null;
           cover_alt: string | null;
+          review_status: Database["public"]["Enums"]["group_review_status"];
+          review_reason: string;
+          reviewed_at: string | null;
           photos_public: boolean;
         };
         Insert: {
@@ -888,10 +891,15 @@ export type Database = {
       suspend_user: { Args: { p_user_id: string; p_reason: string }; Returns: undefined };
       unsuspend_user: { Args: { p_user_id: string }; Returns: undefined };
       delete_my_account: { Args: never; Returns: undefined };
+      approve_new_group: { Args: { p_group_id: string }; Returns: undefined };
+      decline_new_group: { Args: { p_group_id: string; p_reason: string }; Returns: undefined };
+      delete_declined_group: { Args: { p_group_id: string }; Returns: undefined };
+      first_group_needs_review: { Args: never; Returns: boolean };
     };
     Enums: {
       join_policy: "open" | "approval";
       group_status: "active" | "archived" | "removed";
+      group_review_status: "pending" | "approved" | "declined";
       member_role: "owner" | "admin" | "member";
       member_list_visibility: "organizers" | "members" | "signed_in";
       member_status: "pending" | "active" | "banned";
@@ -919,6 +927,8 @@ export type Database = {
         | "invite_manager"
         | "send_invites"
         | "dismiss_report"
+        | "approve_group"
+        | "decline_group"
         | "remove_rsvp";
     };
     CompositeTypes: {

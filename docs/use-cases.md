@@ -694,11 +694,11 @@ decision themselves.
 
 ## UC-27 — Start your first group
 
-> **Draft, awaiting review. Decision needed.** Requested by Sarah on 8
-> October 2026. Answers the PRD open question *Who can create groups*
-> and would replace FR-GR-8 (Could). Written for the recommended option,
-> **approve only a person's first group**; the alternatives and their
-> costs are in [Functional requirements](./functional-requirements#group-creation-approval-uc-27).
+> **Approved (option B) and built 9 October 2026.** Requested by Sarah on
+> 8 October 2026. Answers the PRD open question *Who can create groups*:
+> Sarah chose **approve only a person's first group**. It replaces
+> FR-GR-8 (Could); the options she weighed are kept in
+> [Functional requirements](./functional-requirements#group-creation-approval-uc-27).
 
 **Actor:** The organizer, then the site admin
 
@@ -718,8 +718,7 @@ decision themselves.
 5. Later, the same organizer starts a second group. It is listed at once,
    with no review.
 
-**Requirements:** to be written after review (drafts FR-GR-8, FR-GR-21,
-FR-GR-22).
+**Requirements:** FR-GR-8, FR-GR-21, FR-GR-22.
 
 **Succeeds when:** no one's first group reaches the listings without the
 site admin's yes, and an organizer who has been checked once is never

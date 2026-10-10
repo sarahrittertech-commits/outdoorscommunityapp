@@ -23,11 +23,11 @@ export default async function PastEventsPage({ params, searchParams }: Props) {
   const { supabase, group } = await loadGroup((await params).slug);
   const page = pageFrom((await searchParams).page);
 
-  // event_listings holds active groups only (FR-GR-6); an archived group's
-  // past events are read directly.
+  // event_listings holds listed, active groups only (FR-GR-6, UC-27); an
+  // archived or unlisted group's past events are read directly.
   const range = { from: (page - 1) * PAGE_SIZE, to: page * PAGE_SIZE - 1 };
   const { events, count } =
-    group.status === "active"
+    group.status === "active" && group.review_status === "approved"
       ? await supabase
           .from("event_listings")
           .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps", { count: "exact" })

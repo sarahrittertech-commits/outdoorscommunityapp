@@ -131,8 +131,10 @@ select lives_ok(
   'FR-GR-10 anyone signed in can ask to take over a group that needs an owner'
 );
 select throws_ok(
+  -- g2 is owner2's ordinary group. (new-group, made by a first-time
+  -- organizer, now waits for review and is invisible here: UC-27.)
   format($$ insert into public.group_claims (group_id, user_id, note)
-            select id, %L, 'This group is fine as it is.' from public.groups where slug = 'new-group' $$, tests.uid('admin')),
+            values (%L, %L, 'This group is fine as it is.') $$, tests.id('g2'), tests.uid('admin')),
   '42501', null, 'Ordinary groups cannot be claimed'
 );
 select tests.as('siteadmin');

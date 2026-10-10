@@ -119,6 +119,8 @@ it except through the database functions (onboarding, suspend, delete).
 | `created_at`, `updated_at` | timestamp | |
 | `is_unclaimed` | boolean | FR-GR-9: an unclaimed listing, added from public information. Only SQL run by the operator sets it. |
 | `needs_owner` | boolean | FR-AC-6: its owner deleted their account. The group is archived until a claim is approved. Only database functions set it. |
+| `review_status` | enum | UC-27, FR-GR-8: `pending`, `approved` (default; every group that existed on 9 October 2026), `declined`. A first-time organizer's group starts `pending`. Only `approved` groups are listed or joinable; a pending or declined group is readable by its owner, its page managers and the site admin only. Kept apart from `status`, which says what organizers can do, so the many organizer checks didn't change. Only database functions set it. |
+| `review_reason`, `reviewed_at` | text (≤500), timestamp | FR-GR-21: the site admin's reason for declining, shown to the page admin |
 | `source_url` | text, optional | The organization's own website. Required for a listing. |
 | `website` | text, optional | FR-GR-23: the group's own site, http(s) only, set by owner and admins |
 | `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia`; empty by default |
@@ -333,7 +335,7 @@ site admin.
 | --- | --- | --- |
 | `id` | uuid | |
 | `actor_id` | uuid | who did it |
-| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, `create_invite_link`, `turn_off_invite_link`, `invite_manager`, `send_invites`, `dismiss_report`, … |
+| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, `create_invite_link`, `turn_off_invite_link`, `invite_manager`, `send_invites`, `dismiss_report`, `approve_group`, `decline_group`, … |
 | `target_type`, `target_id` | | what it was done to |
 | `group_id` | uuid, optional | |
 | `reason` | text | |
@@ -488,7 +490,6 @@ written when each is approved, with its migration and permission tests.
 | `businesses`, `business_admins`, `business_places`, `business_groups` | UC-12 | Owner is the account that claimed it with the business email; admins are people's own accounts; places have role *its location* or *operates at*; linked groups keep their own roles. No events table of its own |
 
 | `group_claims`: `confirmed_domain`, `confirmed_at`, plus a temporary address, link token, expiry and send count | UC-26 | The address and token are cleared once the link is used or the last one expires; only the domain and date stay |
-| `groups.review_status`: `pending`, `approved`, `declined`, with `review_reason` | UC-27 | Existing groups start as `approved`; a pending group is readable by its owner and the site admin only |
 
 The branded sign-in email (UC-25) needs no tables: it is Supabase Auth
 settings and template files. Reminders (UC-23) and the calendar (UC-18) need no tables: they are read

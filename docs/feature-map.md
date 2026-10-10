@@ -30,7 +30,7 @@ permission enforced and tested in the database.
 | Communities | One table of every group, A to Z, filterable by activity | — | FR-BR-10 |
 | Search | Keyword search over groups and events | — | FR-BR-5 |
 | Accounts | Email and password sign-in with a confirmed email, forgot and change password; 18+ and terms, profile, *My stuff*, delete account, public profiles | UC-2, UC-29 | FR-AC-2 to FR-AC-7, FR-AC-17 to FR-AC-21 |
-| Groups | Start, edit, archive; open or approval joining with a question; rules; discussions on or off; limit of 3 | UC-3 | FR-GR-1 to FR-GR-7 |
+| Groups | Start, edit, archive; open or approval joining with a question; rules; discussions on or off; limit of 3; a person's first group waits for the site admin (*New groups*) | UC-3, UC-27 | FR-GR-1 to FR-GR-8, FR-GR-21, FR-GR-22 |
 | Membership and roles | Join, request, leave; page admin, up to two page managers, member; approve, remove, ban; transfer ownership | UC-2, UC-4, UC-31 | FR-MB-1 to FR-MB-9, FR-MB-11 |
 | Invites | Invite link (7 days, 30 days or until turned off) that joins people straight in; email invites for members and page managers built but waiting on the board's email setup | UC-31 | FR-MB-12 to FR-MB-16 |
 | Events and RSVPs | Post, edit, cancel; going or not going; places and "full"; who's going; past events | UC-2, UC-3 | FR-EV-1 to FR-EV-8 |
@@ -115,7 +115,7 @@ Requested by Sarah on 8 October; drafted 9 October.
 | --- | --- | --- | --- |
 | **Branded sign-in email**: plain wording from Branch Outdoors instead of Supabase's generic email; no images or tracking | Fits · Waits on domain | UC-25 | FR-AC-11 to FR-AC-13 |
 | **Confirm a claim by email** at the group's own website domain; the site admin sees *Confirmed at …* or *Not confirmed* | Fits · Waits on domain | UC-26 | FR-GR-18 to FR-GR-20 |
-| **Approval of a person's first group** (recommended of three options: every group, first group only, none) | Decision needed | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 |
+| **Approval of a person's first group** (option B of three: every group, first group only, none) | Built 9 October 2026 | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 |
 
 ### Posting events
 

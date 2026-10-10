@@ -47,7 +47,7 @@ export default async function Home({ searchParams }: Props) {
       .gt("starts_at", new Date().toISOString())
       .order("starts_at")
       .limit(300),
-    supabase.from("groups").select("slug, area").eq("status", "active"),
+    supabase.from("groups").select("slug, area").eq("status", "active").eq("review_status", "approved"),
   ]);
 
   // Each event is placed at its group's town (UC-14).
