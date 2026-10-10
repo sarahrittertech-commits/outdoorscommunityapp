@@ -935,6 +935,74 @@ and the member can see what happened to it.
 
 ---
 
+## UC-33 — Tell people about yourself
+
+> **Draft, awaiting review. Decisions needed.** Requested by Sarah on 10
+> October 2026: an *About me* profile in the spirit of early Facebook (a
+> small photo, a few plain sections, the groups you're in), each section
+> private or left blank. Written for the recommended options; the
+> decisions and their cost are below.
+
+**Actor:** A member filling in their profile, then another member reading
+it
+
+**Trigger:** A member wants the people they'll meet on a trail to know a
+little about them before the day; or a member wonders who just asked to
+join their group or sent them a message request.
+
+**Flow:**
+
+1. From *My stuff → Profile*, opens *Edit my profile*. Every section is
+   optional and starts blank.
+2. Adds a small photo of themselves (a square crop, with a one-line
+   description).
+3. Picks a **home town** from the board's town list and writes a short
+   **blurb** (today's bio, 280 characters).
+4. Ticks **activities I enjoy** from the board's activity list (hiking,
+   camping, paddling, foraging…).
+5. Fills in up to three **fill-in-the-blanks** from a fixed list, such as
+   *I've always wanted to try* ___ (snowboarding) or *My favorite place
+   outside is* ___ (the Grand Tetons).
+6. Writes up to ten **adventure goals for this year**, and ticks each one
+   off when it's done.
+7. Chooses, for each section, **Show** or **Hide**. *Groups I'm in* is
+   shown by default and lists only groups the reader could see anyway.
+8. Saves, and sees the profile as other members will.
+9. Another signed-in member opens the profile from a post, an RSVP list
+   or a message request: the photo with the blurb, town and activities
+   beside it, then the fill-in-the-blanks, this year's goals with ticks,
+   and the groups, each linked.
+
+**Requirements:** to be written after review (drafts FR-PR-1 to FR-PR-9).
+
+**Succeeds when:** a member can see in ten seconds who someone is and what
+they're into, nothing a member hid is ever shown to anyone else (on the
+page or through the API), and a profile left blank still looks finished.
+
+**Options and their cost:**
+
+| Decision | Recommended | Alternatives and their cost |
+| --- | --- | --- |
+| **Profile photo** (reverses FR-AC-3, *No profile photos*) | **Yes, optional and small**: one square photo, re-encoded and stripped like event photos (TR-SEC-9), reportable through *Report this profile*, removable by the site admin. | No photo: nothing to moderate, but profiles look empty and people are harder to recognise at a trailhead. A photo is the one part of this that needs moderation: someone will upload something that isn't them, or isn't appropriate. |
+| **Who sees a profile** | **Signed-in members only.** Visitors and search engines see only the display name. | Public: friendlier to share, but anyone (and any scraper) could read someone's home town, goals and groups. |
+| **Show or hide** | **Per section, Show or Hide.** No "friends only" tier. | Three levels (everyone, members of my groups, only me): finer control, but a second permission model to build and test for every section. |
+| **Groups I'm in** | **Only groups the reader could already see the member list of** (the group's own member-list privacy, FR-MB-10, wins). | Every group: simpler, but it would undo a group's choice to keep its member list private. |
+| **Adventure goals** | **This year's list only**, up to ten, each ticked off or not. On 1 January it starts empty; last year's list stays visible to its owner only. | Keep past years public: a nice record, but a growing page and an archive to design. |
+| **Fill-in-the-blanks** | **A fixed list of about eight prompts**, answer up to three, 60 characters each. | Free-form questions: more personal, but any question at all is a second free-text box to moderate. |
+
+**Will it help tell people from bots?** A little, not much. A filled-in
+profile with a photo and goals is a signal a person can read when deciding
+on a join request or a message request. The real protections stay where
+they are: a confirmed email, rate limits, first-group review (UC-27) and
+message requests (UC-20).
+
+**Not part of this:** a wall or timeline, likes or comments on goals,
+friends or followers, "people you may know", or showing who viewed a
+profile. Those would turn the board into a social network, which the PRD
+rules out.
+
+---
+
 ## Journeys the seed data must cover
 
 Launch data should let a reviewer walk every use case above on the live site:

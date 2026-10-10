@@ -221,7 +221,7 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28 and UC-33 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built (UC-29, password sign-in, was approved and built on 9 October and
 its requirements, FR-AC-17 to FR-AC-21, are in the Accounts table). Each moves into its area's table above, with a priority, once Sarah
@@ -363,6 +363,23 @@ admin (FR-MB-6). Sarah may want any member to be eligible; that is
 listed as its own open question in the PRD.
 
 The requirements are in the Groups table: FR-GR-8, FR-GR-21, FR-GR-22.
+
+### About me profile (UC-33)
+
+**Decisions needed:** see the options in UC-33. These drafts follow the
+recommended ones.
+
+| ID | Draft requirement | Proposed | Accepted when |
+| --- | --- | --- | --- |
+| FR-PR-1 | **Photo.** Optional, one per member: JPEG, PNG or WebP, at most 5 MB, cropped square, re-encoded to WebP at most 400 px with location and camera data removed (TR-SEC-9), with a one-line description (defaults to the display name). Replacing it removes the old file. Replaces "No profile photos" in FR-AC-3. | Should | The stored file has no metadata, and only its owner can write it. |
+| FR-PR-2 | **Home town.** Chosen from the board's town list (the same list as Location on Events), replacing the free-text area. Existing free-text areas are kept until the member picks a town. | Should | — |
+| FR-PR-3 | **Activities I enjoy.** Ticked from the board's activity categories, shown comma-separated, each linking to that activity's page. | Should | Only real categories can be stored. |
+| FR-PR-4 | **Fill-in-the-blanks.** Up to 3 answers to a fixed list of about 8 prompts set in `src/config/site.ts` (so the women's board can have its own), each answer 1 to 60 characters of plain text. | Could | Prompts not in the list are refused. |
+| FR-PR-5 | **Adventure goals.** Up to 10 for the current year, each 1 to 100 characters, each done or not. A new year starts an empty list; earlier years stay readable by their owner only. | Should | Another member never sees a past year's list. |
+| FR-PR-6 | **Groups I'm in.** Lists the member's active groups, linked, but only those whose member list the reader may see (FR-MB-10), and never pending or banned memberships. | Should | A group with a private member list never appears on anyone's profile for a non-member. |
+| FR-PR-7 | **Show or hide.** Each section (photo, town, blurb, activities, fill-in-the-blanks, goals, groups) has Show or Hide. Hidden and blank sections are left out entirely. Enforced by the database, not just the page. | Must | A hidden section can't be read through the API. |
+| FR-PR-8 | **Members only.** Only signed-in members read a profile beyond its display name; visitors are asked to sign in. Profiles stay out of search engines. | Must | Signed out, the API returns the display name only. |
+| FR-PR-9 | **Reports and removal.** *Report this profile* covers every section. The site admin can remove a member's photo or clear any section, logged in the moderation log. | Must | Removals leave a record. |
 
 ### Demo member (UC-28)
 
