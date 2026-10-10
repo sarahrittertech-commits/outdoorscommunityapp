@@ -176,6 +176,20 @@ claimed the same way; its remaining admins and members are users here.
 | Skip a candidate | ❌ | ❌ | ✅ |
 | Add a candidate | ❌ | ❌ | ❌ research agent only |
 
+### Group photos (UC-21, FR-GR-12, FR-GR-13)
+
+Built 9 October 2026. *Admin* is a page manager, *Owner* the page admin.
+The database and the private `group-photos` bucket enforce every row.
+
+| Action | Visitor | User (not a member) | Member | Admin | Owner | Site admin |
+| --- | --- | --- | --- | --- | --- | --- |
+| See a members-only gallery and its files | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| See a gallery the page admin made public | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Add photos (active group; 20 a day, 200 per gallery) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Delete a photo (active group) | ❌ | ❌ | **own** | ✅ any, logged | ✅ any, logged | ✅ any, logged |
+| Report a photo | ❌ | public galleries only | ✅ | ✅ | ✅ | ✅ |
+| Make the gallery public or members-only | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+
 ### Suggestions to the site admin (UC-32, FR-AD-4 to FR-AD-7)
 
 Built 9 October 2026. Page admins and page managers are users here: being
@@ -205,9 +219,6 @@ approved.
 | See own going and saved events on a calendar (built with UC-18; saving with UC-22) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See own reminders | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Reply to a reply (built with UC-19; see Discussions) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
-| Upload photos to the group gallery | ❌ | ❌ | ✅ | ✅ | ✅ | — |
-| See a members-only gallery | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
-| Remove a gallery photo | ❌ | ❌ | **own** | ✅ | ✅ | ✅ |
 | Send a message request | ❌ | ✅ (10 a day) | ✅ | ✅ | ✅ | ✅ |
 | Accept, decline or block a request | ❌ | **own** | **own** | **own** | **own** | **own** |
 | Read a conversation | ❌ | **own** | **own** | **own** | **own** | reported only |

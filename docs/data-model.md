@@ -123,6 +123,7 @@ it except through the database functions (onboarding, suspend, delete).
 | `website` | text, optional | FR-GR-23: the group's own site, http(s) only, set by owner and admins |
 | `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia`; empty by default |
 | `member_list_visibility` | enum | FR-MB-10: `organizers`, `members` (default), `signed_in`. Decides who reads the full `group_members` list and other people's `event_rsvps`; set by owner and admins |
+| `photos_public` | boolean | FR-GR-12: false (members only) by default; changed only by the page admin or site admin through `set_group_photos_public()` |
 
 ### group_claims
 
@@ -314,7 +315,7 @@ posting.
 | --- | --- | --- |
 | `id` | uuid | |
 | `reporter_id` | uuid | |
-| `target_type` | enum | `group`, `event`, `thread`, `reply`, `profile` |
+| `target_type` | enum | `group`, `event`, `thread`, `reply`, `profile`, `photo` |
 | `target_id` | uuid | |
 | `group_id` | uuid, optional | set for content inside a group, so the report reaches that group's admins |
 | `reason` | enum | `spam`, `harassment`, `unsafe`, `off_topic`, `other` |
@@ -338,6 +339,33 @@ site admin.
 | `reason` | text | |
 | `content_snapshot` | json, optional | the removed text, kept for the site admin only |
 | `created_at` | timestamp | |
+
+## Group photos (UC-21)
+
+### group_photos
+
+A group's gallery (FR-GR-12, FR-GR-13). Members of an active group insert
+only `group_id`, `uploader_id` (themselves), `path` and `alt`; `status`
+changes only through `remove_group_photo()`. Nobody updates or deletes a row
+directly. Visible rows are readable by the group's members, by anyone when
+`groups.photos_public` is on, and by the site admin. A trigger allows at
+most 200 visible photos per group and 20 uploads per member per group per
+day, with server time.
+
+The files are in the PRIVATE `group-photos` bucket at
+`<group_id>/<uploader_id>/<random>.webp`, with a 400 px thumbnail next to
+each at `<random>_t.webp`. Pages show them through signed URLs created as
+the viewer; the bucket's read policy is the same check as the rows.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `group_id` | uuid | the group; removed with it |
+| `uploader_id` | uuid, optional | who added it; null if they delete their account |
+| `path` | text, unique | the full-size file, always in the group's and uploader's folder (checked) |
+| `alt` | text | the description, 1 to 200 characters |
+| `status` | text | `visible`, `deleted` (by the uploader), `removed` (by an organizer, logged) |
+| `created_at` | timestamp | server time |
 
 ## Suggestions (UC-32)
 
@@ -453,7 +481,6 @@ written when each is approved, with its migration and permission tests.
 | `event_faqs` for a series | UC-10, UC-11 | Built for single events 9 October 2026 |
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
 | `groups`: `organization_id` (`group_type` and the cover built with UC-24, `member_list_visibility` with UC-16) | UC-13 | |
-| `group_photos` | UC-21 | Uploader, path, alt text, status |
 | `places` | UC-15, UC-12 | Name, kind, activities, coordinates, description; seeded from the research workspace's places |
 | `towns` | UC-14 | Bundled US towns and zip codes with coordinates |
 | `organizations` | UC-13 | National organizations that chapters link to |

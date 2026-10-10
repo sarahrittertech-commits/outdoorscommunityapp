@@ -222,6 +222,11 @@ export const eventPhotoSchema = z
     "Use a JPEG, PNG or WebP image.",
   );
 
+/** FR-GR-12: at most 10 photos at a time (25 MB together), each with its own alt text. */
+export const GROUP_PHOTO_BATCH = 10;
+export const GROUP_PHOTO_BATCH_BYTES = 25 * 1024 * 1024;
+export const groupPhotoAltSchema = requiredText(1, 200);
+
 export const threadSchema = z.object({
   title: requiredText(1, 150),
   body: requiredText(1, 10000),
@@ -237,7 +242,7 @@ export const newReplySchema = replySchema.extend({
 });
 
 export const reportSchema = z.object({
-  targetType: z.enum(["group", "event", "thread", "reply", "profile"]),
+  targetType: z.enum(["group", "event", "thread", "reply", "profile", "photo"]),
   targetId: id,
   reason: z.enum(["spam", "harassment", "unsafe", "off_topic", "other"]),
   note: optionalText(1000),

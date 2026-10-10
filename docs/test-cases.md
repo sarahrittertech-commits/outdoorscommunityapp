@@ -155,6 +155,16 @@ web app is not the thing enforcing the rule.
 | PT-133 | Sponsor links are http(s) only, logos live in their own event's folder, and a sponsor's group is its event's group (FR-EV-14) | A script link, or a logo from another group |
 | PT-134 | At most 5 sponsors per event; organizers remove one (FR-EV-14) | Unlimited sponsors |
 | PT-135 | A sponsored event lists like any other (FR-EV-14) | Sponsorship changes lists |
+| PT-150 | Members add photos and files into their own folder; outsiders, banned members, visitors and other people's folders are refused (FR-GR-12) | Anyone puts pictures in a group's gallery |
+| PT-151 | A members-only gallery's rows and files reach members and the site admin only; the bucket is private (FR-GR-12, TR-SEC-12) | Members-only photos leak to the public |
+| PT-152 | A photo needs alt text and a `.webp` path in its own group's folder; nobody updates or deletes rows directly (FR-GR-12) | Undescribed photos, or a row pointing at another group's file |
+| PT-153 | 20 uploads per member per group a day; 200 photos per gallery (FR-GR-12, TR-SEC-8) | One account fills the storage |
+| PT-154 | The uploader deletes their own photo and file; others can't; deleting doesn't reset the day's limit (FR-GR-13) | Members delete each other's photos |
+| PT-155 | The page admin and managers remove any photo, logged with its description (FR-GR-13, FR-MD-6) | Removals leave no record |
+| PT-156 | A visible photo can be reported and the report reaches its group; a report about an organizer's photo goes to the site admin (FR-GR-13, FR-MD-2) | Reports on photos go nowhere, or organizers clear complaints about themselves |
+| PT-157 | Only the page admin makes a gallery public, and a public gallery's rows and files reach visitors (FR-GR-12) | A manager exposes members' photos |
+| PT-158 | An archived group takes no new photos and its uploaders can't delete; members still see it (FR-GR-12, FR-GR-6) | A read-only group still changes |
+| PT-159 | A suspended member can't upload a photo (FR-GR-12, FR-MD-3) | Suspension doesn't stop uploads |
 
 ## Automated — unit
 
@@ -217,7 +227,6 @@ real tests, with requirements, once the use case is approved.
 | UC-17 Approve who comes | A member can't approve their own RSVP; going never exceeds places with two admins acting at once; only admins open Manage RSVPs |
 | UC-18 My calendar | Shows only the user's going and saved events; works without JavaScript |
 | UC-20 Message another member | A second message before acceptance is refused; a blocked user's message is refused; a third user, group admins included, reads nothing; the 11th request in a day is refused |
-| UC-21 Share trip photos | A non-member gets no photo from a members-only gallery, from the database or storage; uploads are re-encoded and stripped of location data; only the uploader and organizers remove photos |
 | UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |
 | UC-25 A sign-in email that sounds like us | The email comes from the board's domain with no images or tracked links; an expired or used link signs nobody in |
 | UC-26 Prove it's my club | A confirmation at a domain other than the group's website is refused; a used or expired link confirms nothing; no full address is kept afterwards; a confirmed claim is never approved automatically |

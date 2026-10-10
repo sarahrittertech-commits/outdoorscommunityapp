@@ -119,6 +119,7 @@ export type Database = {
           member_list_visibility: Database["public"]["Enums"]["member_list_visibility"];
           group_type: Database["public"]["Enums"]["group_type"] | null;
           cover_alt: string | null;
+          photos_public: boolean;
         };
         Insert: {
           id?: string;
@@ -145,6 +146,7 @@ export type Database = {
           member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
           group_type?: Database["public"]["Enums"]["group_type"] | null;
           cover_alt?: string | null;
+          photos_public?: boolean;
         };
         Update: {
           id?: string;
@@ -171,6 +173,7 @@ export type Database = {
           member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
           group_type?: Database["public"]["Enums"]["group_type"] | null;
           cover_alt?: string | null;
+          photos_public?: boolean;
         };
         Relationships: [
           Fk<"groups_subcategory_id_fkey", "subcategory_id", "subcategories">,
@@ -557,6 +560,30 @@ export type Database = {
           Fk<"reports_reporter_id_fkey", "reporter_id", "profiles">,
         ];
       };
+      group_photos: {
+        Row: {
+          id: string;
+          group_id: string;
+          uploader_id: string | null;
+          path: string;
+          alt: string;
+          status: "visible" | "deleted" | "removed";
+          created_at: string;
+        };
+        Insert: {
+          group_id: string;
+          uploader_id: string;
+          path: string;
+          alt: string;
+        };
+        Update: {
+          [_ in never]: never;
+        };
+        Relationships: [
+          Fk<"group_photos_group_id_fkey", "group_id", "groups">,
+          Fk<"group_photos_uploader_id_fkey", "uploader_id", "profiles">,
+        ];
+      };
       suggestions: {
         Row: {
           id: string;
@@ -820,6 +847,18 @@ export type Database = {
         Args: { p_suggestion_id: string; p_status: Database["public"]["Enums"]["suggestion_status"]; p_note?: string | null };
         Returns: undefined;
       };
+      remove_group_photo: {
+        Args: { p_photo_id: string; p_reason?: string };
+        Returns: string;
+      };
+      set_group_photos_public: {
+        Args: { p_group_id: string; p_public: boolean };
+        Returns: undefined;
+      };
+      can_view_group_photos: {
+        Args: { p_group_id: string };
+        Returns: boolean;
+      };
       resolve_report: {
         Args: { p_report_id: string; p_status: Database["public"]["Enums"]["report_status"] };
         Returns: undefined;
@@ -861,7 +900,7 @@ export type Database = {
       rsvp_status: "going" | "not_going" | "waitlisted" | "requested" | "declined";
       group_type: "club" | "meetup" | "volunteer" | "nonprofit" | "chapter";
       post_status: "visible" | "deleted_by_author" | "removed";
-      report_target: "group" | "event" | "thread" | "reply" | "profile";
+      report_target: "group" | "event" | "thread" | "reply" | "profile" | "photo";
       report_reason: "spam" | "harassment" | "unsafe" | "off_topic" | "other";
       report_status: "open" | "actioned" | "dismissed";
       suggestion_kind: "region" | "feature" | "group" | "event" | "other";
