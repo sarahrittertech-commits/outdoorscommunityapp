@@ -507,3 +507,52 @@ flowchart TD
   decide --> declined(["Declined"])
   planned & done & declined --> back(["Member sees the status and note under My suggestions"])
 ```
+
+## UC-33 — Tell people about yourself
+
+*Draft, awaiting review (10 October 2026). Written for the recommended
+options in the use case.*
+
+```mermaid
+flowchart TD
+  me["My stuff → Profile"] --> edit["Edit my profile<br/>every section optional"]
+  edit --> photo["Photo (optional): upload, crop square,<br/>one-line description"]
+  edit --> basics["Home town (town list), blurb (280)"]
+  edit --> acts["Activities I enjoy: tick from the activity list"]
+  edit --> blanks["Fill in up to 3 of 8 prompts<br/>I've always wanted to try ___"]
+  edit --> goals["This year's adventure goals: up to 10,<br/>tick when done"]
+  photo & basics & acts & blanks & goals --> vis["Each section: Show or Hide"]
+  vis --> save["Save"] --> preview(["See it as other members will"])
+  reader["A member opens a name<br/>(post, RSVP list, message request)"] --> signed{Signed in?}
+  signed -->|no| nameonly(["Display name only, and Sign in to see more"])
+  signed -->|yes| profile(["Profile: photo with blurb, town and activities beside it;<br/>fill-in-the-blanks; this year's goals with ticks;<br/>groups I'm in, linked (only those the reader may see)"])
+  profile --> report["Report this profile"]
+```
+
+**Layout (wide screens):**
+
+```
++---------------------------------------------------------------+
+| [photo]   Sam Rivers                                          |
+| 120x120   Brevard, NC · member since 2026                     |
+|           "Weekend hiker, slow but steady. Ask me about       |
+|            mushrooms."                                        |
+|           Enjoys: hiking, camping, mountain biking, foraging  |
+|           [Message]                                           |
++---------------------------------------------------------------+
+| I've always wanted to try ... snowboarding                    |
+| My favorite place outside is ... the Grand Tetons             |
++---------------------------------------------------------------+
+| 2026 adventure goals                       3 of 5 done        |
+|  [x] Summit Mount Mitchell                                    |
+|  [x] Paddle the French Broad, Section 9                       |
+|  [ ] First overnight backpacking trip                         |
++---------------------------------------------------------------+
+| Groups                                                        |
+| Blue Ridge Dirt Skrrts · Asheville Trail Runners              |
++---------------------------------------------------------------+
+```
+
+On phones the photo sits above the name, and each block stacks. Hidden
+or blank sections don't appear at all: no empty headings.
+
