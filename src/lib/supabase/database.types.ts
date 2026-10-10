@@ -612,6 +612,63 @@ export type Database = {
         };
         Relationships: [Fk<"suggestions_user_id_fkey", "user_id", "profiles">];
       };
+      conversations: {
+        Row: {
+          id: string;
+          starter_id: string;
+          recipient_id: string;
+          status: Database["public"]["Enums"]["conversation_status"];
+          reported_at: string | null;
+          last_message_at: string;
+          created_at: string;
+        };
+        Insert: {
+          [_ in never]: never;
+        };
+        Update: {
+          [_ in never]: never;
+        };
+        Relationships: [
+          Fk<"conversations_starter_id_fkey", "starter_id", "profiles">,
+          Fk<"conversations_recipient_id_fkey", "recipient_id", "profiles">,
+        ];
+      };
+      messages: {
+        Row: {
+          id: string;
+          conversation_id: string;
+          sender_id: string;
+          body: string;
+          created_at: string;
+        };
+        Insert: {
+          [_ in never]: never;
+        };
+        Update: {
+          [_ in never]: never;
+        };
+        Relationships: [
+          Fk<"messages_conversation_id_fkey", "conversation_id", "conversations">,
+          Fk<"messages_sender_id_fkey", "sender_id", "profiles">,
+        ];
+      };
+      message_blocks: {
+        Row: { blocker_id: string; blocked_id: string; created_at: string };
+        Insert: { blocker_id: string; blocked_id: string };
+        Update: {
+          [_ in never]: never;
+        };
+        Relationships: [
+          Fk<"message_blocks_blocker_id_fkey", "blocker_id", "profiles">,
+          Fk<"message_blocks_blocked_id_fkey", "blocked_id", "profiles">,
+        ];
+      };
+      conversation_reads: {
+        Row: { conversation_id: string; user_id: string; last_read_at: string };
+        Insert: { conversation_id: string; user_id: string; last_read_at?: string };
+        Update: { last_read_at?: string };
+        Relationships: [Fk<"conversation_reads_conversation_id_fkey", "conversation_id", "conversations">];
+      };
       moderation_actions: {
         Row: {
           id: string;
@@ -850,6 +907,9 @@ export type Database = {
         Args: { p_suggestion_id: string; p_status: Database["public"]["Enums"]["suggestion_status"]; p_note?: string | null };
         Returns: undefined;
       };
+      send_message: { Args: { p_to: string; p_body: string }; Returns: string };
+      answer_message_request: { Args: { p_conversation_id: string; p_accept: boolean }; Returns: undefined };
+      unread_conversation_count: { Args: never; Returns: number };
       remove_group_photo: {
         Args: { p_photo_id: string; p_reason?: string };
         Returns: string;
@@ -908,7 +968,8 @@ export type Database = {
       rsvp_status: "going" | "not_going" | "waitlisted" | "requested" | "declined";
       group_type: "club" | "meetup" | "volunteer" | "nonprofit" | "chapter";
       post_status: "visible" | "deleted_by_author" | "removed";
-      report_target: "group" | "event" | "thread" | "reply" | "profile" | "photo";
+      report_target: "group" | "event" | "thread" | "reply" | "profile" | "photo" | "message";
+      conversation_status: "requested" | "accepted" | "declined";
       report_reason: "spam" | "harassment" | "unsafe" | "off_topic" | "other";
       report_status: "open" | "actioned" | "dismissed";
       suggestion_kind: "region" | "feature" | "group" | "event" | "other";

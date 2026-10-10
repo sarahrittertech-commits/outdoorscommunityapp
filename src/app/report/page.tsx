@@ -36,7 +36,8 @@ export default async function ReportPage({ searchParams }: Props) {
       </p>
       <p className="mt-2 max-w-prose text-sm text-muted">
         Reports about things inside a group go to that group&apos;s organizers and to the site admin. Reports about a
-        group or a person go to the site admin. Your name is not shown to the person you report.
+        group or a person go to the site admin. A report about a private message goes only to the site admin, who can then
+        read that conversation. Your name is not shown to the person you report.
       </p>
       <Notice params={params} />
       <form action={submitReport}>

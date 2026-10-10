@@ -68,6 +68,14 @@ export default async function AdminPage({ searchParams }: Props) {
   ]);
   const { data: suggestions } = await suggestionQuery;
 
+  // FR-DM-5: who sent each reported message, so the site admin can suspend them.
+  // RLS lets the site admin read a conversation only once it has been reported.
+  const reportedMessageIds = (reports ?? []).filter((r) => r.target_type === "message").map((r) => r.target_id);
+  const { data: reportedMessages } = reportedMessageIds.length
+    ? await supabase.from("messages").select("id, sender_id").in("id", reportedMessageIds)
+    : { data: [] };
+  const senderOf = new Map((reportedMessages ?? []).map((m) => [m.id, m.sender_id]));
+
   // Every report target and suspended profile in one batch, not one query per row.
   const targets = await resolveReportTargets(supabase, [
     ...(reports ?? []).map((r) => ({ type: r.target_type, id: r.target_id, groupSlug: r.groups?.slug })),
@@ -114,6 +122,12 @@ export default async function AdminPage({ searchParams }: Props) {
                 <form action={suspendUser.bind(null, r.target_id)} className="flex items-end gap-2">
                   <input name="reason" type="text" required maxLength={500} placeholder="Reason" aria-label="Reason for suspension" className="mt-0 w-48" />
                   <button className="button button-danger">Suspend account</button>
+                </form>
+              )}
+              {r.target_type === "message" && senderOf.get(r.target_id) && (
+                <form action={suspendUser.bind(null, senderOf.get(r.target_id)!)} className="flex items-end gap-2">
+                  <input name="reason" type="text" required maxLength={500} placeholder="Reason" aria-label="Reason for suspending the sender" className="mt-0 w-48" />
+                  <button className="button button-danger">Suspend sender</button>
                 </form>
               )}
               {r.target_type === "group" && (

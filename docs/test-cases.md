@@ -175,6 +175,26 @@ web app is not the thing enforcing the rule.
 | PT-167 | Declining needs a reason of at most 500 characters, is site admin only and logged; the owner reads the reason; a declined group can't be edited or post events (FR-GR-21, FR-GR-22) | Declines with no explanation, or a declined group keeps changing |
 | PT-168 | Only the page admin deletes a declined group, never an approved one, and can then start again (FR-GR-21) | Anyone deletes groups, or a declined group blocks the limit |
 | PT-169 | Deleting an account deletes its groups waiting for review, and nobody else's (FR-GR-22) | Unreviewed groups linger with no owner |
+| PT-170 | A first message makes a request, stored once (FR-DM-1) | A message skips the request step |
+| PT-171 | A second message before acceptance is refused, and the recipient accepts before replying (FR-DM-1) | Someone is messaged repeatedly without saying yes |
+| PT-172 | Only the recipient accepts; then both write back and forth (FR-DM-2) | The sender accepts their own request |
+| PT-173 | A page admin, a page manager, the site admin (unreported) and visitors read no one else's conversations (FR-DM-6, TR-SEC-13) | Private messages leak to organizers |
+| PT-174 | Nobody inserts, changes or deletes conversations or messages directly; visitors can't send (TR-SEC-13, TR-SEC-2) | The request rule is bypassed through the API |
+| PT-175 | A declined sender can't message again and gets the same answer as a waiting one (FR-DM-2) | A declined sender keeps writing, or learns they were declined |
+| PT-176 | A blocked person's messages are refused neutrally, they can't see the block, blocking stops an open conversation, and unblocking restores it (FR-DM-2) | Blocking doesn't stop contact |
+| PT-177 | Blocks are made only in one's own name and read only by the blocker (FR-DM-2) | Someone blocks in another's name |
+| PT-178 | Suspended accounts read but can't send; accounts without the terms can't send (FR-DM-6) | A suspended account keeps messaging |
+| PT-179 | Nobody can message a deleted account; its messages stay (FR-DM-6) | Messages to a deleted account |
+| PT-180 | Messages are 1 to 2,000 characters, never to yourself or to nobody (FR-DM-6) | Empty or oversized messages |
+| PT-181 | Ten requests a day are allowed and the 11th is refused (FR-DM-6) | One account spams new people |
+| PT-182 | A 21st message within 10 minutes is refused (FR-DM-6) | One account floods a conversation |
+| PT-183 | The unread count includes new requests, not your own messages, and drops once opened; visitors have none (FR-DM-4) | Wrong or leaked unread counts |
+| PT-184 | Nobody reads or writes the other person's read time (FR-DM-3) | Read receipts through the API |
+| PT-185 | Only a person in the conversation can report a message, and not while suspended (FR-DM-5, FR-MD-1) | A stranger opens a conversation to the site admin |
+| PT-186 | A message report has no group; the site admin reads that conversation and no other; group admins see no message reports (FR-DM-5) | Message reports reach organizers |
+| PT-187 | The reported person can't see the report (FR-MD-8) | Retaliation against a reporter |
+| PT-188 | Requests carry the server's time (FR-DM-6, TR-SEC-8) | The daily limit is bypassed with an old date |
+| PT-189 | Read times can be changed only by their owner (FR-DM-4) | Someone's unread count is tampered with |
 
 ## Automated — unit
 
@@ -237,6 +257,7 @@ real tests, with requirements, once the use case is approved.
 | UC-17 Approve who comes | A member can't approve their own RSVP; going never exceeds places with two admins acting at once; only admins open Manage RSVPs |
 | UC-18 My calendar | Shows only the user's going and saved events; works without JavaScript |
 | UC-20 Message another member | A second message before acceptance is refused; a blocked user's message is refused; a third user, group admins included, reads nothing; the 11th request in a day is refused |
+| UC-21 Share trip photos | A non-member gets no photo from a members-only gallery, from the database or storage; uploads are re-encoded and stripped of location data; only the uploader and organizers remove photos |
 | UC-23 What needs my attention | The list holds only items that need this user; handled items drop off; nothing is sent by email or push without opt-in |
 | UC-25 A sign-in email that sounds like us | The email comes from the board's domain with no images or tracked links; an expired or used link signs nobody in |
 | UC-26 Prove it's my club | A confirmation at a domain other than the group's website is refused; a used or expired link confirms nothing; no full address is kept afterwards; a confirmed claim is never approved automatically |

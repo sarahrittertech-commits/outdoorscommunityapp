@@ -5,7 +5,7 @@ title: ADR-0006 Direct messages
 
 # ADR-0006 — Direct messages as requests, on plain pages
 
-**Status:** Proposed · **Date:** 8 October 2026
+**Status:** Accepted (as built) · **Date:** 8 October 2026 · **Built:** 9 October 2026
 
 ## Context
 
@@ -39,7 +39,7 @@ Live updates, typing indicators, read receipts. Against it: everything in
 ADR-0005 still applies. Live connections are a lot of code, and they pull
 toward the always-on experience the principles rule out (P4).
 
-## Decision (proposed)
+## Decision
 
 **Messages as requests, on plain pages.** The inbox is an ordinary page
 that shows new messages when it loads, like the discussion board. No live
@@ -49,6 +49,22 @@ shows only how many conversations have unread messages.
 The database enforces the request rule, blocks and the 10-requests-a-day
 limit (FR-DM-1 to FR-DM-6). Only the two people in a conversation can
 read it. The site admin sees a conversation only when it is reported.
+
+### As built (9 October 2026)
+
+- Tables `conversations` (one per pair, with the request status),
+  `messages`, `message_blocks` and `conversation_reads` (each person's own
+  last-read time, readable only by them, so it can never act as a read
+  receipt). Migration `20261010000013_direct_messages.sql`.
+- Every send goes through one database function, `send_message`, which
+  checks the request rule, blocks, deleted accounts, the 10-requests-a-day
+  and 20-messages-in-10-minutes limits under the per-person lock. Nobody
+  inserts or edits conversations or messages directly.
+- A declined or blocked sender gets the same answer as one whose request is
+  still waiting, so nobody learns they were declined or blocked.
+- Reporting a message (new report target `message`) routes the report to
+  the site admin only and opens that conversation, and no other, to them.
+- Permission tests PT-170 to PT-189.
 
 ## Consequences
 

@@ -14,7 +14,7 @@ One page that separates the branded app as it runs today from the new
 features proposed in the 8 October Magic Patterns design or requested by
 Sarah the same day. Live features
 link to their requirements; new ones link to their draft use case. Rows under *New features* say *Built* where they were built on 9 October
-(UC-14 to UC-16, UC-19, UC-22, UC-24, UC-29 to UC-32); the rest are drafts.
+(UC-14 to UC-16, UC-19, UC-20, UC-22, UC-24, UC-29 to UC-32); the rest are drafts.
 
 Last updated 9 October 2026.
 
@@ -99,7 +99,7 @@ until the domain is chosen and email sending through Resend is set up.
 | **Calendar** on the signed-in home page | **Built 9 Oct** (month or week, going / saved / my groups filters) | UC-18 | FR-AC-9 |
 | **Reminders** list and unread-message count | In scope | UC-23 | FR-AC-10 |
 | **Replies to replies**, one level | Built 9 October 2026 | UC-19 | FR-DS-9 |
-| **Direct messages** that start as requests | In scope | UC-20 | FR-DM-1 to FR-DM-6, ADR-0006 |
+| **Direct messages** that start as requests | **Built 9 Oct** (migration `20261010000013` applied 10 Oct) | UC-20 | FR-DM-1 to FR-DM-6, ADR-0006 |
 
 ### Businesses
 

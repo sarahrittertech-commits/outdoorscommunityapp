@@ -6,6 +6,7 @@ import { signOut } from "@/app/actions/auth";
 import { Mark } from "@/brand/Mark";
 import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 
 import "./globals.css";
 
@@ -28,6 +29,9 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const viewer = await getViewer();
+  // FR-DM-4: conversations with unread messages, counted when the page loads.
+  // Nothing updates by itself, and nothing about the other person is shown.
+  const unread = viewer ? ((await (await createClient()).rpc("unread_conversation_count")).data ?? 0) : 0;
 
   return (
     <html lang="en" className={`${atkinson.variable} ${youngSerif.variable}`}>
@@ -65,6 +69,15 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               {viewer ? (
                 <>
                   <Link href="/me">my stuff</Link>
+                  <Link href="/messages">
+                    messages
+                    {unread > 0 && (
+                      <>
+                        {" "}({unread}
+                        <span className="sr-only"> with unread messages</span>)
+                      </>
+                    )}
+                  </Link>
                   {viewer.isSiteAdmin && <Link href="/admin">admin</Link>}
                   <form action={signOut} className="inline">
                     <button className="link-button">sign out</button>

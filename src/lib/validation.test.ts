@@ -15,6 +15,8 @@ import {
   sponsorLogoSchema,
   sponsorSchema,
   slugSchema,
+  messageSchema,
+  reportSchema,
   suggestionSchema,
   suggestionStatusSchema,
 } from "./validation";
@@ -222,5 +224,18 @@ describe("suggestions (FR-AD-4, FR-AD-6)", () => {
     expect(suggestionStatusSchema.safeParse({ status: "planned", note: "" }).success).toBe(true);
     expect(suggestionStatusSchema.safeParse({ status: "new" }).success).toBe(false);
     expect(suggestionStatusSchema.safeParse({ status: "done", note: "x".repeat(501) }).success).toBe(false);
+  });
+});
+
+describe("direct messages (FR-DM-5, FR-DM-6)", () => {
+  const to = "11111111-1111-4111-8111-111111111111";
+  it("takes plain text up to 2,000 characters", () => {
+    expect(messageSchema.parse({ to, body: "  Borrow your rack?  " })).toEqual({ to, body: "Borrow your rack?" });
+    expect(messageSchema.safeParse({ to, body: "   " }).success).toBe(false);
+    expect(messageSchema.safeParse({ to, body: "x".repeat(2001) }).success).toBe(false);
+    expect(messageSchema.safeParse({ to: "nobody", body: "hi" }).success).toBe(false);
+  });
+  it("lets a message be reported", () => {
+    expect(reportSchema.safeParse({ targetType: "message", targetId: to, reason: "harassment" }).success).toBe(true);
   });
 });

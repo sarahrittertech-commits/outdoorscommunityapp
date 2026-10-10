@@ -52,6 +52,8 @@ records where each one came from.
 | member | ask to go to an event the organizers approve, and see whether I'm in | I know where I stand before the day | UC-17 | FR-EV-15 | Built |
 | member | see plainly when RSVPs open, and read the event's FAQ and sponsors | I come back at the right time with my questions answered | UC-10 | FR-EV-14, FR-EV-19, FR-EV-20 | Built |
 | member | see the events I'm going to and saved on a calendar when I sign in, a month or a week at a time | I see my outdoor week at a glance and open any event from it | UC-18 | FR-AC-9 | Built |
+| member | message another member privately from their profile | we can arrange things like a carpool or a borrowed bike rack without posting them in a group | UC-20 | FR-DM-1, FR-DM-3, FR-DM-4 | Built |
+| member | accept, decline or block a first message from someone new, and report one | nobody can keep messaging me without my saying yes, and abuse reaches the site admin | UC-20 | FR-DM-2, FR-DM-5, FR-DM-6 | Built |
 
 ## Running a group
 

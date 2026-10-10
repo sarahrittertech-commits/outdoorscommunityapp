@@ -25,6 +25,14 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       {profile.area && <p className="text-muted">{profile.area}</p>}
       {profile.bio && <PlainText text={profile.bio} className="mt-3 max-w-prose" />}
       <p className="mt-2 text-sm text-muted">Member since {new Date(profile.created_at).getFullYear()}</p>
+      {viewer?.id !== profile.id && (
+        <p className="mt-4">
+          {/* UC-20: the first message arrives as a request (FR-DM-1). Signed-out visitors are asked to sign in. */}
+          <Link href={`/messages/new?to=${profile.id}`} className="button button-plain">
+            Message
+          </Link>
+        </p>
+      )}
       {viewer && viewer.id !== profile.id && (
         <p className="mt-8 text-sm">
           <Link href={`/report?type=profile&id=${profile.id}&next=/u/${profile.id}`} className="text-muted">

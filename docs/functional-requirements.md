@@ -163,8 +163,8 @@ are not notifications and are always sent.
 
 | ID | Requirement | Priority | Accepted when |
 | --- | --- | --- | --- |
-| FR-MD-1 | Any signed-in user can report a group, event, thread, reply, profile or gallery photo (FR-GR-13), with a reason (spam, harassment, unsafe, off-topic, other) and an optional note. | Must | — |
-| FR-MD-2 | Reports on content inside a group go to that group's owner and admins and to the site admin, without the reporter's identity (FR-MD-8). Reports on a group itself or a profile go to the site admin only. A report about something a page admin or page manager posted is handled by the site admin only, so nobody clears a report about themselves or a fellow organizer. Dismissing a report is written to the moderation log. | Must | A group admin sees only their own group's reports. |
+| FR-MD-1 | Any signed-in user can report a group, event, thread, reply, profile, gallery photo (FR-GR-13) or private message (FR-DM-5), with a reason (spam, harassment, unsafe, off-topic, other) and an optional note. | Must | — |
+| FR-MD-2 | Reports on content inside a group go to that group's owner and admins and to the site admin, without the reporter's identity (FR-MD-8). Reports on a group itself, a profile or a private message go to the site admin only. A report about something a page admin or page manager posted is handled by the site admin only, so nobody clears a report about themselves or a fellow organizer. Dismissing a report is written to the moderation log. | Must | A group admin sees only their own group's reports. |
 | FR-MD-3 | The site admin can remove any content, archive or remove any group, and suspend any account. A suspended user can read but not post, join or RSVP. | Must | — |
 | FR-MD-4 | Rate limits on posting, joining, RSVPing, reporting, group creation and claim requests. | Must | Limits in [Technical requirements](./technical-requirements#security--tr-sec). |
 | FR-MD-5 | Terms of use, privacy policy and community guidelines pages, linked from every page footer. | Must | — |
@@ -183,6 +183,20 @@ are not notifications and are always sent.
 | FR-AD-5 | **Private.** A suggestion is readable only by the member who sent it and the site admin. Never shown publicly, never voted on or ranked (product principles). | Must | No other member, organizer or visitor can read it. |
 | FR-AD-6 | **Site admin review.** The admin page lists suggestions newest first, filterable by kind, each with its sender (display name, linked to their profile), link and date. The site admin sets *Planned*, *Done* or *Declined*, with an optional note (up to 500 characters) the member can read, through one database function. | Should | Only the site admin can change a status; members can't set one when sending. |
 | FR-AD-7 | **Limits.** 5 suggestions per member per day, with the per-person lock and server time every other write has (TR-SEC-8). The member's own list (*My suggestions*) shows each one's status and note. | Should | A sixth suggestion in a day is refused. |
+
+## Direct messages — FR-DM
+
+Supports [UC-20](./use-cases#uc-20--message-another-member) and
+[ADR-0006](./architecture/adr-0006-direct-messages). Built 9 October 2026.
+
+| ID | Requirement | Priority | Accepted when |
+| --- | --- | --- | --- |
+| FR-DM-1 | **Requests first.** A member's first message to someone, sent from *Message* on their profile, arrives as a request. Until it's accepted, the sender can't send another; their inbox shows it as *request sent*. There is one conversation per pair of people. | Should | The database refuses a second message to someone who hasn't accepted (PT-171). |
+| FR-DM-2 | **Accept, decline, block.** The recipient accepts or declines a request on the conversation page, or blocks the sender. Declining stops that sender for good (the recipient can still accept later); either side can block at any time, including in an open conversation, and unblock from the Messages page. A declined or blocked sender is told only *You can send another message once they accept your request*, the same as a request still waiting, and nobody is told they were blocked. A blocked person's conversations drop out of the blocker's inbox. | Should | A declined or blocked sender's message is refused by the database (PT-175, PT-176). |
+| FR-DM-3 | **Inbox.** /messages lists conversations newest first, with a *Requests* tab (/messages/requests). A conversation page shows the latest 200 messages, oldest at the top and newest at the bottom, with a plain reply form under them. Ordinary pages, updated on load; forms work without JavaScript. No typing indicators, read receipts or online status: each person's last-read time is kept in a table only they can read. | Should | Nobody can read when the other person read a conversation (PT-184). |
+| FR-DM-4 | **Unread count.** The header link *messages (2)* shows how many conversations have messages the viewer hasn't opened, counted on the server when the page loads, and nothing else. Your own messages are never unread for you; a request waiting for you counts. | Should | PT-183. |
+| FR-DM-5 | **Report.** The *report* link on any message from the other person sends a report (FR-MD-1) to the site admin only: messages belong to no group, so no organizer sees it. Only a person in the conversation can report one of its messages. Once reported, the site admin can read that conversation (and only that one) and can suspend the sender from the admin page. | Should | A message report has no group; the site admin reads a conversation only after a report in it (PT-185, PT-186). |
+| FR-DM-6 | **Limits and privacy.** Plain text only, rendered as text, 1 to 2,000 characters. At most 10 new requests a day and 20 messages in 10 minutes per member, under the per-person lock and server time (TR-SEC-8). Suspended accounts and accounts that haven't accepted the terms can read their conversations but not send; they can still decline and block. A deleted account shows as *deleted user*, its messages stay, and nobody can message it. Only the two people in a conversation can read it; conversations and messages are written only through database functions. | Should | A third user, including group admins, reads nothing; the site admin sees only reported conversations; the 11th request in a day is refused (PT-173, PT-178 to PT-182). |
 
 ## Research agent — FR-RS
 
@@ -296,17 +310,6 @@ only through a group, so events stay one feature with one set of rules.
 | FR-BZ-5 | **Events through groups only.** A business page has no events of its own; its events are its group's events, posted and managed as any group's. | Should | The database has no way to post an event without a group. |
 | FR-BZ-6 | **As sponsors.** A sponsor on an event (FR-EV-14) can link to a business page; the business page lists the upcoming events it sponsors. | Should | — |
 | FR-BZ-7 | **Never above groups.** Businesses have their own directory page; they don't appear in group listings and never affect the order of anything. | Should | A business never appears in the Communities list or changes any list's order. |
-
-### Direct messages (UC-20, ADR-0006)
-
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-DM-1 | **Requests first.** A user's first message to someone arrives as a request. Until it's accepted, the sender can't send another. | Should | The database refuses a second message to someone who hasn't accepted. |
-| FR-DM-2 | **Accept, decline, block.** Declining stops that sender messaging again; blocking also hides each from the other in messages. Either side can block at any time. | Should | A blocked user's message is refused by the database. |
-| FR-DM-3 | **Inbox.** Conversations newest first, with a *Requests* tab. Plain pages, updated on load; no typing indicators, read receipts or online status. | Should | — |
-| FR-DM-4 | **Unread count.** The header shows the number of conversations with unread messages, and nothing else. | Should | — |
-| FR-DM-5 | **Report.** Any message can be reported to the site admin with the conversation attached; reports follow FR-MD. | Should | — |
-| FR-DM-6 | **Limits.** Plain text only, 2,000 characters; at most 10 new requests a day per user; suspended users can't message. Only the two people in a conversation can read it. | Should | A third user, including group admins, reads nothing; the site admin sees only reported conversations. |
 
 ### Sign-in email (UC-25)
 
