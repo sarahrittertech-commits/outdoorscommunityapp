@@ -47,6 +47,8 @@ records where each one came from.
 | member | see what an event costs, the registration fee and the total | I know before I commit | UC-30 | FR-EV-25 | Draft |
 | member | save an event without RSVPing, and see it under Saved in My stuff | I keep track of things I might go to, and nobody else sees my list | UC-22 | FR-EV-18 | Built |
 | member | answer one person's reply in a thread, not the whole thread | side conversations stay together and readable | UC-19 | FR-DS-9 | Built |
+| member | ask to go to an event the organizers approve, and see whether I'm in | I know where I stand before the day | UC-17 | FR-EV-15 | Built |
+| member | see plainly when RSVPs open, and read the event's FAQ and sponsors | I come back at the right time with my questions answered | UC-10 | FR-EV-14, FR-EV-19, FR-EV-20 | Built |
 | member | see the events I'm going to and saved on a calendar when I sign in, a month or a week at a time | I see my outdoor week at a glance and open any event from it | UC-18 | FR-AC-9 | Built |
 
 ## Running a group
@@ -63,6 +65,8 @@ records where each one came from.
 | page admin or manager | choose who sees our member list: members, organizers only or anyone signed in | members who want privacy aren't listed for everyone | UC-16 | FR-MB-10 | Built |
 | organizer | add our group's website | members can find our own site | — | FR-GR-23 | Built |
 | organizer | set our group's type and a cover photo with its description | newcomers can tell us apart from other groups | UC-24 | FR-GR-16, FR-GR-14 | Built |
+| organizer | approve RSVPs and manage requests, going, the waitlist and declines on one page | I decide who comes, and the place count is always right | UC-17 | FR-EV-15, FR-EV-17 | Built |
+| organizer | set when RSVPs open, add an FAQ and list our sponsors on an event | people sign up fairly, get answers and see who supports us | UC-10 | FR-EV-14, FR-EV-19, FR-EV-20 | Built (series still a draft) |
 | organizer | claim a listing of our real group | I run it here instead of starting over | UC-8 | FR-GR-9, FR-GR-10 | Live |
 | organizer | prove a claim with an email at our club's domain | the site admin can approve it quickly | UC-26 | FR-GR-18 to FR-GR-20 | Draft (needs a domain) |
 

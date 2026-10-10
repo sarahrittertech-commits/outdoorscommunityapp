@@ -139,6 +139,22 @@ web app is not the thing enforcing the rule.
 | PT-117 | set_suggestion_status refuses *new* and a note over 500 characters (FR-AD-6) | Bad data through the admin function |
 | PT-118 | Five suggestions a day are allowed and the sixth is refused (FR-AD-7, TR-SEC-8) | One account floods the admin queue |
 | PT-119 | A member can't backdate a suggestion to slip past the daily limit (FR-AD-7, TR-SEC-8) | The limit is bypassed with an old date |
+| PT-120 | Only organizers turn on Approve RSVPs (FR-EV-15) | A member opens their own event to themselves |
+| PT-121 | On an approval event a member's RSVP is a request, and a request takes no place (FR-EV-15) | Members walk in without approval |
+| PT-122 | A member can't set their own RSVP to going or declined, or request on an event without approval (FR-EV-15) | A member approves themselves through the API |
+| PT-123 | Requests are seen by the person and the organizers only (FR-EV-15) | Other members learn who asked |
+| PT-124 | Only organizers call manage_rsvp; visitors can't; unknown actions are refused (FR-EV-17) | A member approves or removes someone |
+| PT-125 | Approving takes a place, organizers RSVP directly, and approving into a full event is refused (FR-EV-15, FR-EV-17) | Going exceeds the places |
+| PT-126 | An organizer waitlists a request; the database sets the waitlist place (FR-EV-17, FR-EV-28) | The waitlist order is forged |
+| PT-127 | A declined member can't ask again or delete the decline (FR-EV-15) | Declines are undone by the member |
+| PT-128 | Removing an RSVP deletes it and writes remove_rsvp to the moderation log (FR-EV-17) | Removals leave no trace |
+| PT-129 | RSVPs open before the start; before the opening time a member's RSVP is refused; after it, accepted (FR-EV-20) | Early RSVPs through the API |
+| PT-130 | Organizers set the FAQ, visitors read it in order; members can't edit it or write the table; at most 15 (FR-EV-19) | A member rewrites the FAQ |
+| PT-131 | An organizer adds a sponsor with a link and uploads its logo to the event's folder; visitors see it (FR-EV-14) | Sponsors can't be added |
+| PT-132 | A member can't add or remove a sponsor (FR-EV-14) | A member advertises on an event |
+| PT-133 | Sponsor links are http(s) only, logos live in their own event's folder, and a sponsor's group is its event's group (FR-EV-14) | A script link, or a logo from another group |
+| PT-134 | At most 5 sponsors per event; organizers remove one (FR-EV-14) | Unlimited sponsors |
+| PT-135 | A sponsored event lists like any other (FR-EV-14) | Sponsorship changes lists |
 
 ## Automated — unit
 

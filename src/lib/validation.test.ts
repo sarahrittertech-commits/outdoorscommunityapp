@@ -4,12 +4,16 @@ import {
   affinityTagsSchema,
   eventPhotoSchema,
   eventSchema,
+  faqSchema,
   groupSchema,
   inviteTokenSchema,
   localPathSchema,
   onboardingSchema,
   parseInviteEmails,
   replySchema,
+  rsvpActionSchema,
+  sponsorLogoSchema,
+  sponsorSchema,
   slugSchema,
   suggestionSchema,
   suggestionStatusSchema,
@@ -79,6 +83,31 @@ describe("form validation", () => {
     expect(paid.isPaid).toBe(true);
     const free = eventSchema.parse({ ...validEvent, registrationFee: "$25" });
     expect(free.registrationFee).toBeNull();
+  });
+
+  it("opens RSVPs before the start, in the event's zone, and approval only with RSVPs (FR-EV-15, FR-EV-20)", () => {
+    const parsed = eventSchema.parse({ ...validEvent, rsvpsOpenLocal: "2026-10-01T09:00", approveRsvps: "on" });
+    expect(parsed.rsvpsOpenAt).toBe("2026-10-01T13:00:00.000Z");
+    expect(parsed.approveRsvps).toBe(true);
+    expect(eventSchema.parse({ ...validEvent, rsvpsOpenLocal: "" }).rsvpsOpenAt).toBeNull();
+    expect(eventSchema.safeParse({ ...validEvent, rsvpsOpenLocal: "2026-10-04T09:00" }).success).toBe(false);
+    expect(eventSchema.parse({ ...validEvent, takesRsvps: undefined, approveRsvps: "on" }).approveRsvps).toBe(false);
+  });
+
+  it("reads FAQ rows in order, skipping empty ones (FR-EV-19)", () => {
+    const faq = faqSchema.parse({ faqQ1: "Dogs?", faqA1: "On a leash.", faqQ3: "Parking?", faqA3: "At the lot." });
+    expect(faq).toEqual({ questions: ["Dogs?", "Parking?"], answers: ["On a leash.", "At the lot."] });
+    expect(faqSchema.safeParse({ faqQ1: "No answer?" }).success).toBe(false);
+    expect(faqSchema.safeParse({ faqQ1: "Q".repeat(201), faqA1: "Yes" }).success).toBe(false);
+    expect(rsvpActionSchema.safeParse("promote").success).toBe(false);
+  });
+
+  it("takes a sponsor's name and an http(s) website only (FR-EV-14)", () => {
+    expect(sponsorSchema.parse({ name: "Trail Shop", websiteUrl: "" }).websiteUrl).toBeNull();
+    expect(sponsorSchema.safeParse({ name: "Trail Shop", websiteUrl: "javascript:alert(1)" }).success).toBe(false);
+    expect(sponsorSchema.safeParse({ name: "X" }).success).toBe(false);
+    const big = new File([new Uint8Array(1024 * 1024 + 1)], "logo.png", { type: "image/png" });
+    expect(sponsorLogoSchema.safeParse(big).success).toBe(false);
   });
 
   it("keeps a waitlist only with places, and a sign-up link only without RSVPs (FR-EV-26 to FR-EV-28)", () => {

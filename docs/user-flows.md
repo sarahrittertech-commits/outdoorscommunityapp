@@ -134,7 +134,7 @@ flowchart TD
 
 ## UC-10 — Post a ride series
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026 for single events: sponsors (on the event's Sponsors page), FAQ and RSVPs open at. The series steps stay a draft, awaiting review.*
 
 ```mermaid
 flowchart TD
@@ -236,7 +236,7 @@ flowchart TD
 
 ## UC-17 — Approve who comes
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. Manage RSVPs is at /e/<id>/rsvps, linked from the page admin tools.*
 
 ```mermaid
 flowchart TD
