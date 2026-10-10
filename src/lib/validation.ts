@@ -215,8 +215,14 @@ export const newReplySchema = replySchema.extend({
   parent_id: id.optional(),
 });
 
+/** FR-DM-6: plain text, at most 2,000 characters. */
+export const messageSchema = z.object({
+  to: id,
+  body: requiredText(1, 2000),
+});
+
 export const reportSchema = z.object({
-  targetType: z.enum(["group", "event", "thread", "reply", "profile"]),
+  targetType: z.enum(["group", "event", "thread", "reply", "profile", "message"]),
   targetId: id,
   reason: z.enum(["spam", "harassment", "unsafe", "off_topic", "other"]),
   note: optionalText(1000),

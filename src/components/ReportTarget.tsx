@@ -16,14 +16,16 @@ const key = (t: { type: TargetType; id: string }) => `${t.type}:${t.id}`;
 export async function resolveReportTargets(supabase: ServerClient, targets: TargetRef[]): Promise<Map<string, Resolved>> {
   const ids = (type: TargetType) => [...new Set(targets.filter((t) => t.type === type).map((t) => t.id))];
   const none = Promise.resolve({ data: [] as never[] });
-  const [groupIds, eventIds, threadIds, replyIds, profileIds] = (["group", "event", "thread", "reply", "profile"] as const).map(ids);
+  const [groupIds, eventIds, threadIds, replyIds, profileIds, messageIds] = (["group", "event", "thread", "reply", "profile", "message"] as const).map(ids);
 
-  const [groups, events, threads, replies, profiles] = await Promise.all([
+  const [groups, events, threads, replies, profiles, messages] = await Promise.all([
     groupIds.length ? supabase.from("groups").select("id, slug, name").in("id", groupIds) : none,
     eventIds.length ? supabase.from("events").select("id, title").in("id", eventIds) : none,
     threadIds.length ? supabase.from("threads").select("id, title, groups(slug)").in("id", threadIds) : none,
     replyIds.length ? supabase.from("replies").select("id, thread_id, body, threads(groups(slug))").in("id", replyIds) : none,
     profileIds.length ? supabase.from("profiles").select("id, display_name").in("id", profileIds) : none,
+    // FR-DM-5: readable by the two people, and by the site admin once reported.
+    messageIds.length ? supabase.from("messages").select("id, conversation_id, body").in("id", messageIds) : none,
   ]);
 
   const byId = <T extends { id: string }>(rows: T[] | null) => new Map((rows ?? []).map((r) => [r.id, r]));
@@ -32,6 +34,7 @@ export async function resolveReportTargets(supabase: ServerClient, targets: Targ
   const th = byId(threads.data);
   const rp = byId(replies.data);
   const pr = byId(profiles.data);
+  const ms = byId(messages.data);
 
   const out = new Map<string, Resolved>();
   for (const t of targets) {
@@ -63,6 +66,13 @@ export async function resolveReportTargets(supabase: ServerClient, targets: Targ
       case "profile":
         resolved = { href: `/u/${t.id}`, label: pr.get(t.id)?.display_name ?? "deleted user" };
         break;
+      case "message": {
+        const row = ms.get(t.id);
+        resolved = row
+          ? { href: `/messages/${row.conversation_id}#m-${t.id}`, label: `message “${row.body.slice(0, 60)}”` }
+          : { label: "private message" };
+        break;
+      }
     }
     out.set(key(t), resolved);
   }
