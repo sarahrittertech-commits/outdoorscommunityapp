@@ -465,7 +465,9 @@ always right.
 
 ## UC-18 — My calendar
 
-> **Draft, awaiting review.**
+> **Approved and built 9 October 2026.** The calendar sits on the home
+> page above *Browse by activity*, only when signed in. Filters add
+> *everything from my groups*.
 
 **Actor:** The regular
 
@@ -479,7 +481,7 @@ always right.
    be filtered to one group or to *going only*.
 3. Opens Thursday's ride from the calendar.
 
-**Requirements:** to be written after review (draft FR-AC-9).
+**Requirements:** FR-AC-9
 
 **Succeeds when:** a member sees their outdoor week at a glance and can
 still add any event to their own calendar (FR-EV-7).

@@ -5,6 +5,7 @@ import { changePassword, deleteAccount, saveProfile } from "@/app/actions/auth";
 import { Notice } from "@/components/Notice";
 import { requireViewer } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export const metadata: Metadata = { title: "Profile", robots: { index: false } };
 
@@ -35,7 +36,7 @@ export default async function ProfilePage({ searchParams }: Props) {
         <input id="area" name="area" type="text" maxLength={80} defaultValue={profile?.area ?? ""} />
         <label htmlFor="bio">About you</label>
         <textarea id="bio" name="bio" maxLength={280} className="min-h-20" defaultValue={profile?.bio ?? ""} />
-        <button className="button mt-3">Save profile</button>
+        <SubmitButton className="button mt-3" pendingText="Saving…">Save profile</SubmitButton>
       </form>
 
       <section className="mt-12 border-t border-rule pt-4">
@@ -53,7 +54,7 @@ export default async function ProfilePage({ searchParams }: Props) {
           <input id="password" name="password" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
           <label htmlFor="passwordAgain">New password again</label>
           <input id="passwordAgain" name="passwordAgain" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
-          <button className="button mt-3">Change password</button>
+          <SubmitButton className="button mt-3" pendingText="Saving…">Change password</SubmitButton>
         </form>
       </section>
 
@@ -69,7 +70,7 @@ export default async function ProfilePage({ searchParams }: Props) {
             Type <strong>DELETE</strong> to confirm
           </label>
           <input id="confirm" name="confirm" type="text" required pattern="DELETE" className="max-w-48" />
-          <button className="button button-danger mt-2">Delete my account</button>
+          <SubmitButton className="button button-danger mt-2" pendingText="Deleting…">Delete my account</SubmitButton>
         </form>
       </section>
     </>

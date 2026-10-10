@@ -202,7 +202,7 @@ approved.
 | Post an event series (photo and price built with UC-30; sponsors, FAQ and RSVP opening time with UC-10) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Ask an event a question | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Read and answer questions, move answers to the FAQ | ❌ | ❌ own only | ❌ own only | ✅ | ✅ | ✅ |
-| See own going and saved events on a calendar (saving built with UC-22) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See own going and saved events on a calendar (built with UC-18; saving with UC-22) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See own reminders | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Reply to a reply (built with UC-19; see Discussions) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Upload photos to the group gallery | ❌ | ❌ | ✅ | ✅ | ✅ | — |

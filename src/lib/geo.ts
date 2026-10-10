@@ -1,4 +1,5 @@
 import { towns, type Town } from "@/config/towns";
+import { zipTowns } from "@/config/zips";
 
 const byName = new Map<string, Town>();
 for (const t of towns) {
@@ -47,4 +48,37 @@ export function countWithin(
   miles: number,
 ): number {
   return places.filter((p) => p && milesBetween(center, p) <= miles).length;
+}
+
+/**
+ * A 5-digit US zip code typed on a form (FR-BR-12): "28712" or "28712-1234",
+ * spaces allowed around it. Anything else is not a zip code.
+ */
+export function parseZip(input: string | null | undefined): string | undefined {
+  return input?.trim().match(/^(\d{5})(?:-\d{4})?$/)?.[1];
+}
+
+/** The town a zip code belongs to, from the built-in table (no outside service). */
+export function townForZip(zip: string | null | undefined): Town | undefined {
+  const parsed = parseZip(zip);
+  return parsed && Object.hasOwn(zipTowns, parsed) ? findTown(zipTowns[parsed]) : undefined;
+}
+
+/**
+ * Where a search is centered, from a town select (`near`) and an optional
+ * zip code box (`zip`). A zip code wins when given; one we don't know falls
+ * back to the town, if any, and comes back as `unknownZip` so the page can
+ * say so plainly.
+ */
+export function resolveLocation(
+  near: unknown,
+  zip: unknown,
+): { town?: Town; zip?: string; unknownZip?: string } {
+  const town = typeof near === "string" ? findTown(near) : undefined;
+  const typed = typeof zip === "string" ? zip.trim().slice(0, 20) : "";
+  if (!typed) return { town };
+  const parsed = parseZip(typed);
+  const zipTown = townForZip(parsed);
+  if (parsed && zipTown) return { town: zipTown, zip: parsed };
+  return { town, unknownZip: typed };
 }

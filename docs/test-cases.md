@@ -171,6 +171,7 @@ Run by the unit test command in CI. Pure functions only.
 | UT-7 | `.ics` line folding | Folding counts UTF-8 bytes, not characters, and never splits an emoji in a title |
 | UT-8 | Password rules (FR-AC-17) | Under 10 characters or over 72 bytes is refused; passwords are never trimmed; the common-password list is refused whatever the case; both copies must match; each failure names its rule |
 | UT-9 | Sign-in limiter (FR-AC-19) | 5 failures for an address in 15 minutes pause it, case and spaces ignored; the pause lifts 15 minutes later; spread-out failures and a successful sign-in reset it; memory stays bounded |
+| UT-10 | Calendar dates (FR-AC-9) | The month grid is whole Sunday-first weeks (four to six rows); weeks and month steps cross month and year ends; an event sits on the day it starts in its own zone (11 pm in Los Angeles stays on Friday); the query window covers every zone; unknown view, date, filter or group values fall back to the defaults |
 
 ## Automated — end to end
 
@@ -190,7 +191,7 @@ Playwright in CI against the local stack with seed data.
 | --- | --- |
 | MT-1 | Walk every approved use case on the production site with seed data |
 | MT-2 | Confirmation and password reset emails arrive in Gmail and Outlook inboxes, not spam |
-| MT-10 | UC-29 on production: sign up with a new address (page says *Check your email*), and again with the same address (same page, nothing revealed); an unconfirmed account cannot sign in; 5 wrong passwords pause sign-in for that address; *Forgot password* answers the same for an unknown address; the reset link sets a new password and signs out a second browser; *Set a new password* without the link sends you to *Forgot password*; a wrong current password on the profile page changes nothing |
+| MT-10 | UC-29 on production: sign up with a new address (page says *Check your email*), and again with the same address (same page, nothing revealed); an unconfirmed account cannot sign in; 5 wrong passwords pause sign-in for that address; *Forgot password* answers the same for an unknown address; the reset link sets a new password and signs out a second browser; *Set a new password* without the link sends you to *Forgot password*; a sign-up or reset link opened in a different browser or mail app still works after *Continue*; every *Email me the link* button greys out and says *Sending…* when pressed; a wrong current password on the profile page changes nothing |
 | MT-3 | Lighthouse mobile: performance and accessibility at or above target (TR-PERF-3, TR-A11Y) |
 | MT-4 | Keyboard-only pass through join, RSVP and post |
 | MT-5 | Supabase security advisor reports no errors (TR-SEC-10) |

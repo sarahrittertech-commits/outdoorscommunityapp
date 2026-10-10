@@ -251,7 +251,10 @@ flowchart TD
 
 ## UC-18 — My calendar
 
-*Draft, awaiting review.*
+*Approved and built 9 October 2026. Every choice (view, date, filters) is
+a link or a GET form in the page address (`/?cal=week&date=2026-10-09&show=going#calendar`),
+so it works without JavaScript. With no view chosen, the screen width
+decides: month on a computer, week on a phone.*
 
 ```mermaid
 flowchart TD
@@ -408,21 +411,25 @@ flowchart TD
 
 ## UC-29 — Sign up with an email and a password
 
-*Approved and built 9 October 2026. Open sign-up with email confirmation; password only.*
+*Approved and built 9 October 2026. Open sign-up with email confirmation; password only.
+Emailed links open a page with a Continue button, so they work in any browser or mail
+app and a mail scanner can't use them up (10 October).*
 
 ```mermaid
 flowchart TD
   join["Group page: Join group"] --> signin["Sign in<br/>email + password<br/>links: Create an account · Forgot password"]
   signin -->|Create an account| signup["Create an account<br/>email only"]
   signup -->|Email me the link| check(["Check your email"])
-  check -->|clicks Confirm my email| create["Create your password<br/>password, password again"]
+  check -->|clicks Confirm my email| cont1["Confirm your email: Continue"]
+  cont1 --> create["Create your password<br/>password, password again"]
   create --> welcome["Welcome: 18+, terms, display name"]
   welcome --> back["Back on the group page: Join"]
   signin -->|correct email + password| back
   signin -->|wrong, or email not confirmed| signin
   signin -->|Forgot password| forgot["Forgot password: email"]
   forgot --> resetmail(["Check your email for a reset link"])
-  resetmail -->|clicks the link| newpw["Set a new password"]
+  resetmail -->|clicks the link| cont2["Reset your password: Continue"]
+  cont2 --> newpw["Set a new password"]
   newpw --> back
 ```
 

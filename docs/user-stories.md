@@ -22,7 +22,7 @@ records where each one came from.
 | As a… | I want to… | So that… | Use case | Requirements | Status |
 | --- | --- | --- | --- | --- | --- |
 | visitor | browse groups and events by activity without signing up | I can see what's out there before giving anything away | UC-1 | FR-BR-1 to FR-BR-5 | Live |
-| visitor | search for events near a town I pick, within a distance | I find things I can actually get to | UC-14 | FR-BR-12 to FR-BR-15 | Live (towns; no zip codes yet) |
+| visitor | search for events and groups near a town or zip code I give, within a distance | I find things I can actually get to | UC-14 | FR-BR-12 to FR-BR-15 | Live (towns); built (zip codes, Communities) |
 | visitor | see where people are heading on a map and a list | I discover new places to go | UC-15 | FR-BR-16 to FR-BR-18 | Live (towns; no place pages yet) |
 | visitor | see a group's own website | I can learn more about them off the board | — | FR-GR-23 | Built |
 | newcomer | see what kind of group it is (club, meetup, volunteer group, nonprofit, chapter) and filter by it | I find a group that suits how I want to take part | UC-24 | FR-GR-16, FR-GR-17 | Built |
@@ -49,6 +49,7 @@ records where each one came from.
 | member | answer one person's reply in a thread, not the whole thread | side conversations stay together and readable | UC-19 | FR-DS-9 | Built |
 | member | ask to go to an event the organizers approve, and see whether I'm in | I know where I stand before the day | UC-17 | FR-EV-15 | Built |
 | member | see plainly when RSVPs open, and read the event's FAQ and sponsors | I come back at the right time with my questions answered | UC-10 | FR-EV-14, FR-EV-19, FR-EV-20 | Built |
+| member | see the events I'm going to and saved on a calendar when I sign in, a month or a week at a time | I see my outdoor week at a glance and open any event from it | UC-18 | FR-AC-9 | Built |
 
 ## Running a group
 

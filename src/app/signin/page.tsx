@@ -6,6 +6,7 @@ import { signIn } from "@/app/actions/auth";
 import { Notice } from "@/components/Notice";
 import { getViewer } from "@/lib/auth";
 import { safeNext } from "@/lib/navigation";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export const metadata: Metadata = { title: "Sign in", robots: { index: false } };
 
@@ -31,7 +32,7 @@ export default async function SignInPage({ searchParams }: Props) {
         <input id="email" name="email" type="email" required autoComplete="email" maxLength={254} />
         <label htmlFor="password">Password</label>
         <input id="password" name="password" type="password" required autoComplete="current-password" maxLength={200} />
-        <button className="button mt-3">Sign in</button>
+        <SubmitButton className="button mt-3" pendingText="Signing in…">Sign in</SubmitButton>
       </form>
       <p className="mt-4 text-sm">
         <Link href="/forgot-password">Forgot password?</Link>

@@ -7,6 +7,7 @@ import { Notice } from "@/components/Notice";
 import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
 import { safeNext } from "@/lib/navigation";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export const metadata: Metadata = { title: "Welcome", robots: { index: false } };
 
@@ -50,7 +51,7 @@ export default async function WelcomePage({ searchParams }: Props) {
           <Link href="/guidelines">community guidelines</Link>.
         </label>
 
-        <button className="button mt-5">Continue</button>
+        <SubmitButton className="button mt-5" pendingText="One moment…">Continue</SubmitButton>
       </form>
     </>
   );
