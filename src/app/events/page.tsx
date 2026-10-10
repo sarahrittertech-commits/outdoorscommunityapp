@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ActivityIcon } from "@/brand/ActivityIcon";
+import { GroupTypeIcon } from "@/brand/GroupTypeIcon";
 import { EventList } from "@/components/Listings";
+import { LocationFilter, UnknownZip } from "@/components/LocationFilter";
 import { site } from "@/config/site";
-import { TownSelect } from "@/components/TownSelect";
 import { distances } from "@/config/towns";
-import { findTown, milesBetween, townForArea } from "@/lib/geo";
+import { milesBetween, resolveLocation, townForArea } from "@/lib/geo";
+import { GROUP_TYPES, isGroupType } from "@/lib/groupTypes";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -24,16 +26,28 @@ const WINDOWS = [
   { days: 90, label: "next 3 months" },
 ] as const;
 
-/** FR-BR-4: upcoming events, soonest first, filtered by activity and time window. */
+/**
+ * FR-BR-4: upcoming events, soonest first, filtered by activity, group type
+ * (FR-GR-17), time window, and distance from a town or zip code (FR-BR-12).
+ */
 export default async function EventsPage({ searchParams }: Props) {
   const params = await searchParams;
   const category = typeof params.category === "string" ? params.category : undefined;
   const days = WINDOWS.find((w) => String(w.days) === params.days)?.days ?? 30;
-  // UC-14: near a town the visitor picks, never their device's location.
-  const near = findTown(typeof params.near === "string" ? params.near : undefined);
+  const type = isGroupType(params.type) ? params.type : undefined;
+  // UC-14: near a town or zip code the visitor gives, never their device's location.
+  const location = resolveLocation(params.near, params.zip);
+  const near = location.town;
+  const place = near && (location.zip ? `${location.zip} (${near.name})` : near.name);
   const within = distances.find((d) => String(d) === params.within) ?? 50;
 
   const supabase = await createClient();
+  // event_listings doesn't carry the group's type or town, so both come from
+  // the groups themselves. The type filter goes to the database as a list of
+  // group slugs, so it holds past the 300-row page like the activity filter.
+  const { data: groupRows } = await supabase.from("groups").select("slug, area, group_type");
+  const typeOf = new Map((groupRows ?? []).map((g) => [g.slug, g.group_type]));
+  const ofType = (groupSlug: string | null) => !type || typeOf.get(groupSlug ?? "") === type;
   const now = new Date();
   const until = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
 
@@ -51,8 +65,9 @@ export default async function EventsPage({ searchParams }: Props) {
     .gt("starts_at", startsInWindow.from)
     .lt("starts_at", startsInWindow.to);
   if (category) listing = listing.eq("category_slug", category);
+  if (type) listing = listing.in("group_slug", (groupRows ?? []).filter((g) => g.group_type === type).map((g) => g.slug));
 
-  const [{ data: all }, { data: categories }, { data: countRows }, { data: groupAreas }] = await Promise.all([
+  const [{ data: all }, { data: categories }, { data: countRows }] = await Promise.all([
     listing.order("starts_at").limit(300),
     supabase.from("categories").select("slug, name").order("sort_order"),
     supabase
@@ -61,13 +76,12 @@ export default async function EventsPage({ searchParams }: Props) {
       .eq("status", "scheduled")
       .gt("starts_at", startsInWindow.from)
       .lt("starts_at", startsInWindow.to),
-    near ? supabase.from("groups").select("slug, area") : Promise.resolve({ data: [] as { slug: string; area: string | null }[] }),
   ]);
 
   // Distance from the chosen town to each event's group town.
   const milesOf = new Map<string, number>();
   if (near) {
-    for (const g of groupAreas ?? []) {
+    for (const g of groupRows ?? []) {
       const t = townForArea(g.area);
       if (t) milesOf.set(g.slug, milesBetween(near, t));
     }
@@ -75,16 +89,26 @@ export default async function EventsPage({ searchParams }: Props) {
   const inRange = (groupSlug: string | null) => !near || (milesOf.get(groupSlug ?? "") ?? Infinity) <= within;
   const events = (all ?? []).filter((e) => inRange(e.group_slug));
 
-  // Counts per activity, for the sidebar: over the whole window, not the page.
+  // Counts for the sidebar: over the whole window, not the page. Each list
+  // counts what its links would show: activities under the chosen type and
+  // place, types under the chosen activity and place.
+  const placed = (countRows ?? []).filter((r) => inRange(r.group_slug));
   const counts = new Map<string, number>();
-  for (const e of (countRows ?? []).filter((r) => inRange(r.group_slug))) counts.set(e.category_slug ?? "", (counts.get(e.category_slug ?? "") ?? 0) + 1);
+  for (const e of placed.filter((r) => ofType(r.group_slug))) counts.set(e.category_slug ?? "", (counts.get(e.category_slug ?? "") ?? 0) + 1);
   // "all" is every activity together, whichever one is picked.
   const allCount = [...counts.values()].reduce((a, b) => a + b, 0);
+  const typeCounts = new Map<string, number>();
+  for (const e of placed.filter((r) => !category || r.category_slug === category)) {
+    const t = typeOf.get(e.group_slug ?? "");
+    if (t) typeCounts.set(t, (typeCounts.get(t) ?? 0) + 1);
+  }
+  const anyTypeCount = placed.filter((r) => !category || r.category_slug === category).length;
 
   // Near a town, events whose group area isn't a known town have no
   // distance, so they drop out; the page says how many (UC-14).
   const unplaced = near
-    ? (countRows ?? []).filter((r) => (!category || r.category_slug === category) && !milesOf.has(r.group_slug ?? "")).length
+    ? (countRows ?? []).filter((r) => (!category || r.category_slug === category) && ofType(r.group_slug) && !milesOf.has(r.group_slug ?? ""))
+        .length
     : 0;
 
   // Group by month, in the board's time zone.
@@ -96,14 +120,17 @@ export default async function EventsPage({ searchParams }: Props) {
     months.at(-1)!.events.push(e);
   }
 
-  const href = (next: { category?: string; days?: number; anywhere?: boolean }) => {
+  const href = (next: { category?: string; type?: string; days?: number; anywhere?: boolean }) => {
     const q = new URLSearchParams();
     const c = "category" in next ? next.category : category;
+    const t = "type" in next ? next.type : type;
     const d = next.days ?? days;
     if (c) q.set("category", c);
+    if (t) q.set("type", t);
     if (d !== 30) q.set("days", String(d));
     if (near && !next.anywhere) {
-      q.set("near", near.name);
+      if (location.zip) q.set("zip", location.zip);
+      else q.set("near", near.name);
       q.set("within", String(within));
     }
     const s = q.toString();
@@ -111,6 +138,7 @@ export default async function EventsPage({ searchParams }: Props) {
   };
 
   const current = categories?.find((c) => c.slug === category);
+  const typeLabel = GROUP_TYPES.find((t) => t.value === type)?.label;
 
   const filters = (where: string) => (
     <>
@@ -125,25 +153,14 @@ export default async function EventsPage({ searchParams }: Props) {
       </form>
 
       <h2 className="filter-heading">location</h2>
-      <form action="/events" className="mt-1 space-y-1">
-        {category && <input type="hidden" name="category" value={category} />}
-        {days !== 30 && <input type="hidden" name="days" value={days} />}
-        <label htmlFor={`events-near-${where}`} className="sr-only">
-          Town
-        </label>
-        <TownSelect id={`events-near-${where}`} name="near" defaultValue={near?.name ?? ""} anywhere className="w-full py-1 text-sm" />
-        <label htmlFor={`events-within-${where}`} className="sr-only">
-          Distance
-        </label>
-        <select id={`events-within-${where}`} name="within" defaultValue={String(within)} className="w-full py-1 text-sm">
-          {distances.map((d) => (
-            <option key={d} value={d}>
-              within {d} miles
-            </option>
-          ))}
-        </select>
-        <button className="button px-2 py-1 text-sm">show</button>
-      </form>
+      <LocationFilter
+        action="/events"
+        idPrefix={`events-${where}`}
+        keep={{ category, type, days: days !== 30 ? String(days) : undefined }}
+        town={location.zip ? undefined : near?.name}
+        zip={location.zip ?? location.unknownZip}
+        within={within}
+      />
 
       <h2 className="filter-heading">activity</h2>
       <ul className="mt-1 space-y-0.5">
@@ -165,6 +182,29 @@ export default async function EventsPage({ searchParams }: Props) {
         ))}
       </ul>
 
+      {/* FR-GR-17: plain links, so the filter works without JavaScript. */}
+      <h2 className="filter-heading">type</h2>
+      <ul className="mt-1 space-y-0.5">
+        <li>
+          {type ? <Link href={href({ type: undefined })}>any</Link> : <strong>any</strong>}{" "}
+          <span className="text-muted">({anyTypeCount})</span>
+        </li>
+        {GROUP_TYPES.map((t) => (
+          <li key={t.value}>
+            {t.value === type ? (
+              <strong>
+                <GroupTypeIcon type={t.value} />
+              </strong>
+            ) : (
+              <Link href={href({ type: t.value })} prefetch={false}>
+                <GroupTypeIcon type={t.value} />
+              </Link>
+            )}{" "}
+            <span className="text-muted">({typeCounts.get(t.value) ?? 0})</span>
+          </li>
+        ))}
+      </ul>
+
       <h2 className="filter-heading">when</h2>
       <ul className="mt-1 space-y-0.5">
         {WINDOWS.map((w) => (
@@ -181,12 +221,14 @@ export default async function EventsPage({ searchParams }: Props) {
         <h1 className="m-0 flex items-center gap-3">
           {current && <ActivityIcon slug={current.slug} />}
           {current ? `${current.name} events` : "Events"}
-          {near ? ` near ${near.name}` : ""}
+          {near ? ` near ${place}` : ""}
+          {typeLabel && <span className="text-subtle"> · {typeLabel}</span>}
         </h1>
         <p className="mt-2 border-b border-rule pb-3 text-subtle">
           {events.length} upcoming in the {WINDOWS.find((w) => w.days === days)!.label}
-          {near ? `, within ${within} miles of ${near.name}` : ""}, soonest first
+          {near ? `, within ${within} miles of ${place}` : ""}, soonest first
         </p>
+        {location.unknownZip && <UnknownZip zip={location.unknownZip} fallback={near?.name} />}
         {unplaced > 0 && (
           <p className="mt-2 text-sm text-muted">
             {unplaced} event{unplaced === 1 ? "" : "s"} without a known town {unplaced === 1 ? "isn’t" : "aren’t"} shown —{" "}
@@ -202,15 +244,16 @@ export default async function EventsPage({ searchParams }: Props) {
           ))
         ) : (
           <p className="mt-4 text-muted">
-            Nothing scheduled{current ? ` for ${current.name.toLowerCase()}` : ""} in this window.{" "}
+            Nothing scheduled{current ? ` for ${current.name.toLowerCase()}` : ""}
+            {typeLabel ? ` by a ${typeLabel.toLowerCase()}` : ""} in this window.{" "}
             {days !== 90 && <Link href={href({ days: 90 })}>Look further ahead</Link>}
           </p>
         )}
       </div>
 
       {/* Phones: the filters fold into a card above the list, open until a filter is picked. Computers: a side column. */}
-      <details className="filter-card order-first text-sm md:hidden" open={!category}>
-        <summary>{!category ? "Browse by activity and date" : "Change activity or date"}</summary>
+      <details className="filter-card order-first text-sm md:hidden" open={!category && !type}>
+        <summary>{!category && !type ? "Browse by activity, type and date" : "Change filters"}</summary>
         <div>{filters("card")}</div>
       </details>
       <aside aria-label="Filters" className="hidden text-sm md:col-start-1 md:row-start-1 md:block">

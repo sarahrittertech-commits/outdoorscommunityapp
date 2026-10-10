@@ -65,7 +65,7 @@ until the domain is chosen and email sending through Resend is set up.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Group types:** *Club*, *Meetup*, *Volunteer group*, *Nonprofit*, *Chapter*, with a type icon on Communities and group pages, and a type filter on Communities | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-16, FR-GR-17 |
+| **Group types:** *Club*, *Meetup*, *Volunteer group*, *Nonprofit*, *Chapter*, with a type icon on Communities and group pages, and a type filter on Communities and Events | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-16, FR-GR-17 |
 | **Group cover photo** on the group page and in the Communities list, uploaded in group settings | Built 9 Oct (migration `20261010000007` to apply) | UC-24 | FR-GR-14 (narrowed) |
 | **Event photo**, one per event or series | Fits | UC-10 | FR-EV-12 |
 | **Group photo galleries**, members-only by default, removable and reportable | In scope | UC-21 | FR-GR-12, FR-GR-13 |
@@ -75,7 +75,7 @@ until the domain is chosen and email sending through Resend is set up.
 
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
-| **Location and distance search** by town or zip, with distance on results and shareable filtered links | **Built 9 Oct** (towns, home and Events; no zip codes or Communities yet) | UC-14 | FR-BR-12, FR-BR-13, FR-BR-15 |
+| **Location and distance search** by town or zip, with distance on results and shareable filtered links | **Built 9 Oct** (towns and zip codes from built-in lists, on home, Events and Communities) | UC-14 | FR-BR-12, FR-BR-13, FR-BR-15 |
 | **Near you** row on the home page | **Built 9 Oct** | UC-14 | FR-BR-14 |
 | **Destinations map** and place pages | **Map built 9 Oct** (towns with events); place pages wait on places | UC-15 | FR-BR-16 to FR-BR-18, ADR-0007 |
 
