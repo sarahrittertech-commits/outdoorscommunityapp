@@ -193,6 +193,7 @@ insert into definer_allowed values
   ('event_going_count(uuid)'),
   ('event_rsvps_before_write()'),
   ('event_waitlist_place(uuid)'),
+  ('event_sponsors_limit()'),
   ('events_source_url_guard()'),
   ('group_claims_before_insert()'),
   ('group_discussions_open(uuid)'),

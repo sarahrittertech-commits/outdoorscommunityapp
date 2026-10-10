@@ -6,8 +6,7 @@
 --             anyone's RSVP (manage_rsvp); removals go in the moderation log
 --   FR-EV-20  RSVPs open at: before it, the database refuses RSVPs
 --   FR-EV-19  FAQ: up to 15 questions and answers per event, in order
---
--- FR-EV-14 (sponsors) was deferred; nothing here is for it yet.
+--   FR-EV-14  Sponsors: up to 5 per event, logo in event-photos
 
 -- ---------------------------------------------------------------------------
 -- 1. New values. Neither can be used in the transaction that adds it, so
@@ -251,3 +250,68 @@ $$;
 
 revoke execute on function public.set_event_faq(uuid, text[], text[]) from public, anon;
 grant execute on function public.set_event_faq(uuid, text[], text[]) to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- 7. Sponsors (FR-EV-14). Up to 5 per event, in the order added. The logo is
+-- the app's re-encoded WebP in the event's own folder of event-photos
+-- (<group_id>/<event_id>/sponsors/<file>.webp), so the event-photos storage
+-- policies already limit writing it to the group's organizers.
+-- ---------------------------------------------------------------------------
+
+create table public.event_sponsors (
+  id uuid primary key default gen_random_uuid(),
+  event_id uuid not null references public.events (id) on delete cascade,
+  group_id uuid not null references public.groups (id) on delete cascade,
+  name text not null check (char_length(btrim(name)) between 2 and 100),
+  website_url text check (website_url ~ '^https?://[^\s]+$' and char_length(website_url) <= 500),
+  logo_path text,
+  created_at timestamptz not null default now(),
+  constraint event_sponsors_logo_path_check check (
+    logo_path is null
+    or logo_path ~ ('^' || group_id::text || '/' || event_id::text || '/sponsors/[A-Za-z0-9_-]{8,64}\.webp$')
+  )
+);
+
+create index event_sponsors_event_idx on public.event_sponsors (event_id, created_at);
+create index event_sponsors_group_idx on public.event_sponsors (group_id);
+
+alter table public.event_sponsors enable row level security;
+revoke all on public.event_sponsors from public, anon, authenticated;
+grant select on public.event_sponsors to anon, authenticated;
+grant insert (event_id, group_id, name, website_url, logo_path) on public.event_sponsors to authenticated;
+grant delete on public.event_sponsors to authenticated;
+
+create policy "Sponsors are as visible as their event" on public.event_sponsors
+  for select to anon, authenticated
+  using (exists (select 1 from public.events e where e.id = event_id));
+
+create policy "Organizers add sponsors" on public.event_sponsors
+  for insert to authenticated
+  with check (exists (
+    select 1 from public.events e
+    where e.id = event_id and e.group_id = event_sponsors.group_id and public.can_moderate(e.group_id)
+  ));
+
+create policy "Organizers remove sponsors" on public.event_sponsors
+  for delete to authenticated
+  using (public.can_moderate(group_id));
+
+-- At most 5 per event. The event row is locked so two organizers adding at
+-- once can't make a sixth.
+create or replace function public.event_sponsors_limit()
+returns trigger
+language plpgsql security definer set search_path = ''
+as $$
+begin
+  perform 1 from public.events e where e.id = new.event_id for update;
+  if (select count(*) from public.event_sponsors s where s.event_id = new.event_id) >= 5 then
+    perform public.raise_rule('sponsor_limit', 'An event can have at most 5 sponsors.');
+  end if;
+  return new;
+end
+$$;
+
+revoke execute on function public.event_sponsors_limit() from public, anon, authenticated;
+
+create trigger event_sponsors_limit before insert on public.event_sponsors
+  for each row execute function public.event_sponsors_limit();

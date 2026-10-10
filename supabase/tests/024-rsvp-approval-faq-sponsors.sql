@@ -1,7 +1,7 @@
 -- UC-17 and part of UC-10: RSVP approval (FR-EV-15), Manage RSVPs
 -- (FR-EV-17), RSVPs open at (FR-EV-20) and the FAQ (FR-EV-19). PT-120 to PT-139.
 begin;
-select plan(34);
+select plan(45);
 select tests.build_fixture();
 
 select tests.as_admin();
@@ -199,6 +199,66 @@ select throws_ok(
   format($$ select public.set_event_faq(%L, array_fill('Question?'::text, array[16]), array_fill('Answer'::text, array[16])) $$, tests.id('e1')),
   'P0001', 'faq_limit: An event can have at most 15 questions.', 'PT-130 at most 15 questions'
 );
+
+-- PT-131: sponsors (FR-EV-14) ---------------------------------------------------------
+select tests.as('admin');
+select lives_ok(
+  format($$ insert into public.event_sponsors (event_id, group_id, name, website_url, logo_path)
+            values (%L, %L, 'Trail Shop', 'https://trailshop.example', %L) $$,
+         tests.id('e1'), tests.id('g1'), tests.id('g1') || '/' || tests.id('e1') || '/sponsors/abcdef123456.webp'),
+  'PT-131 an admin adds a sponsor with a logo and link'
+);
+select lives_ok(
+  format($$ insert into storage.objects (bucket_id, name) values ('event-photos', %L) $$,
+         tests.id('g1') || '/' || tests.id('e1') || '/sponsors/abcdef123456.webp'),
+  'PT-131 an admin uploads the sponsor logo to the event''s folder'
+);
+select tests.as_anon();
+select is((select name from public.event_sponsors where event_id = tests.id('e1')), 'Trail Shop',
+  'PT-131 visitors see the sponsor on the event');
+
+select tests.as('member');
+select throws_ok(
+  format($$ insert into public.event_sponsors (event_id, group_id, name) values (%L, %L, 'Sneaky Co') $$,
+         tests.id('e1'), tests.id('g1')),
+  '42501', null, 'PT-132 a member cannot add a sponsor'
+);
+delete from public.event_sponsors where event_id = tests.id('e1');
+select tests.as_admin();
+select is((select count(*)::int from public.event_sponsors where event_id = tests.id('e1')), 1,
+  'PT-132 nor remove one');
+
+select tests.as('admin');
+select throws_ok(
+  format($$ insert into public.event_sponsors (event_id, group_id, name, website_url) values (%L, %L, 'Bad Link', 'javascript:alert(1)') $$,
+         tests.id('e1'), tests.id('g1')),
+  '23514', null, 'PT-133 only http and https sponsor links are stored'
+);
+select throws_ok(
+  format($$ insert into public.event_sponsors (event_id, group_id, name, logo_path) values (%L, %L, 'Elsewhere', %L) $$,
+         tests.id('e1'), tests.id('g1'), tests.id('g3') || '/' || tests.id('e1') || '/sponsors/abcdef123456.webp'),
+  '23514', null, 'PT-133 a logo lives in its own event''s folder'
+);
+select throws_ok(
+  format($$ insert into public.event_sponsors (event_id, group_id, name) values (%L, %L, 'Wrong group') $$,
+         tests.id('e1'), tests.id('g3')),
+  '42501', null, 'PT-133 a sponsor''s group is its event''s group'
+);
+
+insert into public.event_sponsors (event_id, group_id, name)
+select tests.id('e1'), tests.id('g1'), 'Sponsor ' || n from generate_series(2, 5) as n;
+select throws_ok(
+  format($$ insert into public.event_sponsors (event_id, group_id, name) values (%L, %L, 'Sixth') $$,
+         tests.id('e1'), tests.id('g1')),
+  'P0001', 'sponsor_limit: An event can have at most 5 sponsors.', 'PT-134 at most 5 sponsors per event'
+);
+select lives_ok(
+  format($$ delete from public.event_sponsors where event_id = %L and name = 'Sponsor 5' $$, tests.id('e1')),
+  'PT-134 an admin removes a sponsor'
+);
+select tests.as_anon();
+select is((select count(*)::int from public.event_listings where id = tests.id('e1')), 1,
+  'PT-135 a sponsored event lists like any other');
 
 select * from finish();
 rollback;
