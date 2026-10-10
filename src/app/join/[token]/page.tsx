@@ -75,7 +75,8 @@ export default async function JoinPage({ params, searchParams }: Props) {
         {checkEmail ? (
           <p role="status" className="mt-4 rounded bg-notice px-3 py-2">
             Check your email. The link confirms your address, lets you create your password, and brings you straight back to
-            join {group.name}.
+            join {group.name}. Nothing arrived? If you&apos;ve signed up before, you already have an account:{" "}
+            <Link href={`/forgot-password`}>reset your password</Link>, then sign in and come back to this link.
           </p>
         ) : (
           <>
