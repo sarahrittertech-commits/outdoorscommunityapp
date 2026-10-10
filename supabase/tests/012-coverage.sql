@@ -176,6 +176,7 @@ create temporary table definer_allowed (signature text primary key) on commit dr
 insert into definer_allowed values
   ('admin_candidate_counts()'),
   ('admin_candidates()'),
+  ('answer_message_request(uuid, boolean)'),
   ('approve_claim(uuid)'),
   ('approve_member(uuid, uuid)'),
   ('archive_group(uuid, text)'),
@@ -232,6 +233,7 @@ insert into definer_allowed values
   ('require_writer()'),
   ('resolve_report(uuid, report_status)'),
   ('restore_group(uuid)'),
+  ('send_message(uuid, text)'),
   ('set_member_role(uuid, uuid, member_role)'),
   ('set_suggestion_status(uuid, suggestion_status, text)'),
   ('set_thread_flags(uuid, boolean, boolean)'),
