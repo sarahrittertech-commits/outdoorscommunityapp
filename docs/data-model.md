@@ -533,7 +533,7 @@ without revealing the rows, so visitors see "12 members" but not who.
 
 ## Planned with the 8 October design (drafts, not built)
 
-What the draft use cases UC-10 to UC-13, UC-17, UC-18, UC-20, UC-21, UC-23 and UC-25 to UC-28 would add. Field-level detail is
+What the draft use cases UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28 would add. Field-level detail is
 written when each is approved, with its migration and permission tests.
 
 | Table or change | For | Notes |

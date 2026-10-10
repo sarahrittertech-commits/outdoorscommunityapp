@@ -276,3 +276,26 @@ is already in the allowed redirect URLs; the callback hands token_hash
 links to `/auth/confirm` without using them. Until the templates are
 changed, links still work, but only when opened in the same browser that
 requested them.
+
+## Sample data (10 October 2026)
+
+For testing, production has one clearly labelled sample group,
+**[Sample] Trail Test Crew** (`/g/sample-trail-test-crew`): slritter@gmail.com
+("Sam (sample admin)") is its page admin and sarahrittertech@gmail.com a
+member. It has four `[Sample]` events (free with a waitlist, paid, organizers
+approve RSVPs with an FAQ and a sponsor, RSVPs open later), a thread with a
+nested reply, and one message request from Sam to Sarah. Sam must finish the
+welcome step (18+, terms) before posting. To remove all of it, run in the
+Supabase SQL editor:
+
+```sql
+begin;
+delete from public.conversations c
+ using auth.users a, auth.users b
+ where a.id = c.starter_id and b.id = c.recipient_id
+   and a.email = 'slritter@gmail.com' and b.email = 'sarahrittertech@gmail.com';
+-- Members, events, RSVPs, FAQ, sponsors, threads and replies cascade.
+delete from public.groups where slug = 'sample-trail-test-crew';
+commit;
+```
+
