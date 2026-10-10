@@ -68,7 +68,7 @@ Who is allowed to do each action is defined once, in
 | FR-GR-11 | **Affinity tags.** A group can carry any of these tags: *Women*, *Youth*, *BIPOC*, *LGBTQIA+*. They show on the group page and in group lists. The owner and admins can change them on the group's edit form; listings get them from the import or the research agent. | Should | A tag outside the list is refused by the database. |
 | FR-GR-23 | **Website.** A group can have its own website address, set by the owner and admins on the group form and shown on its own line on the group page ("Website: dirtskrrts.com"), as a link with `rel="nofollow ugc noopener"`. Only http and https addresses are stored; a missing scheme is taken as https. A listing that is claimed keeps the website it was listed with. | Should | Members can't change it; nothing but a web address is accepted. |
 | FR-GR-16 | **Group type.** A group can have one type: *Club*, *Meetup*, *Volunteer group*, *Nonprofit* or *Chapter*, set by the owner and admins on the group form. Groups that existed before have none until an organizer picks one; a group without a type shows none. It shows as a line drawing with the type's name beside it on the group page and in Communities. Built 9 October 2026 (UC-24). | Should | A type outside the list is refused by the database; members can't change it. |
-| FR-GR-17 | **Filter by type.** Communities filters by group type alongside activity, with plain links that work without JavaScript (`/communities?type=volunteer`). Built 9 October 2026 (UC-24); the Events filter waits for the Events side filters. | Should | The filter shows only groups of that type, and each shows the type it was filtered by. |
+| FR-GR-17 | **Filter by type.** Communities filters by group type alongside activity, with plain links that work without JavaScript (`/communities?type=volunteer`). Built 9 October 2026 (UC-24) for Communities and Events (`/events?type=volunteer`), where it combines with activity, place, distance and time window. | Should | The filter shows only groups of that type, and each shows the type it was filtered by. |
 | FR-GR-14 | **Cover photo.** *Narrowed 9 October 2026: upload only; picking from the gallery waits on UC-21.* The owner and admins upload one cover photo on the group's edit form: JPEG, PNG or WebP, at most 5 MB, re-encoded to WebP and stripped of location data on upload (TR-SEC-9, as FR-EV-24), with a required short description (alt text). Replaceable and removable. Shown under the group's name on its page and as a thumbnail in Communities; it replaces a sample group's representative photo. Built 9 October 2026 (UC-24). | Should | Only an active group's owner and admins can add or remove its cover, at most 5 files per group; nothing but a re-encoded image is ever served. |
 | FR-GR-10 | **Claiming a listing.** A signed-in user can ask to claim a listing, or a group whose owner deleted their account (FR-AC-6), with a short note on how they're connected. The site admin checks it against the organization's website or the group's members and approves (the claimant becomes owner, the group is active again, a listing's discussions open, other claims are declined) or declines. A group without an owner comes back only through a claim, whatever state it was in when the owner left: a group that was removed at the time is still marked as needing one, so restoring it can never produce a live group nobody can run. | Must | Only the site admin can approve; an approved claimant owns the group and it becomes an ordinary group. |
 
@@ -225,12 +225,16 @@ approves its use case and user flow. Priorities here are proposals.
 :::info Built 9 October 2026
 Sarah directed the 8 October design onto the live board, so these were
 built ahead of their review. What shipped, against the drafts below:
-FR-BR-12 takes a town from a list in `src/config/towns.ts` (no zip codes
-yet) on the home page and Events (not Communities yet); FR-BR-13 offers
+FR-BR-12 takes a town from a list in `src/config/towns.ts`, or a 5-digit
+zip code from a built-in table in `src/config/zips.ts` that maps each zip
+to one of those towns (a zip wins over the town; an unknown one says so and
+falls back to the town), on the home page, Events and Communities;
+FR-BR-13 offers
 10, 25, 50, 100 and 250 miles, measured from town center to the group's
 town, shown rounded on the home page cards; FR-BR-14 uses 100 miles and
 keeps the town in the page address, not the browser; FR-BR-15 covers
-Events; FR-BR-17 maps **towns with upcoming events** rather than places,
+Events and Communities (the page heading states the filters; the browser
+tab title doesn't yet); FR-BR-17 maps **towns with upcoming events** rather than places,
 because FR-BR-16 (places) isn't built. FR-BR-18 waits on FR-BR-16.
 Fixed after the 9 October review: the home search defaults to *Anywhere*;
 near a town, Events doesn't list events whose group's area isn't a known
@@ -238,6 +242,11 @@ town, but says how many it left out and links to all events (FR-BR-13's
 "distance unknown" list is not built); each destination's count is the
 number of events in the next 90 days within 25 miles, the same list its
 link opens.
+On Communities, groups within the distance come nearest first with their
+rounded distance, and groups whose area isn't a known town follow under
+"Area not on the map" (FR-BR-13's "listed after"); the activity counts are
+left off while a type or place is chosen. Zip codes and Communities were
+added later on 9 October 2026.
 :::
 
 | ID | Draft requirement | Proposed | Accepted when |
@@ -265,7 +274,7 @@ link opens.
 | FR-GR-13 | **Removing photos.** The uploader can delete their own photos; owner and admins can remove any, logged as moderation. Photos can be reported (FR-MD). | Could | — |
 | FR-GR-14 | **Group photo.** The owner picks the group's cover photo from the gallery or uploads one (image rules as FR-EV-12); otherwise the activity's drawing shows. The photo appears on the group page and in the Communities list. *Narrowed (upload only), built 9 October 2026 and moved to the Groups table; picking from the gallery waits on UC-21.* | Should | — |
 | FR-GR-16 | *Built 9 October 2026; moved to the Groups table. Listings getting a type from the research agent is not built yet.* | — | — |
-| FR-GR-17 | *Built for Communities 9 October 2026; moved to the Groups table. The Events filter and the location and audience filters stay draft.* | — | — |
+| FR-GR-17 | *Built for Communities and Events 9 October 2026; moved to the Groups table. The audience filter stays draft.* | — | — |
 | FR-GR-15 | **Chapters.** A group's owner can mark it as a chapter of a national organization from a site-admin-managed list. The organization's page lists its chapters A to Z. | Could | Only the group's owner can link it; the organization can't claim groups. |
 
 ### Businesses (UC-12)

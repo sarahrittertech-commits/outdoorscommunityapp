@@ -22,7 +22,7 @@ records where each one came from.
 | As a… | I want to… | So that… | Use case | Requirements | Status |
 | --- | --- | --- | --- | --- | --- |
 | visitor | browse groups and events by activity without signing up | I can see what's out there before giving anything away | UC-1 | FR-BR-1 to FR-BR-5 | Live |
-| visitor | search for events near a town I pick, within a distance | I find things I can actually get to | UC-14 | FR-BR-12 to FR-BR-15 | Live (towns; no zip codes yet) |
+| visitor | search for events and groups near a town or zip code I give, within a distance | I find things I can actually get to | UC-14 | FR-BR-12 to FR-BR-15 | Live (towns); built (zip codes, Communities) |
 | visitor | see where people are heading on a map and a list | I discover new places to go | UC-15 | FR-BR-16 to FR-BR-18 | Live (towns; no place pages yet) |
 | visitor | see a group's own website | I can learn more about them off the board | — | FR-GR-23 | Built |
 | newcomer | see what kind of group it is (club, meetup, volunteer group, nonprofit, chapter) and filter by it | I find a group that suits how I want to take part | UC-24 | FR-GR-16, FR-GR-17 | Built |
