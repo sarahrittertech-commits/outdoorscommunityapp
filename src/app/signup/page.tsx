@@ -6,6 +6,7 @@ import { signUp } from "@/app/actions/auth";
 import { Notice } from "@/components/Notice";
 import { getViewer } from "@/lib/auth";
 import { safeNext } from "@/lib/navigation";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export const metadata: Metadata = { title: "Create an account", robots: { index: false } };
 
@@ -30,7 +31,7 @@ export default async function SignUpPage({ searchParams }: Props) {
         <input type="hidden" name="next" value={next} />
         <label htmlFor="email">Email address</label>
         <input id="email" name="email" type="email" required autoComplete="email" maxLength={254} />
-        <button className="button mt-4">Email me the link</button>
+        <SubmitButton className="button mt-4" pendingText="Sending…">Email me the link</SubmitButton>
       </form>
     </>
   );

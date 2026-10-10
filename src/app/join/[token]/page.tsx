@@ -10,6 +10,7 @@ import { getViewer } from "@/lib/auth";
 import { loadGroup } from "@/lib/groups";
 import { createClient } from "@/lib/supabase/server";
 import { inviteTokenSchema } from "@/lib/validation";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export const metadata: Metadata = { title: "Join by invite", robots: { index: false, follow: false } };
 
@@ -75,7 +76,8 @@ export default async function JoinPage({ params, searchParams }: Props) {
         {checkEmail ? (
           <p role="status" className="mt-4 rounded bg-notice px-3 py-2">
             Check your email. The link confirms your address, lets you create your password, and brings you straight back to
-            join {group.name}.
+            join {group.name}. Nothing arrived? If you&apos;ve signed up before, you already have an account:{" "}
+            <Link href={`/forgot-password`}>reset your password</Link>, then sign in and come back to this link.
           </p>
         ) : (
           <>
@@ -87,7 +89,7 @@ export default async function JoinPage({ params, searchParams }: Props) {
                 Email address <span className="hint">Never shown to anyone.</span>
               </label>
               <input id="email" name="email" type="email" required autoComplete="email" maxLength={254} />
-              <button className="button mt-4">Email me the link</button>
+              <SubmitButton className="button mt-4" pendingText="Sending…">Email me the link</SubmitButton>
             </form>
           </>
         )}
@@ -112,7 +114,7 @@ export default async function JoinPage({ params, searchParams }: Props) {
         Join to see the group&apos;s events and discussions on {site.name}. No approval needed; you can leave at any time.
       </p>
       <form action={joinByInvite.bind(null, token)} className="mt-4">
-        <button className="button">Join {group.name}</button>
+        <SubmitButton className="button" pendingText="Joining…">Join {group.name}</SubmitButton>
       </form>
     </>
   );

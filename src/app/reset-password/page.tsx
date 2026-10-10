@@ -7,6 +7,7 @@ import { Notice } from "@/components/Notice";
 import { getViewer } from "@/lib/auth";
 import { withMessage } from "@/lib/navigation";
 import { RESET_COOKIE } from "@/lib/password-reset";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export const metadata: Metadata = { title: "Set a new password", robots: { index: false } };
 
@@ -33,7 +34,7 @@ export default async function ResetPasswordPage({ searchParams }: Props) {
         <input id="password" name="password" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
         <label htmlFor="passwordAgain">New password again</label>
         <input id="passwordAgain" name="passwordAgain" type="password" required minLength={10} maxLength={72} autoComplete="new-password" />
-        <button className="button mt-3">Set password</button>
+        <SubmitButton className="button mt-3" pendingText="Saving…">Set password</SubmitButton>
       </form>
     </>
   );
