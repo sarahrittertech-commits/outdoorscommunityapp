@@ -3,6 +3,7 @@ import Image from "next/image";
 import { site } from "@/config/site";
 import type { Tables } from "@/lib/supabase/database.types";
 import { utcToZonedLocal } from "@/lib/time";
+import { FAQ_ROWS } from "@/lib/validation";
 
 type Event = Pick<
   Tables<"events">,
@@ -22,7 +23,11 @@ type Event = Pick<
   | "takes_rsvps"
   | "signup_url"
   | "waitlist_enabled"
+  | "approve_rsvps"
+  | "rsvps_open_at"
 >;
+
+type Faq = { question: string; answer: string };
 
 const TIME_ZONES = [
   "America/New_York",
@@ -44,12 +49,14 @@ export function EventForm({
   event,
   address,
   photoUrl,
+  faqs = [],
   submitLabel,
 }: {
   action: (formData: FormData) => Promise<void>;
   event?: Event;
   address?: string | null;
   photoUrl?: string | null;
+  faqs?: Faq[];
   submitLabel: string;
 }) {
   const timezone = event?.timezone ?? site.defaultTimezone;
@@ -188,6 +195,21 @@ export function EventForm({
           <input type="checkbox" name="waitlistEnabled" defaultChecked={event?.waitlist_enabled ?? false} />
           Waitlist when full <span className="hint">With places. You move people from the waitlist to going.</span>
         </label>
+        {/* FR-EV-15 */}
+        <label className="check mt-2">
+          <input type="checkbox" name="approveRsvps" defaultChecked={event?.approve_rsvps ?? false} />
+          Approve RSVPs <span className="hint">Members ask to go; you approve or decline each one on Manage RSVPs.</span>
+        </label>
+        {/* FR-EV-20 */}
+        <label htmlFor="rsvpsOpenLocal">
+          RSVPs open at <span className="hint">Optional, in the event&apos;s time zone. Leave empty to open now.</span>
+        </label>
+        <input
+          id="rsvpsOpenLocal"
+          name="rsvpsOpenLocal"
+          type="datetime-local"
+          defaultValue={event?.rsvps_open_at ? utcToZonedLocal(event.rsvps_open_at, timezone) : undefined}
+        />
         <label htmlFor="signupUrl">
           Sign-up link <span className="hint">Without RSVPs, optional: your own sign-up page</span>
         </label>
@@ -205,6 +227,23 @@ export function EventForm({
         Details <span className="hint">Optional: what to bring, pace, difficulty. Plain text; links work.</span>
       </label>
       <textarea id="details" name="details" maxLength={10000} defaultValue={event?.details ?? ""} />
+
+      {/* FR-EV-19: a fixed set of rows, so it works without JavaScript. Shown in this order. */}
+      <details className="mt-6" open={faqs.length > 0}>
+        <summary className="font-semibold">FAQ (optional, up to {FAQ_ROWS} questions)</summary>
+        <p className="hint mt-1">Plain text, shown in this order. Empty rows are skipped; clear a row to remove it.</p>
+        {Array.from({ length: FAQ_ROWS }, (_, i) => (
+          <fieldset key={i} className="mt-3">
+            <legend className="text-sm font-semibold">Question {i + 1}</legend>
+            <label htmlFor={`faqQ${i + 1}`} className="sr-only">
+              Question {i + 1}
+            </label>
+            <input id={`faqQ${i + 1}`} name={`faqQ${i + 1}`} type="text" maxLength={200} defaultValue={faqs[i]?.question ?? ""} />
+            <label htmlFor={`faqA${i + 1}`}>Answer {i + 1}</label>
+            <textarea id={`faqA${i + 1}`} name={`faqA${i + 1}`} maxLength={2000} defaultValue={faqs[i]?.answer ?? ""} className="min-h-16" />
+          </fieldset>
+        ))}
+      </details>
 
       <button className="button mt-6">{submitLabel}</button>
     </form>

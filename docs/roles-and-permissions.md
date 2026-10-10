@@ -118,6 +118,14 @@ Email invites are stored but not sent until the board's email is set up
 | Join or leave an event's waitlist when it is full (FR-EV-28) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Add, replace or remove an event photo; set price, RSVPs, sign-up link, waitlist (FR-EV-24 to FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Move someone from the waitlist to going, while a place is free (FR-EV-28) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Ask to go to an event that approves RSVPs; withdraw the request (FR-EV-15) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Turn on Approve RSVPs; set when RSVPs open (FR-EV-15, FR-EV-20) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| RSVP before RSVPs open (FR-EV-20) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| See other people's requests and declines (FR-EV-15) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Open Manage RSVPs; approve, decline, waitlist or remove an RSVP, removals logged (FR-EV-17) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Undo a decline of their own RSVP | ❌ | ❌ | ❌ | ❌ | — | — | — |
+| Edit an event's FAQ, add or remove sponsors (FR-EV-14, FR-EV-19) | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Read an event's FAQ and sponsors | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Save an event they can see, unsave it, see their own saved events (FR-EV-18) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See someone else's saved events | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
@@ -159,6 +167,24 @@ claimed the same way; its remaining admins and members are users here.
 | Approve or decline a claim | ❌ | ❌ | ✅ |
 | Add a listing or set a source link | ❌ | ❌ | ❌ operator SQL only |
 
+### A person's first group (UC-27, FR-GR-8, FR-GR-21)
+
+Built 9 October 2026. A first-time organizer's group waits for the site
+admin before it is listed. It has no members yet but its page admin and
+any page managers.
+
+| Action | Visitor | User | Page manager | Page admin | Site admin |
+| --- | --- | --- | --- | --- | --- |
+| See a group waiting for review, or declined, and its events | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Join it, by the button or an invite link | ❌ | ❌ | — | — | ❌ |
+| Edit it and post events while it waits | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Edit a declined group or post in it | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Delete a declined group | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Approve or decline a new group (logged) | ❌ | ❌ | ❌ | ❌ | ✅ |
+
+A person skips review once they started or own an approved group, or had
+a claim approved.
+
 ### Research candidates (FR-RS-5, FR-RS-6)
 
 | Action | Visitor | User | Site admin |
@@ -167,6 +193,20 @@ claimed the same way; its remaining admins and members are users here.
 | List a group candidate | ❌ | ❌ | ✅ |
 | Skip a candidate | ❌ | ❌ | ✅ |
 | Add a candidate | ❌ | ❌ | ❌ research agent only |
+
+### Group photos (UC-21, FR-GR-12, FR-GR-13)
+
+Built 9 October 2026. *Admin* is a page manager, *Owner* the page admin.
+The database and the private `group-photos` bucket enforce every row.
+
+| Action | Visitor | User (not a member) | Member | Admin | Owner | Site admin |
+| --- | --- | --- | --- | --- | --- | --- |
+| See a members-only gallery and its files | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| See a gallery the page admin made public | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Add photos (active group; 20 a day, 200 per gallery) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| Delete a photo (active group) | ❌ | ❌ | **own** | ✅ any, logged | ✅ any, logged | ✅ any, logged |
+| Report a photo | ❌ | public galleries only | ✅ | ✅ | ✅ | ✅ |
+| Make the gallery public or members-only | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 
 ### Suggestions to the site admin (UC-32, FR-AD-4 to FR-AD-7)
 
@@ -207,26 +247,24 @@ approved.
 | Search by town or zip and distance, see *Near you* | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See the destinations map and place pages | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Manage the places list | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Post an event series, sponsors, FAQ, RSVP opening time (photo and price built with UC-30) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Post an event series (photo and price built with UC-30; sponsors, FAQ and RSVP opening time with UC-10) | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | Ask an event a question | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Read and answer questions, move answers to the FAQ | ❌ | ❌ own only | ❌ own only | ✅ | ✅ | ✅ |
-| RSVP to an approval event (request) (waitlist built with UC-30) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
-| Approve, decline, waitlist or remove RSVPs | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
-| See own going and saved events on a calendar (saving built with UC-22) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| See own going and saved events on a calendar (built with UC-18; saving with UC-22) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | See own reminders | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Reply to a reply (built with UC-19; see Discussions) | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | Upload photos to the group gallery | ❌ | ❌ | ✅ | ✅ | ✅ | — |
 | See a members-only gallery | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | Remove a gallery photo | ❌ | ❌ | **own** | ✅ | ✅ | ✅ |
+| Send a message request | ❌ | ✅ (10 a day) | ✅ | ✅ | ✅ | ✅ |
+| Accept, decline or block a request | ❌ | **own** | **own** | **own** | **own** | **own** |
+| Read a conversation | ❌ | **own** | **own** | **own** | **own** | reported only |
 | Link a group to a national organization | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 | Edit a business page | ❌ | business owner and admins only | — | — | — | ✅ |
 | Add or remove a business page's admins | ❌ | business owner only | — | — | — | ✅ |
 | Link a group to a business page | ❌ | business owner, with the group owner's acceptance | — | — | ✅ accepts | ✅ |
 | Confirm a claim with a club email (UC-26) | ❌ | **own claim** | — | — | — | — |
 | See whether a claim was confirmed, and at which domain | ❌ | **own claim** | — | — | — | ✅ |
-| See a group waiting for review (UC-27) | ❌ | ❌ | — | — | ✅ | ✅ |
-| Join a group waiting for review | ❌ | ❌ | — | — | — | ❌ |
-| Approve or decline a new group | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 
 Group admins never read members' private messages or saved events.
 

@@ -22,7 +22,7 @@ records where each one came from.
 | As a… | I want to… | So that… | Use case | Requirements | Status |
 | --- | --- | --- | --- | --- | --- |
 | visitor | browse groups and events by activity without signing up | I can see what's out there before giving anything away | UC-1 | FR-BR-1 to FR-BR-5 | Live |
-| visitor | search for events near a town I pick, within a distance | I find things I can actually get to | UC-14 | FR-BR-12 to FR-BR-15 | Live (towns; no zip codes yet) |
+| visitor | search for events and groups near a town or zip code I give, within a distance | I find things I can actually get to | UC-14 | FR-BR-12 to FR-BR-15 | Live (towns); built (zip codes, Communities) |
 | visitor | see where people are heading on a map and a list | I discover new places to go | UC-15 | FR-BR-16 to FR-BR-18 | Live (towns; no place pages yet) |
 | visitor | see a group's own website | I can learn more about them off the board | — | FR-GR-23 | Built |
 | newcomer | see what kind of group it is (club, meetup, volunteer group, nonprofit, chapter) and filter by it | I find a group that suits how I want to take part | UC-24 | FR-GR-16, FR-GR-17 | Built |
@@ -45,8 +45,13 @@ records where each one came from.
 | member | join through an invite link a group shared with me, creating my account on the same page | I'm in without waiting for approval | UC-31 | FR-MB-14, FR-MB-15 | Built |
 | member | join the waitlist when an event is full | I get a place if someone drops out | UC-30 | FR-EV-28 | Draft |
 | member | see what an event costs, the registration fee and the total | I know before I commit | UC-30 | FR-EV-25 | Draft |
+| member | add photos from our trip to the group's gallery, with a description for each | the group keeps a record of what we did | UC-21 | FR-GR-12 | Built |
+| member | delete a photo I added, or report someone else's | I stay in control of what's shared | UC-21 | FR-GR-13 | Built |
 | member | save an event without RSVPing, and see it under Saved in My stuff | I keep track of things I might go to, and nobody else sees my list | UC-22 | FR-EV-18 | Built |
 | member | answer one person's reply in a thread, not the whole thread | side conversations stay together and readable | UC-19 | FR-DS-9 | Built |
+| member | ask to go to an event the organizers approve, and see whether I'm in | I know where I stand before the day | UC-17 | FR-EV-15 | Built |
+| member | see plainly when RSVPs open, and read the event's FAQ and sponsors | I come back at the right time with my questions answered | UC-10 | FR-EV-14, FR-EV-19, FR-EV-20 | Built |
+| member | see the events I'm going to and saved on a calendar when I sign in, a month or a week at a time | I see my outdoor week at a glance and open any event from it | UC-18 | FR-AC-9 | Built |
 | member | message another member privately from their profile | we can arrange things like a carpool or a borrowed bike rack without posting them in a group | UC-20 | FR-DM-1, FR-DM-3, FR-DM-4 | Built |
 | member | accept, decline or block a first message from someone new, and report one | nobody can keep messaging me without my saying yes, and abuse reaches the site admin | UC-20 | FR-DM-2, FR-DM-5, FR-DM-6 | Built |
 
@@ -64,6 +69,9 @@ records where each one came from.
 | page admin or manager | choose who sees our member list: members, organizers only or anyone signed in | members who want privacy aren't listed for everyone | UC-16 | FR-MB-10 | Built |
 | organizer | add our group's website | members can find our own site | — | FR-GR-23 | Built |
 | organizer | set our group's type and a cover photo with its description | newcomers can tell us apart from other groups | UC-24 | FR-GR-16, FR-GR-14 | Built |
+| page admin | remove a photo that breaks our rules, and choose whether the gallery is public | the gallery stays ours and appropriate | UC-21 | FR-GR-12, FR-GR-13 | Built |
+| organizer | approve RSVPs and manage requests, going, the waitlist and declines on one page | I decide who comes, and the place count is always right | UC-17 | FR-EV-15, FR-EV-17 | Built |
+| organizer | set when RSVPs open, add an FAQ and list our sponsors on an event | people sign up fairly, get answers and see who supports us | UC-10 | FR-EV-14, FR-EV-19, FR-EV-20 | Built (series still a draft) |
 | organizer | claim a listing of our real group | I run it here instead of starting over | UC-8 | FR-GR-9, FR-GR-10 | Live |
 | organizer | prove a claim with an email at our club's domain | the site admin can approve it quickly | UC-26 | FR-GR-18 to FR-GR-20 | Draft (needs a domain) |
 
@@ -73,7 +81,7 @@ records where each one came from.
 | --- | --- | --- | --- | --- | --- |
 | site admin | have new groups and events suggested from public sources | the board fills up without me searching | UC-9 | FR-RS-1 to FR-RS-9 | Live (cloud permission pending) |
 | site admin | see suggestions that look like something already listed, tagged *possible duplicate* | I don't list the same group twice; exact matches never reach me | UC-9 | FR-RS-3, FR-RS-10 | Built |
-| site admin | review a person's first group before it's listed | spam never reaches the listings | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 | Decision needed |
+| site admin | review a person's first group before it's listed | spam never reaches the listings | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 | Built |
 | member | report anything that breaks the rules | moderators can act on it | UC-6 | FR-MD-1 to FR-MD-6 | Live |
 | member | suggest a region, a feature, a group to invite or an event to add | the board grows where people want it | UC-32 | FR-AD-4, FR-AD-5, FR-AD-7 | Built |
 | site admin | see every suggestion in one place and mark it planned, done or declined | nothing gets lost and members hear back | UC-32 | FR-AD-6 | Built |

@@ -16,14 +16,17 @@ const key = (t: { type: TargetType; id: string }) => `${t.type}:${t.id}`;
 export async function resolveReportTargets(supabase: ServerClient, targets: TargetRef[]): Promise<Map<string, Resolved>> {
   const ids = (type: TargetType) => [...new Set(targets.filter((t) => t.type === type).map((t) => t.id))];
   const none = Promise.resolve({ data: [] as never[] });
-  const [groupIds, eventIds, threadIds, replyIds, profileIds, messageIds] = (["group", "event", "thread", "reply", "profile", "message"] as const).map(ids);
+  const [groupIds, eventIds, threadIds, replyIds, profileIds, photoIds, messageIds] = (
+    ["group", "event", "thread", "reply", "profile", "photo", "message"] as const
+  ).map(ids);
 
-  const [groups, events, threads, replies, profiles, messages] = await Promise.all([
+  const [groups, events, threads, replies, profiles, photos, messages] = await Promise.all([
     groupIds.length ? supabase.from("groups").select("id, slug, name").in("id", groupIds) : none,
     eventIds.length ? supabase.from("events").select("id, title").in("id", eventIds) : none,
     threadIds.length ? supabase.from("threads").select("id, title, groups(slug)").in("id", threadIds) : none,
     replyIds.length ? supabase.from("replies").select("id, thread_id, body, threads(groups(slug))").in("id", replyIds) : none,
     profileIds.length ? supabase.from("profiles").select("id, display_name").in("id", profileIds) : none,
+    photoIds.length ? supabase.from("group_photos").select("id, alt, status, groups(slug)").in("id", photoIds) : none,
     // FR-DM-5: readable by the two people, and by the site admin once reported.
     messageIds.length ? supabase.from("messages").select("id, conversation_id, body").in("id", messageIds) : none,
   ]);
@@ -34,6 +37,7 @@ export async function resolveReportTargets(supabase: ServerClient, targets: Targ
   const th = byId(threads.data);
   const rp = byId(replies.data);
   const pr = byId(profiles.data);
+  const ph = byId(photos.data);
   const ms = byId(messages.data);
 
   const out = new Map<string, Resolved>();
@@ -66,6 +70,16 @@ export async function resolveReportTargets(supabase: ServerClient, targets: Targ
       case "profile":
         resolved = { href: `/u/${t.id}`, label: pr.get(t.id)?.display_name ?? "deleted user" };
         break;
+      case "photo": {
+        // A deleted or removed photo has no page; the site admin still sees its description.
+        const row = ph.get(t.id);
+        const slug = row?.groups?.slug ?? t.groupSlug;
+        resolved =
+          row?.status === "visible" && slug
+            ? { href: `/g/${slug}/photos/${t.id}`, label: `photo: ${row.alt.slice(0, 60)}` }
+            : { label: row ? `removed photo: ${row.alt.slice(0, 60)}` : "removed photo" };
+        break;
+      }
       case "message": {
         const row = ms.get(t.id);
         resolved = row

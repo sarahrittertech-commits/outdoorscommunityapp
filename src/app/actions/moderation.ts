@@ -65,3 +65,24 @@ export async function removeGroup(groupId: string, formData: FormData) {
   failOnError(back, error);
   succeed(back, "group_removed");
 }
+
+/** FR-GR-21: the New groups queue. Site admin only; the database checks. */
+export async function approveNewGroup(groupId: string) {
+  const back = "/admin";
+  const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema]), [groupId]);
+  const { error } = await supabase.rpc("approve_new_group", { p_group_id: groupId });
+  failOnError(back, error);
+  succeed(back, "new_group_approved");
+}
+
+export async function declineNewGroup(groupId: string, formData: FormData) {
+  const back = "/admin";
+  const { supabase } = await actingUser(back);
+  checkArgs(back, z.tuple([idSchema]), [groupId]);
+  const reason = reasonSchema.safeParse(formData.get("reason"));
+  if (!reason.success) fail(back, "invalid");
+  const { error } = await supabase.rpc("decline_new_group", { p_group_id: groupId, p_reason: reason.data });
+  failOnError(back, error);
+  succeed(back, "new_group_declined");
+}

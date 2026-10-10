@@ -119,6 +119,10 @@ export type Database = {
           member_list_visibility: Database["public"]["Enums"]["member_list_visibility"];
           group_type: Database["public"]["Enums"]["group_type"] | null;
           cover_alt: string | null;
+          review_status: Database["public"]["Enums"]["group_review_status"];
+          review_reason: string;
+          reviewed_at: string | null;
+          photos_public: boolean;
         };
         Insert: {
           id?: string;
@@ -145,6 +149,7 @@ export type Database = {
           member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
           group_type?: Database["public"]["Enums"]["group_type"] | null;
           cover_alt?: string | null;
+          photos_public?: boolean;
         };
         Update: {
           id?: string;
@@ -171,6 +176,7 @@ export type Database = {
           member_list_visibility?: Database["public"]["Enums"]["member_list_visibility"];
           group_type?: Database["public"]["Enums"]["group_type"] | null;
           cover_alt?: string | null;
+          photos_public?: boolean;
         };
         Relationships: [
           Fk<"groups_subcategory_id_fkey", "subcategory_id", "subcategories">,
@@ -238,6 +244,8 @@ export type Database = {
           takes_rsvps: boolean;
           signup_url: string | null;
           waitlist_enabled: boolean;
+          approve_rsvps: boolean;
+          rsvps_open_at: string | null;
         };
         Insert: {
           id?: string;
@@ -264,6 +272,8 @@ export type Database = {
           takes_rsvps?: boolean;
           signup_url?: string | null;
           waitlist_enabled?: boolean;
+          approve_rsvps?: boolean;
+          rsvps_open_at?: string | null;
         };
         Update: {
           id?: string;
@@ -290,6 +300,8 @@ export type Database = {
           takes_rsvps?: boolean;
           signup_url?: string | null;
           waitlist_enabled?: boolean;
+          approve_rsvps?: boolean;
+          rsvps_open_at?: string | null;
         };
         Relationships: [
           Fk<"events_group_id_fkey", "group_id", "groups">,
@@ -341,6 +353,45 @@ export type Database = {
           Fk<"saved_events_user_id_fkey", "user_id", "profiles">,
           Fk<"saved_events_event_id_fkey", "event_id", "events">,
         ];
+      };
+      event_sponsors: {
+        Row: {
+          id: string;
+          event_id: string;
+          group_id: string;
+          name: string;
+          website_url: string | null;
+          logo_path: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          event_id: string;
+          group_id: string;
+          name: string;
+          website_url?: string | null;
+          logo_path?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          event_id?: string;
+          group_id?: string;
+          name?: string;
+          website_url?: string | null;
+          logo_path?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          Fk<"event_sponsors_event_id_fkey", "event_id", "events">,
+          Fk<"event_sponsors_group_id_fkey", "group_id", "groups">,
+        ];
+      };
+      event_faqs: {
+        Row: { event_id: string; position: number; question: string; answer: string };
+        Insert: { event_id: string; position: number; question: string; answer: string };
+        Update: { event_id?: string; position?: number; question?: string; answer?: string };
+        Relationships: [Fk<"event_faqs_event_id_fkey", "event_id", "events">];
       };
       event_private_details: {
         Row: { event_id: string; address: string };
@@ -510,6 +561,30 @@ export type Database = {
         Relationships: [
           Fk<"reports_group_id_fkey", "group_id", "groups">,
           Fk<"reports_reporter_id_fkey", "reporter_id", "profiles">,
+        ];
+      };
+      group_photos: {
+        Row: {
+          id: string;
+          group_id: string;
+          uploader_id: string | null;
+          path: string;
+          alt: string;
+          status: "visible" | "deleted" | "removed";
+          created_at: string;
+        };
+        Insert: {
+          group_id: string;
+          uploader_id: string;
+          path: string;
+          alt: string;
+        };
+        Update: {
+          [_ in never]: never;
+        };
+        Relationships: [
+          Fk<"group_photos_group_id_fkey", "group_id", "groups">,
+          Fk<"group_photos_uploader_id_fkey", "uploader_id", "profiles">,
         ];
       };
       suggestions: {
@@ -775,6 +850,11 @@ export type Database = {
         Returns: undefined;
       };
       move_from_waitlist: { Args: { p_event_id: string; p_user_id: string }; Returns: undefined };
+      manage_rsvp: {
+        Args: { p_event_id: string; p_user_id: string; p_action: "approve" | "decline" | "waitlist" | "remove"; p_reason?: string };
+        Returns: undefined;
+      };
+      set_event_faq: { Args: { p_event_id: string; p_questions: string[]; p_answers: string[] }; Returns: undefined };
       approve_member: { Args: { p_group_id: string; p_user_id: string }; Returns: undefined };
       decline_member: { Args: { p_group_id: string; p_user_id: string }; Returns: undefined };
       remove_member: {
@@ -830,6 +910,18 @@ export type Database = {
       send_message: { Args: { p_to: string; p_body: string }; Returns: string };
       answer_message_request: { Args: { p_conversation_id: string; p_accept: boolean }; Returns: undefined };
       unread_conversation_count: { Args: never; Returns: number };
+      remove_group_photo: {
+        Args: { p_photo_id: string; p_reason?: string };
+        Returns: string;
+      };
+      set_group_photos_public: {
+        Args: { p_group_id: string; p_public: boolean };
+        Returns: undefined;
+      };
+      can_view_group_photos: {
+        Args: { p_group_id: string };
+        Returns: boolean;
+      };
       resolve_report: {
         Args: { p_report_id: string; p_status: Database["public"]["Enums"]["report_status"] };
         Returns: undefined;
@@ -859,19 +951,24 @@ export type Database = {
       suspend_user: { Args: { p_user_id: string; p_reason: string }; Returns: undefined };
       unsuspend_user: { Args: { p_user_id: string }; Returns: undefined };
       delete_my_account: { Args: never; Returns: undefined };
+      approve_new_group: { Args: { p_group_id: string }; Returns: undefined };
+      decline_new_group: { Args: { p_group_id: string; p_reason: string }; Returns: undefined };
+      delete_declined_group: { Args: { p_group_id: string }; Returns: undefined };
+      first_group_needs_review: { Args: never; Returns: boolean };
     };
     Enums: {
       join_policy: "open" | "approval";
       group_status: "active" | "archived" | "removed";
+      group_review_status: "pending" | "approved" | "declined";
       member_role: "owner" | "admin" | "member";
       member_list_visibility: "organizers" | "members" | "signed_in";
       member_status: "pending" | "active" | "banned";
       address_visibility: "public" | "members";
       event_status: "scheduled" | "cancelled";
-      rsvp_status: "going" | "not_going" | "waitlisted";
+      rsvp_status: "going" | "not_going" | "waitlisted" | "requested" | "declined";
       group_type: "club" | "meetup" | "volunteer" | "nonprofit" | "chapter";
       post_status: "visible" | "deleted_by_author" | "removed";
-      report_target: "group" | "event" | "thread" | "reply" | "profile" | "message";
+      report_target: "group" | "event" | "thread" | "reply" | "profile" | "photo" | "message";
       conversation_status: "requested" | "accepted" | "declined";
       report_reason: "spam" | "harassment" | "unsafe" | "off_topic" | "other";
       report_status: "open" | "actioned" | "dismissed";
@@ -889,7 +986,11 @@ export type Database = {
         | "create_invite_link"
         | "turn_off_invite_link"
         | "invite_manager"
-        | "send_invites";
+        | "send_invites"
+        | "dismiss_report"
+        | "approve_group"
+        | "decline_group"
+        | "remove_rsvp";
     };
     CompositeTypes: {
       [_ in never]: never;

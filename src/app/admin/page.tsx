@@ -3,13 +3,14 @@ import Link from "next/link";
 
 import { listCandidate, skipCandidate } from "@/app/actions/candidates";
 import { approveClaim, declineClaim } from "@/app/actions/claims";
-import { removeGroup, resolveReport, suspendUser, unsuspendUser } from "@/app/actions/moderation";
+import { approveNewGroup, declineNewGroup, removeGroup, resolveReport, suspendUser, unsuspendUser } from "@/app/actions/moderation";
 import { setSuggestionStatus } from "@/app/actions/suggestions";
 import { AffinityTags } from "@/components/AffinityTags";
 import { Notice } from "@/components/Notice";
 import { ReportTargetLink, resolveReportTargets } from "@/components/ReportTarget";
 import { site } from "@/config/site";
 import { requireSiteAdmin } from "@/lib/auth";
+import { siteAdminOnlyReports } from "@/lib/reports";
 import { SUGGESTION_KIND_LABELS, SUGGESTION_STATUS_LABELS } from "@/lib/suggestions";
 import { createClient } from "@/lib/supabase/server";
 import { formatPostDate } from "@/lib/time";
@@ -35,7 +36,7 @@ export default async function AdminPage({ searchParams }: Props) {
     .limit(100);
   if (kind) suggestionQuery = suggestionQuery.eq("kind", kind);
 
-  const [{ data: reports }, { data: log }, { data: suspended }, { data: claims }, { data: candidates }, { data: kept }] = await Promise.all([
+  const [{ data: reports }, { data: log }, { data: suspended }, { data: claims }, { data: candidates }, { data: kept }, { data: newGroups }] = await Promise.all([
     supabase
       .from("reports")
       .select("id, target_type, target_id, reason, note, group_id, created_at, groups(slug, name)")
@@ -56,6 +57,14 @@ export default async function AdminPage({ searchParams }: Props) {
       .limit(100),
     supabase.rpc("admin_candidates"),
     supabase.rpc("admin_candidate_counts"),
+    // FR-GR-21: first groups waiting for review, oldest first.
+    supabase
+      .from("groups")
+      .select("id, slug, name, description, area, created_at, subcategories(name), group_members(role, user_id, profiles(display_name))")
+      .eq("review_status", "pending")
+      .eq("group_members.role", "owner")
+      .order("created_at")
+      .limit(100),
   ]);
   const { data: suggestions } = await suggestionQuery;
 
@@ -74,6 +83,8 @@ export default async function AdminPage({ searchParams }: Props) {
   ]);
 
   const tz = site.defaultTimezone;
+  // Reports about an organizer's own post reach only you (resolve_report's own_content rule).
+  const organizerPosts = await siteAdminOnlyReports(supabase, reports ?? [], "");
 
   return (
     <>
@@ -97,6 +108,9 @@ export default async function AdminPage({ searchParams }: Props) {
               <span className="ml-2 text-sm text-muted">{formatPostDate(r.created_at, tz)}</span>
             </p>
             {r.note && <p className="mt-1 text-sm">&ldquo;{r.note}&rdquo;</p>}
+            {organizerPosts.has(r.id) && (
+              <p className="mt-1 text-sm text-muted">About an organizer&apos;s own post, so only you can close it.</p>
+            )}
             <div className="mt-2 flex flex-wrap items-end gap-3 text-sm">
               <form action={resolveReport.bind(null, r.id, "actioned", "/admin")}>
                 <button className="button">Dealt with</button>
@@ -126,6 +140,42 @@ export default async function AdminPage({ searchParams }: Props) {
           </li>
         ))}
         {!reports?.length && <li className="py-2 text-muted">Nothing to review.</li>}
+      </ul>
+
+      <h2 id="new-groups">New groups ({newGroups?.length ?? 0})</h2>
+      <p className="mt-1 text-sm text-muted">
+        A person&apos;s first group waits here before it&apos;s listed, oldest first. Check it&apos;s a real outdoor group. Once one of their
+        groups is approved, their next ones are listed at once. A reason for declining is shown to its page admin.
+      </p>
+      <ul className="mt-2 divide-y divide-rule border-y border-rule">
+        {newGroups?.map((g) => {
+          const owner = g.group_members?.[0];
+          return (
+            <li key={g.id} className="py-3">
+              <p>
+                <Link href={`/g/${g.slug}`}>
+                  <strong>{g.name}</strong>
+                </Link>{" "}
+                <span className="text-sm text-muted">
+                  · {g.subcategories?.name} · {g.area} · by{" "}
+                  {owner ? <Link href={`/u/${owner.user_id}`}>{owner.profiles?.display_name ?? "deleted user"}</Link> : "nobody"} ·{" "}
+                  {formatPostDate(g.created_at, tz)}
+                </span>
+              </p>
+              <p className="mt-1 whitespace-pre-line text-sm">{g.description}</p>
+              <div className="mt-2 flex flex-wrap items-end gap-3 text-sm">
+                <form action={approveNewGroup.bind(null, g.id)}>
+                  <button className="button">Approve</button>
+                </form>
+                <form action={declineNewGroup.bind(null, g.id)} className="flex items-end gap-2">
+                  <input name="reason" type="text" required maxLength={500} placeholder="Reason" aria-label="Reason for declining" className="mt-0 w-64" />
+                  <button className="button button-plain">Decline</button>
+                </form>
+              </div>
+            </li>
+          );
+        })}
+        {!newGroups?.length && <li className="py-2 text-muted">No new groups waiting.</li>}
       </ul>
 
       <h2>Claim requests ({claims?.length ?? 0})</h2>

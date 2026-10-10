@@ -278,7 +278,8 @@ grant execute on function public.unread_conversation_count() to authenticated;
 
 -- ---------------------------------------------------------------------------
 -- FR-DM-5: reports about a message go to the site admin only, and only a
--- person in the conversation can report one. Reporting opens the
+-- person in the conversation can report one. Otherwise as 20261010000011
+-- (photos included). Reporting opens the
 -- conversation to the site admin (reported_at).
 -- ---------------------------------------------------------------------------
 
@@ -308,6 +309,10 @@ begin
       select null::uuid, true into v_group, v_found from public.groups g where g.id = new.target_id;
     when 'profile' then
       select null::uuid, true into v_group, v_found from public.profiles p where p.id = new.target_id;
+    when 'photo' then
+      -- As 20261010000011: a photo you can't see can't be reported.
+      select p.group_id, true into v_group, v_found from public.group_photos p
+       where p.id = new.target_id and p.status = 'visible' and public.can_view_group_photos(p.group_id);
     when 'message' then
       select null::uuid, true, c.id into v_group, v_found, v_conv
         from public.messages m join public.conversations c on c.id = m.conversation_id

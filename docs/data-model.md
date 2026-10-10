@@ -119,10 +119,13 @@ it except through the database functions (onboarding, suspend, delete).
 | `created_at`, `updated_at` | timestamp | |
 | `is_unclaimed` | boolean | FR-GR-9: an unclaimed listing, added from public information. Only SQL run by the operator sets it. |
 | `needs_owner` | boolean | FR-AC-6: its owner deleted their account. The group is archived until a claim is approved. Only database functions set it. |
+| `review_status` | enum | UC-27, FR-GR-8: `pending`, `approved` (default; every group that existed on 9 October 2026), `declined`. A first-time organizer's group starts `pending`. Only `approved` groups are listed or joinable; a pending or declined group is readable by its owner, its page managers and the site admin only. Kept apart from `status`, which says what organizers can do, so the many organizer checks didn't change. Only database functions set it. |
+| `review_reason`, `reviewed_at` | text (≤500), timestamp | FR-GR-21: the site admin's reason for declining, shown to the page admin |
 | `source_url` | text, optional | The organization's own website. Required for a listing. |
 | `website` | text, optional | FR-GR-23: the group's own site, http(s) only, set by owner and admins |
 | `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia`; empty by default |
 | `member_list_visibility` | enum | FR-MB-10: `organizers`, `members` (default), `signed_in`. Decides who reads the full `group_members` list and other people's `event_rsvps`; set by owner and admins |
+| `photos_public` | boolean | FR-GR-12: false (members only) by default; changed only by the page admin or site admin through `set_group_photos_public()` |
 
 ### group_claims
 
@@ -202,6 +205,8 @@ rest of the active list follows `groups.member_list_visibility`, checked by
 | `takes_rsvps` | boolean | FR-EV-26: `true` by default; when `false` the database refuses RSVPs |
 | `signup_url` | text, optional | FR-EV-27: http or https only |
 | `waitlist_enabled` | boolean | FR-EV-28: only meaningful with a capacity |
+| `approve_rsvps` | boolean | FR-EV-15: members ask to go; organizers approve |
+| `rsvps_open_at` | timestamp, optional | FR-EV-20: members can't RSVP before it; must be before `starts_at` |
 
 ### event_private_details
 
@@ -220,7 +225,7 @@ to live in a row that only members may read.
 | --- | --- | --- |
 | `event_id` | uuid | part of the key |
 | `user_id` | uuid | part of the key |
-| `status` | enum | `going`, `not_going`, `waitlisted` |
+| `status` | enum | `going`, `not_going`, `waitlisted`, `requested` (FR-EV-15), `declined` (set by organizers only) |
 | `waitlisted_at` | timestamp, optional | FR-EV-28: set by the database when the person joins the waitlist; the waitlist's order |
 | `updated_at` | timestamp | |
 
@@ -230,6 +235,42 @@ for an event that takes no RSVPs, or one that would push `going` past
 moves someone from the waitlist to going (`move_from_waitlist`, which locks
 the event row and needs a free place); while anyone is waiting, members
 can't take a freed place themselves.
+
+FR-EV-15 and FR-EV-17: on an event with `approve_rsvps`, a member's RSVP is
+`requested` and only organizers set `going` or `declined`, through
+`manage_rsvp` (approve, decline, waitlist, remove; removals are logged as
+`remove_rsvp`), which keeps the event row lock. A declined member can't change
+or delete the row. Requests and declines are visible only to the person and
+the organizers. FR-EV-20: before `rsvps_open_at`, members' RSVPs are refused.
+
+### event_faqs
+
+FR-EV-19. Written only through `set_event_faq`, which replaces the list.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `event_id` | uuid | part of the key |
+| `position` | smallint | part of the key; 1 to 15, the order shown |
+| `question` | text | 3 to 200 characters |
+| `answer` | text | 1 to 2,000 characters |
+
+Readable wherever the event is.
+
+### event_sponsors
+
+FR-EV-14. At most 5 per event (a trigger counts under the event row lock).
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `event_id` | uuid | |
+| `group_id` | uuid | must be the event's group; organizers of it add and remove |
+| `name` | text | 2 to 100 characters |
+| `website_url` | text, optional | http or https, shown with `rel="sponsored noopener"` |
+| `logo_path` | text, optional | `event-photos/<group_id>/<event_id>/sponsors/<random>.webp` |
+| `created_at` | timestamp | display order |
+
+Readable wherever the event is; shown on the event page only.
 
 ## Discussions
 
@@ -276,7 +317,7 @@ posting.
 | --- | --- | --- |
 | `id` | uuid | |
 | `reporter_id` | uuid | |
-| `target_type` | enum | `group`, `event`, `thread`, `reply`, `profile`, `message` (UC-20; always the site admin's, never a group's) |
+| `target_type` | enum | `group`, `event`, `thread`, `reply`, `profile`, `photo`, `message` (UC-20; always the site admin's, never a group's) |
 | `target_id` | uuid | |
 | `group_id` | uuid, optional | set for content inside a group, so the report reaches that group's admins |
 | `reason` | enum | `spam`, `harassment`, `unsafe`, `off_topic`, `other` |
@@ -294,12 +335,39 @@ site admin.
 | --- | --- | --- |
 | `id` | uuid | |
 | `actor_id` | uuid | who did it |
-| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, `create_invite_link`, `turn_off_invite_link`, `invite_manager`, `send_invites`, `dismiss_report`, … |
+| `action` | enum | `remove_content`, `ban_member`, `suspend_user`, `archive_group`, `remove_group`, `create_invite_link`, `turn_off_invite_link`, `invite_manager`, `send_invites`, `dismiss_report`, `approve_group`, `decline_group`, … |
 | `target_type`, `target_id` | | what it was done to |
 | `group_id` | uuid, optional | |
 | `reason` | text | |
 | `content_snapshot` | json, optional | the removed text, kept for the site admin only |
 | `created_at` | timestamp | |
+
+## Group photos (UC-21)
+
+### group_photos
+
+A group's gallery (FR-GR-12, FR-GR-13). Members of an active group insert
+only `group_id`, `uploader_id` (themselves), `path` and `alt`; `status`
+changes only through `remove_group_photo()`. Nobody updates or deletes a row
+directly. Visible rows are readable by the group's members, by anyone when
+`groups.photos_public` is on, and by the site admin. A trigger allows at
+most 200 visible photos per group and 20 uploads per member per group per
+day, with server time.
+
+The files are in the PRIVATE `group-photos` bucket at
+`<group_id>/<uploader_id>/<random>.webp`, with a 400 px thumbnail next to
+each at `<random>_t.webp`. Pages show them through signed URLs created as
+the viewer; the bucket's read policy is the same check as the rows.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `group_id` | uuid | the group; removed with it |
+| `uploader_id` | uuid, optional | who added it; null if they delete their account |
+| `path` | text, unique | the full-size file, always in the group's and uploader's folder (checked) |
+| `alt` | text | the description, 1 to 200 characters |
+| `status` | text | `visible`, `deleted` (by the uploader), `removed` (by an organizer, logged) |
+| `created_at` | timestamp | server time |
 
 ## Suggestions (UC-32)
 
@@ -470,21 +538,17 @@ written when each is approved, with its migration and permission tests.
 
 | Table or change | For | Notes |
 | --- | --- | --- |
-| `events`: `series_id`, `rsvp_opens_at`, `requires_approval`, `place_id` | UC-10, UC-17, UC-15 | A series row holds the repeat rule; each date stays its own event |
+| `events`: `series_id`, `place_id` (`approve_rsvps` and `rsvps_open_at` built 9 October 2026) | UC-10, UC-15 | A series row holds the repeat rule; each date stays its own event |
 | `event_series` | UC-10 | Repeat rule and end date; edits apply to later dates |
-| `event_sponsors` | UC-10 | Name, logo path, website, optional business or group it links to |
-| `event_faq` | UC-10, UC-11 | Question, answer, order |
+| `event_faqs` for a series | UC-10, UC-11 | Built for single events 9 October 2026 |
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
-| `event_rsvps.status` gains `requested`, `declined` (`waitlisted` built with UC-30) | UC-17 | Places counted on `going` only |
 | `groups`: `organization_id` (`group_type` and the cover built with UC-24, `member_list_visibility` with UC-16) | UC-13 | |
-| `group_photos` | UC-21 | Uploader, path, alt text, status |
 | `places` | UC-15, UC-12 | Name, kind, activities, coordinates, description; seeded from the research workspace's places |
 | `towns` | UC-14 | Bundled US towns and zip codes with coordinates |
 | `organizations` | UC-13 | National organizations that chapters link to |
 | `businesses`, `business_admins`, `business_places`, `business_groups` | UC-12 | Owner is the account that claimed it with the business email; admins are people's own accounts; places have role *its location* or *operates at*; linked groups keep their own roles. No events table of its own |
 
 | `group_claims`: `confirmed_domain`, `confirmed_at`, plus a temporary address, link token, expiry and send count | UC-26 | The address and token are cleared once the link is used or the last one expires; only the domain and date stay |
-| `groups.review_status`: `pending`, `approved`, `declined`, with `review_reason` | UC-27 | Existing groups start as `approved`; a pending group is readable by its owner and the site admin only |
 
 The branded sign-in email (UC-25) needs no tables: it is Supabase Auth
 settings and template files. Reminders (UC-23) and the calendar (UC-18) need no tables: they are read

@@ -61,7 +61,7 @@ comes and keep a waitlist (UC-17); keep the member list private (UC-16);
 answer questions and move answers into the FAQ (UC-11); see join and RSVP
 requests in one reminders list (UC-23). **Requested 8 October (drafts):**
 confirm a claim with an address at the club's own domain (UC-26); a first
-group may wait for the site admin's review (UC-27, decision needed).
+group waits for the site admin's review (UC-27, built 9 October).
 
 ## 3. The regular
 

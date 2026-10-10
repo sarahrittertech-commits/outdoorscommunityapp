@@ -7,11 +7,12 @@ import { createClient } from "@/lib/supabase/server";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient();
   const [{ data: groups }, { data: events }, { data: subcategories }] = await Promise.all([
-    supabase.from("groups").select("slug, updated_at").eq("status", "active").limit(5000),
+    supabase.from("groups").select("slug, updated_at").eq("status", "active").eq("review_status", "approved").limit(5000),
     supabase
       .from("events")
-      .select("id, updated_at, groups!inner(status)")
+      .select("id, updated_at, groups!inner(status, review_status)")
       .eq("groups.status", "active")
+      .eq("groups.review_status", "approved")
       .eq("status", "scheduled")
       .gt("starts_at", new Date().toISOString())
       .limit(5000),

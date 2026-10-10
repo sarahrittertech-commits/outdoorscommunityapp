@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { dateParts, formatEventTime, isValidTimeZone, utcToZonedLocal, zonedLocalToUtc } from "./time";
+import { dateParts, formatEventTime, formatOpensAt, isValidTimeZone, utcToZonedLocal, zonedLocalToUtc } from "./time";
 
 // UT-2: event times are stored in UTC and shown in the event's own zone.
 describe("time zones", () => {
@@ -25,6 +25,10 @@ describe("time zones", () => {
   it("formats an event in its own zone, whatever the server's zone", () => {
     const text = formatEventTime("2026-10-04T13:00:00Z", "2026-10-04T17:00:00Z", "America/New_York");
     expect(text).toBe("Sun, Oct 4, 2026, 9:00 AM – 1:00 PM EDT");
+  });
+
+  it("states when RSVPs open, plainly, in the event's zone (FR-EV-20)", () => {
+    expect(formatOpensAt("2026-10-14T13:00:00Z", "America/New_York")).toBe("Wed 14 Oct, 9:00 am");
   });
 
   it("rejects unknown zones", () => {

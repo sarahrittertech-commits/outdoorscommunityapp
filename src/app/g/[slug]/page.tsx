@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { requestClaim } from "@/app/actions/claims";
-import { restoreGroup } from "@/app/actions/groups";
+import { deleteDeclinedGroup, restoreGroup } from "@/app/actions/groups";
 import { joinGroup, leaveGroup } from "@/app/actions/membership";
 import { groupPhotos } from "@/brand/activityPhotos";
 import { GroupTypeIcon } from "@/brand/GroupTypeIcon";
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: group.name,
       description: group.description.slice(0, 160),
     },
-    robots: group.status === "archived" ? { index: false } : undefined,
+    robots: group.status === "archived" || group.review_status !== "approved" ? { index: false } : undefined,
   };
 }
 
@@ -46,7 +46,7 @@ function hostOf(url: string): string {
 export default async function GroupPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const loaded = await loadGroup(slug);
-  const { supabase, group, viewer, membership, isMember, isAdmin, isOwner, isActive, canManage, seesMemberList } = loaded;
+  const { supabase, group, viewer, membership, isMember, isAdmin, isOwner, isActive, isListed, canManage, seesMemberList } = loaded;
   const now = new Date().toISOString();
   const query = await searchParams;
 
@@ -64,9 +64,9 @@ export default async function GroupPage({ params, searchParams }: Props) {
         .in("role", ["owner", "admin"])
         .eq("status", "active")
         .order("role"),
-      // event_listings holds active groups only (FR-GR-6); an archived
-      // group's page reads its own events directly.
-      group.status === "active"
+      // event_listings holds listed, active groups only (FR-GR-6, UC-27); an
+      // archived or unlisted group's page reads its own events directly.
+      group.status === "active" && isListed
         ? supabase
             .from("event_listings")
             .select("id, title, starts_at, timezone, group_name, group_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps")
@@ -132,6 +132,8 @@ export default async function GroupPage({ params, searchParams }: Props) {
         {group.area} ·{" "}
         {group.is_unclaimed ? (
           <>unclaimed listing</>
+        ) : !isListed ? (
+          <>not listed</>
         ) : (
           <>
             {listing?.member_count ?? 0} {listing?.member_count === 1 ? "member" : "members"} ·{" "}
@@ -157,6 +159,31 @@ export default async function GroupPage({ params, searchParams }: Props) {
             {hostOf(group.website)}
           </a>
         </p>
+      )}
+
+      {/* UC-27, FR-GR-22: a first group waits for the site admin. ------------- */}
+      {group.review_status === "pending" && (
+        <div role="status" className="mt-3 rounded bg-notice px-3 py-2">
+          <strong>Waiting for review.</strong> The site admin checks a person&apos;s first group before it&apos;s listed. Until then only you,
+          your page managers and the site admin can see it, and nobody can join. You can still edit it and post events; they&apos;ll show
+          once it&apos;s approved.
+        </div>
+      )}
+      {group.review_status === "declined" && (
+        <div role="status" className="mt-3 rounded bg-warning px-3 py-2">
+          <strong>Not approved.</strong> The site admin didn&apos;t approve this group, so it isn&apos;t listed and is read-only.
+          {group.review_reason && (
+            <>
+              {" "}
+              Their reason: &ldquo;{group.review_reason}&rdquo;
+            </>
+          )}
+          {isOwner && (
+            <form action={deleteDeclinedGroup.bind(null, group.id, group.slug)} className="mt-2">
+              <button className="button button-plain">Delete it and start again</button>
+            </form>
+          )}
+        </div>
       )}
 
       {group.status === "archived" && !group.needs_owner && (
@@ -225,7 +252,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
             </div>
           ) : membership?.status === "banned" ? (
             <p className="text-sm text-muted">You can&apos;t join this group.</p>
-          ) : isActive ? (
+          ) : isActive && isListed ? (
             <form action={joinGroup.bind(null, group.id, group.slug)}>
               {group.join_policy === "approval" && group.join_question && (
                 <>
@@ -277,6 +304,20 @@ export default async function GroupPage({ params, searchParams }: Props) {
               <Link href={`/g/${group.slug}/discussions`}>Go to the discussion board</Link>
             ) : (
               <span className="text-muted">The discussion board is for members.</span>
+            )}
+          </p>
+        </>
+      )}
+
+      {/* FR-GR-12: the gallery, members only unless the page admin made it public. */}
+      {!group.is_unclaimed && (
+        <>
+          <h2>Photos</h2>
+          <p className="mt-2">
+            {isMember || group.photos_public || viewer?.isSiteAdmin ? (
+              <Link href={`/g/${group.slug}/photos`}>See the group&apos;s photos</Link>
+            ) : (
+              <span className="text-muted">The photos are for members.</span>
             )}
           </p>
         </>
