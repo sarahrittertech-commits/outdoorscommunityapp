@@ -1,6 +1,6 @@
 -- Regions ("go national", approved 11 October 2026). PT-210 to PT-219.
 begin;
-select plan(42);
+select plan(43);
 select tests.build_fixture();
 
 create function pg_temp.region(p_slug text) returns uuid
@@ -112,16 +112,31 @@ from public.groups where slug = 'g2';
 update public.groups set review_status = 'pending' where slug = 'g-waiting';
 
 create temporary table fixture_sub as select subcategory_id as id from public.groups where slug = 'g1';
-grant select on fixture_sub to anon, authenticated;
+-- Expected counts, worked out from the table as the site admin, so the test
+-- holds whether or not the local demo seed (supabase/seed.sql) is loaded.
+create temporary table fixture_expect as
+select r.slug,
+       count(g.id) filter (where g.status = 'active' and g.review_status = 'approved')::int as active_approved,
+       count(g.id)::int as all_groups
+from public.regions r
+left join public.groups g on g.region_id = r.id and g.subcategory_id = (select id from fixture_sub)
+group by r.slug;
+grant select on fixture_sub, fixture_expect to anon, authenticated;
 select tests.as_anon();
 select is(
   (select group_count from public.subcategory_region_counts
-    where region_slug = 'western-nc' and subcategory_id = (select id from fixture_sub)), 2,
+    where region_slug = 'western-nc' and subcategory_id = (select id from fixture_sub)),
+  (select active_approved from fixture_expect where slug = 'western-nc'),
   'PT-214 counts only active, approved groups in the region'
+);
+select ok(
+  (select all_groups - active_approved from fixture_expect where slug = 'western-nc') >= 2,
+  'PT-214 the archived and waiting groups are there, and left out of the count'
 );
 select is(
   (select group_count from public.subcategory_region_counts
-    where region_slug = 'triangle' and subcategory_id = (select id from fixture_sub)), 1,
+    where region_slug = 'triangle' and subcategory_id = (select id from fixture_sub)),
+  (select active_approved from fixture_expect where slug = 'triangle'),
   'PT-214 a group counts in its own region only'
 );
 select is(
