@@ -208,6 +208,13 @@ on 11 October 2026.
 5. **Go live:** a migration setting the region's `status` to `live`. It
    then shows under *change* for everyone.
 
+**Moving existing groups into a region.** `scripts/regions/assign-regions.mjs`
+matches each group's area to the town list: given the groups as JSON on
+stdin it prints one guarded `update` per group to move (read it before
+running it); with `--values` it prints a single statement. Watch for plain
+town names used in more than one state (Burlington, Monroe, Clinton,
+Louisville, Charleston).
+
 To check a region's reach before opening it:
 `select name, hub_towns, radius_miles, status from public.regions order by sort_order;`
 

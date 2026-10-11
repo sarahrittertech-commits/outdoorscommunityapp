@@ -64,6 +64,19 @@ The app keeps a matching list in `src/config/regions.ts` (short name for
 the header, example town and meeting place, the hero line), and each town
 in `src/config/towns.ts` names its region.
 
+Since 11 October 2026 (`20261011000001_regions.sql`):
+
+- `event_listings` ends with `region_id`, the event's group's region.
+- `subcategory_region_counts` (security invoker, readable by everyone):
+  one row per region and subcategory, zeros included, counting active,
+  approved groups; `/browse` and the Regions page read it.
+- `list_candidate(p_candidate_id, p_region_id default null)` lists a
+  candidate into a live region (no region: the first live one) and refuses
+  others with `region_closed`.
+- Trigger `groups_region_live`: a group can only be created in, or moved
+  to, a live region (`region_closed`). Only a change of region is checked,
+  so a group in a region that later closes can still be edited.
+
 ### categories and subcategories
 
 The Craigslist-style directory. Managed by migration, not UI (FR-AD-1).

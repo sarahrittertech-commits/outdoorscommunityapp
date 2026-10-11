@@ -88,3 +88,21 @@ One board, regions as data.
 - The town list is hand-made per region. A full national place and zip
   list (Census gazetteer) would make search work anywhere; it waits until
   a region needs it.
+
+## As built (11 October 2026)
+
+Migration `20261011000001_regions.sql`; app lists in `src/config/regions.ts`,
+`towns.ts` (about 130 towns added, each naming its region) and `zips.ts`
+(3-digit prefixes for the new regions); the region is resolved in
+`src/lib/currentRegion.ts`. Known limits:
+
+- Dates that belong to no event (post times, "next event" in lists, the
+  admin page) still show in the board's default zone, Eastern.
+- A town name used in two states carries its state ("Fayetteville, WV");
+  a plain "Fayetteville" still means North Carolina, so older saved areas
+  keep their meaning.
+- Towns outside every region (Red River Gorge, KY) still work for distance
+  and are listed under *Other places*.
+- Existing groups stay in Western North Carolina until they are moved
+  ([runbook](../runbook#opening-a-region)).
+

@@ -208,6 +208,16 @@ web app is not the thing enforcing the rule.
 | PT-200 | Only the site admin clears a section or removes a photo; each removal is logged with what was removed, and the photo's file is returned for deletion (FR-PR-9) | Silent or unauthorized removals |
 | PT-201 | *Groups* shows only memberships the reader may see: a group whose member list is for organizers only, a pending request and a ban never appear (FR-PR-6, FR-MB-10) | A profile undoes a group's member-list privacy |
 | PT-202 | Deleting an account removes every About me section; onboarding writes the town and blurb to the About me profile (FR-AC-6, FR-PR-2) | Personal data outlives the account |
+| PT-210 | Anyone, signed out included, reads the regions in order with their hub towns, coming-soon ones too (FR-RG-1) | The region list is hidden or out of order |
+| PT-211 | Nobody, the site admin included, adds, changes or deletes a region from the app; only migrations do (FR-RG-1, FR-RG-9) | A region is changed through the API |
+| PT-212 | The new region columns, their defaults and checks (radius 10–250, status live or coming soon), Western North Carolina's values and each region's time zone (FR-RG-1, FR-RG-10) | A region with no centre or a bad radius |
+| PT-213 | `event_listings.region_id` is the last column, the others are unchanged, and it is the event's group's region (FR-RG-3) | Events listed under the wrong region |
+| PT-214 | Region counts include active, approved groups only, one row per region and subcategory, and add up to the board-wide totals (FR-RG-1, FR-RG-3) | Counts include waiting or removed groups |
+| PT-215 | Listing a candidate puts it in the chosen region; a coming-soon or unknown region and anyone but the site admin are refused; no region means the first live one (FR-RG-8) | Candidates land in a region nobody chose |
+| PT-216 | The page admin and a page manager move their group to a live region, never a coming-soon one (FR-RG-7) | A group in a closed region |
+| PT-217 | Members and outsiders can't move a group (FR-RG-7) | Anyone moves a group |
+| PT-218 | A new group can start in any live region, not a coming-soon one (FR-RG-7) | A group created in a closed region |
+| PT-219 | A group whose region later closes can still be edited, and moved back to a live one (FR-RG-7) | Closing a region freezes its groups |
 
 ## Automated — unit
 
@@ -226,6 +236,7 @@ Run by the unit test command in CI. Pure functions only.
 | UT-9 | Sign-in limiter (FR-AC-19) | 5 failures for an address in 15 minutes pause it, case and spaces ignored; the pause lifts 15 minutes later; spread-out failures and a successful sign-in reset it; memory stays bounded |
 | UT-10 | Calendar dates (FR-AC-9) | The month grid is whole Sunday-first weeks (four to six rows); weeks and month steps cross month and year ends; an event sits on the day it starts in its own zone (11 pm in Los Angeles stays on Friday); the query window covers every zone; unknown view, date, filter or group values fall back to the defaults |
 | UT-11 | About me form (FR-PR-2 to FR-PR-7) | The form's rows and Show/Hide selects are collected; nothing is shared or hidden by default; prompts not on this board's list, or picked twice, are refused; a blank answer drops its prompt; lengths match the database; every prompt key has the database's shape; the goal year is UTC; Groups can't be cleared; the welcome form's town must be on the town list |
+| UT-12 | Regions and towns (FR-RG-2, FR-RG-4) | Every town is unique by name and state and belongs to a region that exists, within 150 miles of its centre; every zip prefix maps to a known town; the region a visitor sees follows link, then cookie, then home town, then the default; `?region=all` survives paging |
 
 ## Automated — end to end
 
