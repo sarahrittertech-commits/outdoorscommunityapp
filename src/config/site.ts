@@ -43,6 +43,21 @@ export const site = {
   exampleArea: "Brevard",
   /** A well-known meeting spot, used as the example on the event form. */
   exampleMeetingPlace: "Hooker Falls parking area",
+  /**
+   * UC-33 fill-in-the-blanks (FR-PR-4): a member answers up to 3. The key is
+   * what's stored, so the wording can change, but never reuse a key for a
+   * different question. Keys are lowercase letters, digits and underscores.
+   */
+  profilePrompts: [
+    { key: "always_wanted", text: "I've always wanted to try" },
+    { key: "favorite_place", text: "My favorite place outside is" },
+    { key: "trail_snack", text: "My go-to trail snack is" },
+    { key: "never_without", text: "I never head out without" },
+    { key: "proudest", text: "The outdoor thing I'm proudest of is" },
+    { key: "first_adventure", text: "My first outdoor adventure was" },
+    { key: "best_season", text: "My favorite season outside is" },
+    { key: "show_you", text: "Ask me to show you how to" },
+  ] as readonly { key: string; text: string }[],
   /** Whether the create-group form starts on "anyone can join" or "approval". */
   defaultJoinPolicy: "open" as "open" | "approval",
   /** Public contact for the site admin. null hides every contact line until there is a real address. */

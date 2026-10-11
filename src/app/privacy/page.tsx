@@ -14,7 +14,13 @@ export default function PrivacyPage() {
       <h2>What we collect</h2>
       <ul className="mt-2 list-disc pl-6">
         <li>Your email address, to sign you in, confirm your account, send password reset links and the emails you choose to get. Nobody else can see it. Your password is stored only as a one-way hash by Supabase; nobody, including us, can read it.</li>
-        <li>Your display name, and your area and bio if you add them. These are public.</li>
+        <li>Your display name, which is public.</li>
+        <li>
+          Whatever you add to your profile: a photo, home town, blurb, activities, fill-in-the-blanks and adventure
+          goals. Organizers of groups you&apos;re in or have asked to join can see it; if you are a page admin or page
+          manager of a listed group, anyone can; other members of your groups can only if you choose to share it. Any
+          section you hide is seen by you only. Photos are re-encoded, with location and camera details removed.
+        </li>
         <li>What you do on the board: groups you join, events you RSVP to, posts you write, reports you send.</li>
       </ul>
 

@@ -7,9 +7,10 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { site } from "@/config/site";
-import { actingUser, fail, failOnError, succeed } from "@/lib/actions";
+import { fail, failOnError, succeed } from "@/lib/actions";
 import { getViewer } from "@/lib/auth";
 import { safeNext, withMessage } from "@/lib/navigation";
+import { removeProfilePhotoFile } from "@/lib/profilePhotos";
 import { afterEmailLink } from "@/lib/email-links";
 import { SET_PASSWORD_PATH, RESET_COOKIE, RESET_COOKIE_MAX_AGE, RESET_PATH } from "@/lib/password-reset";
 import { sessionCookieOptions } from "@/lib/supabase/env";
@@ -22,7 +23,6 @@ import {
   newPasswordSchema,
   onboardingSchema,
   passwordErrorCode,
-  profileSchema,
   signInSchema,
   emailLinkSchema,
   signUpSchema,
@@ -191,7 +191,8 @@ export async function completeOnboarding(formData: FormData) {
   const parsed = onboardingSchema.safeParse(formFields(formData));
   if (!parsed.success) {
     const termsIssue = parsed.error.issues.some((i) => i.path[0] === "confirmAdult" || i.path[0] === "acceptTerms");
-    fail(back, termsIssue ? "terms_required" : "invalid");
+    const townIssue = parsed.error.issues.some((i) => i.path[0] === "area");
+    fail(back, termsIssue ? "terms_required" : townIssue ? "town_invalid" : "invalid");
   }
 
   const supabase = await createClient();
@@ -206,26 +207,19 @@ export async function completeOnboarding(formData: FormData) {
   succeed(next, "welcome");
 }
 
-export async function saveProfile(formData: FormData) {
-  const back = "/me/profile";
-  const { viewer, supabase } = await actingUser(back);
-  const parsed = profileSchema.safeParse(formFields(formData));
-  if (!parsed.success) fail(back, "invalid");
-
-  const { error } = await supabase
-    .from("profiles")
-    .update({ display_name: parsed.data.displayName, bio: parsed.data.bio, area: parsed.data.area })
-    .eq("id", viewer.id);
-  failOnError(back, error);
-  succeed(back, "profile_saved");
-}
-
 /** FR-AC-6. The auth user itself is removed by a server-side job within 24 hours. */
 export async function deleteAccount(formData: FormData) {
   const back = "/me/profile";
   if (formData.get("confirm") !== "DELETE") fail(back, "invalid");
 
   const supabase = await createClient();
+  // UC-33: the photo file goes first, as the member; the database can't
+  // delete storage files itself.
+  const viewer = await getViewer();
+  if (viewer) {
+    const { data: about } = await supabase.from("profile_about").select("photo_path").eq("user_id", viewer.id).maybeSingle();
+    await removeProfilePhotoFile(supabase, about?.photo_path);
+  }
   const { error } = await supabase.rpc("delete_my_account");
   failOnError(back, error);
   await supabase.auth.signOut();

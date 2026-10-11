@@ -3,10 +3,14 @@
 
 import { z } from "zod";
 
+import { site } from "@/config/site";
+
 import { AFFINITY_TAGS } from "./affinity";
 import { isCommonPassword } from "./common-passwords";
+import { findTown } from "./geo";
 import { GROUP_TYPES } from "./groupTypes";
 import { safeNext } from "./navigation";
+import { CLEARABLE_SECTIONS, GOAL_MAX, MAX_GOALS, MAX_PROMPTS, PROFILE_SECTION_VALUES, PROMPT_ANSWER_MAX } from "./profile";
 import { isValidTimeZone, zonedLocalToUtc } from "./time";
 
 const requiredText = (min: number, max: number) => z.string().trim().min(min).max(max);
@@ -95,15 +99,83 @@ export function passwordErrorCode(error: z.ZodError): PasswordCode | "invalid" {
 export const onboardingSchema = z.object({
   displayName: requiredText(2, 40),
   bio: optionalText(280),
-  area: optionalText(80),
+  /** FR-PR-2: a town from the town list, stored under its listed name. */
+  area: optionalText(80)
+    .refine((v) => v === null || findTown(v) !== undefined, "Pick a town from the list.")
+    .transform((v) => (v === null ? null : findTown(v)!.name)),
   confirmAdult: checkbox.refine((v) => v, "You must be 18 or older."),
   acceptTerms: checkbox.refine((v) => v, "You must accept the terms."),
 });
 
-export const profileSchema = z.object({
-  displayName: requiredText(2, 40),
-  bio: optionalText(280),
-  area: optionalText(80),
+// UC-33: the About me form (FR-PR-2 to FR-PR-7, FR-PR-10). The fields arrive
+// as aboutMeInput() collects them from the form.
+
+const promptKeys = site.profilePrompts.map((p) => p.key);
+
+export const aboutMeSchema = z
+  .object({
+    displayName: requiredText(2, 40),
+    /** A town from the town list; the action checks it against the list. */
+    town: optionalText(80),
+    bio: optionalText(280),
+    shareWithMembers: checkbox,
+    activities: z.array(id).max(100),
+    prompts: z.array(z.object({ key: z.string().max(40), answer: z.string().trim().max(PROMPT_ANSWER_MAX) })).max(MAX_PROMPTS),
+    goals: z.array(z.object({ body: z.string().trim().max(GOAL_MAX), done: z.boolean() })).max(MAX_GOALS),
+    /** Each section's Show/Hide select: the hidden ones. */
+    hidden: z.array(z.enum(PROFILE_SECTION_VALUES)),
+  })
+  .transform((form, ctx) => {
+    const prompts = form.prompts.filter((p) => p.answer);
+    const keys = prompts.map((p) => p.key);
+    if (keys.some((k) => !promptKeys.includes(k)) || new Set(keys).size !== keys.length) {
+      ctx.addIssue({ code: "custom", path: ["prompts"], message: "prompt_invalid" });
+      return z.NEVER;
+    }
+    return {
+      ...form,
+      activities: [...new Set(form.activities)],
+      prompts,
+      goals: form.goals.filter((g) => g.body),
+      hidden: [...new Set(form.hidden)],
+    };
+  });
+
+/**
+ * The About me form's fields as aboutMeSchema expects them: ticked
+ * activities, the three prompt rows (promptKey1/promptAnswer1…), the ten
+ * goal rows (goal1/goalDone1…) and a show_<section> select per section.
+ */
+export function aboutMeInput(formData: FormData) {
+  const text = (name: string) => {
+    const value = formData.get(name);
+    return typeof value === "string" ? value : "";
+  };
+  return {
+    displayName: text("displayName"),
+    town: text("town"),
+    bio: text("bio"),
+    shareWithMembers: text("shareWithMembers"),
+    activities: formData.getAll("activity").filter((v) => typeof v === "string"),
+    prompts: Array.from({ length: MAX_PROMPTS }, (_, i) => ({
+      key: text(`promptKey${i + 1}`),
+      answer: text(`promptAnswer${i + 1}`),
+    })),
+    goals: Array.from({ length: MAX_GOALS }, (_, i) => ({
+      body: text(`goal${i + 1}`),
+      done: text(`goalDone${i + 1}`) === "on",
+    })),
+    hidden: PROFILE_SECTION_VALUES.filter((s) => text(`show_${s}`) === "hide"),
+  };
+}
+
+/** FR-PR-1: the photo's one-line description; empty means "use my display name". */
+export const profilePhotoAltSchema = optionalText(200);
+
+/** FR-PR-9: what the site admin clears, and why. */
+export const clearSectionSchema = z.object({
+  section: z.enum(CLEARABLE_SECTIONS.map((s) => s.value) as [string, ...string[]]),
+  reason: optionalText(500),
 });
 
 export const groupSchema = z.object({

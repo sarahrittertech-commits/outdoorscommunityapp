@@ -8,6 +8,7 @@ import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
 import { safeNext } from "@/lib/navigation";
 import { SubmitButton } from "@/components/SubmitButton";
+import { TownSelect } from "@/components/TownSelect";
 
 export const metadata: Metadata = { title: "Welcome", robots: { index: false } };
 
@@ -34,9 +35,9 @@ export default async function WelcomePage({ searchParams }: Props) {
         <input id="displayName" name="displayName" type="text" required minLength={2} maxLength={40} />
 
         <label htmlFor="area">
-          Area <span className="hint">Optional, e.g. {site.exampleArea}</span>
+          Home town <span className="hint">Optional. Your profile settings say who sees it.</span>
         </label>
-        <input id="area" name="area" type="text" maxLength={80} />
+        <TownSelect id="area" name="area" blank="Choose later" />
 
         <label htmlFor="bio">
           About you <span className="hint">Optional, up to 280 characters</span>
