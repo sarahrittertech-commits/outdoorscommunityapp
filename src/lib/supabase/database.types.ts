@@ -42,28 +42,91 @@ export type Database = {
         Row: {
           id: string;
           display_name: string | null;
-          bio: string | null;
-          area: string | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id: string;
           display_name?: string | null;
-          bio?: string | null;
-          area?: string | null;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
           display_name?: string | null;
-          bio?: string | null;
-          area?: string | null;
           created_at?: string;
           updated_at?: string;
         };
         Relationships: [];
+      };
+      profile_about: {
+        Row: {
+          user_id: string;
+          town: string | null;
+          bio: string | null;
+          photo_path: string | null;
+          photo_alt: string | null;
+          share_with_members: boolean;
+          show_photo: boolean;
+          show_town: boolean;
+          show_bio: boolean;
+          show_activities: boolean;
+          show_prompts: boolean;
+          show_goals: boolean;
+          show_groups: boolean;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          town?: string | null;
+          bio?: string | null;
+          photo_path?: string | null;
+          photo_alt?: string | null;
+          share_with_members?: boolean;
+          show_photo?: boolean;
+          show_town?: boolean;
+          show_bio?: boolean;
+          show_activities?: boolean;
+          show_prompts?: boolean;
+          show_goals?: boolean;
+          show_groups?: boolean;
+        };
+        Update: {
+          town?: string | null;
+          bio?: string | null;
+          photo_path?: string | null;
+          photo_alt?: string | null;
+          share_with_members?: boolean;
+          show_photo?: boolean;
+          show_town?: boolean;
+          show_bio?: boolean;
+          show_activities?: boolean;
+          show_prompts?: boolean;
+          show_goals?: boolean;
+          show_groups?: boolean;
+        };
+        Relationships: [Fk<"profile_about_user_id_fkey", "user_id", "profiles">];
+      };
+      profile_activities: {
+        Row: { user_id: string; category_id: string; created_at: string };
+        Insert: { user_id: string; category_id: string };
+        Update: { [_ in never]: never };
+        Relationships: [
+          Fk<"profile_activities_user_id_fkey", "user_id", "profiles">,
+          Fk<"profile_activities_category_id_fkey", "category_id", "categories">,
+        ];
+      };
+      profile_prompts: {
+        Row: { user_id: string; prompt_key: string; answer: string; position: number; created_at: string };
+        Insert: { user_id: string; prompt_key: string; answer: string; position?: number };
+        Update: { answer?: string; position?: number };
+        Relationships: [Fk<"profile_prompts_user_id_fkey", "user_id", "profiles">];
+      };
+      profile_goals: {
+        Row: { id: string; user_id: string; year: number; position: number; body: string; done: boolean; created_at: string };
+        Insert: { user_id: string; position: number; body: string; done?: boolean };
+        Update: { position?: number; body?: string; done?: boolean };
+        Relationships: [Fk<"profile_goals_user_id_fkey", "user_id", "profiles">];
       };
       accounts: {
         Row: {
@@ -822,6 +885,40 @@ export type Database = {
       };
     };
     Functions: {
+      can_view_profile: { Args: { p_user: string }; Returns: boolean };
+      profile_section_visible: { Args: { p_user: string; p_section: string }; Returns: boolean };
+      profile_goal_year: { Args: never; Returns: number };
+      profile_card: {
+        Args: { p_user: string };
+        Returns: {
+          can_view: boolean;
+          could_see_more: boolean;
+          town: string | null;
+          bio: string | null;
+          photo_path: string | null;
+          photo_alt: string | null;
+          show_groups: boolean;
+        }[];
+      };
+      save_about_me: {
+        Args: {
+          p_display_name: string;
+          p_town: string | null;
+          p_bio: string | null;
+          p_share_with_members: boolean;
+          p_hidden: string[];
+          p_category_ids: string[];
+          p_prompt_keys: string[];
+          p_prompt_answers: string[];
+          p_goal_bodies: string[];
+          p_goal_done: boolean[];
+        };
+        Returns: undefined;
+      };
+      clear_profile_section: {
+        Args: { p_user: string; p_section: string; p_reason?: string };
+        Returns: string | null;
+      };
       is_site_admin: { Args: never; Returns: boolean };
       can_write: { Args: never; Returns: boolean };
       can_moderate: { Args: { p_group_id: string }; Returns: boolean };

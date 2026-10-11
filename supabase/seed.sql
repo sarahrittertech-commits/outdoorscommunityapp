@@ -30,7 +30,10 @@ from (values
   ('11111111-1111-4111-8111-000000000007', 'admin@example.com')
 ) as v (id, email);
 
-update public.profiles p set display_name = v.name, area = v.area, bio = v.bio
+-- Display names are public; the home town and blurb live in the About me
+-- profile (UC-33), which follows its own visibility rules.
+create temporary table seed_people as
+select v.id::uuid as id, v.name, v.area, v.bio
 from (values
   ('11111111-1111-4111-8111-000000000001', 'Maya R.', 'Brevard', 'Paddler, occasional hiker, full-time dog walker.'),
   ('11111111-1111-4111-8111-000000000002', 'Tom K.', 'Pisgah Forest', 'Trail runner. Slow on the ups.'),
@@ -39,8 +42,14 @@ from (values
   ('11111111-1111-4111-8111-000000000005', 'Eli W.', 'Brevard', 'Birds, mostly.'),
   ('11111111-1111-4111-8111-000000000006', 'Rosa M.', 'Rosman', 'New to the area. Say hi.'),
   ('11111111-1111-4111-8111-000000000007', 'Site Admin', null, null)
-) as v (id, name, area, bio)
-where p.id = v.id::uuid;
+) as v (id, name, area, bio);
+
+update public.profiles p set display_name = s.name from seed_people s where p.id = s.id;
+
+insert into public.profile_about (user_id, town, bio)
+select id, area, bio from seed_people where area is not null or bio is not null;
+
+drop table seed_people;
 
 update public.accounts set accepted_terms_at = now();
 update public.accounts set is_site_admin = true where id = '11111111-1111-4111-8111-000000000007';

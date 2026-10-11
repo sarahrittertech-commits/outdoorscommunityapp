@@ -54,6 +54,10 @@ records where each one came from.
 | member | see the events I'm going to and saved on a calendar when I sign in, a month or a week at a time | I see my outdoor week at a glance and open any event from it | UC-18 | FR-AC-9 | Built |
 | member | message another member privately from their profile | we can arrange things like a carpool or a borrowed bike rack without posting them in a group | UC-20 | FR-DM-1, FR-DM-3, FR-DM-4 | Built |
 | member | accept, decline or block a first message from someone new, and report one | nobody can keep messaging me without my saying yes, and abuse reaches the site admin | UC-20 | FR-DM-2, FR-DM-5, FR-DM-6 | Built |
+| member | fill in an About me profile (a small photo of me outdoors, home town, a blurb, activities I enjoy, fill-in-the-blanks, this year's adventure goals) and show or hide each part | the people I'll meet on a trail know a little about me, and I decide what's shown | UC-33 | FR-PR-1 to FR-PR-7 | Built |
+| member | choose whether other members of my groups can see my profile | I can share with the people I hike with without being visible to everyone | UC-33 | FR-PR-8, FR-PR-10 | Built |
+| organizer | see the profile of someone in my group or asking to join it | I can tell who I'm letting in | UC-33 | FR-PR-8 | Built |
+| visitor | see the profile of a group's page admin and page managers | I know who runs a group before I join it | UC-33 | FR-PR-8 | Built |
 
 ## Running a group
 

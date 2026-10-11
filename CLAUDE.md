@@ -82,9 +82,12 @@ UC-32 (suggestions to the site admin). Built on 10 October 2026: UC-17
 (approve RSVPs, Manage RSVPs), UC-10 for single events (FAQ, sponsors,
 RSVPs open at), UC-18 (My calendar), UC-20 (direct messages, starting as
 requests), UC-21 (group photo galleries), UC-27 (a person's first group
-waits for the site admin) and email links that work in any browser.
+waits for the site admin), UC-33 (the About me profile, with Sarah's
+visibility model: organizers' profiles public, plain members' seen by
+their groups' organizers and, if they opt in, co-members) and email links
+that work in any browser.
 Draft use cases awaiting review:
-UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28 and UC-33. UC-25 and UC-26 wait on a domain and email. On 8 October
+UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28. UC-25 and UC-26 wait on a domain and email. On 8 October
 Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live

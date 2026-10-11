@@ -40,8 +40,8 @@ Who is allowed to do each action is defined once, in
 | --- | --- | --- | --- |
 | FR-AC-1 | ~~Sign up and sign in with an emailed one-time link. No passwords.~~ **Replaced by FR-AC-17 to FR-AC-21** (UC-29, ADR-0009), built 9 October 2026. | — | — |
 | FR-AC-2 | On first sign-in, the user confirms they are 18 or older and accepts the terms and community guidelines before doing anything else. | Must | A user who hasn't confirmed cannot join, post or RSVP. |
-| FR-AC-3 | Profile: display name (required, 2–40 characters), short bio (optional, 280 characters), general area (optional). No profile photos. Required means the database refuses to store a missing or blank one, and an account without a name cannot post, join or RSVP — a member must always be nameable, reportable and reachable by a moderator. | Must | Display name is required at first sign-in and editable later. Clearing it through the API is refused, not silently accepted. |
-| FR-AC-4 | A public profile page shows display name, bio and area. | Should | Reachable from any post author's name. |
+| FR-AC-3 | Profile: display name (required, 2–40 characters), public everywhere. Everything else on a profile (photo, home town, blurb of 280 characters and the rest) is the About me profile, FR-PR-1 to FR-PR-10, and follows its visibility rules. *Updated 10 October 2026 (UC-33): optional profile photos are now allowed (FR-PR-1), and the bio and area moved to the About me profile.* Required means the database refuses to store a missing or blank one, and an account without a name cannot post, join or RSVP — a member must always be nameable, reportable and reachable by a moderator. | Must | Display name is required at first sign-in and editable later. Clearing it through the API is refused, not silently accepted. |
+| FR-AC-4 | A profile page for every member, reachable from any post author's name. Everyone sees the display name; who sees the rest is FR-PR-8. *Updated 10 October 2026 (UC-33): the profile is no longer fully public.* | Should | Reachable from any post author's name. |
 | FR-AC-5 | A user's email address is never shown to any other user, including group admins. | Must | No page or API response available to another user contains it. |
 | FR-AC-6 | A user can delete their account. Profile and memberships are removed; their posts remain as "deleted user" so threads still make sense. An owner can transfer a group to one of its admins first (FR-MB-6). Any group they still own goes inactive: archived (read-only, hidden from listings, still viewable), its upcoming events cancelled, members and posts kept, and open to claims (FR-GR-10). | Must | After deletion the user cannot sign in, and their name appears nowhere. |
 | FR-AC-7 | *My stuff* page: the user's groups (alphabetical) and upcoming RSVPs (by date). | Must | Shows only the signed-in user's own groups and RSVPs. |
@@ -198,6 +198,25 @@ Supports [UC-20](./use-cases#uc-20--message-another-member) and
 | FR-DM-5 | **Report.** The *report* link on any message from the other person sends a report (FR-MD-1) to the site admin only: messages belong to no group, so no organizer sees it. Only a person in the conversation can report one of its messages. Once reported, the site admin can read that conversation (and only that one) and can suspend the sender from the admin page. | Should | A message report has no group; the site admin reads a conversation only after a report in it (PT-185, PT-186). |
 | FR-DM-6 | **Limits and privacy.** Plain text only, rendered as text, 1 to 2,000 characters. At most 10 new requests a day and 20 messages in 10 minutes per member, under the per-person lock and server time (TR-SEC-8). Suspended accounts and accounts that haven't accepted the terms can read their conversations but not send; they can still decline and block. A deleted account shows as *deleted user*, its messages stay, and nobody can message it. Only the two people in a conversation can read it; conversations and messages are written only through database functions. | Should | A third user, including group admins, reads nothing; the site admin sees only reported conversations; the 11th request in a day is refused (PT-173, PT-178 to PT-182). |
 
+## Profiles — FR-PR
+
+Supports [UC-33](./use-cases#uc-33--tell-people-about-yourself). Built 10
+October 2026, with Sarah's visibility model (FR-PR-8), which may change
+after her user testing on profile sharing.
+
+| ID | Requirement | Priority | Accepted when |
+| --- | --- | --- | --- |
+| FR-PR-1 | **Photo.** Optional, one per member: a photo of the member, often doing their sport; not necessarily a face close-up. JPEG, PNG or WebP, at most 5 MB, re-encoded to a 320 × 320 px WebP (center-cropped) with location and camera data removed (TR-SEC-9), with a one-line description (defaults to the display name). Kept in a private bucket and shown through short-lived signed URLs (TR-SEC-12). Replacing it removes the old file. Replaces "No profile photos" in FR-AC-3. | Should | The stored file has no metadata, only its owner can write it, and only someone who may see the photo section can read it (PT-199). |
+| FR-PR-2 | **Home town.** Chosen from the board's town list (the same list as Location on Events), replacing the free-text area. Existing free-text areas are kept until the member picks a town. | Should | The form refuses a town not on the list, except the member's own older area. |
+| FR-PR-3 | **Activities I enjoy.** Ticked from the board's activity categories, shown comma-separated, each linking to that activity's page. | Should | Only real categories can be stored (PT-197). |
+| FR-PR-4 | **Fill-in-the-blanks.** Up to 3 answers to a fixed list of 8 prompts set in `src/config/site.ts` (so the women's board can have its own), each answer 1 to 60 characters of plain text. | Could | Prompts not in the list are refused by the form; a fourth answer is refused by the database (PT-196). |
+| FR-PR-5 | **Adventure goals.** Up to 10 for the current year (UTC, the server's clock), each 1 to 100 characters, each done or not, shown with "n of m done". A new year starts an empty list; earlier years stay readable by their owner only, and can't be changed. | Should | Another member never sees a past year's list; an eleventh goal is refused (PT-195, PT-196). |
+| FR-PR-6 | **Groups I'm in.** Lists the member's active groups, linked, but only those whose member list the reader may see (FR-MB-10), and never pending or banned memberships. | Should | A group with a private member list never appears on anyone's profile for someone who can't see that list (PT-201). |
+| FR-PR-7 | **Show or hide.** Each section (photo, town, blurb, activities, fill-in-the-blanks, goals, groups) has Show or Hide, on top of who may see the profile. A hidden section is seen by its owner only (marked *hidden* for them), not even the site admin. Hidden and blank sections are left out entirely. Enforced by the database, not just the page; Groups follows each group's member-list setting, which the database already enforces. | Must | A hidden section can't be read through the API (PT-194). |
+| FR-PR-8 | **Who sees a profile.** Everyone sees the display name. The rest is seen by: the member and the site admin; **everyone**, signed out included, when the member is an active page admin or page manager of a listed group; page admins and page managers of a group the member is in or has asked to join; and, if the member opts in (FR-PR-10), other members of an active group they share. Nobody else: they see the display name and *This profile is private*, or *Sign in to see more* when signing in could help. Profiles stay out of search engines, organizers' included. | Must | Signed out, the API returns a regular member's display name only, and an organizer's whole profile (PT-190 to PT-193). |
+| FR-PR-9 | **Reports and removal.** *Report this profile* covers every section. The site admin can remove a member's photo or clear any other section from the profile page, logged in the moderation log with what was removed. | Must | Removals leave a record (PT-200). |
+| FR-PR-10 | **Share with members of my groups.** A setting, off by default: when on, any signed-in member who shares an active membership in an active group with the member sees their profile (the sections they show). Organizers of their groups see it regardless. | Should | Sharing reaches co-members of active groups only, not members of other groups, pending requesters or visitors (PT-193). |
+
 ## Research agent — FR-RS
 
 Supports [UC-9](./use-cases#uc-9--keep-the-listings-fresh). The agent is
@@ -221,7 +240,7 @@ other, with affinity tags.)
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28 and UC-33 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built (UC-29, password sign-in, was approved and built on 9 October and
 its requirements, FR-AC-17 to FR-AC-21, are in the Accounts table). Each moves into its area's table above, with a priority, once Sarah
@@ -363,23 +382,6 @@ admin (FR-MB-6). Sarah may want any member to be eligible; that is
 listed as its own open question in the PRD.
 
 The requirements are in the Groups table: FR-GR-8, FR-GR-21, FR-GR-22.
-
-### About me profile (UC-33)
-
-**Decisions needed:** see the options in UC-33. These drafts follow the
-recommended ones.
-
-| ID | Draft requirement | Proposed | Accepted when |
-| --- | --- | --- | --- |
-| FR-PR-1 | **Photo.** Optional, one per member: JPEG, PNG or WebP, at most 5 MB, cropped square, re-encoded to WebP at most 400 px with location and camera data removed (TR-SEC-9), with a one-line description (defaults to the display name). Replacing it removes the old file. Replaces "No profile photos" in FR-AC-3. | Should | The stored file has no metadata, and only its owner can write it. |
-| FR-PR-2 | **Home town.** Chosen from the board's town list (the same list as Location on Events), replacing the free-text area. Existing free-text areas are kept until the member picks a town. | Should | — |
-| FR-PR-3 | **Activities I enjoy.** Ticked from the board's activity categories, shown comma-separated, each linking to that activity's page. | Should | Only real categories can be stored. |
-| FR-PR-4 | **Fill-in-the-blanks.** Up to 3 answers to a fixed list of about 8 prompts set in `src/config/site.ts` (so the women's board can have its own), each answer 1 to 60 characters of plain text. | Could | Prompts not in the list are refused. |
-| FR-PR-5 | **Adventure goals.** Up to 10 for the current year, each 1 to 100 characters, each done or not. A new year starts an empty list; earlier years stay readable by their owner only. | Should | Another member never sees a past year's list. |
-| FR-PR-6 | **Groups I'm in.** Lists the member's active groups, linked, but only those whose member list the reader may see (FR-MB-10), and never pending or banned memberships. | Should | A group with a private member list never appears on anyone's profile for a non-member. |
-| FR-PR-7 | **Show or hide.** Each section (photo, town, blurb, activities, fill-in-the-blanks, goals, groups) has Show or Hide. Hidden and blank sections are left out entirely. Enforced by the database, not just the page. | Must | A hidden section can't be read through the API. |
-| FR-PR-8 | **Members only.** Only signed-in members read a profile beyond its display name; visitors are asked to sign in. Profiles stay out of search engines. | Must | Signed out, the API returns the display name only. |
-| FR-PR-9 | **Reports and removal.** *Report this profile* covers every section. The site admin can remove a member's photo or clear any section, logged in the moderation log. | Must | Removals leave a record. |
 
 ### Demo member (UC-28)
 

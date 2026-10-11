@@ -236,9 +236,35 @@ manager is a user like any other, and can't read members' messages.
 | Report a message | ❌ | **own conversations** | ❌ | **own conversations** |
 | See message reports | ❌ | ❌ | ❌ | ✅ (no group's organizers) |
 
+### Profiles (UC-33, FR-PR-1 to FR-PR-10)
+
+Built 10 October 2026, with Sarah's visibility model (it may change after
+user testing). Rows are *who is reading*; "the rest" is everything on a
+profile beyond the display name. A section its owner set to Hide is
+excluded from every row except **Themselves**.
+
+| Who is reading | Display name | The rest of a plain member's profile | The rest of an organizer's profile (page admin or page manager of a listed group) |
+| --- | --- | --- | --- |
+| Visitor (signed out) | ✅ | ❌ | ✅ |
+| Signed-in user who shares no group with them | ✅ | ❌ | ✅ |
+| Member of an active group they're in | ✅ | ✅ only if they opted in to *Share my profile with members of my groups* | ✅ |
+| Page admin or page manager of a group they're in, or asked to join | ✅ | ✅ | ✅ |
+| Themselves | ✅ | ✅ including hidden sections | ✅ including hidden sections |
+| Site admin | ✅ | ✅ except hidden sections | ✅ except hidden sections |
+
+*Groups I'm in* lists only groups whose member list the reader may see
+(FR-MB-10), so it never shows more than the group pages already do.
+
+| Action | Visitor | User | Suspended | Site admin |
+| --- | --- | --- | --- | --- |
+| Edit own profile, photo, Show/Hide and sharing | ❌ | **own** | ❌ | **own** |
+| See another year's adventure goals | ❌ | **own** | **own** | **own** |
+| Report a profile | ❌ | ✅ | ❌ | ✅ |
+| Clear a section or remove a photo (logged) | ❌ | ❌ | ❌ | ✅ |
+
 ### Proposed with the 8 October design (drafts, not built)
 
-These follow the draft requirements for UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28 and UC-33. Each becomes part
+These follow the draft requirements for UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28. Each becomes part
 of the matrix above, with a permission test, once its use case is
 approved.
 

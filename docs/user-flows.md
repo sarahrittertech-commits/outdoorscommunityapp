@@ -510,23 +510,30 @@ flowchart TD
 
 ## UC-33 — Tell people about yourself
 
-*Draft, awaiting review (10 October 2026). Written for the recommended
-options in the use case.*
+*Approved and built 10 October 2026, with Sarah's visibility model: the
+member and the site admin; everyone, for page admins and page managers of a
+listed group; organizers of the member's groups (and of groups they asked
+to join); co-members, if the member opts in; nobody else.*
 
 ```mermaid
 flowchart TD
-  me["My stuff → Profile"] --> edit["Edit my profile<br/>every section optional"]
-  edit --> photo["Photo (optional): upload, crop square,<br/>one-line description"]
+  me["My stuff → Profile"] --> edit["Profile settings<br/>every section optional"]
+  edit --> photo["Photo (optional): upload, 320px square,<br/>one-line description"]
   edit --> basics["Home town (town list), blurb (280)"]
   edit --> acts["Activities I enjoy: tick from the activity list"]
   edit --> blanks["Fill in up to 3 of 8 prompts<br/>I've always wanted to try ___"]
   edit --> goals["This year's adventure goals: up to 10,<br/>tick when done"]
-  photo & basics & acts & blanks & goals --> vis["Each section: Show or Hide"]
-  vis --> save["Save"] --> preview(["See it as other members will"])
-  reader["A member opens a name<br/>(post, RSVP list, message request)"] --> signed{Signed in?}
-  signed -->|no| nameonly(["Display name only, and Sign in to see more"])
-  signed -->|yes| profile(["Profile: photo with blurb, town and activities beside it;<br/>fill-in-the-blanks; this year's goals with ticks;<br/>groups I'm in, linked (only those the reader may see)"])
+  photo & basics & acts & blanks & goals --> vis["Each section: Show or Hide<br/>Share with members of my groups? (off)"]
+  vis --> save["Save"] --> preview(["Open my profile: hidden sections marked"])
+  reader["Someone opens a name<br/>(post, RSVP list, join request, message request)"] --> who{Who is reading?}
+  who -->|the member or the site admin| profile
+  who -->|anyone, and the member is a page admin<br/>or page manager of a listed group| profile
+  who -->|an organizer of a group the member<br/>is in or asked to join| profile
+  who -->|a co-member, and the member shares<br/>with members of their groups| profile
+  who -->|anyone else| nameonly(["Display name only:<br/>Sign in to see more (signed out, if it could help)<br/>or This profile is private"])
+  profile(["Profile: photo with blurb, town and activities beside it;<br/>fill-in-the-blanks; this year's goals with ticks;<br/>groups, linked (only those whose member list the reader may see);<br/>hidden sections left out"])
   profile --> report["Report this profile"]
+  nameonly --> report
 ```
 
 **Layout (wide screens):**
@@ -554,5 +561,6 @@ flowchart TD
 ```
 
 On phones the photo sits above the name, and each block stacks. Hidden
-or blank sections don't appear at all: no empty headings.
+or blank sections don't appear at all: no empty headings. The owner sees
+their hidden sections, marked *hidden: only you see this*.
 

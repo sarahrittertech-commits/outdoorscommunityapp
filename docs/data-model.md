@@ -68,15 +68,17 @@ The Craigslist-style directory. Managed by migration, not UI (FR-AD-1).
 ### profiles
 
 The public face of a user, readable by everyone, created automatically on
-first sign-in. The email address is **not** here: it stays in Supabase's
+first sign-in. Only the display name is here, because it appears on every
+post and RSVP. The email address is **not** here: it stays in Supabase's
 private `auth.users` table, which the public API cannot read (FR-AC-5).
+Everything else a member says about themselves is in the
+[About me tables](#about-me-profile-uc-33), which have their own
+visibility rules; `bio` and `area` moved there on 10 October 2026.
 
 | Field | Type | Notes |
 | --- | --- | --- |
 | `id` | uuid | same as the auth user id |
 | `display_name` | text, optional | 2–40 characters; null until onboarding, and after deletion ("deleted user") |
-| `bio` | text, optional | 280 characters |
-| `area` | text, optional | free text, e.g. "Brevard" |
 | `created_at`, `updated_at` | timestamp | |
 
 ### accounts
@@ -505,6 +507,86 @@ the code, the group (active, not a listing), the person (can write, not
 banned) and, for a manager invite, that the account's email is the invited
 one, then adds an active member row, so the join limit applies.
 
+## About me profile (UC-33)
+
+A member's profile beyond the display name (FR-PR-1 to FR-PR-10). Who may
+read it is one database function, `can_view_profile(user)`: the member, the
+site admin; everyone when the member is an active page admin or page
+manager of a listed group; organizers of a group the member is in or has
+asked to join; and, if `share_with_members` is on, members of an active
+group they share. `profile_section_visible(user, section)` adds the owner's
+Show/Hide setting: a hidden section is the owner's alone. Every table's read
+policy uses it, so the API returns nothing the reader may not see. Owners
+write only their own rows, with a writable account; the anonymous role never
+writes. The profile form is saved in one transaction by `save_about_me()`,
+which runs as the member. Deleting an account removes all of it.
+
+### profile_about
+
+One row per member who has filled anything in. Readable by its owner only;
+everyone else reads it through `profile_card(user)`, which returns null for
+any part they may not see (and, for a signed-out visitor, whether signing in
+could show more).
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `user_id` | uuid | the member; removed with the profile |
+| `town` | text, optional | FR-PR-2: a town from the town list, or an older free-text area until the member picks one; 1 to 80 characters |
+| `bio` | text, optional | the blurb, 1 to 280 characters |
+| `photo_path`, `photo_alt` | text, optional | FR-PR-1: a file in the PRIVATE `profile-photos` bucket, always `<user_id>/<random>.webp` (checked); the description (1 to 200) is required with a photo |
+| `share_with_members` | boolean | FR-PR-10; off by default |
+| `show_photo`, `show_town`, `show_bio`, `show_activities`, `show_prompts`, `show_goals`, `show_groups` | boolean | FR-PR-7; on by default |
+| `updated_at` | timestamp | server time |
+
+The photo file is a 320 px square WebP in the private `profile-photos`
+bucket (at most 1 MB a file, WebP only, at most 3 files per member's
+folder while one replaces another). Pages show it through a signed URL
+created as the viewer; the bucket's read policy lets a file be read only
+when it is someone's current photo and the reader may see their photo
+section.
+
+### profile_activities
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `user_id` | uuid | |
+| `category_id` | uuid | a real activity category (foreign key) |
+| `created_at` | timestamp | |
+
+### profile_prompts
+
+At most 3 per member (trigger, under the per-person lock). The prompts'
+wording is in `src/config/site.ts`; the key is stored.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `user_id` | uuid | |
+| `prompt_key` | text | e.g. `always_wanted`; lowercase letters, digits and underscores |
+| `answer` | text | 1 to 60 characters |
+| `position` | smallint | 1 to 3, the order shown |
+| `created_at` | timestamp | |
+
+### profile_goals
+
+At most 10 per member per year (trigger, under the per-person lock, server
+time). `year` is set by the database on insert to the current year in UTC.
+Other people read only the current year's; earlier years are the owner's,
+read-only.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `user_id` | uuid | |
+| `year` | smallint | set by the database |
+| `position` | smallint | 1 to 10 |
+| `body` | text | 1 to 100 characters |
+| `done` | boolean | |
+| `created_at` | timestamp | |
+
+The site admin clears a section or removes a photo with
+`clear_profile_section()`, logged in `moderation_actions` as
+`remove_content` on target type `profile`, with what was removed.
+
 ## Notifications (Should)
 
 ### notification_preferences
@@ -533,7 +615,7 @@ without revealing the rows, so visitors see "12 members" but not who.
 
 ## Planned with the 8 October design (drafts, not built)
 
-What the draft use cases UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28 and UC-33 would add. Field-level detail is
+What the draft use cases UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28 would add. Field-level detail is
 written when each is approved, with its migration and permission tests.
 
 | Table or change | For | Notes |
