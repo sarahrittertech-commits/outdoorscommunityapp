@@ -200,7 +200,9 @@ on 11 October 2026.
      that matter most, or 3-digit prefixes mapped to a nearby town.
    `npm test` checks that every town and zip belongs to a region that
    exists.
-3. **Load the research** for the area with
+3. **Research the area** with the Gemini prompt in
+   `scripts/research/gemini-prompt.md`, one city at a time, then **load
+   the research** with
    `node scripts/research/load.mjs --append <folder>` (see *Seeding real
    groups*). It only adds rows that aren't there yet.
 4. **Make candidates** of the community groups that have a website, and
