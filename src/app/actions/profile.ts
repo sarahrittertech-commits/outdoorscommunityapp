@@ -3,7 +3,7 @@
 import { z } from "zod";
 
 import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
-import { findTown } from "@/lib/geo";
+import { findTown, townKey } from "@/lib/geo";
 import {
   profilePhotoPath,
   reencodeProfilePhoto,
@@ -39,7 +39,7 @@ export async function saveAboutMe(formData: FormData) {
   let town = form.town;
   if (town) {
     const listed = findTown(town);
-    if (listed) town = listed.name;
+    if (listed) town = townKey(listed);
     else {
       const { data: current } = await supabase.from("profile_about").select("town").eq("user_id", viewer.id).maybeSingle();
       if (current?.town !== town) fail(EDIT, "town_invalid");

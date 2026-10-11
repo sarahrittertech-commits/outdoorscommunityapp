@@ -7,9 +7,11 @@ import { GroupTypeIcon } from "@/brand/GroupTypeIcon";
 import { AffinityTags } from "@/components/AffinityTags";
 import { LocationFilter, UnknownZip } from "@/components/LocationFilter";
 import { pageFrom, Pagination } from "@/components/Pagination";
+import { RegionScope } from "@/components/RegionScope";
 import { site } from "@/config/site";
 import { distances } from "@/config/towns";
-import { aboutMiles, milesBetween, resolveLocation, townForArea } from "@/lib/geo";
+import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
+import { aboutMiles, milesBetween, resolveLocation, townForArea, townKey } from "@/lib/geo";
 import { groupCoverUrl } from "@/lib/groupCovers";
 import { GROUP_TYPES, isGroupType } from "@/lib/groupTypes";
 import { createClient } from "@/lib/supabase/server";
@@ -24,7 +26,7 @@ const PAGE_SIZE = 50;
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
-type Filters = { category?: string; type?: string; near?: string; zip?: string; within?: number };
+type Filters = { category?: string; type?: string; near?: string; zip?: string; within?: number; region?: string };
 
 /** /communities with the given filters; empty ones are left out (FR-BR-15). */
 function communitiesHref(filters: Filters): string {
@@ -34,6 +36,7 @@ function communitiesHref(filters: Filters): string {
   if (filters.zip) query.set("zip", filters.zip);
   else if (filters.near) query.set("near", filters.near);
   if ((filters.zip || filters.near) && filters.within) query.set("within", String(filters.within));
+  else if (filters.region) query.set("region", filters.region);
   return query.size ? `/communities?${query}` : "/communities";
 }
 
@@ -52,10 +55,17 @@ export default async function CommunitiesPage({ searchParams }: Props) {
   const type = isGroupType(params.type) ? params.type : undefined;
   const location = resolveLocation(params.near, params.zip);
   const near = location.town;
-  const place = near && (location.zip ? `${location.zip} (${near.name})` : near.name);
+  const place = near && (location.zip ? `${location.zip} (${townKey(near)})` : townKey(near));
   const within = distances.find((d) => String(d) === params.within) ?? 50;
+  // Regions: with no town or zip, the region being browsed (or every region
+  // with ?region=all). Near a town or zip, distance decides, across every
+  // region, so a town outside the region still works.
+  const browsing = await getCurrentRegion(params.region);
+  const regionId = near ? null : await regionFilterId(browsing);
   // The other filters' links keep the place, so filters combine.
-  const kept: Filters = near ? { category, type, near: near.name, zip: location.zip, within } : { category, type };
+  const kept: Filters = near
+    ? { category, type, near: townKey(near), zip: location.zip, within }
+    : { category, type, region: browsing.param };
   const asked = pageFrom(params.page);
 
   const supabase = await createClient();
@@ -63,6 +73,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
     let query = supabase.from("group_listings").select(COLUMNS, { count: "exact" }).eq("status", "active").order("name");
     if (category) query = query.eq("category_slug", category);
     if (type) query = query.eq("group_type", type);
+    if (regionId) query = query.eq("region_id", regionId);
     return query;
   };
   const listPage = (n: number) => listQuery().range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
@@ -71,7 +82,9 @@ export default async function CommunitiesPage({ searchParams }: Props) {
     // Near a place, distance comes from each group's free-text area, worked
     // out here, so every matching group is fetched and paged after sorting.
     near ? listQuery().limit(2000) : listPage(asked),
-    supabase.from("subcategory_group_counts").select("category_slug, group_count"),
+    regionId
+      ? supabase.from("subcategory_region_counts").select("category_slug, group_count").eq("region_id", regionId)
+      : supabase.from("subcategory_group_counts").select("category_slug, group_count"),
     supabase.from("categories").select("slug, name").order("sort_order"),
   ]);
 
@@ -158,8 +171,10 @@ export default async function CommunitiesPage({ searchParams }: Props) {
       <LocationFilter
         action="/communities"
         idPrefix={`communities-${where}`}
-        keep={{ category, type }}
-        town={location.zip ? undefined : near?.name}
+        keep={{ category, type, region: near ? undefined : browsing.param }}
+        town={location.zip || !near ? undefined : townKey(near)}
+        region={browsing.region.slug}
+        zipPlaceholder={browsing.region.exampleZip}
         zip={location.zip ?? location.unknownZip}
         within={within}
       />
@@ -226,10 +241,11 @@ export default async function CommunitiesPage({ searchParams }: Props) {
               {unmappedCount > 0 && `, then ${unmappedCount} whose area isn’t on the map`}. Anyone can look; sign in to join.
             </>
           ) : (
-            <>Local groups and clubs in {site.regionName}, A to Z. Anyone can look; sign in to join.</>
+            <>Local groups and clubs {browsing.all ? "in every region" : `in ${browsing.region.name}`}, A to Z. Anyone can look; sign in to join.</>
           )}
         </p>
-        {location.unknownZip && <UnknownZip zip={location.unknownZip} fallback={near?.name} />}
+        {!near && <RegionScope current={browsing} path="/communities" query={{ category, type }} className="mt-2 text-sm text-muted" />}
+        {location.unknownZip && <UnknownZip zip={location.unknownZip} fallback={near ? townKey(near) : undefined} />}
 
         {groups.length ? (
           <table className="mt-2 w-full text-left">

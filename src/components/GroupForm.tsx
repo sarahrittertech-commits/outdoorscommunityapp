@@ -1,14 +1,17 @@
 import Image from "next/image";
 
+import { regions } from "@/config/regions";
 import { site } from "@/config/site";
 import { AFFINITY_TAGS } from "@/lib/affinity";
+import { getCurrentRegion } from "@/lib/currentRegion";
 import { GROUP_TYPES } from "@/lib/groupTypes";
+import { getRegion } from "@/lib/regions";
 import type { Tables } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 
 type Group = Pick<
   Tables<"groups">,
-  "name" | "description" | "rules" | "subcategory_id" | "area" | "join_policy" | "join_question" | "discussions_enabled" | "affinity_tags" | "website" | "member_list_visibility" | "group_type" | "cover_alt"
+  "name" | "description" | "rules" | "subcategory_id" | "region_id" | "area" | "join_policy" | "join_question" | "discussions_enabled" | "affinity_tags" | "website" | "member_list_visibility" | "group_type" | "cover_alt"
 >;
 
 const MEMBER_LIST_CHOICES = [
@@ -31,10 +34,16 @@ export async function GroupForm({
   submitLabel: string;
 }) {
   const supabase = await createClient();
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("id, name, subcategories(id, name, sort_order)")
-    .order("sort_order");
+  const [{ data: categories }, { data: regionRows }, current] = await Promise.all([
+    supabase.from("categories").select("id, name, subcategories(id, name, sort_order)").order("sort_order"),
+    supabase.from("regions").select("id, slug, status"),
+    getCurrentRegion(),
+  ]);
+  // The group's own region, or the one the visitor is browsing for a new group.
+  const groupRegion = group ? getRegion(regionRows?.find((r) => r.id === group.region_id)?.slug) : undefined;
+  const region = groupRegion ?? current.region;
+  // Live regions, plus the group's own if it has since closed (it may stay, not move back in).
+  const choices = regions.filter((r) => r.status === "live" || r.slug === groupRegion?.slug);
 
   return (
     <form action={action}>
@@ -78,8 +87,21 @@ export async function GroupForm({
         )}
       </fieldset>
 
+      {/* Regions: which region's listings the group appears in. */}
+      <label htmlFor="region">
+        Region <span className="hint">Where the group is listed. People browse one region at a time.</span>
+      </label>
+      <select id="region" name="region" required defaultValue={region.slug}>
+        {choices.map((r) => (
+          <option key={r.slug} value={r.slug}>
+            {r.name}
+            {r.status === "live" ? "" : " (closed to new groups)"}
+          </option>
+        ))}
+      </select>
+
       <label htmlFor="area">
-        Area <span className="hint">Town or area you usually meet, e.g. {site.exampleArea}</span>
+        Area <span className="hint">Town or area you usually meet, e.g. {region.exampleTown}</span>
       </label>
       <input id="area" name="area" type="text" required minLength={2} maxLength={80} defaultValue={group?.area} />
 

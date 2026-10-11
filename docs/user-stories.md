@@ -22,6 +22,7 @@ records where each one came from.
 | As a… | I want to… | So that… | Use case | Requirements | Status |
 | --- | --- | --- | --- | --- | --- |
 | visitor | browse groups and events by activity without signing up | I can see what's out there before giving anything away | UC-1 | FR-BR-1 to FR-BR-5 | Live |
+| visitor | choose the region I live in and have the board remember it | I see groups and events I can actually get to, not another state's | UC-34 | FR-RG-1 to FR-RG-6 | Built |
 | visitor | search for events and groups near a town or zip code I give, within a distance | I find things I can actually get to | UC-14 | FR-BR-12 to FR-BR-15 | Live (towns); built (zip codes, Communities) |
 | visitor | see where people are heading on a map and a list | I discover new places to go | UC-15 | FR-BR-16 to FR-BR-18 | Live (towns; no place pages yet) |
 | visitor | see a group's own website | I can learn more about them off the board | — | FR-GR-23 | Built |
@@ -84,6 +85,7 @@ records where each one came from.
 | As a… | I want to… | So that… | Use case | Requirements | Status |
 | --- | --- | --- | --- | --- | --- |
 | site admin | have new groups and events suggested from public sources | the board fills up without me searching | UC-9 | FR-RS-1 to FR-RS-9 | Live (cloud permission pending) |
+| site admin | open a new region from research I have reviewed | the board grows city by city without listing anything unchecked | UC-35 | FR-RG-7 to FR-RG-9 | Built |
 | site admin | see suggestions that look like something already listed, tagged *possible duplicate* | I don't list the same group twice; exact matches never reach me | UC-9 | FR-RS-3, FR-RS-10 | Built |
 | site admin | review a person's first group before it's listed | spam never reaches the listings | UC-27 | FR-GR-8, FR-GR-21, FR-GR-22 | Built |
 | member | report anything that breaks the rules | moderators can act on it | UC-6 | FR-MD-1 to FR-MD-6 | Live |

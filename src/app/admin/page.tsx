@@ -10,6 +10,9 @@ import { Notice } from "@/components/Notice";
 import { ReportTargetLink, resolveReportTargets } from "@/components/ReportTarget";
 import { site } from "@/config/site";
 import { requireSiteAdmin } from "@/lib/auth";
+import { getCurrentRegion } from "@/lib/currentRegion";
+import { townForArea } from "@/lib/geo";
+import { liveRegions, nearestRegion, regionForTown } from "@/lib/regions";
 import { siteAdminOnlyReports } from "@/lib/reports";
 import { SUGGESTION_KIND_LABELS, SUGGESTION_STATUS_LABELS } from "@/lib/suggestions";
 import { createClient } from "@/lib/supabase/server";
@@ -25,6 +28,14 @@ export default async function AdminPage({ searchParams }: Props) {
   await requireSiteAdmin();
   const supabase = await createClient();
   const params = await searchParams;
+  // Regions: a candidate is listed in its area's region when the area is a
+  // known town (or the region whose center is nearest it), else the region
+  // being browsed.
+  const browsing = (await getCurrentRegion()).region;
+  const candidateRegion = (area: string | null) => {
+    const town = townForArea(area);
+    return regionForTown(town) ?? (town && nearestRegion(town.lat, town.lng)) ?? browsing;
+  };
   // FR-AD-6: ?kind= filters the suggestions; anything else shows them all.
   const kind = SUGGESTION_KINDS.find((k) => k === params.kind) ?? null;
   const back = kind ? `/admin?kind=${kind}#suggestions` : "/admin#suggestions";
@@ -249,7 +260,18 @@ export default async function AdminPage({ searchParams }: Props) {
               · {c.upcoming_events} upcoming {c.upcoming_events === 1 ? "event" : "events"} · found {formatPostDate(c.found_at, tz)}
             </p>
             <div className="mt-2 flex flex-wrap gap-3 text-sm">
-              <form action={listCandidate.bind(null, c.id)}>
+              <form action={listCandidate.bind(null, c.id)} className="flex flex-wrap items-center gap-2">
+                {/* Regions: the region the listing goes in, starting from the one its area is in. */}
+                <label htmlFor={`candidate-region-${c.id}`} className="sr-only">
+                  Region for {c.name}
+                </label>
+                <select id={`candidate-region-${c.id}`} name="region" defaultValue={candidateRegion(c.area).slug} className="mt-0 w-auto py-1 text-sm">
+                  {liveRegions().map((r) => (
+                    <option key={r.slug} value={r.slug}>
+                      {r.name}
+                    </option>
+                  ))}
+                </select>
                 <button className="button">List it</button>
               </form>
               <form action={skipCandidate.bind(null, c.id)}>

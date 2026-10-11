@@ -21,11 +21,14 @@ export function DestinationMap({
   focus,
   tiles,
   center,
+  zoom = 7,
 }: {
   points: MapPoint[];
   focus?: LatLng;
   tiles: { url: string; attribution: string };
   center: LatLng;
+  /** Starting zoom when there are no pins. */
+  zoom?: number;
 }) {
   const el = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -55,7 +58,7 @@ export function DestinationMap({
 
       if (focus) map.setView([focus.lat, focus.lng], 9);
       else if (points.length) map.fitBounds(L.latLngBounds(points.map((p) => [p.lat, p.lng])), { padding: [30, 30], maxZoom: 10 });
-      else map.setView([center.lat, center.lng], 7);
+      else map.setView([center.lat, center.lng], zoom);
       setMounted(true);
     });
 
@@ -63,7 +66,7 @@ export function DestinationMap({
       cancelled = true;
       map?.remove();
     };
-  }, [points, focus, tiles, center]);
+  }, [points, focus, tiles, center, zoom]);
 
   return (
     <div

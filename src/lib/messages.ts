@@ -93,6 +93,7 @@ export const errors = {
   own_content: "That report is about an organizer's own post, so the site admin handles it.",
   not_signed_in: "Sign in first.",
   town_invalid: "Pick your home town from the list.",
+  region_closed: "Groups can only be in a region that is open. Pick one from the list.",
   prompt_invalid: "Pick each fill-in-the-blank from the list, and each one only once.",
   prompts_full: "Answer at most 3 fill-in-the-blanks.",
   goals_full: "Add at most 10 adventure goals a year.",

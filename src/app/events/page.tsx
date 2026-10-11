@@ -5,9 +5,11 @@ import { ActivityIcon } from "@/brand/ActivityIcon";
 import { GroupTypeIcon } from "@/brand/GroupTypeIcon";
 import { EventList } from "@/components/Listings";
 import { LocationFilter, UnknownZip } from "@/components/LocationFilter";
-import { site } from "@/config/site";
+import { RegionScope } from "@/components/RegionScope";
 import { distances } from "@/config/towns";
-import { milesBetween, resolveLocation, townForArea } from "@/lib/geo";
+import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
+import { milesBetween, resolveLocation, townForArea, townKey } from "@/lib/geo";
+import { regionForTown } from "@/lib/regions";
 import { GROUP_TYPES, isGroupType } from "@/lib/groupTypes";
 import { createClient } from "@/lib/supabase/server";
 
@@ -17,8 +19,6 @@ export const metadata: Metadata = {
 };
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
-
-const monthFormat = new Intl.DateTimeFormat("en-US", { timeZone: site.defaultTimezone, month: "long", year: "numeric" });
 
 const WINDOWS = [
   { days: 7, label: "next 7 days" },
@@ -38,8 +38,19 @@ export default async function EventsPage({ searchParams }: Props) {
   // UC-14: near a town or zip code the visitor gives, never their device's location.
   const location = resolveLocation(params.near, params.zip);
   const near = location.town;
-  const place = near && (location.zip ? `${location.zip} (${near.name})` : near.name);
+  const place = near && (location.zip ? `${location.zip} (${townKey(near)})` : townKey(near));
   const within = distances.find((d) => String(d) === params.within) ?? 50;
+  // Regions: with no town or zip, the region being browsed (or every region
+  // with ?region=all). Near a town or zip, distance decides, across every
+  // region, so a town outside the region still works.
+  const browsing = await getCurrentRegion(params.region);
+  const regionId = near ? null : await regionFilterId(browsing);
+  const regionParam = near ? undefined : browsing.param;
+  const monthFormat = new Intl.DateTimeFormat("en-US", {
+    timeZone: (near && regionForTown(near)?.timezone) || browsing.region.timezone,
+    month: "long",
+    year: "numeric",
+  });
 
   const supabase = await createClient();
   // event_listings doesn't carry the group's type or town, so both come from
@@ -66,16 +77,20 @@ export default async function EventsPage({ searchParams }: Props) {
     .lt("starts_at", startsInWindow.to);
   if (category) listing = listing.eq("category_slug", category);
   if (type) listing = listing.in("group_slug", (groupRows ?? []).filter((g) => g.group_type === type).map((g) => g.slug));
+  if (regionId) listing = listing.eq("region_id", regionId);
+
+  let countQuery = supabase
+    .from("event_listings")
+    .select("category_slug, group_slug")
+    .eq("status", "scheduled")
+    .gt("starts_at", startsInWindow.from)
+    .lt("starts_at", startsInWindow.to);
+  if (regionId) countQuery = countQuery.eq("region_id", regionId);
 
   const [{ data: all }, { data: categories }, { data: countRows }] = await Promise.all([
     listing.order("starts_at").limit(300),
     supabase.from("categories").select("slug, name").order("sort_order"),
-    supabase
-      .from("event_listings")
-      .select("category_slug, group_slug")
-      .eq("status", "scheduled")
-      .gt("starts_at", startsInWindow.from)
-      .lt("starts_at", startsInWindow.to),
+    countQuery,
   ]);
 
   // Distance from the chosen town to each event's group town.
@@ -130,9 +145,9 @@ export default async function EventsPage({ searchParams }: Props) {
     if (d !== 30) q.set("days", String(d));
     if (near && !next.anywhere) {
       if (location.zip) q.set("zip", location.zip);
-      else q.set("near", near.name);
+      else q.set("near", townKey(near));
       q.set("within", String(within));
-    }
+    } else if (browsing.param) q.set("region", browsing.param);
     const s = q.toString();
     return s ? `/events?${s}` : "/events";
   };
@@ -156,8 +171,10 @@ export default async function EventsPage({ searchParams }: Props) {
       <LocationFilter
         action="/events"
         idPrefix={`events-${where}`}
-        keep={{ category, type, days: days !== 30 ? String(days) : undefined }}
-        town={location.zip ? undefined : near?.name}
+        keep={{ category, type, days: days !== 30 ? String(days) : undefined, region: regionParam }}
+        town={location.zip || !near ? undefined : townKey(near)}
+        region={browsing.region.slug}
+        zipPlaceholder={browsing.region.exampleZip}
         zip={location.zip ?? location.unknownZip}
         within={within}
       />
@@ -226,9 +243,17 @@ export default async function EventsPage({ searchParams }: Props) {
         </h1>
         <p className="mt-2 border-b border-rule pb-3 text-subtle">
           {events.length} upcoming in the {WINDOWS.find((w) => w.days === days)!.label}
-          {near ? `, within ${within} miles of ${place}` : ""}, soonest first
+          {near ? `, within ${within} miles of ${place}` : browsing.all ? " in every region" : ` in ${browsing.region.name}`}, soonest first
         </p>
-        {location.unknownZip && <UnknownZip zip={location.unknownZip} fallback={near?.name} />}
+        {!near && (
+          <RegionScope
+            current={browsing}
+            path="/events"
+            query={{ category, type, days: days !== 30 ? String(days) : undefined }}
+            className="mt-2 text-sm text-muted"
+          />
+        )}
+        {location.unknownZip && <UnknownZip zip={location.unknownZip} fallback={near ? townKey(near) : undefined} />}
         {unplaced > 0 && (
           <p className="mt-2 text-sm text-muted">
             {unplaced} event{unplaced === 1 ? "" : "s"} without a known town {unplaced === 1 ? "isn’t" : "aren’t"} shown —{" "}

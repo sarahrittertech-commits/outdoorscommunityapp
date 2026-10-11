@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { TownSelect } from "@/components/TownSelect";
 import { distances } from "@/config/towns";
 
@@ -14,6 +16,8 @@ export function LocationFilter({
   town,
   zip,
   within,
+  region,
+  zipPlaceholder = "28712",
 }: {
   action: string;
   idPrefix: string;
@@ -21,6 +25,9 @@ export function LocationFilter({
   town?: string;
   zip?: string;
   within: number;
+  /** Slug of the region whose towns come first in the list. */
+  region?: string;
+  zipPlaceholder?: string;
 }) {
   return (
     <form action={action} className="mt-1 space-y-1">
@@ -28,7 +35,7 @@ export function LocationFilter({
       <label htmlFor={`${idPrefix}-near`} className="sr-only">
         Town
       </label>
-      <TownSelect id={`${idPrefix}-near`} name="near" defaultValue={town ?? ""} anywhere className="w-full py-1 text-sm" />
+      <TownSelect id={`${idPrefix}-near`} name="near" defaultValue={town ?? ""} anywhere region={region} className="w-full py-1 text-sm" />
       <label htmlFor={`${idPrefix}-zip`} className="mt-1 font-normal text-muted">
         or zip code
       </label>
@@ -41,7 +48,7 @@ export function LocationFilter({
         pattern="\d{5}(-\d{4})?"
         maxLength={10}
         defaultValue={zip ?? ""}
-        placeholder="28712"
+        placeholder={zipPlaceholder}
         className="w-full py-1 text-sm"
       />
       <label htmlFor={`${idPrefix}-within`} className="sr-only">
@@ -59,11 +66,12 @@ export function LocationFilter({
   );
 }
 
-/** The plain notice for a zip code that isn't in the built-in table (FR-BR-12). */
+/** The plain notice for a zip code that isn't in the built-in tables (FR-BR-12). */
 export function UnknownZip({ zip, fallback }: { zip: string; fallback?: string }) {
   return (
     <p role="status" className="mt-2 text-sm">
-      We don’t know the zip code “{zip}” — this board only knows zip codes in its own region.{" "}
+      We don’t cover the zip code “{zip}” yet — the board only knows zip codes in{" "}
+      <Link href="/regions">the regions it covers</Link>.{" "}
       {fallback ? `Showing results near ${fallback} instead.` : "Showing results everywhere; pick a town to narrow them."}
     </p>
   );

@@ -1,15 +1,56 @@
+import { site } from "@/config/site";
 import { towns, type Town } from "@/config/towns";
-import { zipTowns } from "@/config/zips";
+import { zipPrefixTowns, zipTowns } from "@/config/zips";
 
-const byName = new Map<string, Town>();
-for (const t of towns) {
-  byName.set(t.name.toLowerCase(), t);
-  for (const a of t.aliases ?? []) byName.set(a.toLowerCase(), t);
+/** State names a group's area might spell out ("Red River Gorge, Kentucky"). */
+const STATE_NAMES: Record<string, string> = {
+  CO: "Colorado",
+  KY: "Kentucky",
+  NC: "North Carolina",
+  TN: "Tennessee",
+  VA: "Virginia",
+  WA: "Washington",
+  WV: "West Virginia",
+};
+
+const nameCount = new Map<string, number>();
+for (const t of towns) nameCount.set(t.name.toLowerCase(), (nameCount.get(t.name.toLowerCase()) ?? 0) + 1);
+
+/**
+ * How a town is saved and passed in links: its name, or "Name, ST" when
+ * another state has a town of the same name ("Fayetteville, WV").
+ */
+export function townKey(t: Town): string {
+  return (nameCount.get(t.name.toLowerCase()) ?? 0) > 1 ? `${t.name}, ${t.state}` : t.name;
 }
 
-/** A town picked on a form, by exact name. */
+/** "Brevard, NC": how a town is shown in lists. */
+export function townLabel(t: Town): string {
+  return `${t.name}, ${t.state}`;
+}
+
+const byName = new Map<string, Town>();
+const add = (key: string, t: Town) => {
+  if (!byName.has(key.toLowerCase())) byName.set(key.toLowerCase(), t);
+};
+// A plain name used in two states finds the default region's town, so values
+// saved before regions existed ("Fayetteville" meant the one in NC) keep
+// their meaning. Those go in first; then every town in list order.
+for (const t of towns.filter((t) => t.region === site.defaultRegionSlug)) add(t.name, t);
+for (const t of towns) {
+  add(t.name, t);
+  add(`${t.name}, ${t.state}`, t);
+  if (STATE_NAMES[t.state]) add(`${t.name}, ${STATE_NAMES[t.state]}`, t);
+  for (const a of t.aliases ?? []) add(a, t);
+}
+
+/**
+ * A town picked on a form or saved earlier, by its key, "Name, ST",
+ * "Name, State", plain name or an alias. A plain name used in two states
+ * means the default region's town, else the first in the list.
+ */
 export function findTown(name: string | null | undefined): Town | undefined {
-  return name ? byName.get(name.trim().toLowerCase()) : undefined;
+  return name ? byName.get(name.trim().replace(/\s+/g, " ").toLowerCase()) : undefined;
 }
 
 /**
@@ -18,7 +59,8 @@ export function findTown(name: string | null | undefined): Town | undefined {
  */
 export function townForArea(area: string | null | undefined): Town | undefined {
   if (!area) return undefined;
-  return findTown(area) ?? findTown(area.split(/\s+and\s+|,/)[0]);
+  const first = area.split(/\s+and\s+/)[0];
+  return findTown(area) ?? findTown(first) ?? findTown(first.split(",")[0]);
 }
 
 /** Great-circle distance in miles. */
@@ -58,10 +100,17 @@ export function parseZip(input: string | null | undefined): string | undefined {
   return input?.trim().match(/^(\d{5})(?:-\d{4})?$/)?.[1];
 }
 
-/** The town a zip code belongs to, from the built-in table (no outside service). */
+/**
+ * The town a zip code belongs to, from the built-in tables (no outside
+ * service): the 5-digit table first, then the first three digits, which
+ * cover each region more roughly (the area's nearest listed town).
+ */
 export function townForZip(zip: string | null | undefined): Town | undefined {
   const parsed = parseZip(zip);
-  return parsed && Object.hasOwn(zipTowns, parsed) ? findTown(zipTowns[parsed]) : undefined;
+  if (!parsed) return undefined;
+  if (Object.hasOwn(zipTowns, parsed)) return findTown(zipTowns[parsed]);
+  const prefix = parsed.slice(0, 3);
+  return Object.hasOwn(zipPrefixTowns, prefix) ? findTown(zipPrefixTowns[prefix]) : undefined;
 }
 
 /**

@@ -6,6 +6,7 @@ import { completeOnboarding } from "@/app/actions/auth";
 import { Notice } from "@/components/Notice";
 import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
+import { getCurrentRegion } from "@/lib/currentRegion";
 import { safeNext } from "@/lib/navigation";
 import { SubmitButton } from "@/components/SubmitButton";
 import { TownSelect } from "@/components/TownSelect";
@@ -37,7 +38,7 @@ export default async function WelcomePage({ searchParams }: Props) {
         <label htmlFor="area">
           Home town <span className="hint">Optional. Your profile settings say who sees it.</span>
         </label>
-        <TownSelect id="area" name="area" blank="Choose later" />
+        <TownSelect id="area" name="area" blank="Choose later" region={(await getCurrentRegion()).region.slug} />
 
         <label htmlFor="bio">
           About you <span className="hint">Optional, up to 280 characters</span>

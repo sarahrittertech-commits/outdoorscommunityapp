@@ -178,6 +178,46 @@ Setting it up or changing the token:
 If the token leaks, change it in both places; the old one stops working at
 once.
 
+## Opening a region
+
+How a new region goes from research to the board (UC-35, FR-RG-9,
+[ADR-0010](./architecture/adr-0010-regions)). Six regions opened this way
+on 11 October 2026.
+
+1. **Pick the hubs.** One or more hub towns, a radius (100 miles unless the
+   area says otherwise), a name and a short name for the header. If two
+   hubs' areas mostly overlap (Denver and Boulder, Seattle and Bellingham),
+   make them one region.
+2. **Add the region in one change:**
+   - a migration inserting the `regions` row: slug, name, time zone,
+     centre, radius, state, `status` (`coming_soon` while groups are
+     still being reviewed, then `live`), order and hub towns;
+   - the region in `src/config/regions.ts` (short name, hubs, centre and
+     zoom, hero line, example town and meeting place);
+   - its towns in `src/config/towns.ts`, each naming the region, with
+     coordinates to two decimals;
+   - its zip codes in `src/config/zips.ts`: 5-digit codes for the towns
+     that matter most, or 3-digit prefixes mapped to a nearby town.
+   `npm test` checks that every town and zip belongs to a region that
+   exists.
+3. **Load the research** for the area with
+   `node scripts/research/load.mjs --append <folder>` (see *Seeding real
+   groups*). It only adds rows that aren't there yet.
+4. **Make candidates** of the community groups that have a website, and
+   review them on the admin page: *List* into the region, or *Skip*.
+5. **Go live:** a migration setting the region's `status` to `live`. It
+   then shows under *change* for everyone.
+
+**Moving existing groups into a region.** `scripts/regions/assign-regions.mjs`
+matches each group's area to the town list: given the groups as JSON on
+stdin it prints one guarded `update` per group to move (read it before
+running it); with `--values` it prints a single statement. Watch for plain
+town names used in more than one state (Burlington, Monroe, Clinton,
+Louisville, Charleston).
+
+To check a region's reach before opening it:
+`select name, hub_towns, radius_miles, status from public.regions order by sort_order;`
+
 ## Operations
 
 ### Password sign-in settings (UC-29)

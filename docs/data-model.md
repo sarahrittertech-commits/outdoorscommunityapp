@@ -41,15 +41,41 @@ is what almost every permission rule looks at.
 
 ### regions
 
-Where groups are. One region at launch (see the PRD's open questions); the
-table exists so a second region is data, not a redesign.
+Where groups are. One board, many regions since 11 October 2026
+([ADR-0010](./architecture/adr-0010-regions), FR-RG-1): each region is
+built around one or more hub towns. Readable by everyone; written only by
+migrations. Every group has one region (`groups.region_id`), which must be
+a live one (FR-RG-7).
 
 | Field | Type | Notes |
 | --- | --- | --- |
 | `id` | uuid | |
-| `slug` | text, unique | `western-nc` |
-| `name` | text | "Western North Carolina" |
-| `timezone` | text | IANA zone, default for new events |
+| `slug` | text, unique | `western-nc`, `front-range`, `triangle`, `puget-sound`, `new-river-gorge`, `east-tennessee` |
+| `name` | text | "Western North Carolina", "Colorado Front Range"… |
+| `timezone` | text | IANA zone; new events default to their group's region's zone (FR-RG-10) |
+| `center_lat`, `center_lng` | numeric | Where the map opens (FR-RG-5) |
+| `radius_miles` | integer, 10–250, default 100 | How far the region reaches from its hubs |
+| `state` | text | Two-letter state of the main hub |
+| `status` | text | `live` or `coming_soon` |
+| `sort_order` | integer | Order on the Regions page |
+| `hub_towns` | text[] | Hub town names, as in the app's town list |
+
+The app keeps a matching list in `src/config/regions.ts` (short name for
+the header, example town and meeting place, the hero line), and each town
+in `src/config/towns.ts` names its region.
+
+Since 11 October 2026 (`20261011000001_regions.sql`):
+
+- `event_listings` ends with `region_id`, the event's group's region.
+- `subcategory_region_counts` (security invoker, readable by everyone):
+  one row per region and subcategory, zeros included, counting active,
+  approved groups; `/browse` and the Regions page read it.
+- `list_candidate(p_candidate_id, p_region_id default null)` lists a
+  candidate into a live region (no region: the first live one) and refuses
+  others with `region_closed`.
+- Trigger `groups_region_live`: a group can only be created in, or moved
+  to, a live region (`region_closed`). Only a change of region is checked,
+  so a group in a region that later closes can still be edited.
 
 ### categories and subcategories
 
@@ -626,7 +652,7 @@ written when each is approved, with its migration and permission tests.
 | `event_questions` | UC-11 | Asker, question, answer, added-to-FAQ flag; private until answered |
 | `groups`: `organization_id` (`group_type` and the cover built with UC-24, `member_list_visibility` with UC-16) | UC-13 | |
 | `places` | UC-15, UC-12 | Name, kind, activities, coordinates, description; seeded from the research workspace's places |
-| `towns` | UC-14 | Bundled US towns and zip codes with coordinates |
+| `towns` | UC-14, UC-34 | Bundled US towns and zip codes with coordinates. Today a hand-made list per region in `src/config/towns.ts` and `zips.ts`; a full national list (Census gazetteer) waits until a region needs it (ADR-0010) |
 | `organizations` | UC-13 | National organizations that chapters link to |
 | `businesses`, `business_admins`, `business_places`, `business_groups` | UC-12 | Owner is the account that claimed it with the business email; admins are people's own accounts; places have role *its location* or *operates at*; linked groups keep their own roles. No events table of its own |
 
@@ -654,7 +680,7 @@ reads it only through site-admin functions.
 | `description` | text | short, neutral, written by the agent |
 | `source_url` | text | the public page it came from |
 | `affinity_tags` | text[] | FR-GR-11: any of `women`, `youth`, `bipoc`, `lgbtqia` |
-| `out_of_region` | boolean | |
+| `out_of_region` | boolean | Outside every live region (FR-RG-1) |
 | `status` | text | `new`, `listed`, `skipped`, `kept` |
 | `group_id` | uuid, optional | the listing it became |
 | `found_at`, `decided_at` | timestamp | |

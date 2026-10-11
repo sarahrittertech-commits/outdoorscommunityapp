@@ -86,7 +86,8 @@ waits for the site admin), UC-33 (the About me profile, with Sarah's
 visibility model: organizers' profiles public, plain members' seen by
 their groups' organizers and, if they opt in, co-members) and email links
 that work in any browser.
-Draft use cases awaiting review:
+Built on 11 October 2026: UC-34 and UC-35 (regions: one board,
+many regions built around hub cities; see ADR-0010). Draft use cases awaiting review:
 UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28. UC-25 and UC-26 wait on a domain and email. On 8 October
 Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October

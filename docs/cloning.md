@@ -5,9 +5,15 @@ title: Cloning for another board
 
 # Cloning for another board
 
-This board is the **local, all-adventure** board for Western North Carolina.
-The plan is to build it first and then clone it for the **women's outdoor
-community app**. This page is how to do that cheaply, and what it costs.
+This board is the **local, all-adventure** board, covering several regions
+since 11 October 2026 (Western North Carolina first). The plan is to build
+it first and then clone it for the **women's outdoor community app**. This
+page is how to do that cheaply, and what it costs.
+
+A clone is for a different **audience**, not a different place: a new
+region is a row in the same board ([ADR-0010](./architecture/adr-0010-regions),
+UC-35), so a clone also takes the regions mechanism and chooses its own
+regions.
 
 ## The short version
 
@@ -33,10 +39,11 @@ In full, what a clone replaces:
 | Group type drawings | `src/brand/GroupTypeIcon.tsx` (keyed by type: club, meetup, volunteer, nonprofit, chapter) | Its own drawings, or keep these; the type names come from `src/lib/groupTypes.ts` and are shared |
 | Sample photos for a couple of groups | `src/brand/activityPhotos.ts` and `public/activities/` | Its own, keyed by its group slugs, or an empty list |
 | Brand guide                                                                                                                                 | `docs/brand.md`                                                                                       | Its own palette, with contrast ratios                                                         |
-| Name, description, audience, region, contact, home page headline and intro, map tiles and starting point, search example, example town and meeting place for form hints, default join setting, the profile fill-in-the-blank prompts (UC-33) | `src/config/site.ts`                                                                                  | New name and wording; `defaultJoinPolicy: "approval"` if groups should start approval-only    |
-| Region and category list                                                                                                                    | `supabase/migrations/20260925000005_seed_directory.sql`                                               | Replace the file's contents                                                                   |
-| Towns for location search and the map | `src/config/towns.ts` | Its own towns with coordinates, and its default town |
-| Zip codes for location search | `src/config/zips.ts` | Its region's zip codes, each mapped to one of its towns |
+| Name, description, audience, default region (`defaultRegionSlug`) and the time zone for dates that belong to no event (`defaultTimezone`), contact, home page headline, map tiles, default join setting, the profile fill-in-the-blank prompts (UC-33) | `src/config/site.ts`                                                                                  | New name and wording; `defaultJoinPolicy: "approval"` if groups should start approval-only    |
+| Category list (and the first region)                                                                                                        | `supabase/migrations/20260925000005_seed_directory.sql`                                               | Replace the file's contents                                                                   |
+| Regions: names, hubs, centre and zoom, the hero line, example town, meeting place and zip for form hints | `src/config/regions.ts`, mirroring the `regions` rows a migration adds | Its own regions (it can start with one); the file and the rows must match |
+| Towns for location search and the map | `src/config/towns.ts` | Its own towns with coordinates, each naming its region |
+| Zip codes for location search | `src/config/zips.ts` | Its regions' zip codes (5-digit) or zip prefixes (3-digit), each mapped to one of its towns |
 | Legal and community wording                                                                                                                 | `src/app/{about,guidelines,terms,privacy}/page.tsx`                                                   | Rewrite for the audience                                                                      |
 | Who the board is for                                                                                                                        | `docs/prd.md`, `docs/personas.md`, `CLAUDE.md`, `README.md`                                           | Its own audience and product context                                                          |
 | Seed listings and the research agent's areas                                                                                                | `scripts/research/listings.sql` (the curated groups) and the area list in `scripts/research/agent.md` | Its own research, its own areas                                                               |

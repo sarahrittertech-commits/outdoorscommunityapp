@@ -22,6 +22,11 @@ Ship a web app where anyone can browse outdoor groups by category without an
 account, and where signed-in people can join groups, RSVP to events and talk
 in group discussion boards, with groups run by an owner and admins.
 
+The board started with one region, Western North Carolina, and since 11
+October 2026 grows **region by region** across the US: each region is
+built around one or more hub cities that Sarah has researched first
+(UC-34, UC-35).
+
 ## Success criteria
 
 The project succeeds if all five are true on launch day:
@@ -97,7 +102,7 @@ The summary by area:
 
 | Area | Must (MVP) | Should | Could |
 | --- | --- | --- | --- |
-| Browse | Category directory, subcategory listings, group and event pages | Category-wide listing, upcoming events list, keyword search | Region filter |
+| Browse | Category directory, subcategory listings, group and event pages, regions (FR-RG-1 to FR-RG-3, FR-RG-6 to FR-RG-8; added 11 Oct) | Category-wide listing, upcoming events list, keyword search | — |
 | Accounts | Magic-link sign-in, profile, my stuff, delete account | Public profile page | Google sign-in |
 | Groups | Create, edit, discussions on/off, join policy | Rules text, archive, creation limit | New-group review queue |
 | Membership | Join, request to join, leave, roles, remove/ban | Transfer ownership, join question | — |
@@ -281,6 +286,26 @@ TR-SEC-12.
 
 None of this changes what the board does or how any page looks.
 
+## Decisions — 11 October 2026
+
+Sarah asked to take the board national, region by region, after
+researching clubs, venues and shops in dozens of cities and finding the
+same mountain biking and climbing communities overlapping between them.
+Approved in auto mode the same day; the reasoning is in
+[ADR-0010](./architecture/adr-0010-regions).
+
+| Decision | What it means |
+| --- | --- |
+| **One board, many regions** | One site, one database, one account for everyone. A region is a row (name, hub towns, centre, radius, time zone, status), not a separate copy of the site. Clones stay for a different audience (the women's board). |
+| **Launch regions** | Western North Carolina (Asheville); Colorado Front Range (Denver, Boulder); Raleigh and the Triangle; Seattle and Bellingham; New River Gorge (Fayetteville, WV); Knoxville and East Tennessee. Denver and Boulder, and Seattle and Bellingham, share a region each because their 100-mile areas almost entirely overlap. |
+| **Visitors see one region at a time** | The header names it, with *change*. A shared link's `?region=` wins, then the visitor's earlier choice (a first-party cookie), then a signed-in member's home-town region, then Western North Carolina. It is a filter the visitor chose and the page states, so P2 (*lists, not feeds*) holds: the same filters give everyone the same list (FR-BR-8). |
+| **Regions open after research** | Sarah researches an area (Gemini, UC-9), loads it into the private research tables and lists groups from the admin page into the region. Nothing is listed unreviewed (UC-35). |
+| **Town search per region** | Each region brings its own towns; zip codes outside Western North Carolina match by their first three digits, so distances there are approximate. A full national town and zip list waits until it's needed. |
+| **Map tiles** | Still OpenStreetMap's own tiles; with six regions, moving to a tile provider's free tier comes before any promotion (ADR-0007). |
+
+Not decided yet (open questions below): which regions come next, whether a
+region needs local moderators, and the order for research beyond the six.
+
 ## Open questions
 
 These need Sarah's decision before or during build:
@@ -309,7 +334,14 @@ These need Sarah's decision before or during build:
   all-adventure** local board. The women's outdoor community app comes
   later as a clone of it — see [Cloning](./cloning).
 - ~~**Geography.**~~ Settled 25 September 2026: **one region**, Western North
-  Carolina. The data model supports more regions later.
+  Carolina. **Changed 11 October 2026:** the board goes national region by
+  region, starting with six regions (see *Decisions — 11 October 2026*).
+- **Which regions next, and when.** Sarah has research loaded for Burlington,
+  both Portlands, Austin, Birmingham, Bozeman, Sedona, Chattanooga, Salt
+  Lake City, Reno, Bentonville and eleven Eastern cities. Each opens after
+  its groups are reviewed (UC-35).
+- **Local help with moderation.** One site admin for many regions; whether
+  a region gets a trusted local moderator is open.
 - ~~**Who can create groups (UC-27).**~~ Settled 9 October 2026: **option
   B, approve only a person's first group**, built the same day. Anyone
   signed in can still start up to 3 groups (FR-GR-7); their first waits for

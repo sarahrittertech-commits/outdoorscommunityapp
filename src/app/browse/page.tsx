@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ActivityIcon } from "@/brand/ActivityIcon";
-import { site } from "@/config/site";
+import { RegionScope } from "@/components/RegionScope";
+import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
 import { createClient } from "@/lib/supabase/server";
 
 type Subcategory = { slug: string; name: string; count: number };
@@ -13,14 +14,28 @@ export const metadata: Metadata = {
   description: "Every activity on the board, with the number of groups in each.",
 };
 
-/** FR-BR-1: the whole directory on one page, Craigslist-style. Linked from the home page's activity row. */
-export default async function BrowsePage() {
+type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
+
+/**
+ * FR-BR-1: the whole directory on one page, Craigslist-style. Linked from
+ * the home page's activity row. Counts are for the region being browsed
+ * (subcategory_region_counts), or every region with `?region=all`.
+ */
+export default async function BrowsePage({ searchParams }: Props) {
+  const current = await getCurrentRegion((await searchParams).region);
+  const regionId = await regionFilterId(current);
   const supabase = await createClient();
-  const { data: rows } = await supabase
-    .from("subcategory_group_counts")
-    .select("*")
-    .order("category_sort_order")
-    .order("subcategory_sort_order");
+  const columns = "category_slug, category_name, subcategory_slug, subcategory_name, group_count";
+  const { data: rows } = regionId
+    ? await supabase
+        .from("subcategory_region_counts")
+        .select(columns)
+        .eq("region_id", regionId)
+        .order("category_sort_order")
+        .order("subcategory_sort_order")
+    : await supabase.from("subcategory_group_counts").select(columns).order("category_sort_order").order("subcategory_sort_order");
+  // Category and subcategory links carry "all regions" along when it's on.
+  const scoped = (path: string) => (current.all ? `${path}?region=all` : path);
 
   const categories: Category[] = [];
   for (const row of rows ?? []) {
@@ -37,23 +52,24 @@ export default async function BrowsePage() {
     <>
       <h1>Browse all activities</h1>
       <p className="mt-1 text-muted">
-        {site.regionName} · categories A–Z · {total} {total === 1 ? "group" : "groups"} · <Link href="/events">upcoming events</Link> ·{" "}
-        <Link href="/groups/new">start a group</Link>
+        Categories A–Z · {total} {total === 1 ? "group" : "groups"} ·{" "}
+        <Link href="/events">upcoming events</Link> · <Link href="/groups/new">start a group</Link>
       </p>
+      <RegionScope current={current} path="/browse" />
 
       <div className="mt-6 gap-8 sm:columns-2 lg:columns-3">
         {categories.map((category) => (
           <section key={category.slug} className="mb-6 break-inside-avoid" aria-labelledby={`cat-${category.slug}`}>
             <h2 id={`cat-${category.slug}`} className="mt-0 flex items-center gap-2 border-b border-rule pb-1 text-xl">
               <ActivityIcon slug={category.slug} className="h-6 w-6" />
-              <Link href={`/c/${category.slug}`} prefetch={false} className="text-heading no-underline visited:text-heading hover:underline">
+              <Link href={scoped(`/c/${category.slug}`)} prefetch={false} className="text-heading no-underline visited:text-heading hover:underline">
                 {category.name}
               </Link>
             </h2>
             <ul className="mt-2 space-y-0.5">
               {category.subcategories.map((sub) => (
                 <li key={sub.slug}>
-                  <Link href={`/c/${category.slug}/${sub.slug}`} prefetch={false}>{sub.name}</Link>{" "}
+                  <Link href={scoped(`/c/${category.slug}/${sub.slug}`)} prefetch={false}>{sub.name}</Link>{" "}
                   <span className="text-sm text-muted">({sub.count})</span>
                 </li>
               ))}
