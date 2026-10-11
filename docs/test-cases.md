@@ -195,6 +195,19 @@ web app is not the thing enforcing the rule.
 | PT-187 | The reported person can't see the report (FR-MD-8) | Retaliation against a reporter |
 | PT-188 | Requests carry the server's time (FR-DM-6, TR-SEC-8) | The daily limit is bypassed with an old date |
 | PT-189 | Read times can be changed only by their owner (FR-DM-4) | Someone's unread count is tampered with |
+| PT-190 | Rules 1 and 5: the member and the site admin see a profile; a signed-in user who shares no group, and a visitor, get the display name only, through `profile_card` and every section table (FR-PR-8) | A plain member's town, goals or groups leak to strangers |
+| PT-191 | Rule 2: a visitor sees the whole profile of a page admin or page manager of a listed group, but not of an organizer whose group is still waiting for review, nor of a former manager (FR-PR-8) | Organizers are hidden from the people deciding to join, or ex-organizers stay exposed |
+| PT-192 | Rule 3: organizers see members of their group and people asking to join it, but not someone banned from it, nor a member of only another group; plain members don't see requesters (FR-PR-8) | An organizer of one group reads members of another |
+| PT-193 | Rule 4: by default a fellow member sees the display name only; after opting in, co-members of an active group see the profile, but not members of other groups, pending requesters or visitors, and not once the shared group is archived (FR-PR-10) | Opting in shares more widely than promised |
+| PT-194 | Show/Hide: a hidden town, activities or goals can't be read through the API by anyone but the owner, the site admin included; shown sections still can (FR-PR-7) | Hiding is only cosmetic |
+| PT-195 | Earlier years' goals are visible to their owner only and can't be changed; a new goal always gets the current year (FR-PR-5) | Last year's list leaks, or a goal is back-dated |
+| PT-196 | At most 3 fill-in-the-blanks and 10 goals a year; prompt keys, answers, goals and the blurb are length- and format-checked; mismatched form lists are refused (FR-PR-4, FR-PR-5) | Profiles grow without limit |
+| PT-197 | Only real activity categories can be stored (FR-PR-3) | Made-up activities |
+| PT-198 | Visitors never write; nobody writes someone else's profile; suspended accounts and accounts without the terms can't save one (FR-PR-7, TR-SEC-2) | Profile defacement |
+| PT-199 | The profile-photos bucket is private; uploads only into your own folder, at most 3 files, with a writable account; the photo path must be in your folder; only someone who may see the photo section reads the current file, never spare files, and not once it is hidden; nobody else deletes your file (FR-PR-1, TR-SEC-12) | A private photo is read, or replaced by someone else |
+| PT-200 | Only the site admin clears a section or removes a photo; each removal is logged with what was removed, and the photo's file is returned for deletion (FR-PR-9) | Silent or unauthorized removals |
+| PT-201 | *Groups* shows only memberships the reader may see: a group whose member list is for organizers only, a pending request and a ban never appear (FR-PR-6, FR-MB-10) | A profile undoes a group's member-list privacy |
+| PT-202 | Deleting an account removes every About me section; onboarding writes the town and blurb to the About me profile (FR-AC-6, FR-PR-2) | Personal data outlives the account |
 
 ## Automated — unit
 
@@ -212,6 +225,7 @@ Run by the unit test command in CI. Pure functions only.
 | UT-8 | Password rules (FR-AC-17) | Under 10 characters or over 72 bytes is refused; passwords are never trimmed; the common-password list is refused whatever the case; both copies must match; each failure names its rule |
 | UT-9 | Sign-in limiter (FR-AC-19) | 5 failures for an address in 15 minutes pause it, case and spaces ignored; the pause lifts 15 minutes later; spread-out failures and a successful sign-in reset it; memory stays bounded |
 | UT-10 | Calendar dates (FR-AC-9) | The month grid is whole Sunday-first weeks (four to six rows); weeks and month steps cross month and year ends; an event sits on the day it starts in its own zone (11 pm in Los Angeles stays on Friday); the query window covers every zone; unknown view, date, filter or group values fall back to the defaults |
+| UT-11 | About me form (FR-PR-2 to FR-PR-7) | The form's rows and Show/Hide selects are collected; nothing is shared or hidden by default; prompts not on this board's list, or picked twice, are refused; a blank answer drops its prompt; lengths match the database; every prompt key has the database's shape; the goal year is UTC; Groups can't be cleared; the welcome form's town must be on the town list |
 
 ## Automated — end to end
 
@@ -242,7 +256,7 @@ Playwright in CI against the local stack with seed data.
 
 ## Planned — pending use case review
 
-Draft use cases UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28 and UC-33 are not approved yet, so these have no
+Draft use cases UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28 are not approved yet, so these have no
 requirement numbers. They show what each would have to prove; they become
 real tests, with requirements, once the use case is approved.
 

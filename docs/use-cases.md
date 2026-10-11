@@ -937,64 +937,66 @@ and the member can see what happened to it.
 
 ## UC-33 — Tell people about yourself
 
-> **Draft, awaiting review. Decisions needed.** Requested by Sarah on 10
-> October 2026: an *About me* profile in the spirit of early Facebook (a
-> small photo, a few plain sections, the groups you're in), each section
-> private or left blank. Written for the recommended options; the
-> decisions and their cost are below.
+> **Approved and built 10 October 2026,** with a different visibility model
+> from the draft's "signed-in members only" (Sarah's decision, below).
+> Requested by Sarah the same day: an *About me* profile in the spirit of
+> early Facebook (a small photo, a few plain sections, the groups you're
+> in), each section shown or hidden by its owner. Sarah plans user testing,
+> demos and interviews on profile sharing, so the visibility model may
+> change.
 
-**Actor:** A member filling in their profile, then another member reading
-it
+**Actor:** A member filling in their profile, then someone reading it
 
 **Trigger:** A member wants the people they'll meet on a trail to know a
-little about them before the day; or a member wonders who just asked to
-join their group or sent them a message request.
+little about them before the day; or an organizer wonders who just asked
+to join their group or sent them a message request.
 
 **Flow:**
 
-1. From *My stuff → Profile*, opens *Edit my profile*. Every section is
-   optional and starts blank.
-2. Adds a small photo of themselves (a square crop, with a one-line
-   description).
+1. From *My stuff → Profile*, opens their profile settings. Every section
+   is optional and starts blank.
+2. Adds a small photo of themselves, often doing their sport (shown
+   320 px square, with a one-line description).
 3. Picks a **home town** from the board's town list and writes a short
    **blurb** (today's bio, 280 characters).
 4. Ticks **activities I enjoy** from the board's activity list (hiking,
-   camping, paddling, foraging…).
+   camping, paddling…).
 5. Fills in up to three **fill-in-the-blanks** from a fixed list, such as
    *I've always wanted to try* ___ (snowboarding) or *My favorite place
    outside is* ___ (the Grand Tetons).
 6. Writes up to ten **adventure goals for this year**, and ticks each one
    off when it's done.
-7. Chooses, for each section, **Show** or **Hide**. *Groups I'm in* is
-   shown by default and lists only groups the reader could see anyway.
-8. Saves, and sees the profile as other members will.
-9. Another signed-in member opens the profile from a post, an RSVP list
-   or a message request: the photo with the blurb, town and activities
-   beside it, then the fill-in-the-blanks, this year's goals with ticks,
-   and the groups, each linked.
+7. Chooses, for each section, **Show** or **Hide**, and whether to **share
+   the profile with members of their groups** (off unless ticked).
+8. Saves, and opens the profile to see it.
+9. Someone opens the profile from a post, an RSVP list, a join request or a
+   message request. If they may see it: the photo with the blurb, town and
+   activities beside it, then the fill-in-the-blanks, this year's goals
+   with ticks, and the groups, each linked. If not: the display name only.
 
-**Requirements:** to be written after review (drafts FR-PR-1 to FR-PR-9).
+**Requirements:** FR-PR-1 to FR-PR-10.
 
 **Succeeds when:** a member can see in ten seconds who someone is and what
 they're into, nothing a member hid is ever shown to anyone else (on the
 page or through the API), and a profile left blank still looks finished.
 
-**Options and their cost:**
+**Decisions (10 October 2026):**
 
-| Decision | Recommended | Alternatives and their cost |
+| Decision | Chosen | Why, and the cost |
 | --- | --- | --- |
-| **Profile photo** (reverses FR-AC-3, *No profile photos*) | **Yes, optional and small**: one square photo, re-encoded and stripped like event photos (TR-SEC-9), reportable through *Report this profile*, removable by the site admin. | No photo: nothing to moderate, but profiles look empty and people are harder to recognise at a trailhead. A photo is the one part of this that needs moderation: someone will upload something that isn't them, or isn't appropriate. |
-| **Who sees a profile** | **Signed-in members only.** Visitors and search engines see only the display name. | Public: friendlier to share, but anyone (and any scraper) could read someone's home town, goals and groups. |
-| **Show or hide** | **Per section, Show or Hide.** No "friends only" tier. | Three levels (everyone, members of my groups, only me): finer control, but a second permission model to build and test for every section. |
-| **Groups I'm in** | **Only groups the reader could already see the member list of** (the group's own member-list privacy, FR-MB-10, wins). | Every group: simpler, but it would undo a group's choice to keep its member list private. |
-| **Adventure goals** | **This year's list only**, up to ten, each ticked off or not. On 1 January it starts empty; last year's list stays visible to its owner only. | Keep past years public: a nice record, but a growing page and an archive to design. |
-| **Fill-in-the-blanks** | **A fixed list of about eight prompts**, answer up to three, 60 characters each. | Free-form questions: more personal, but any question at all is a second free-text box to moderate. |
+| **Profile photo** (reverses FR-AC-3, *No profile photos*) | **Yes, optional and small**: one 320 px square photo of the member, often doing their sport, not necessarily a face close-up. Re-encoded and stripped like event photos (TR-SEC-9), kept in a private bucket, reportable through *Report this profile*, removable by the site admin. | People are easier to recognise at a trailhead. A photo is the one part that needs moderation. |
+| **Who sees a profile** | **Sarah's model:** (1) the member and the site admin; (2) **everyone**, signed out included, when the member is a page admin or page manager of a listed group ("if you are a group admin you should have a public profile"); (3) page admins and page managers of a group the member is in or has asked to join ("group admins see people's profiles"); (4) if the member opts in, other members of an active group they share; (5) nobody else, who sees the display name only. | Organizers can judge join requests, and the people running groups are visible to the people deciding whether to join. Plain members stay private unless they choose otherwise. Replaces the draft's *signed-in members only*. |
+| **Show or hide** | **Per section, Show or Hide**, on top of who can see. A hidden section is seen by its owner only. | One setting per section; no second permission tier to build and test. |
+| **Groups I'm in** | **Only groups the reader could already see the member list of** (the group's own member-list privacy, FR-MB-10, wins). | A group's choice to keep its member list private is never undone by a profile. |
+| **Adventure goals** | **This year's list only**, up to ten, each ticked off or not. On 1 January (UTC, the server's clock) it starts empty; last year's list stays visible to its owner only. | No growing archive to design. |
+| **Fill-in-the-blanks** | **A fixed list of eight prompts** in `src/config/site.ts` (so the women's board can have its own), answer up to three, 60 characters each. | Free-form questions would be a second free-text box to moderate. |
+| **Search engines** | **Every profile stays out of search engines,** organizers' included. | An organizer's profile is public to read, but nobody needs it indexed. |
 
 **Will it help tell people from bots?** A little, not much. A filled-in
-profile with a photo and goals is a signal a person can read when deciding
-on a join request or a message request. The real protections stay where
-they are: a confirmed email, rate limits, first-group review (UC-27) and
-message requests (UC-20).
+profile with a photo and goals is a signal an organizer can read when
+deciding on a join request. The real protections stay where they are: a
+confirmed email, rate limits, first-group review (UC-27) and message
+requests (UC-20).
 
 **Not part of this:** a wall or timeline, likes or comments on goals,
 friends or followers, "people you may know", or showing who viewed a

@@ -14,9 +14,9 @@ One page that separates the branded app as it runs today from the new
 features proposed in the 8 October Magic Patterns design or requested by
 Sarah the same day. Live features
 link to their requirements; new ones link to their draft use case. Rows under *New features* say *Built* where they were built on 9 October
-(UC-14 to UC-16, UC-19, UC-20, UC-22, UC-24, UC-29 to UC-32); the rest are drafts.
+(UC-14 to UC-16, UC-19, UC-20, UC-22, UC-24, UC-29 to UC-32) or 10 October (UC-33); the rest are drafts.
 
-Last updated 9 October 2026.
+Last updated 10 October 2026.
 
 ## Live in the branded app
 
@@ -29,7 +29,7 @@ permission enforced and tested in the database.
 | Events | Events page with activity and time-window filters, grouped by month; event pages; add to calendar | UC-7 | FR-BR-4, FR-BR-7, FR-EV-7 |
 | Communities | One table of every group, A to Z, filterable by activity | — | FR-BR-10 |
 | Search | Keyword search over groups and events | — | FR-BR-5 |
-| Accounts | Email and password sign-in with a confirmed email, forgot and change password; 18+ and terms, profile, *My stuff*, delete account, public profiles | UC-2, UC-29 | FR-AC-2 to FR-AC-7, FR-AC-17 to FR-AC-21 |
+| Accounts | Email and password sign-in with a confirmed email, forgot and change password; 18+ and terms, profile, *My stuff*, delete account, profile pages | UC-2, UC-29 | FR-AC-2 to FR-AC-7, FR-AC-17 to FR-AC-21 |
 | Groups | Start, edit, archive; open or approval joining with a question; rules; discussions on or off; limit of 3; a person's first group waits for the site admin (*New groups*) | UC-3, UC-27 | FR-GR-1 to FR-GR-8, FR-GR-21, FR-GR-22 |
 | Membership and roles | Join, request, leave; page admin, up to two page managers, member; approve, remove, ban; transfer ownership | UC-2, UC-4, UC-31 | FR-MB-1 to FR-MB-9, FR-MB-11 |
 | Invites | Invite link (7 days, 30 days or until turned off) that joins people straight in; email invites for members and page managers built but waiting on the board's email setup | UC-31 | FR-MB-12 to FR-MB-16 |
@@ -100,6 +100,7 @@ until the domain is chosen and email sending through Resend is set up.
 | **Reminders** list and unread-message count | In scope | UC-23 | FR-AC-10 |
 | **Replies to replies**, one level | Built 9 October 2026 | UC-19 | FR-DS-9 |
 | **Direct messages** that start as requests | **Built 9 Oct** (migration `20261010000013` applied 10 Oct) | UC-20 | FR-DM-1 to FR-DM-6, ADR-0006 |
+| **About me profile**: small photo, home town, blurb, activities, fill-in-the-blanks, this year's adventure goals, groups; Show or Hide per section; organizers' profiles public, plain members' seen by their groups' organizers (and co-members if they opt in) | **Built 10 Oct** (migration `20261010000014` to apply) | UC-33 | FR-PR-1 to FR-PR-10 |
 
 ### Businesses
 

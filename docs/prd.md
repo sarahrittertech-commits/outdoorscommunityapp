@@ -191,6 +191,14 @@ Added 9 October 2026: **a person's first group waits for review**
 (UC-27, FR-GR-8, FR-GR-21, FR-GR-22). The site admin approves or declines
 it from *New groups* on the admin page; later groups list at once.
 
+Added 10 October 2026: **the About me profile** (UC-33, FR-PR-1 to
+FR-PR-10). A small photo, home town, blurb, activities, fill-in-the-blanks,
+this year's adventure goals and groups, each shown or hidden by its owner.
+Profiles of page admins and page managers are public; a plain member's is
+seen by the organizers of their groups, and by co-members only if they opt
+in. This reverses *No profile photos* (FR-AC-3) and narrows the public
+profile (FR-AC-4); Sarah will test the sharing model with users.
+
 Not built yet:
 
 | Item | Requirement | Why it waits |
