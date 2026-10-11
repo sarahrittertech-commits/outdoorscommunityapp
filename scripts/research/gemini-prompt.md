@@ -71,3 +71,40 @@ Cities for the live regions (11 October 2026): Denver, Boulder, Raleigh,
 Seattle, Bellingham, Fayetteville (West Virginia) and Knoxville. The
 Front Range, Seattle–Bellingham, New River Gorge and East Tennessee regions
 are thin until these runs come back with links.
+
+## Events prompt
+
+Events go out of date and AI tools fill gaps with invented links: the 11
+October Boone events list cited one race page for eleven different events.
+So this prompt starts from the groups, wants each event's own page, and
+puts affinity events (women's rides, clinics, meetups) first. Events load
+into the private research tables as unverified; the board shows an event
+only once its group is listed and the event checks out (FR-RS-8).
+
+```text
+List upcoming outdoor events within 100 miles of [CITY, STATE] in the next 6 months, for hiking, backpacking, climbing and mountain biking.
+
+Start with these groups' own calendars, event pages and public Instagram or Facebook posts, then search more widely: [GROUP NAMES — e.g. for Boone: Trail Sisters High Country NC, Boone Area Girls MTB, Boone Area Cyclists, High Country Trail Keepers, Carolina Climbers Coalition, Northwest NC Mountain Bike Alliance].
+
+Do women's, queer, BIPOC, adaptive and beginner events FIRST: group rides, clinics, meetups, skills days, women's ride days at bike parks and gyms.
+
+Rules:
+1. Every event needs its OWN page: the event page, the organizer's calendar entry, a registration page, or a public post announcing it. Never reuse one link for two events. If you can't find the event's own page, leave the event out.
+2. The date must appear on that page. Copy the date and start time as written. If the page says "tentative" or gives no year, say so in "date_note". Never guess a date from last year's event.
+3. Recurring events (a weekly ride): one row, with the pattern in "recurrence" and the next date in "start_date".
+4. The organizer must be a real group or business with its own website or public page. Never invent an organizer name.
+5. Description: one factual sentence in your own words, at most 200 characters. No marketing words.
+6. No people's names, email addresses or phone numbers.
+7. At the end, after the code block: "Found: N events (of which N women's, inclusive or beginner)." Then "Searches I ran:" and "Left out:" (events you saw but couldn't source).
+
+Output: a CSV in one code block, every field quoted, with exactly this header:
+
+"event_name","organizer","organizer_website","venue","town","state","start_date","end_date","start_time","recurrence","date_note","activities","event_url","women_specific","beginner_friendly","description","confidence"
+
+- start_date and end_date: YYYY-MM-DD
+- activities: semicolon-separated, only from: hiking; backpacking; rock_climbing; bouldering; indoor_climbing; mountaineering; mountain_biking; trail_running; trail_stewardship; skills_courses; camping; social_meetup
+- women_specific and beginner_friendly: Yes | No | Unknown
+- confidence: high (the event's own page shows this date) | medium (a public post or listing shows it) | low (couldn't confirm). Be strict.
+
+If the CSV is too long, stop after a complete row and write CONTINUE.
+```
