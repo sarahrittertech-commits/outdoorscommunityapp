@@ -10,8 +10,8 @@ select throws_ok(
   format($$ insert into public.reports (reporter_id, target_type, target_id, reason) values (%L, 'group', %L, 'spam') $$, tests.uid('suspended'), tests.id('g1')),
   '42501', null, 'PT-16 suspended users cannot report'
 );
-update public.profiles set bio = 'still here' where id = tests.uid('suspended');
-select is((select bio from public.profiles where id = tests.uid('suspended')), null, 'PT-16 suspended users cannot edit their profile');
+update public.profiles set display_name = 'Still Here' where id = tests.uid('suspended');
+select is((select display_name from public.profiles where id = tests.uid('suspended')), 'Suspended', 'PT-16 suspended users cannot edit their profile');
 
 -- PT-17: terms first ----------------------------------------------------------
 select tests.as('noterms');
