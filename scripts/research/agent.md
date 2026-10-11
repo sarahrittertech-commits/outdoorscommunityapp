@@ -72,7 +72,7 @@ the intake answers `401`, stop and say so in your summary.
      reach, and any city on Sarah's research list (see the PRD's open
      questions).
 
-   **Affinity first (FR-RS-10).** In every region, every week, before the
+   **Affinity first (FR-RS-11).** In every region, every week, before the
    activity searches: women's, queer and LGBTQ+, BIPOC, adaptive, youth and
    family groups for the week's activities, including national networks'
    local chapters (Trail Sisters, Ladies Climbing Coalition, Radical

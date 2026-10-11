@@ -207,7 +207,7 @@ on 11 October 2026.
    groups*). It only adds rows that aren't there yet.
 4. **Make candidates** of the community groups that have a website, and
    review them on the admin page: *List* into the region, or *Skip*.
-5. **Bias check (FR-RS-11):** before going live, make sure the research
+5. **Bias check (FR-RS-12):** before going live, make sure the research
    included the affinity pass (women's, queer and LGBTQ+, BIPOC, adaptive,
    youth and family groups) and that every group on the city's
    known-groups list is either a candidate or a listing. Count them:

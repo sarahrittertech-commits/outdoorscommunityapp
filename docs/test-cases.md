@@ -67,6 +67,7 @@ web app is not the thing enforcing the rule.
 | PT-38 | Only the site admin unsuspends an account, after which it can write again (FR-MD-3) | Anyone lifts a suspension |
 | PT-39 | Every SECURITY DEFINER function in the public schema is on a reviewed list, and a new one fails by name | A function that skips RLS ships without review |
 | PT-40 | A find with a similar name or the same website as something already known is kept and tagged as a possible duplicate; an exact name match is dropped; shared sites like Facebook never count as the same website (FR-RS-10) | Near duplicates listed twice, or real groups lost |
+| PT-40b | A find whose name exactly matches a research note comes in as a new candidate flagged as a possible duplicate of it; once the site admin has decided, the same name is dropped silently (FR-RS-10, 11 October 2026) | Research notes hide groups nobody reviewed |
 | PT-41 | Events found for an unclaimed listing publish without review only from a group find whose event links are on the listing's own website (FR-RS-8) | A web page tricks the agent into putting a phishing link on a live listing |
 | PT-42 | Only a group's owner and admins set its website, and only http(s) addresses are stored (FR-GR-23) | A member points the group's link somewhere else, or a script link is stored |
 | PT-50 | Owner and admins set an event's description, details, price, RSVP choice, sign-up link and waitlist; members can't (FR-EV-23 to FR-EV-28) | A member edits an event's price or turns off its RSVPs |
