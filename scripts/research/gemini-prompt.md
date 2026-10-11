@@ -11,7 +11,9 @@ Why it is shaped this way (lessons from the 10–11 October lists):
 - One city per run: asking for many cities returns 8 to 10 rows each.
 - One real organization per row, official name, no "X & Y" rows.
 - `kind` and `activities` match the board's import, so rows load cleanly.
-- A website and a separate `source_url` for every row, and a confidence,
+- A website, a separate `source_url`, Instagram, Facebook and any other
+  public pages that mention the group (`other_sources`) for every row, and
+  a confidence,
   because the board refuses candidates without a link and some links in
   AI output are guessed.
 - No people's names, emails or phone numbers (FR-RS-2).
@@ -35,7 +37,7 @@ Find every real, currently active:
 Rules:
 1. One real organization or place per row. Never combine two into one row ("X & Y"). Use the official name as it appears on its own website.
 2. Do not invent anything. If you can't confirm something exists and is active, leave it out. If you can't find a field, leave it blank rather than guessing.
-3. Open each website before you list it. "website" must be the official homepage (not a deep link, not a directory). "source_url" is the page where you confirmed the details (it can be the same page).
+3. Open each website before you list it. "website" must be the official homepage (not a deep link, not a directory). "source_url" is the page where you confirmed the details (it can be the same page). Give every source you used: the organization's Instagram and Facebook pages in their own columns, and any other pages that mention it (Meetup, a shop or gym event page, a news story, a national network's chapter page) in "other_sources". Only pages anyone can read without signing in.
 4. If an organization is within 100 miles of a different major city, still list it once here and put the actual town and distance.
 5. Description: 1–2 factual sentences in your own words, at most 300 characters. No marketing words (premier, legendary, world-class, best). Say what they do and where (trails, crags, ride days).
 6. No people's names, email addresses or phone numbers, ever.
@@ -47,12 +49,14 @@ Rules:
 
 Output: a CSV in a single code block, with exactly this header and these allowed values, every field quoted:
 
-"kind","name","type","activities","town","state","target_city","approx_miles","website","source_url","instagram","women_specific","description","recent_activity","confidence"
+"kind","name","type","activities","town","state","target_city","approx_miles","website","source_url","instagram","facebook","other_sources","women_specific","description","recent_activity","confidence"
 
 - kind: group | venue | business
 - type: one of: hiking club, backpacking club, climbing club, mountain bike club, trail organization, women's group, inclusive group, university club, meetup group, trail system, bike park, state or national park/forest, outdoor crag, climbing gym, bouldering gym, bike shop, outfitter
 - activities: semicolon-separated, only from: hiking; backpacking; rock_climbing; bouldering; indoor_climbing; mountaineering; mountain_biking; trail_running; trail_stewardship; skills_courses; camping; social_meetup
 - instagram: the public handle with @ if you found one, else blank
+- facebook: the full link to the public Facebook page or group if there is one, else blank
+- other_sources: other public links that mention the organization, separated by " ; ", else blank
 - women_specific: Yes | No | Unknown
 - recent_activity: the most recent dated post, event or update you saw (YYYY-MM), else blank
 - confidence: high (official site confirms it) | medium (only third-party sources) | low (couldn't confirm)

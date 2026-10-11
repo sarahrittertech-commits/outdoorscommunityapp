@@ -322,8 +322,8 @@ Instagram.
 | Decision | What it means |
 | --- | --- |
 | **Principle P8, complete, not featured** | Above. |
-| **Research looks for affinity groups first** | Every research run, Gemini or the weekly agent, searches for women's and inclusive groups first, from a per-city list of known groups and national networks' local chapters, and reports how many it found (FR-RS-10). |
-| **A bias check before a region opens** | A region doesn't go live until its research includes an affinity pass and its candidates have been checked against the known-groups list (FR-RS-11). Measured on 11 October: 34 of 692 researched organizations (5%) were women-specific; 12 of Western North Carolina's 62 listed groups and none of the Triangle's 14 carry an affinity tag. |
+| **Research looks for affinity groups first** | Every research run, Gemini or the weekly agent, searches for women's and inclusive groups first, from a per-city list of known groups and national networks' local chapters, and reports how many it found (FR-RS-11). |
+| **A bias check before a region opens** | A region doesn't go live until its research includes an affinity pass and its candidates have been checked against the known-groups list (FR-RS-12). Measured on 11 October: 34 of 692 researched organizations (5%) were women-specific; 12 of Western North Carolina's 62 listed groups and none of the Triangle's 14 carry an affinity tag. |
 | **Not featured** | Sarah, the same day: affinity groups must not be put front and centre, which would attract the wrong kind of attention; they just must not be left off. No affinity showcase on the home page; the existing affinity tags (FR-GR-11) stay as they are. |
 | **Safety for affinity groups (draft)** | UC-36 (keep our space our own) is drafted for review. |
 
