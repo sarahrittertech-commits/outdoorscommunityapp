@@ -28,6 +28,7 @@ describe("form validation", () => {
     description: "Weekly hikes for everyone.",
     subcategoryId: "11111111-1111-4111-8111-000000000001",
     area: "Brevard",
+    region: "western-nc",
     joinPolicy: "open",
   };
 
@@ -35,6 +36,12 @@ describe("form validation", () => {
     const parsed = groupSchema.parse({ ...validGroup, discussionsEnabled: "on" });
     expect(parsed.discussionsEnabled).toBe(true);
     expect(parsed.rules).toBeNull();
+  });
+
+  it("takes a region on the list", () => {
+    expect(groupSchema.parse({ ...validGroup, region: "puget-sound" }).region).toBe("puget-sound");
+    expect(groupSchema.safeParse({ ...validGroup, region: "atlantis" }).success).toBe(false);
+    expect(groupSchema.safeParse({ ...validGroup, region: undefined }).success).toBe(false);
   });
 
   it("rejects missing and over-long group fields", () => {
@@ -184,6 +191,7 @@ describe("group website (FR-GR-23)", () => {
     description: "We ride every Saturday.",
     subcategoryId: "0b6f7a2e-1c1d-4c3b-9b1a-2f8e9d6c5b4a",
     area: "Brevard",
+    region: "western-nc",
     joinPolicy: "open",
   };
 

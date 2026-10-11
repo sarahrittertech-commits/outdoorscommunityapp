@@ -21,9 +21,45 @@ export type Database = {
   public: {
     Tables: {
       regions: {
-        Row: { id: string; slug: string; name: string; timezone: string };
-        Insert: { id?: string; slug: string; name: string; timezone: string };
-        Update: { id?: string; slug?: string; name?: string; timezone?: string };
+        Row: {
+          id: string;
+          slug: string;
+          name: string;
+          timezone: string;
+          center_lat: number;
+          center_lng: number;
+          radius_miles: number;
+          state: string | null;
+          status: "live" | "coming_soon";
+          sort_order: number;
+          hub_towns: string[];
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name: string;
+          timezone: string;
+          center_lat: number;
+          center_lng: number;
+          radius_miles?: number;
+          state?: string | null;
+          status?: "live" | "coming_soon";
+          sort_order?: number;
+          hub_towns?: string[];
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          name?: string;
+          timezone?: string;
+          center_lat?: number;
+          center_lng?: number;
+          radius_miles?: number;
+          state?: string | null;
+          status?: "live" | "coming_soon";
+          sort_order?: number;
+          hub_towns?: string[];
+        };
         Relationships: [];
       };
       categories: {
@@ -880,6 +916,23 @@ export type Database = {
           source_url: string | null;
           is_paid: boolean | null;
           takes_rsvps: boolean | null;
+          region_id: string | null;
+        };
+        Relationships: [];
+      };
+      subcategory_region_counts: {
+        Row: {
+          region_id: string | null;
+          region_slug: string | null;
+          category_id: string | null;
+          category_slug: string | null;
+          category_name: string | null;
+          category_sort_order: number | null;
+          subcategory_id: string | null;
+          subcategory_slug: string | null;
+          subcategory_name: string | null;
+          subcategory_sort_order: number | null;
+          group_count: number | null;
         };
         Relationships: [];
       };
@@ -1041,7 +1094,7 @@ export type Database = {
         }[];
       };
       admin_candidate_counts: { Args: never; Returns: { kind: string; kept: number }[] };
-      list_candidate: { Args: { p_candidate_id: string }; Returns: string };
+      list_candidate: { Args: { p_candidate_id: string; p_region_id?: string }; Returns: string };
       skip_candidate: { Args: { p_candidate_id: string }; Returns: undefined };
       approve_claim: { Args: { p_claim_id: string }; Returns: undefined };
       decline_claim: { Args: { p_claim_id: string }; Returns: undefined };

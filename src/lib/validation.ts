@@ -7,10 +7,11 @@ import { site } from "@/config/site";
 
 import { AFFINITY_TAGS } from "./affinity";
 import { isCommonPassword } from "./common-passwords";
-import { findTown } from "./geo";
+import { findTown, townKey } from "./geo";
 import { GROUP_TYPES } from "./groupTypes";
 import { safeNext } from "./navigation";
 import { CLEARABLE_SECTIONS, GOAL_MAX, MAX_GOALS, MAX_PROMPTS, PROFILE_SECTION_VALUES, PROMPT_ANSWER_MAX } from "./profile";
+import { getRegion } from "./regions";
 import { isValidTimeZone, zonedLocalToUtc } from "./time";
 
 const requiredText = (min: number, max: number) => z.string().trim().min(min).max(max);
@@ -99,10 +100,10 @@ export function passwordErrorCode(error: z.ZodError): PasswordCode | "invalid" {
 export const onboardingSchema = z.object({
   displayName: requiredText(2, 40),
   bio: optionalText(280),
-  /** FR-PR-2: a town from the town list, stored under its listed name. */
+  /** FR-PR-2: a town from the town list, stored under its key (lib/geo townKey). */
   area: optionalText(80)
     .refine((v) => v === null || findTown(v) !== undefined, "Pick a town from the list.")
-    .transform((v) => (v === null ? null : findTown(v)!.name)),
+    .transform((v) => (v === null ? null : townKey(findTown(v)!))),
   confirmAdult: checkbox.refine((v) => v, "You must be 18 or older."),
   acceptTerms: checkbox.refine((v) => v, "You must accept the terms."),
 });
@@ -184,6 +185,8 @@ export const groupSchema = z.object({
   rules: optionalText(5000),
   subcategoryId: id,
   area: requiredText(2, 80),
+  /** Regions: a region slug. New groups and moves need a live one; the action and the database check (region_closed). */
+  region: z.string().trim().refine((v) => getRegion(v) !== undefined, "Pick a region."),
   joinPolicy: z.enum(["open", "approval"]),
   joinQuestion: optionalText(280),
   discussionsEnabled: checkbox,
