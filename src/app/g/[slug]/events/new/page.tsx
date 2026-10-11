@@ -6,6 +6,7 @@ import { createEvent } from "@/app/actions/events";
 import { EventForm } from "@/components/EventForm";
 import { Notice } from "@/components/Notice";
 import { requireViewer } from "@/lib/auth";
+import { regionOfGroup } from "@/lib/currentRegion";
 import { loadGroup } from "@/lib/groups";
 
 export const metadata: Metadata = { title: "Post an event", robots: { index: false } };
@@ -28,7 +29,7 @@ export default async function NewEventPage({ params, searchParams }: Props) {
       </p>
       <h1>Post an event</h1>
       <Notice params={await searchParams} />
-      <EventForm action={createEvent.bind(null, group.id, group.slug)} submitLabel="Post event" />
+      <EventForm action={createEvent.bind(null, group.id, group.slug)} region={await regionOfGroup(group.region_id)} submitLabel="Post event" />
     </>
   );
 }

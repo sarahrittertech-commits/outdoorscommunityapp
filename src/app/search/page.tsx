@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import { EventList, GroupList } from "@/components/Listings";
+import { RegionScope } from "@/components/RegionScope";
+import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Search", robots: { index: false } };
@@ -20,6 +22,10 @@ export default async function SearchPage({ searchParams }: Props) {
   // Letters, digits, spaces, hyphens and apostrophes only, so the words can be
   // placed safely inside the filter below.
   const words = q.replace(/[^\p{L}\p{N}\s'-]/gu, " ").replace(/\s+/g, " ").trim();
+
+  // Regions: results from the region being browsed, or every region with ?region=all.
+  const current = await getCurrentRegion(params.region);
+  const regionId = await regionFilterId(current);
 
   const supabase = await createClient();
   const { data: categories } = await supabase.from("categories").select("slug, name").order("sort_order");
@@ -48,6 +54,10 @@ export default async function SearchPage({ searchParams }: Props) {
       groupQuery = groupQuery.eq("category_slug", category);
       eventQuery = eventQuery.eq("category_slug", category);
     }
+    if (regionId) {
+      groupQuery = groupQuery.eq("region_id", regionId);
+      eventQuery = eventQuery.eq("region_id", regionId);
+    }
     const [g, e] = await Promise.all([groupQuery.order("name").limit(50), eventQuery.order("starts_at").limit(50)]);
     groups = g.data ?? [];
     events = e.data ?? [];
@@ -72,8 +82,10 @@ export default async function SearchPage({ searchParams }: Props) {
           Search groups and events
         </label>
         <input id="q" name="q" type="search" defaultValue={q} placeholder="kayak, waterfall, beginner…" className="mt-0 min-w-0 flex-1" />
+        {current.param && <input type="hidden" name="region" value={current.param} />}
         <button className="button">Search</button>
       </form>
+      <RegionScope current={current} path="/search" query={{ q: q || undefined, category: category || undefined }} />
 
       {groups && events && (
         <>

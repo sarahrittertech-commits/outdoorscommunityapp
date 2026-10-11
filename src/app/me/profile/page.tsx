@@ -9,7 +9,8 @@ import { SubmitButton } from "@/components/SubmitButton";
 import { TownSelect } from "@/components/TownSelect";
 import { site } from "@/config/site";
 import { requireViewer } from "@/lib/auth";
-import { findTown } from "@/lib/geo";
+import { getCurrentRegion } from "@/lib/currentRegion";
+import { findTown, townKey } from "@/lib/geo";
 import { GOAL_MAX, goalYear, MAX_GOALS, MAX_PROMPTS, PROMPT_ANSWER_MAX, type ProfileSection } from "@/lib/profile";
 import { signProfilePhoto } from "@/lib/profilePhotos";
 import { createClient } from "@/lib/supabase/server";
@@ -54,7 +55,8 @@ export default async function EditProfilePage({ searchParams }: Props) {
   const ticked = new Set((activities ?? []).map((a) => a.category_id));
   // FR-PR-2: an older free-text area stays selectable until a town is picked.
   const legacyTown = about?.town && !findTown(about.town) ? about.town : null;
-  const townValue = about?.town ? (findTown(about.town)?.name ?? about.town) : "";
+  const listedTown = about?.town ? findTown(about.town) : undefined;
+  const townValue = listedTown ? townKey(listedTown) : (about?.town ?? "");
 
   return (
     <>
@@ -128,7 +130,7 @@ export default async function EditProfilePage({ searchParams }: Props) {
         <input id="displayName" name="displayName" type="text" required minLength={2} maxLength={40} defaultValue={profile?.display_name ?? ""} />
 
         <label htmlFor="town">Home town</label>
-        <TownSelect id="town" name="town" blank="Not saying" keep={legacyTown} defaultValue={townValue} />
+        <TownSelect id="town" name="town" blank="Not saying" keep={legacyTown} defaultValue={townValue} region={(listedTown?.region ?? (await getCurrentRegion()).region.slug)} />
         <ShowHide section="town" shown={shown("town")} label="Home town:" />
 
         <label htmlFor="bio">

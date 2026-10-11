@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 
 import { GroupList } from "@/components/Listings";
 import { pageFrom, Pagination } from "@/components/Pagination";
+import { RegionScope } from "@/components/RegionScope";
+import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
 import { createClient } from "@/lib/supabase/server";
 
 const PAGE_SIZE = 50;
@@ -38,27 +40,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SubcategoryPage({ params, searchParams }: Props) {
   const p = await params;
   const { supabase, subcategory, category } = await loadSubcategory(p.category, p.subcategory);
-  const page = pageFrom((await searchParams).page);
+  const query = await searchParams;
+  const page = pageFrom(query.page);
+  // Regions: the region being browsed, or every region with ?region=all.
+  const current = await getCurrentRegion(query.region);
+  const regionId = await regionFilterId(current);
+  const scoped = (path: string) => (current.all ? `${path}?region=all` : path);
 
-  const { data: groups, count } = await supabase
+  let list = supabase
     .from("group_listings")
     .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags", { count: "exact" })
     .eq("subcategory_id", subcategory.id)
-    .eq("status", "active")
-    .order("name")
-    .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+    .eq("status", "active");
+  if (regionId) list = list.eq("region_id", regionId);
+  const { data: groups, count } = await list.order("name").range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+  const path = `/c/${category.slug}/${subcategory.slug}`;
 
   return (
     <>
       <p className="breadcrumb">
-        <Link href="/browse">all categories</Link> › <Link href={`/c/${category.slug}`}>{category.name}</Link> ›
+        <Link href={scoped("/browse")}>all categories</Link> › <Link href={scoped(`/c/${category.slug}`)}>{category.name}</Link> ›
       </p>
       <h1>{subcategory.name}</h1>
+      <RegionScope current={current} path={path} />
       <p className="mt-1 mb-2 text-sm text-muted">
         Groups sorted A to Z. <Link href="/groups/new">Start one</Link>.
       </p>
       <GroupList groups={groups ?? []} />
-      <Pagination basePath={`/c/${category.slug}/${subcategory.slug}`} page={page} pageCount={Math.ceil((count ?? 0) / PAGE_SIZE)} />
+      <Pagination basePath={scoped(path)} page={page} pageCount={Math.ceil((count ?? 0) / PAGE_SIZE)} />
     </>
   );
 }

@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { Atkinson_Hyperlegible, Young_Serif } from "next/font/google";
+import { headers } from "next/headers";
 import Link from "next/link";
 
 import { signOut } from "@/app/actions/auth";
 import { Mark } from "@/brand/Mark";
 import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
+import { getCurrentRegion } from "@/lib/currentRegion";
+import { safeNext } from "@/lib/navigation";
+import { REQUEST_PATH_HEADER } from "@/lib/regions";
 import { createClient } from "@/lib/supabase/server";
 
 import "./globals.css";
@@ -32,6 +36,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   // FR-DM-4: conversations with unread messages, counted when the page loads.
   // Nothing updates by itself, and nothing about the other person is shown.
   const unread = viewer ? ((await (await createClient()).rpc("unread_conversation_count")).data ?? 0) : 0;
+  const { region } = await getCurrentRegion();
+  const requestPath = safeNext((await headers()).get(REQUEST_PATH_HEADER));
 
   return (
     <html lang="en" className={`${atkinson.variable} ${youngSerif.variable}`}>
@@ -44,6 +50,16 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <Link href="/" className="wordmark flex items-center gap-1.5 text-xl no-underline sm:text-2xl">
               <Mark className="h-[1.5em] w-[0.94em] shrink-0" />
               {site.name}
+            </Link>
+            {/* Regions: which region the lists show, and the way to change it (a plain link). */}
+            <Link
+              href={`/regions?next=${encodeURIComponent(requestPath)}`}
+              prefetch={false}
+              className="whitespace-nowrap text-sm text-muted"
+              aria-label={`Region: ${region.name}. Change region`}
+            >
+              {region.shortName}
+              <span className="hidden xl:inline"> · change</span>
             </Link>
             <nav aria-label="Main" className="flex items-baseline gap-x-4 whitespace-nowrap text-base">
               <Link href="/">explore</Link>
@@ -114,6 +130,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <Link href="/browse">browse all</Link>
             <Link href="/events">all events</Link>
             <Link href="/communities">communities</Link>
+            <Link href="/regions">regions</Link>
             <Link href="/about">about</Link>
             <Link href="/suggest">suggest something</Link>
             <Link href="/guidelines">community guidelines</Link>

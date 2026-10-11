@@ -2,7 +2,6 @@
 
 import { z } from "zod";
 
-import { site } from "@/config/site";
 import { actingUser, checkArgs, fail, failOnError, succeed } from "@/lib/actions";
 import { errorCode } from "@/lib/db-errors";
 import { reencodeEventPhoto } from "@/lib/eventPhotos";
@@ -19,8 +18,9 @@ export async function createGroup(formData: FormData) {
   if (!parsed.success || !tags.success) fail(back, "invalid");
   const group = parsed.data;
 
-  const { data: region } = await supabase.from("regions").select("id").eq("slug", site.defaultRegionSlug).single();
-  if (!region) fail(back, "generic");
+  // Regions: the region chosen on the form (a live one; the database checks again).
+  const { data: region } = await supabase.from("regions").select("id").eq("slug", group.region).eq("status", "live").maybeSingle();
+  if (!region) fail(back, "region_closed");
 
   // FR-GR-2: a readable, unique URL. Retry with a suffix if the name is taken.
   const base = slugify(group.name);
@@ -72,8 +72,13 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
     if (!cover) fail(back, "photo_invalid");
   }
 
-  const { data: current } = await supabase.from("groups").select("cover_image_path").eq("id", groupId).maybeSingle();
+  const [{ data: current }, { data: region }] = await Promise.all([
+    supabase.from("groups").select("cover_image_path, region_id").eq("id", groupId).maybeSingle(),
+    supabase.from("regions").select("id, status").eq("slug", group.region).maybeSingle(),
+  ]);
   if (!current) fail(back, "not_allowed");
+  // A group may keep a region that has since closed, but not move into one.
+  if (!region || (region.id !== current.region_id && region.status !== "live")) fail(back, "region_closed");
   const keepCover = Boolean(current.cover_image_path) && !cover && !group.removeCover;
   if (keepCover && !group.coverAlt) fail(back, "photo_alt_required");
 
@@ -97,6 +102,8 @@ export async function updateGroup(groupId: string, slug: string, formData: FormD
       description: group.description,
       rules: group.rules,
       subcategory_id: group.subcategoryId,
+      // Only sent when it changes, so a group whose region has since closed can still be edited.
+      ...(region.id !== current.region_id ? { region_id: region.id } : {}),
       area: group.area,
       join_policy: group.joinPolicy,
       join_question: group.joinPolicy === "approval" ? group.joinQuestion : null,

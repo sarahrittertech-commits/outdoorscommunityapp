@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import type { Region } from "@/config/regions";
 import { site } from "@/config/site";
 import type { Tables } from "@/lib/supabase/database.types";
 import { utcToZonedLocal } from "@/lib/time";
@@ -50,6 +51,7 @@ export function EventForm({
   address,
   photoUrl,
   faqs = [],
+  region,
   submitLabel,
 }: {
   action: (formData: FormData) => Promise<void>;
@@ -57,9 +59,11 @@ export function EventForm({
   address?: string | null;
   photoUrl?: string | null;
   faqs?: Faq[];
+  /** The group's region: new events default to its time zone, and its meeting place is the example. */
+  region: Region;
   submitLabel: string;
 }) {
-  const timezone = event?.timezone ?? site.defaultTimezone;
+  const timezone = event?.timezone ?? region.timezone;
   const zones = TIME_ZONES.includes(timezone) ? TIME_ZONES : [timezone, ...TIME_ZONES];
 
   return (
@@ -115,7 +119,7 @@ export function EventForm({
       </select>
 
       <label htmlFor="locationName">
-        Meeting place <span className="hint">Always public, e.g. &ldquo;{site.exampleMeetingPlace}&rdquo;</span>
+        Meeting place <span className="hint">Always public, e.g. &ldquo;{region.exampleMeetingPlace}&rdquo;</span>
       </label>
       <input id="locationName" name="locationName" type="text" required minLength={2} maxLength={200} defaultValue={event?.location_name} />
 

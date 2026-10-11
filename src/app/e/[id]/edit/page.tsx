@@ -8,6 +8,7 @@ import { Notice } from "@/components/Notice";
 import { requireViewer } from "@/lib/auth";
 import { eventPhotoUrl } from "@/lib/eventPhotos";
 import { loadEvent } from "@/lib/events";
+import { regionOfGroup } from "@/lib/currentRegion";
 import { loadGroup } from "@/lib/groups";
 
 export const metadata: Metadata = { title: "Edit event", robots: { index: false } };
@@ -22,7 +23,7 @@ export default async function EditEventPage({ params, searchParams }: Props) {
   const { id } = await params;
   await requireViewer(`/e/${id}/edit`);
   const { supabase, event, group } = await loadEvent(id);
-  const { canManage } = await loadGroup(group.slug);
+  const { canManage, group: fullGroup } = await loadGroup(group.slug);
   if (!canManage) redirect(`/e/${id}?e=not_allowed`);
 
   const [{ data: details }, { data: faqs }] = await Promise.all([
@@ -40,6 +41,7 @@ export default async function EditEventPage({ params, searchParams }: Props) {
       <EventForm
         action={updateEvent.bind(null, event.id)}
         event={event}
+        region={await regionOfGroup(fullGroup.region_id)}
         address={details?.address}
         photoUrl={event.photo_path ? eventPhotoUrl(supabase, event.photo_path) : null}
         faqs={faqs ?? []}

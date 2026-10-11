@@ -6,11 +6,14 @@ import { DestinationMap, type MapPoint } from "@/components/DestinationMap";
 import { MyCalendar } from "@/components/MyCalendar";
 import { Notice } from "@/components/Notice";
 import { site } from "@/config/site";
+import { RegionScope } from "@/components/RegionScope";
 import { TownSelect } from "@/components/TownSelect";
-import { defaultTown, distances, type Town } from "@/config/towns";
+import { distances, type Town } from "@/config/towns";
 import { getViewer } from "@/lib/auth";
 import { parseCalendarParams } from "@/lib/calendar";
-import { aboutMiles, countWithin, findTown, milesBetween, townForArea } from "@/lib/geo";
+import { getCurrentRegion, regionIds } from "@/lib/currentRegion";
+import { aboutMiles, countWithin, findTown, milesBetween, townForArea, townKey } from "@/lib/geo";
+import { hubTown, regionForTown } from "@/lib/regions";
 import { createClient } from "@/lib/supabase/server";
 import { dateParts } from "@/lib/time";
 
@@ -31,30 +34,45 @@ const DEST_DAYS = 90;
 export default async function Home({ searchParams }: Props) {
   const params = await searchParams;
   const str = (k: string) => (typeof params[k] === "string" ? (params[k] as string) : undefined);
-  const nearTown = findTown(str("near")) ?? findTown(defaultTown)!;
+  // Regions: the home page shows the region being browsed. Near you starts
+  // at its first hub town; a town picked from another region shows that
+  // town's region's events instead.
+  const current = await getCurrentRegion(params.region);
+  const { region } = current;
+  const nearTown = findTown(str("near")) ?? hubTown(region);
+  const nearRegion = regionForTown(nearTown) ?? region;
   const dest = str("dest");
   const where = str("where")?.trim().slice(0, 60) ?? "";
 
   const viewer = await getViewer();
 
   const supabase = await createClient();
-  const [{ data: categories }, { data: events }, { data: groups }] = await Promise.all([
-    supabase.from("categories").select("slug, name").order("sort_order"),
-    supabase
+  const ids = await regionIds();
+  const upcoming = (regionSlug: string | null) => {
+    let query = supabase
       .from("event_listings")
       .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count, is_unclaimed, is_paid, takes_rsvps")
       .eq("status", "scheduled")
-      .gt("starts_at", new Date().toISOString())
-      .order("starts_at")
-      .limit(300),
+      .gt("starts_at", new Date().toISOString());
+    if (regionSlug) query = query.eq("region_id", ids.get(regionSlug) ?? "00000000-0000-0000-0000-000000000000");
+    return query.order("starts_at").limit(300);
+  };
+  const shownRegion = current.all ? null : region.slug;
+  const [{ data: categories }, { data: events }, { data: nearEvents }, { data: groups }] = await Promise.all([
+    supabase.from("categories").select("slug, name").order("sort_order"),
+    upcoming(shownRegion),
+    // Only a second query when Near you is in another region than the page.
+    shownRegion && nearRegion.slug !== shownRegion ? upcoming(nearRegion.slug) : Promise.resolve({ data: null }),
     supabase.from("groups").select("slug, area").eq("status", "active").eq("review_status", "approved"),
   ]);
 
   // Each event is placed at its group's town (UC-14).
   const townOfGroup = new Map<string, Town | undefined>((groups ?? []).map((g) => [g.slug, townForArea(g.area)]));
-  const placed = (events ?? []).map((e) => ({ ...e, town: townOfGroup.get(e.group_slug ?? "") }));
+  const place = <E extends { group_slug: string | null }>(list: E[] | null) =>
+    (list ?? []).map((e) => ({ ...e, town: townOfGroup.get(e.group_slug ?? "") }));
+  const placed = place(events);
 
-  const nearby = placed
+  const nearby = (nearEvents ? place(nearEvents) : placed)
     .map((e) => ({ ...e, miles: e.town ? milesBetween(nearTown, e.town) : Infinity }))
     .filter((e) => e.miles <= NEAR_MILES)
     .slice(0, 8);
@@ -67,9 +85,9 @@ export default async function Home({ searchParams }: Props) {
   const byTown = new Map<string, { town: Town; count: number; activities: Set<string> }>();
   for (const e of destEvents) {
     if (!e.town) continue;
-    const entry = byTown.get(e.town.name) ?? { town: e.town, count: 0, activities: new Set<string>() };
+    const entry = byTown.get(townKey(e.town)) ?? { town: e.town, count: 0, activities: new Set<string>() };
     if (e.category_slug) entry.activities.add(e.category_slug);
-    byTown.set(e.town.name, entry);
+    byTown.set(townKey(e.town), entry);
   }
   const destTowns = destEvents.map((e) => e.town);
   for (const entry of byTown.values()) entry.count = countWithin(entry.town, destTowns, DEST_MILES);
@@ -80,7 +98,7 @@ export default async function Home({ searchParams }: Props) {
   const focus = findTown(where);
   const categoryName = new Map((categories ?? []).map((c) => [c.slug, c.name]));
   const eventsNear = (t: Town) => {
-    const q = new URLSearchParams({ near: t.name, within: String(DEST_MILES), days: String(DEST_DAYS) });
+    const q = new URLSearchParams({ near: townKey(t), within: String(DEST_MILES), days: String(DEST_DAYS) });
     if (dest) q.set("category", dest);
     return `/events?${q}`;
   };
@@ -94,7 +112,7 @@ export default async function Home({ searchParams }: Props) {
 
   const homeHref = (next: Record<string, string | undefined>) => {
     const q = new URLSearchParams();
-    const merged = { near: str("near"), dest, where: where || undefined, ...next };
+    const merged = { near: str("near"), dest, where: where || undefined, region: current.param, ...next };
     for (const [k, v] of Object.entries(merged)) if (v) q.set(k, v);
     const s = q.toString();
     return s ? `/?${s}` : "/";
@@ -107,7 +125,7 @@ export default async function Home({ searchParams }: Props) {
       <section className="full-bleed -mt-6 border-b border-rule">
         <div className="mx-auto max-w-6xl px-4 pb-12 pt-10 md:pb-16 md:pt-14">
           <h1 className="hero-title m-0 whitespace-pre-line">{site.heroTitle}</h1>
-          <p className="m-0 mt-3 max-w-xl text-lg text-subtle">{site.heroIntro}</p>
+          <p className="m-0 mt-3 max-w-xl text-lg text-subtle">{region.heroIntro}</p>
 
           <div className="mt-6 md:mt-8">
             <Ridgeline />
@@ -128,7 +146,7 @@ export default async function Home({ searchParams }: Props) {
             <div>
               <label htmlFor="hero-near">Location</label>
               {/* Anywhere by default: events whose group area isn't a known town only show without a town. */}
-              <TownSelect id="hero-near" name="near" defaultValue="" anywhere />
+              <TownSelect id="hero-near" name="near" defaultValue="" anywhere region={region.slug} />
             </div>
             <div>
               {/* FR-BR-12: a zip code, if given, wins over the town. */}
@@ -141,7 +159,7 @@ export default async function Home({ searchParams }: Props) {
                 autoComplete="postal-code"
                 pattern="\d{5}(-\d{4})?"
                 maxLength={10}
-                placeholder="28712"
+                placeholder={region.exampleZip}
               />
             </div>
             <div>
@@ -201,13 +219,14 @@ export default async function Home({ searchParams }: Props) {
                 <label htmlFor="near-town" className="sr-only">
                   Town
                 </label>
-                <TownSelect id="near-town" name="near" defaultValue={nearTown.name} />
+                <TownSelect id="near-town" name="near" defaultValue={townKey(nearTown)} region={region.slug} />
                 {dest && <input type="hidden" name="dest" value={dest} />}
                 {where && <input type="hidden" name="where" value={where} />}
+                {current.param && <input type="hidden" name="region" value={current.param} />}
                 <button className="button">Show</button>
               </form>
             </details>
-            <Link href={`/events?near=${encodeURIComponent(nearTown.name)}&within=${NEAR_MILES}`}>all events near {nearTown.name}</Link>
+            <Link href={`/events?near=${encodeURIComponent(townKey(nearTown))}&within=${NEAR_MILES}`}>all events near {nearTown.name}</Link>
           </div>
         </div>
         {nearby.length ? (
@@ -261,6 +280,7 @@ export default async function Home({ searchParams }: Props) {
           Explore destinations
         </h2>
         <p className="m-0 mt-1 text-subtle">Where people are heading next, and what they&rsquo;re doing there.</p>
+        <RegionScope current={current} path="/" query={{ near: str("near"), dest, where: where || undefined }} />
 
         <ul className="chip-row mt-4" aria-label="Activity">
           <li>
@@ -288,14 +308,15 @@ export default async function Home({ searchParams }: Props) {
               <label htmlFor="dest-where" className="sr-only">
                 Search a town
               </label>
-              <input id="dest-where" name="where" type="search" defaultValue={where} placeholder={`Search a town, e.g. ${site.exampleArea}`} className="w-full max-w-none" />
+              <input id="dest-where" name="where" type="search" defaultValue={where} placeholder={`Search a town, e.g. ${region.exampleTown}`} className="w-full max-w-none" />
               {dest && <input type="hidden" name="dest" value={dest} />}
               {str("near") && <input type="hidden" name="near" value={str("near")} />}
+              {current.param && <input type="hidden" name="region" value={current.param} />}
             </form>
             {destinations.length ? (
               <ol>
                 {destinations.map((d) => (
-                  <li key={d.town.name}>
+                  <li key={townKey(d.town)}>
                     <Link href={eventsNear(d.town)} className="flex items-center justify-between gap-3 px-3 py-2 no-underline hover:bg-band">
                       <span>
                         <span className="font-bold">
@@ -328,7 +349,8 @@ export default async function Home({ searchParams }: Props) {
             points={points}
             focus={focus ? { lat: focus.lat, lng: focus.lng } : undefined}
             tiles={site.mapTiles}
-            center={site.mapCenter}
+            center={region.center}
+            zoom={region.zoom}
           />
         </div>
       </section>

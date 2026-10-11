@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 
 import { GroupList } from "@/components/Listings";
 import { pageFrom, Pagination } from "@/components/Pagination";
+import { RegionScope } from "@/components/RegionScope";
+import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
 import { createClient } from "@/lib/supabase/server";
 
 const PAGE_SIZE = 50;
@@ -28,16 +30,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /** FR-BR-3: every group in a category, alphabetically. */
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { supabase, category } = await loadCategory((await params).category);
-  const pageParam = (await searchParams).page;
+  const query = await searchParams;
+  const pageParam = query.page;
   const asked = pageFrom(pageParam);
-  const listPage = (n: number) =>
-    supabase
+  // Regions: the region being browsed, or every region with ?region=all.
+  const current = await getCurrentRegion(query.region);
+  const regionId = await regionFilterId(current);
+  const scoped = (path: string) => (current.all ? `${path}?region=all` : path);
+  const listPage = (n: number) => {
+    let list = supabase
       .from("group_listings")
       .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags", { count: "exact" })
       .eq("category_id", category.id)
-      .eq("status", "active")
-      .order("name")
-      .range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
+      .eq("status", "active");
+    if (regionId) list = list.eq("region_id", regionId);
+    return list.order("name").range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
+  };
 
   const [{ data: subcategories }, first] = await Promise.all([
     supabase.from("subcategories").select("slug, name").eq("category_id", category.id).order("sort_order"),
@@ -53,19 +61,20 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   return (
     <>
       <p className="breadcrumb">
-        <Link href="/browse">all categories</Link> ›
+        <Link href={scoped("/browse")}>all categories</Link> ›
       </p>
       <h1>{category.name}</h1>
       <p className="mt-2 flex flex-wrap gap-x-4 text-sm">
         {subcategories?.map((s) => (
-          <Link key={s.slug} href={`/c/${category.slug}/${s.slug}`}>
+          <Link key={s.slug} href={scoped(`/c/${category.slug}/${s.slug}`)}>
             {s.name}
           </Link>
         ))}
       </p>
-      <p className="mt-4 mb-2 text-sm text-muted">Groups sorted A to Z.</p>
+      <RegionScope current={current} path={`/c/${category.slug}`} className="mt-4 text-sm text-muted" />
+      <p className="mt-1 mb-2 text-sm text-muted">Groups sorted A to Z.</p>
       <GroupList groups={groups ?? []} />
-      <Pagination basePath={`/c/${category.slug}`} page={page} pageCount={Math.ceil((count ?? 0) / PAGE_SIZE)} />
+      <Pagination basePath={scoped(`/c/${category.slug}`)} page={page} pageCount={Math.ceil((count ?? 0) / PAGE_SIZE)} />
     </>
   );
 }
