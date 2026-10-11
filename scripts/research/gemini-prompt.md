@@ -25,6 +25,8 @@ Why it is shaped this way (lessons from the 10–11 October lists):
 ```text
 You are building a research dataset for a community board of outdoor groups. Work on ONE target city: [CITY, STATE]. Radius: 100 miles.
 
+Start with affinity groups: first find every women's, girls', FTWN-B, queer and LGBTQ+, BIPOC and adaptive or disability-inclusive group for these activities around [CITY] (rule 9), then everything else.
+
 Find every real, currently active:
 - hiking, backpacking, climbing/mountaineering and mountain biking CLUBS and community groups (including trail-building and advocacy groups, Meetup groups, women's and inclusive groups, university clubs open to the public);
 - VENUES for those activities (trail systems, bike parks, state/national parks and forests used for these sports, outdoor crags, climbing and bouldering gyms);
@@ -39,7 +41,7 @@ Rules:
 6. No people's names, email addresses or phone numbers, ever.
 7. Skip national chains' general pages, closed businesses, and anything only on a private or sign-in page.
 8. There is no target number. Keep searching until new searches stop turning up new organizations; do not stop at a round number.
-9. REQUIRED SECOND PASS, after the main list: search specifically for women's, girls', FTWN-B, queer and LGBTQ+, BIPOC and adaptive or disability-inclusive groups for these activities around [CITY]. Search Instagram and Facebook pages that anyone can read, Meetup, local bike shop and climbing gym event pages, and national networks' local chapters (Trail Sisters, Ladies Climbing Coalition, Radical Adventure Riders, Brown Girls Climb, Outdoor Afro, Latino Outdoors, Unlikely Hikers, Catalyst Sports, SheJumps, Women's MTB Network, Girls Go Shred). Groups that live mainly on Instagram count: use their Instagram page as the website and give the handle. Put these rows in the same CSV.
+9. AFFINITY PASS, done FIRST: search specifically for women's, girls', FTWN-B, queer and LGBTQ+, BIPOC and adaptive or disability-inclusive groups for these activities around [CITY]. Search Instagram and Facebook pages that anyone can read, Meetup, local bike shop and climbing gym event pages, and national networks' local chapters (Trail Sisters, Ladies Climbing Coalition, Radical Adventure Riders, Brown Girls Climb, Outdoor Afro, Latino Outdoors, Unlikely Hikers, Catalyst Sports, SheJumps, Women's MTB Network, Girls Go Shred). Groups that live mainly on Instagram count: use their Instagram page as the website and give the handle. Put these rows in the same CSV.
 10. Make sure these are included if they are active (check each one): [KNOWN GROUPS — e.g. for Asheville: Blue Ridge Dirt Skrrts (dirtskrrts.com), Trail Sisters WNC, Ladies Climbing Coalition Asheville, Radical Adventure Riders Asheville, Girls Go Shred, Asheville Women's Run Club].
 11. At the end, after the code block, write: "Found: N clubs (of which N women's or inclusive), N venues, N shops." Then "Searches I ran:" with the search queries you used, and "Likely missing:" with what you couldn't cover.
 

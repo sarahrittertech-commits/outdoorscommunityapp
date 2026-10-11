@@ -274,7 +274,7 @@ excluded from every row except **Themselves**.
 
 ### Proposed with the 8 October design (drafts, not built)
 
-These follow the draft requirements for UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28. Each becomes part
+These follow the draft requirements for UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28 and UC-36. Each becomes part
 of the matrix above, with a permission test, once its use case is
 approved.
 
