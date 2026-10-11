@@ -65,3 +65,11 @@ Tiles come from OpenStreetMap's own servers (`site.mapTiles` in
 allows images from that host and nothing else. Before traffic grows, move
 to a tile provider's free tier by changing that one setting. The map shows
 towns with upcoming events until the places list (FR-BR-16) exists.
+
+## Regions (11 October 2026)
+
+With the board national ([ADR-0010](./adr-0010-regions)), the map opens on
+the region the visitor is looking at (its centre and zoom) and shows that
+region's towns with upcoming events. There is still one tile setting for
+the whole board; with six regions live, moving to a tile provider's free
+tier is the next step before any promotion.

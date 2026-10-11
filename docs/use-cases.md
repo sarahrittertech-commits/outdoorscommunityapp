@@ -25,7 +25,8 @@ No build starts before step 3. UC-1 to UC-6 were written before this
 process; UC-7 and UC-8 were written after the features were built, to
 close that gap. UC-14 to UC-23 come from the 8 October Magic Patterns
 design. UC-25 to UC-27 were requested by Sarah on 8 October and drafted on
-9 October.
+9 October. UC-34 and UC-35, taking the board national region by region,
+were requested and approved on 11 October.
 
 ## UC-1 — What's out there?
 
@@ -214,9 +215,10 @@ plus one admin review, and nobody else can take it over.
 **Flow:**
 
 1. The research agent runs. For each activity and subcategory on the
-   board, it searches the public web in Western North Carolina and, in
-   turn, a wider ring across the Southeast, for groups and their upcoming
-   events, plus guides, businesses and venues.
+   board, it searches the public web in each live region (UC-34) and, in
+   turn, a wider ring around it, for groups and their upcoming events,
+   plus guides, businesses and venues. *(Was Western North Carolina and a
+   Southeast ring until the board went national on 11 October 2026.)*
 2. It saves each new find as a *candidate* in the private research area:
    name, type, activity, area, the public page it came from, and its
    upcoming events with dates and times. It skips anything already known.
@@ -392,6 +394,10 @@ half an hour.
 **Succeeds when:** someone finds what's within reach of the town they
 choose, without the board ever asking for their device's location.
 
+*Since 11 October 2026 the town list and *Near you* follow the region
+the visitor is looking at (UC-34); the example towns here are Western
+North Carolina's.*
+
 ## UC-15 — Explore destinations
 
 > **Built 9 October 2026,** on Sarah's direction, ahead of review. See the note on FR-BR-12 to FR-BR-18 for what differs from the draft.
@@ -414,6 +420,9 @@ choose, without the board ever asking for their device's location.
 
 **Succeeds when:** a place leads to the people and events there, and the
 list works on its own for anyone who can't use the map.
+
+*Since 11 October 2026 the map opens on the region the visitor is looking
+at (UC-34) and lists that region's towns.*
 
 ## UC-16 — Keep our member list private
 
@@ -1002,6 +1011,78 @@ requests (UC-20).
 friends or followers, "people you may know", or showing who viewed a
 profile. Those would turn the board into a social network, which the PRD
 rules out.
+
+---
+
+## UC-34 — Choose your region
+
+> **Approved 11 October 2026 (Sarah, in auto mode) and built the same
+> day.** Part of taking the board national region by region: one board,
+> one address, several regions, each built around one or more hub cities.
+> The decisions are in [ADR-0010](./architecture/adr-0010-regions) and the
+> PRD's *Decisions — 11 October 2026*.
+
+**Actor:** The newcomer
+
+**Trigger:** Lives near Boulder, finds the board, and wants to see what's
+around them, not Western North Carolina.
+
+**Flow:**
+
+1. Opens the home page. The header says which region they're looking at
+   (*Western NC · change*), and the hero line names it.
+2. Picks *change* and sees the regions the board covers, each with its hub
+   cities and how many groups it lists: *Colorado Front Range (Denver,
+   Boulder)*, *Raleigh and the Triangle*, *Seattle and Bellingham*, *New
+   River Gorge (Fayetteville, WV)*, *Knoxville and East Tennessee* and
+   *Western North Carolina*.
+3. Chooses *Colorado Front Range*. They're back where they were, now
+   showing that region: the home page's events and *Near you* row, the
+   destinations map centred on Denver and Boulder, Communities, Events and
+   the activity pages.
+4. Searches by a town or zip code in the region, as in UC-14.
+5. Comes back next week: the board still shows the Front Range. A signed-in
+   member whose home town is in a region sees that region without choosing.
+
+**Requirements:** FR-RG-1 to FR-RG-6.
+
+**Succeeds when:** someone outside Western North Carolina sees their own
+area within one click of arriving, and the choice is never stored on their
+account or sent anywhere.
+
+---
+
+## UC-35 — Open a new region
+
+> **Approved 11 October 2026 (Sarah, in auto mode).** Opening a region is
+> an operator task: a migration adds the region and the app's town list
+> grows; research and listing follow. The first five new regions were
+> opened this way on 11 October 2026.
+
+**Actor:** The site admin (Sarah), helped by the research tools
+
+**Trigger:** Sarah has researched a city's clubs, venues and shops (for
+example with Gemini, UC-9) and wants that area on the board.
+
+**Flow:**
+
+1. Picks the hub city or cities and a radius (100 miles unless the area
+   says otherwise), and names the region.
+2. Adds the region: a short migration with its name, hubs, centre, radius,
+   time zone and order, and its towns and zip codes in the app's town list
+   (see the [runbook](./runbook#opening-a-region)).
+3. Loads the research for the area into the private research tables
+   (`load.mjs --append`) and turns the community groups that have a
+   website into candidates.
+4. On the admin page, lists each candidate group into the new region, or
+   skips it. Listed groups appear as unclaimed listings their organizers
+   can claim (FR-GR-9).
+5. The region appears under *change* for everyone, with its groups.
+
+**Requirements:** FR-RG-7 to FR-RG-9; research FR-RS-1 to FR-RS-9.
+
+**Succeeds when:** a new region goes from research to a browsable page in
+an afternoon, with nothing listed that Sarah hasn't looked at.
 
 ---
 

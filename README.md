@@ -13,8 +13,11 @@ or by date, and they are the same for everyone.
 
 Live at https://branchoutapp-production.up.railway.app/ with every Must
 requirement, most Shoulds, 186 database permission tests and the unit
-tests passing. Real Western North Carolina groups are listed until their
-organizers claim them, and a weekly research agent suggests new ones.
+tests passing. Since 11 October 2026 it covers several regions, each built
+around hub cities (Western North Carolina, the Colorado Front Range, the
+Triangle, Seattle and Bellingham, the New River Gorge and East Tennessee).
+Real groups are listed until their organizers claim them, and a weekly
+research agent suggests new ones.
 
 ## Running it
 

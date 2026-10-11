@@ -9,7 +9,8 @@ Four people this board is built for — three who use it and one who keeps it
 running. Deliberately few.
 
 :::note Audience
-This is the general, all-adventure board for Western North Carolina. The
+This is the general, all-adventure board, started in Western North
+Carolina and growing region by region since 11 October 2026 (UC-34). The
 women's outdoor community app will be a clone with its own personas (see
 [Cloning](./cloning)).
 :::

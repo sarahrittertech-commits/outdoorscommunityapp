@@ -564,3 +564,36 @@ On phones the photo sits above the name, and each block stacks. Hidden
 or blank sections don't appear at all: no empty headings. The owner sees
 their hidden sections, marked *hidden: only you see this*.
 
+## UC-34 — Choose your region
+
+*Approved 11 October 2026 (auto mode) and built the same day.*
+
+```mermaid
+flowchart TD
+  arrive["Any page"] --> header["Header: <Region> · change"]
+  header -->|change| regions["Regions page<br/>each live region: name, hub cities, group count, Choose"]
+  regions -->|Choose| set["Region remembered in this browser (cookie)"]
+  set --> back(["Back to the page they came from, now showing that region"])
+  arrive --> which{Which region?}
+  which -->|link has ?region=| fromlink["That region (a shared link opens the same view)"]
+  which -->|chosen before| cookie["The remembered region"]
+  which -->|signed in, home town in a region| home["Their home town's region"]
+  which -->|none of these| default["Western North Carolina"]
+  back --> pages["Home (Near you, destinations map), Communities, Events,<br/>activity pages and search: that region's groups and events"]
+  pages -->|All regions| all(["Every region, for activity pages and search"])
+```
+
+## UC-35 — Open a new region
+
+*Approved 11 October 2026 (auto mode).*
+
+```mermaid
+flowchart TD
+  research["Research the area (Gemini, UC-9)"] --> pick["Pick hub cities, radius, name"]
+  pick --> add["Migration: the region row<br/>App: its towns and zip codes"]
+  add --> load["load.mjs --append into the research tables"]
+  load --> cands["Community groups with a website become candidates"]
+  cands --> admin["Admin page: List into <region> or Skip"]
+  admin --> live(["Region listed under change, with its groups"])
+```
+

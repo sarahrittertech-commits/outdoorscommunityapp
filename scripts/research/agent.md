@@ -51,30 +51,33 @@ the intake answers `401`, stop and say so in your summary.
 2. **Pick this week's activities.** Search a third of the subcategories each
    week, in order, so every activity is covered every three weeks. Use the
    ISO week number: week mod 3 = 0 → the first third, 1 → the second, 2 →
-   the last. Keep to about 80 searches in a run: roughly half for the home
-   area, half for the wider area.
+   the last. Keep to about 80 searches in a run: most for the live regions,
+   the rest for the towns around them.
 
 3. **Search** for each chosen subcategory in two rings.
 
-   - **Home area, every week: Western North Carolina.** Asheville, Brevard,
-     Hendersonville, Black Mountain, Waynesville, Sylva, Boone, Burnsville,
-     Marion and Old Fort, Bryson City, Franklin, Highlands and Lake Lure.
-   - **Wider area, one group a week, in turn** (ISO week number mod 4):
-     - 0 → the rest of North Carolina: Charlotte, Raleigh and Durham,
-       Greensboro and Winston-Salem, Wilmington.
-     - 1 → South Carolina and Georgia: Greenville, Columbia, Charleston,
-       Atlanta, Blue Ridge (GA), Dahlonega.
-     - 2 → Tennessee: Knoxville, Chattanooga, Johnson City, the Smokies
-       gateway towns.
-     - 3 → Virginia and Kentucky: Roanoke, Blacksburg, Charlottesville,
-       Richmond, the Red River Gorge.
+   - **The live regions, every week.** Read them from the board's Regions
+     page (or `{"action": "known"}` if the intake returns them). Today:
+     Western North Carolina (Asheville, Brevard, Hendersonville, Black
+     Mountain, Waynesville, Sylva, Boone, Burnsville, Marion and Old Fort,
+     Bryson City, Franklin, Highlands, Lake Lure); Colorado Front Range
+     (Denver, Boulder, Golden, Fort Collins, Colorado Springs); Raleigh and
+     the Triangle (Raleigh, Durham, Chapel Hill, Cary); Seattle and
+     Bellingham (Seattle, Bellingham, Everett, Tacoma, Issaquah); New River
+     Gorge (Fayetteville WV, Beckley, Summersville); Knoxville and East
+     Tennessee (Knoxville, Maryville, Townsend, Johnson City). Spread the
+     searches across them, one or two regions in depth each week in turn
+     (ISO week number mod the number of regions).
+   - **Around them, in turn:** the towns just beyond each region's 100-mile
+     reach, and any city on Sarah's research list (see the PRD's open
+     questions).
 
    Useful searches:
    - `<activity> club <area>`, `<activity> group <area>`
    - `<activity> meetup <area>`
    - `<activity> events <area> <month> <year>`
 
-   Set `out_of_region` to true for anything outside Western North Carolina.
+   Set `out_of_region` to true for anything outside every live region.
    Finds from farther away that turn up in results are welcome too, with
    `out_of_region` set.
 

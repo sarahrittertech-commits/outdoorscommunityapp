@@ -190,9 +190,19 @@ a claim approved.
 | Action | Visitor | User | Site admin |
 | --- | --- | --- | --- |
 | See candidates | ❌ | ❌ | ✅ |
-| List a group candidate | ❌ | ❌ | ✅ |
+| List a group candidate (into a live region it chooses, FR-RG-8) | ❌ | ❌ | ✅ |
 | Skip a candidate | ❌ | ❌ | ✅ |
 | Add a candidate | ❌ | ❌ | ❌ research agent only |
+
+### Regions (UC-34, UC-35, FR-RG-1 to FR-RG-10)
+
+| Action | Visitor | User | Page manager | Page admin | Site admin |
+| --- | --- | --- | --- | --- | --- |
+| See the regions and choose one to look at | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Choose a group's region when creating it (live regions only) | ❌ | ✅ | — | — | ✅ |
+| Move their group to another live region | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Put a group in a coming-soon region | ❌ | ❌ | ❌ | ❌ | ❌ (migration only) |
+| Add, change or open a region | ❌ | ❌ | ❌ | ❌ | ❌ (migration only) |
 
 ### Group photos (UC-21, FR-GR-12, FR-GR-13)
 
