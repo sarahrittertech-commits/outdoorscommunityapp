@@ -13,10 +13,13 @@ Why it is shaped this way (lessons from the 10–11 October lists):
 - `kind` and `activities` match the board's import, so rows load cleanly.
 - A website, a separate `source_url`, Instagram, Facebook and any other
   public pages that mention the group (`other_sources`) for every row, and
-  a confidence,
+  a confidence that is strict (most rows shouldn't be high),
   because the board refuses candidates without a link and some links in
   AI output are guessed.
 - No people's names, emails or phone numbers (FR-RS-2).
+- A national network's local chapter only with a page for that chapter:
+  the Asheville run listed "Outdoor Afro North Carolina" and "Latino
+  Outdoors Western North Carolina" from the national homepages alone.
 - No target counts, and a required second pass for women's and inclusive
   groups. The 11 October Asheville run returned exactly the 15 clubs it was
   asked for and left out Blue Ridge Dirt Skrrts: search tools rank large,
@@ -43,7 +46,7 @@ Rules:
 6. No people's names, email addresses or phone numbers, ever.
 7. Skip national chains' general pages, closed businesses, and anything only on a private or sign-in page.
 8. There is no target number. Keep searching until new searches stop turning up new organizations; do not stop at a round number.
-9. AFFINITY PASS, done FIRST: search specifically for women's, girls', FTWN-B, queer and LGBTQ+, BIPOC and adaptive or disability-inclusive groups for these activities around [CITY]. Search Instagram and Facebook pages that anyone can read, Meetup, local bike shop and climbing gym event pages, and national networks' local chapters (Trail Sisters, Ladies Climbing Coalition, Radical Adventure Riders, Brown Girls Climb, Outdoor Afro, Latino Outdoors, Unlikely Hikers, Catalyst Sports, SheJumps, Women's MTB Network, Girls Go Shred). Groups that live mainly on Instagram count: use their Instagram page as the website and give the handle. Put these rows in the same CSV.
+9. AFFINITY PASS, done FIRST: search specifically for women's, girls', FTWN-B, queer and LGBTQ+, BIPOC and adaptive or disability-inclusive groups for these activities around [CITY]. Search Instagram and Facebook pages that anyone can read, Meetup, local bike shop and climbing gym event pages, and national networks' local chapters (Trail Sisters, Ladies Climbing Coalition, Radical Adventure Riders, Brown Girls Climb, Outdoor Afro, Latino Outdoors, Unlikely Hikers, Catalyst Sports, SheJumps, Women's MTB Network, Girls Go Shred). Groups that live mainly on Instagram count: use their Instagram page as the website and give the handle. List a national network's local chapter ONLY if you find a page for that chapter (a chapter page, its own Instagram, Facebook or Meetup); a national homepage alone is not evidence of a local group. Put these rows in the same CSV.
 10. Make sure these are included if they are active (check each one): [KNOWN GROUPS — e.g. for Asheville: Blue Ridge Dirt Skrrts (dirtskrrts.com), Trail Sisters WNC, Ladies Climbing Coalition Asheville, Radical Adventure Riders Asheville, Girls Go Shred, Asheville Women's Run Club].
 11. At the end, after the code block, write: "Found: N clubs (of which N women's or inclusive), N venues, N shops." Then "Searches I ran:" with the search queries you used, and "Likely missing:" with what you couldn't cover.
 
@@ -59,7 +62,7 @@ Output: a CSV in a single code block, with exactly this header and these allowed
 - other_sources: other public links that mention the organization, separated by " ; ", else blank
 - women_specific: Yes | No | Unknown
 - recent_activity: the most recent dated post, event or update you saw (YYYY-MM), else blank
-- confidence: high (official site confirms it) | medium (only third-party sources) | low (couldn't confirm)
+- confidence: high (its own website or page shows activity in the last 12 months) | medium (it exists, but you could only see third-party pages, or nothing recent) | low (couldn't confirm). Be strict: most rows should not be high.
 
 If the CSV is too long for one answer, stop after a complete row and write CONTINUE; I'll reply "continue" and you carry on without repeating rows.
 ```
