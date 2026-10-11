@@ -229,7 +229,7 @@ insert into definer_allowed values
   ('is_site_admin()'),
   ('join_answers(uuid)'),
   ('join_by_invite(text)'),
-  ('list_candidate(uuid)'),
+  ('list_candidate(uuid, uuid)'),
   ('move_from_waitlist(uuid, uuid)'),
   ('member_list_visible(uuid)'),
   ('manage_rsvp(uuid, uuid, text, text)'),

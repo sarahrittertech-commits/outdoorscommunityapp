@@ -181,7 +181,7 @@ select '22222222-2222-4222-8222-000000000099', 'example-hiking-club', 'Example H
        'A volunteer hiking club with weekly group hikes. Listed from its public website.',
        s.id, r.id, 'Hendersonville', false, true, 'https://example.org/hiking-club'
 from public.subcategories s join public.categories c on c.id = s.category_id, public.regions r
-where c.slug = 'hiking' order by s.sort_order limit 1;
+where c.slug = 'hiking' and r.slug = 'western-nc' order by s.sort_order limit 1;
 
 insert into public.events (group_id, title, starts_at, ends_at, timezone, location_name, address_visibility, source_url)
 values ('22222222-2222-4222-8222-000000000099', 'Saturday group hike',
