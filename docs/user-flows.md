@@ -597,3 +597,19 @@ flowchart TD
   admin --> live(["Region listed under change, with its groups"])
 ```
 
+## UC-36 — Keep our space our own
+
+*Draft, awaiting review (11 October 2026).*
+
+```mermaid
+flowchart TD
+  create["Create or claim the group, tag it Women"] --> hint["One-line suggestion: Ask to join, organizers-only member list"]
+  hint --> settings["Group settings<br/>Joining: Ask to join + question<br/>Member list: organizers only<br/>Listed / Unlisted (new)"]
+  settings --> share["Share the invite link where the group already talks"]
+  share --> request["Someone asks to join: answer + profile (if shared)"]
+  request --> decide{Organizer decides}
+  decide -->|approve| member(["Member: discussions, photos, who's going"])
+  decide -->|decline| declined(["Not approved; nothing more is said"])
+  member -->|turns out wrong| ban(["Remove and ban; logged"])
+```
+

@@ -26,7 +26,7 @@ process; UC-7 and UC-8 were written after the features were built, to
 close that gap. UC-14 to UC-23 come from the 8 October Magic Patterns
 design. UC-25 to UC-27 were requested by Sarah on 8 October and drafted on
 9 October. UC-34 and UC-35, taking the board national region by region,
-were requested and approved on 11 October.
+were requested and approved on 11 October; UC-36 was drafted the same day.
 
 ## UC-1 — What's out there?
 
@@ -1083,6 +1083,59 @@ example with Gemini, UC-9) and wants that area on the board.
 
 **Succeeds when:** a new region goes from research to a browsable page in
 an afternoon, with nothing listed that Sarah hasn't looked at.
+
+---
+
+## UC-36 — Keep our space our own
+
+> **Draft, awaiting review. Decisions needed.** Requested by Sarah on 11
+> October 2026: women built their groups on Facebook because it was easy,
+> the platform then let men find and target them, and they are moving off
+> it to keep a space of their own; the same holds for other affinity
+> groups. Under principle P8 these groups are listed like any other, never
+> featured, and must be able to protect who is inside. Much of this exists
+> already; the draft names what's new.
+
+**Actor:** The page admin of an affinity group (a women's mountain bike
+group)
+
+**Trigger:** Moving the group off Facebook, and wants only the people the
+group is for to get in.
+
+**Flow:**
+
+1. Creates or claims the group and tags it *Women* (FR-GR-11). The form
+   explains, in one line, the settings below.
+2. Sets joining to *Ask to join* with a join question (FR-GR-3, FR-MB-2),
+   for example "Tell us a little about yourself and how you ride".
+3. Keeps the member list visible to organizers only, so outsiders and new
+   members can't browse who belongs (FR-MB-10).
+4. Discussions, photos and who's going stay members-only (already so).
+5. Reads each request with the person's answer and, where they share it,
+   their profile (UC-33), then approves or declines. Declining says nothing
+   to the person beyond "not approved".
+6. If someone gets in who shouldn't, removes and bans them; a banned person
+   can't ask again, and the removal is logged (FR-MB-7).
+7. Optionally makes the group **unlisted**: it stays out of every list and
+   search, and people join only through the group's invite link (UC-31).
+
+**Requirements:** to be written after review.
+
+**Succeeds when:** an affinity group can move off Facebook with the same
+ease of sharing, and nobody outside it can see who its members are or get
+in without the organizers saying yes.
+
+**Options and their cost:**
+
+| Decision | Recommended | Alternatives and their cost |
+| --- | --- | --- |
+| **Defaults for affinity-tagged groups** | Suggest *Ask to join* and organizers-only member list when a group adds an affinity tag, with a one-line reason; the page admin decides. | Force them on: safer by default, but some open women's rides want anyone to show up. |
+| **Unlisted groups** (new) | Yes: a page admin can hide the group from lists, search and its activity pages; the group page and invite link still work. | No: simpler, but a group that wants to avoid attention has to stay findable. |
+| **Who sees a join request's profile** | The group's organizers, as today (UC-33). | — |
+| **Telling a declined person why** | Never automatically; the organizer can message them if they choose (UC-20). | A required reason: kinder in some cases, but it invites argument. |
+
+**Not part of this:** checking anyone's gender or identity. The board can't
+verify it and won't ask; the organizers' approval is the gate.
 
 ---
 

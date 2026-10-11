@@ -254,12 +254,14 @@ other, with affinity tags.)
 | FR-RS-8 | New events found later for a group that is still an unclaimed listing are added to it automatically, because the group itself was already approved, but only when the find is a group and each event's link is on the listing's own website (not a shared site such as Facebook). Other events wait with the candidate for the site admin. Once a group is claimed, its owner runs its events and the agent adds none. | Should | An event whose link is elsewhere never reaches the board without the site admin. |
 | FR-RS-10 | **Possible duplicates.** A find with exactly the same name as a candidate, research organization or board group is still dropped silently (FR-RS-3). A find that only looks like one (a similar name, or the same website, shared sites such as Facebook or Meetup excepted) is kept and tagged *possible duplicate* on the admin page, naming what it may duplicate and linking to it, so the site admin compares the two before listing or skipping. | Should | A near match is never listed without review and never silently lost. |
 | FR-RS-9 | The agent adds candidates only through one database function that validates every field. It has no database access of its own: it calls an intake (an Edge Function) with a token, and the intake can only list what the board knows and add a candidate. | Should | The function rejects a missing source link, a bad activity or an over-long field. |
+| FR-RS-10 | **Affinity first** *(added 11 October 2026, P8)*. Every research run searches for women's, queer and LGBTQ+, BIPOC, adaptive, youth and family groups first: national networks' local chapters (Trail Sisters, Ladies Climbing Coalition, Radical Adventure Riders, Brown Girls Climb, Outdoor Afro, Latino Outdoors, Unlikely Hikers, Catalyst Sports, SheJumps, Women's MTB Network, Girls Go Shred) and pages anyone can read on Instagram, Facebook and Meetup, plus a per-city list of groups already known. It has no target count, and it reports how many affinity groups it found and the searches it ran. | Should | A run's summary states its affinity count and searches. |
+| FR-RS-11 | **Bias check before a region opens** *(added 11 October 2026)*. A region goes live only after its research includes the affinity pass (FR-RS-10) and its candidates have been checked against the known-groups list; the runbook records the region's affinity count at opening. | Should | — |
 
 ## Draft requirements — pending use case review
 
 :::note Drafts, 8 October 2026
 These cover the alternative paths and edge cases for draft use cases
-UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26 and UC-28 (most from the 8 October Magic Patterns design; UC-25 to
+UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28 and UC-36 (most from the 8 October Magic Patterns design; UC-25 to
 UC-27 requested by Sarah the same day and drafted 9 October). None is
 built (UC-29, password sign-in, was approved and built on 9 October and
 its requirements, FR-AC-17 to FR-AC-21, are in the Accounts table). Each moves into its area's table above, with a priority, once Sarah

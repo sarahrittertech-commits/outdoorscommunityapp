@@ -207,7 +207,13 @@ on 11 October 2026.
    groups*). It only adds rows that aren't there yet.
 4. **Make candidates** of the community groups that have a website, and
    review them on the admin page: *List* into the region, or *Skip*.
-5. **Go live:** a migration setting the region's `status` to `live`. It
+5. **Bias check (FR-RS-11):** before going live, make sure the research
+   included the affinity pass (women's, queer and LGBTQ+, BIPOC, adaptive,
+   youth and family groups) and that every group on the city's
+   known-groups list is either a candidate or a listing. Count them:
+   `select count(*) filter (where cardinality(affinity_tags) > 0), count(*) from public.groups where region_id = (select id from public.regions where slug = '<slug>');`
+   Note the count here when the region opens.
+6. **Go live:** a migration setting the region's `status` to `live`. It
    then shows under *change* for everyone.
 
 **Moving existing groups into a region.** `scripts/regions/assign-regions.mjs`

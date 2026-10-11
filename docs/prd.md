@@ -58,6 +58,7 @@ each one rules features out.
 | P5 | **Text first.** Words and links do the work; images are optional. One photo per event, and members-only photo galleries inside groups *(amended 8 October 2026)*. | Photo walls on browse pages, infinite media scroll |
 | P6 | **Light and fast.** Pages are plain HTML from the server and work on a weak phone signal. | Heavy client apps, spinners on every page, infinite scroll |
 | P7 | **People over metrics.** Show useful facts (member count, next event), never vanity counts. | Likes, reactions, follower counts, leaderboards |
+| P8 | **Complete, not featured.** Affinity groups (women's, queer and LGBTQ+, BIPOC, adaptive, youth and family) are why many people find a safe first step into a sport, so research must never leave them out; but they are listed like every other group, in the same lists and the same order, never singled out, featured or gathered into a showcase that draws the wrong kind of attention. They can keep their space their own *(added 11 October 2026)*. | Research and listings that reflect only what ranks highest in search; "women's groups" banners, featured affinity sections or anything that makes those groups easier to target; settings that expose a group's members to people outside it |
 
 ## Design direction
 
@@ -305,6 +306,26 @@ Approved in auto mode the same day; the reasoning is in
 
 Not decided yet (open questions below): which regions come next, whether a
 region needs local moderators, and the order for research beyond the six.
+
+### Affinity first — 11 October 2026
+
+Sarah, after a Gemini research run for Asheville returned 15 clubs and left
+out Blue Ridge Dirt Skrrts, the one local ride that sells out on RSVP:
+women built their groups on Facebook because it was easy, the platform then
+let men find and target those groups, and women are moving off it to keep
+spaces of their own. The same is true of other affinity groups. The board
+has to be where they can go, and its data gathering has to correct
+actively for the bias in search tools, which rank large, older,
+mixed-gender organizations first while many affinity groups live mainly on
+Instagram.
+
+| Decision | What it means |
+| --- | --- |
+| **Principle P8, complete, not featured** | Above. |
+| **Research looks for affinity groups first** | Every research run, Gemini or the weekly agent, searches for women's and inclusive groups first, from a per-city list of known groups and national networks' local chapters, and reports how many it found (FR-RS-10). |
+| **A bias check before a region opens** | A region doesn't go live until its research includes an affinity pass and its candidates have been checked against the known-groups list (FR-RS-11). Measured on 11 October: 34 of 692 researched organizations (5%) were women-specific; 12 of Western North Carolina's 62 listed groups and none of the Triangle's 14 carry an affinity tag. |
+| **Not featured** | Sarah, the same day: affinity groups must not be put front and centre, which would attract the wrong kind of attention; they just must not be left off. No affinity showcase on the home page; the existing affinity tags (FR-GR-11) stay as they are. |
+| **Safety for affinity groups (draft)** | UC-36 (keep our space our own) is drafted for review. |
 
 ## Open questions
 
