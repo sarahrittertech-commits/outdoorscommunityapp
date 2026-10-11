@@ -125,7 +125,14 @@ details and internal notes.
    ```
 
    It replaces the research tables' contents, so re-running with a newer
-   export is safe.
+   export is safe. To add a newer export **without touching what's already
+   loaded**, use `--append`: only rows whose id and name aren't there yet
+   are inserted, nothing is changed or deleted, and each row's market goes
+   at the start of its notes. Running it twice adds nothing the second time.
+
+   ```bash
+   node scripts/research/load.mjs --append ~/research-export > ~/research.sql
+   ```
 3. Review candidates with `select * from research.organization_fit`. Its
    `board_fit` column is a first sort by organization type — *community
    group*, *business*, *venue*, *not a listing*, *closed* — not a decision.
