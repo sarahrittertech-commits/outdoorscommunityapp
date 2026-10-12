@@ -16,6 +16,16 @@ plain place to browse what's out there by activity and see what's coming up.
 Organizers have the mirror-image problem: they pay for Meetup or fight the
 Facebook algorithm to get an event in front of their own members.
 
+**Not one more platform** *(Sarah, 12 October 2026)*. Organizers of
+community groups and nonprofits already juggle Instagram, Facebook, a
+website, a sign-up tool and group chats. The board must not become one
+more thing to keep up to date. And the path from a post to a sign-up is
+too long: a flyer on Instagram, then the profile, then the link in the
+bio, then another site to register. Too many awkward taps for someone
+scrolling Instagram or TikTok. An event on the board should be the one
+page every post links to, with RSVPs on it, and sharing it should take
+less work than what organizers do now (UC-38, draft).
+
 ## Goal
 
 Ship a web app where anyone can browse outdoor groups by category without an

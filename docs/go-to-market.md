@@ -150,6 +150,11 @@ the least tolerant of promotion.
 - **Facebook:** don't advertise in groups. Organizers decide whether to
   share their listing link with their members; make that easy (share
   buttons, good link previews, calendar files).
+- **Make sharing one step for organizers** (UC-38, draft): a share kit
+  on every event (post and story images with a QR code, caption, short
+  link) and one bio link that never changes. Every post leads to the
+  event page where people RSVP, so the board replaces work instead of
+  adding a platform.
 - **Affinity groups:** never promoted as a category or "featured" (P8).
   They choose whether and how to share.
 

@@ -640,3 +640,20 @@ flowchart TD
   page --> host["Host's page in Guides, shops and venues<br/>its upcoming events"]
 ```
 
+## UC-38 — Share an event to Instagram and Facebook
+
+*Draft, awaiting review (12 October 2026).*
+
+```mermaid
+flowchart TD
+  event["Event page (organizer)"] -->|Share| kit["Share kit<br/>square image · story image with QR<br/>caption · short link"]
+  kit --> story["Instagram story + link sticker"]
+  kit --> post["Instagram post or reel<br/>QR + short link in caption"]
+  kit --> fb["Facebook post<br/>clickable link + preview"]
+  bio["Instagram bio: one link that never changes<br/>the group's upcoming events"]
+  story -->|one tap| page["Event page: RSVP"]
+  post -->|scan or bio| page
+  fb -->|one tap| page
+  bio --> page
+```
+

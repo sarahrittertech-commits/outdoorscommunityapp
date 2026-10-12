@@ -1195,6 +1195,60 @@ business can buy its way up the list.
 **Not part of this:** paid placement, featured events, ads. Business
 events follow P2 (lists, not feeds): same order and filters for everyone.
 
+## UC-38 — Share an event to Instagram and Facebook
+
+> **Draft, awaiting review. Decisions needed.** Requested by Sarah on 12
+> October 2026: organizers manage too many platforms already, and "link in
+> bio" makes people tap through three pages to register. The board should
+> make an event easy to post, with every post leading straight to the
+> event page where people RSVP.
+
+**Actor:** The page admin of a nonprofit trail group who posts the group's
+events on Instagram and Facebook
+
+**Trigger:** Has just posted a Saturday trail day on the board and wants
+it on the group's Instagram and Facebook within a couple of minutes.
+
+**Flow:**
+
+1. On the event page, presses **Share**.
+2. Gets a share kit, ready to use:
+   - a square post image and a tall story image: title, date, time,
+     place, the group's cover photo, and a QR code to the event page;
+   - a caption to copy, with the date, place and a short link;
+   - the short link itself (for example `branchout.org/e/7Kq2`).
+3. Posts to Instagram:
+   - **Story:** the tall image with a link sticker on the short link.
+     One tap from the story to the event page, no bio.
+   - **Feed post or reel:** the square image; the caption names the short
+     link, and the QR code works from a screenshot or a printed flyer.
+4. Posts to Facebook, where links are clickable: the caption and short
+   link. The link preview shows the event's image and date.
+5. In the Instagram bio, keeps one link that never changes: the group's
+   **upcoming events** page on the board, so "link in bio" always lands on
+   this week's events, whatever the latest post was.
+6. Someone taps through from the story, lands on the event page, and
+   RSVPs. Both the organizer and the member stay on one page.
+
+**Requirements:** to be written after review.
+
+**Succeeds when:** posting an event to Instagram and Facebook takes under
+two minutes, every post leads to the event page in one tap or one scan,
+and the organizer never has to update their bio link.
+
+**Options and their cost:**
+
+| Decision | Recommended | Alternatives and their cost |
+| --- | --- | --- |
+| **How posts get to Instagram and Facebook** | A share kit the organizer posts themselves (images, caption, short link, QR). No Meta account connection. | Post for them through Meta's API: one click, but every group must connect a business or creator account, the app needs Meta's review, and the board would hold their social account tokens. Months of work, and the board becomes a social media manager, which is the extra platform Sarah wants to avoid. |
+| **Short links** | Short, stable `/e/<code>` links on the board's own domain, waiting on the domain. | Full URLs: work today, but they're long in captions and on QR codes. |
+| **The one bio link** | A stable group page of upcoming events (exists as `/g/<slug>`); add a tidier `/<slug>/events` once the domain is set. | Link-in-bio tools: one more tool to manage. |
+| **Posting tools organizers already use** | The kit's images and caption drop into Buffer, Later or Meta Business Suite unchanged. | Building scheduling into the board: scope creep. |
+| **Bringing Instagram-only events in** | Not automatic. The research agents read public pages only, and Meta doesn't allow reading posts without the account owner's permission; organizers post on the board first and share out. | Scraping Instagram: against Meta's terms and fragile. |
+
+**Not part of this:** reading or posting to anyone's social accounts,
+follower counts, or anything that turns the board into a feed.
+
 ---
 
 ## Journeys the seed data must cover
