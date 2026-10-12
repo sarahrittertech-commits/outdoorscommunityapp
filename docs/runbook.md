@@ -151,11 +151,34 @@ details and internal notes.
 
 ### Gemini sweep (the inexpensive one, from 12 October 2026)
 
-**Paused on 12 October 2026** (`gh workflow disable research-sweep.yml`). With a new key the
-free tier can't run it: Gemini 2.5 answers 404 and Gemini 3 has no Google Search grounding on
-the free tier (429). Paid API billing is separate from a Gemini app subscription, and Sarah
-chose not to pay for it, since Gemini's finds needed heavy correction. Research continues with
-Claude. To resume: attach billing to the key's project, then `gh workflow enable research-sweep.yml`.
+**Revised 12 October 2026, still switched off until Sarah runs it.**
+Google approved paid API access the same day. Before the first run the
+sweep was rebuilt after a day of invented AI data (whole event files with
+made-up websites):
+
+- **Gemini never supplies dates.** It names organizations and the page
+  where each posts its events (`events_url`), at most 12 per run, "fewer
+  is fine, never guess".
+- **Activity passes, live regions only.** `areas.json` lists the live
+  regions' hubs (deep before wide; the other target towns wait under
+  `later`) and seven activity passes: cycling, running, hiking and trail
+  stewardship, paddling and fishing, climbing and snow, nature, affinity.
+- **Proof of search.** Gemini's answer carries the sites Google actually
+  returned; each find records whether its site was among them.
+- **Invented-batch alarm.** If most suggested sites don't load at all, the
+  run sends nothing.
+- **Dates only from the organizer's page,** read by the script: its
+  schema.org event data, or on its own WordPress site the public listing
+  of The Events Calendar (`/wp-json/tribe/events/v1/events`). Events
+  without a start time are kept as date-only, never published.
+- Homepages that don't load or don't name the organization are kept as
+  failed with the reason (FR-RS-13).
+
+Cost on the paid tier: one request per run, with Google Search billed per
+search after the monthly free allowance (5,000 for Gemini 3 models), at
+eight runs a day well inside it. To run: `gh workflow enable
+research-sweep.yml`, then Actions → *Research sweep (Gemini)* → *Run
+workflow*; read the log before leaving it on its schedule.
 
 `.github/workflows/research-sweep.yml` runs `scripts/research/gemini/sweep.mjs`
 every three hours on GitHub's free runners. Each run takes one area and one
