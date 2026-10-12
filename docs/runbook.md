@@ -171,7 +171,7 @@ Settings → Secrets and variables → Actions):
    (see *Weekly research agent* below).
 
 Optional: a repository *variable* `GEMINI_MODEL` if Google renames the
-model (default `gemini-2.5-flash`). To try it once by hand: Actions →
+model (default `gemini-3.8-flash`; on 12 October 2026 Google answered 404 for `gemini-2.5-flash` on new keys, since the 2.5 models are kept only for accounts that already used them). To try it once by hand: Actions →
 *Research sweep (Gemini)* → *Run workflow*, or locally with
 `node scripts/research/gemini/sweep.mjs --dry --run 0` (sends nothing).
 Edit `areas.json` to change the list. A run that hits the free quota stops

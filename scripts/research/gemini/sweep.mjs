@@ -18,7 +18,7 @@ import { readFile } from "node:fs/promises";
 import { buildPrompt, htmlText, pageNames, pageShowsDate, parseFinds, pick, shapeProblem } from "./lib.mjs";
 
 const INTAKE = process.env.RESEARCH_INTAKE_URL ?? "https://rxszqxwpgbrdytbkyxwp.supabase.co/functions/v1/research-intake";
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
+const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.8-flash";
 const args = process.argv.slice(2);
 const dry = args.includes("--dry");
 const runArg = args.indexOf("--run");

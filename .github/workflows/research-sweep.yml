@@ -29,5 +29,5 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           RESEARCH_AGENT_TOKEN: ${{ secrets.RESEARCH_AGENT_TOKEN }}
-          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.8-flash' }}
         run: node scripts/research/gemini/sweep.mjs
