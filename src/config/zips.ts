@@ -70,9 +70,40 @@ export const zipPrefixTowns: Record<string, string> = {
   // Sedona and Flagstaff
   "860": "Flagstaff",
   "863": "Prescott",
+  // Greenville and the Upstate
+  "293": "Spartanburg",
+  "296": "Greenville",
 };
 
 export const zipTowns: Record<string, string> = {
+  // Greenville and the Upstate (the 296 prefix otherwise points to Greenville)
+  "29690": "Travelers Rest",
+  "29650": "Greer",
+  "29651": "Greer",
+  "29681": "Simpsonville",
+  "29662": "Mauldin",
+  "29644": "Fountain Inn",
+  "29640": "Easley",
+  "29642": "Easley",
+  "29671": "Pickens",
+  "29631": "Clemson",
+  "29678": "Seneca",
+  "29672": "Seneca",
+  "29676": "Salem",
+  "29691": "Walhalla",
+  "29693": "Westminster",
+  "29621": "Anderson",
+  "29624": "Anderson",
+  "29625": "Anderson",
+  "29661": "Marietta",
+  "29687": "Taylors",
+  "29356": "Landrum",
+  "29349": "Inman",
+  "29340": "Gaffney",
+  "29341": "Gaffney",
+  "29360": "Laurens",
+  "29646": "Greenwood",
+  "29649": "Greenwood",
   // Reno and Lake Tahoe: lake towns 20-40 miles from their prefix hub
   "96150": "South Lake Tahoe",
   "96151": "South Lake Tahoe",

@@ -306,6 +306,14 @@ Canyon's South Rim, Prescott and Payson; zip prefixes 860 and 863, with
 Sedona's and the Verde Valley's own codes listed so they don't fall to
 Prescott. Its research included an affinity pass.
 
+Then `upstate-sc` (Greenville and the Upstate; migration
+`20261012000006_region_upstate_sc.sql`): Eastern time, 23 towns from
+Greenville and Travelers Rest to Clemson, Lake Jocassee, Anderson,
+Spartanburg and Greenwood; zip prefixes 293 and 296, with the smaller
+towns' own codes listed so they don't all fall to Greenville. It sits
+about 50 miles from Asheville, so a group near the state line goes in
+whichever region its meetups are in.
+
 To check a region's reach before opening it:
 `select name, hub_towns, radius_miles, status from public.regions order by sort_order;`
 
