@@ -103,55 +103,96 @@ October Boone list cited one race page for eleven different events. So
 this prompt works from the **hosts**, wants each event's own page with the
 date copied from it word for word, and leaves out dates no page shows.
 
-It now starts with the region's **major events**: races, festivals, film
-tours and big volunteer days. Then come the weekly community events, then
-the affinity and beginner events.
+**Paste in the real host list every time.** The 11 October Denver events
+run was given no host list. It came back with ski area openings, a Kansas
+City race company, and links to an Eventbrite search page and a ski
+conditions site. The same night's groups run had found ten Denver clubs
+with their own event calendars, and the events run checked none of them.
+So the prompt now:
+
+- starts from a host list taken from the board itself (the query below);
+- reports every host it checked, including the ones with nothing coming up;
+- takes only links on the host's own site or a registration page naming
+  the host, never a search page, listing site or news story;
+- needs a start time copied from the page;
+- keeps new hosts in their own pass, so they can be added before their
+  events go on.
 
 Events load into the private research tables as unverified. The board
 shows an event only once its group is listed and the event checks out
 (FR-RS-8). To check a row, open `event_url` and look for `date_quote`.
 
+### 1. Get the host list from the board
+
+Run this in the Supabase SQL editor, with the region's slug
+(`front-range`, `wasatch`, `new-river-gorge` and so on). Paste the first
+result into ORGANIZATIONS and the second into SHOPS AND GUIDES.
+
+```sql
+select string_agg(format('%s — %s', g.name, coalesce(g.website, g.source_url)), E'\n' order by g.name) as organizations
+from public.groups g join public.regions r on r.id = g.region_id
+where r.slug = 'front-range' and g.status = 'active' and g.review_status = 'approved';
+
+select string_agg(format('%s — %s', b.name, b.website), E'\n' order by b.name) as shops_and_guides
+from public.businesses b join public.regions r on r.id = b.region_id
+where r.slug = 'front-range' and b.status = 'active';
+```
+
+Add any venues you know hold events: gyms, bike parks, parks and
+recreation departments, REI stores, and breweries that host rides.
+
+### 2. The prompt
+
 ```text
-You are checking upcoming outdoor events for a community board. Area: within 100 miles of [CITY, STATE]. Window: today to 6 months from today. Activities: every kind of outdoor recreation — hiking, cycling of all kinds, paddling, climbing, running, camping, snow sports, fishing, nature and wildlife, trail work and conservation, and skills courses.
+You are checking upcoming outdoor events for a community board. Area: within 100 miles of [CITY, STATE]. Window: today to 6 months from today.
 
-HOSTS to work through, one at a time (open each one's events page or calendar, its public Instagram and Facebook posts, and its registration pages on BikeReg, RunSignup, UltraSignup, Eventbrite or Meetup):
-- ORGANIZATIONS: [ORGANIZATIONS from the groups run]
-- VENUES AND BUSINESSES (gyms, bike parks, ski areas, parks and recreation departments, shops, outfitters, REI stores, breweries that host rides): [VENUES]
-- RACE AND EVENT PROMOTERS: [PROMOTERS, if you know any]
+The HOST LIST below is the board's own list. Work through it one host at a time, in order, and do not skip any. If the host list is empty or still says [ORGANIZATIONS], stop and ask me for it.
 
-Work in three passes and put all rows in one CSV.
+ORGANIZATIONS (name — website):
+[ORGANIZATIONS]
 
-PASS 1 — MAJOR EVENTS. The events the outdoor community in this area plans around: races and race series (trail running, mountain bike, gravel, road, paddling, climbing competitions), festivals and expos, film tours (Banff Mountain Film Festival World Tour, Reel Rock, Radical Reels, Fly Fishing Film Tour), big trail work days and clean-ups, park and public lands days, season openers and closers, and clubs' annual meetings, dinners and swaps that are open to the public. Search "[CITY] trail race [YEAR]", "[CITY] gravel race", "[CITY] outdoor festival", "[CITY] film festival tour", "[STATE] race calendar", and the state's race calendars and parks calendars, then find each event's own page.
+SHOPS AND GUIDES (name — website):
+[SHOPS AND GUIDES]
 
-PASS 2 — RECURRING COMMUNITY EVENTS. Weekly and monthly shop rides, run clubs, gym meetups, paddling nights, group hikes, volunteer days, and beginner classes at shops, gyms and parks.
+VENUES (gyms, bike parks, parks departments, REI stores, breweries):
+[VENUES]
 
-PASS 3 — AFFINITY AND BEGINNER EVENTS (required). Women's, queer, BIPOC, adaptive and beginner rides, clinics, climbing nights, skills days and meetups at every host above, and at the affinity groups from the groups run.
+For each host:
+a. Open its website and find its events page, calendar, ride or run schedule, trips list, or volunteer page. Also check its public Instagram and Facebook posts, its Meetup group, and its own pages on BikeReg, RunSignup, UltraSignup or Eventbrite.
+b. List every upcoming event the host runs and the public can join: rides, runs, hikes, paddles, climbing nights, clinics, classes, volunteer days, races, film screenings, meetings and socials.
+c. Record what you found in the HOST CHECK list (see the end), including hosts with nothing upcoming.
 
-Proof rules (an event that fails any of these is left out and named under "Left out"):
-1. Every event needs its OWN page: the event page, the host's calendar entry, a registration page, or a public post announcing that event. Never reuse one link for two different events. A homepage or a general calendar is not an event page unless the event and its date are on it.
-2. Copy the date and time from that page word for word into "date_quote". Then give "start_date" as YYYY-MM-DD. NEVER work a date out from last year's date or from "usually the first Saturday in May": if no page shows this edition's date, leave the event out and name it under "Left out". If the page shows no year or says tentative or TBA, say so in "date_note" and set confidence to low.
-3. "checked_on": the date you opened the page (YYYY-MM-DD).
-4. "second_source": another public page that shows the same event and date (the host's Instagram, a registration site, a venue calendar), or blank. Do not invent one.
-5. Name the real host: the group or business whose page announces the event, with its own website or public page in "host_url". If a venue holds an event run by another group, put the group in "host" and the venue in "venue".
-6. Recurring events (a weekly ride): one row, with the page's wording for the pattern in "recurrence" and the next date in "start_date".
-7. "open_to": public (anyone can come or register) | members_and_guests (the page says guests may join) | members (members only). Skip members-only events unless they are big annual events listed publicly; skip cancelled and past events and anything you can only see after signing in.
-8. Description: one factual sentence in your own words, at most 200 characters. No marketing words. No people's names, email addresses or phone numbers.
-9. At the end, after the code block, write:
-   - "Found: N events — N major, N recurring, N affinity or beginner — from N hosts."
-   - "Per category:" with a count for each activity category.
-   - "Hosts with no upcoming events found:"
-   - "Searches I ran:"
-   - "Left out:" with each event you saw but couldn't prove, and why.
+Put the events in one CSV, in three passes:
+- PASS "host": events run by a host on the list. This is the main work; do it first and completely.
+- PASS "affinity": women's, queer, BIPOC, adaptive and beginner events run by a host on the list (rides, climbing nights, clinics, skills days). Mark them here instead of under "host".
+- PASS "new_host": only after every listed host is done, the area's major events run by a group NOT on the list (a race series, a festival, a film tour stop, a big trail day). For these, give the host's own website in "host_url" so I can add the host first.
+
+Proof rules. An event that fails any rule is left out and named under "Left out":
+1. "event_url" must be the event's own page on the host's website, or a registration page (BikeReg, RunSignup, UltraSignup, a single Eventbrite event, a single Meetup event) that names the host. NEVER use a search or results page (an Eventbrite or Google search), a listing or aggregator site (onthesnow, allevents, happeningnext, a tourism calendar), a news article, or a homepage that doesn't show the event. Never reuse one link for two events unless the page lists both with their dates (a ride schedule or calendar page).
+2. Copy the date AND the start time from that page word for word into "date_quote". No start time on the page means the event is left out. If the page gives two different times, leave it out and say so.
+3. NEVER work out a date yourself from last year's event, from "usually the first Saturday in May", or from a projected or "weather permitting" date. Ski area opening days are left out.
+4. Recurring events: one row only if the page states the day and time (for example "every Wednesday, 6–8 pm"). Quote that in "recurrence", put the next date in "start_date", and write "next date from the stated pattern" in "date_note".
+5. "host" is the group or business whose page announces the event, spelled exactly as on the host list. If a venue holds an event run by another group, the group is the host and the venue goes in "venue".
+6. "open_to": public | members_and_guests | members. Leave out members-only events, cancelled events, and anything you can only see after signing in.
+7. "location": the meeting place as written on the page (park, trailhead, shop or address). If the page has none, leave the field blank and say so in "date_note".
+8. Description: one factual sentence in your own words, at most 200 characters. No marketing words, no people's names, email addresses or phone numbers.
+
+At the end, after the code block:
+- "HOST CHECK": one line per host on the list, in order: the host, the page you checked, and either "N events" or "none upcoming" or "page wouldn't load".
+- "Found: N events — N host, N affinity, N new_host."
+- "Left out:" each event you saw but couldn't prove, and why.
 
 Output: a CSV in one code block, every field quoted, with exactly this header:
 
-"pass","event_name","host","host_url","venue","town","state","start_date","end_date","start_time","end_time","recurrence","date_quote","date_note","activities","audience","open_to","event_url","second_source","checked_on","price","description","confidence"
+"pass","event_name","host","host_url","venue","location","town","state","start_date","end_date","start_time","end_time","recurrence","date_quote","date_note","activities","audience","open_to","event_url","second_source","checked_on","price","description","confidence"
 
-- pass: major | recurring | affinity
-- activities: semicolon-separated, using the same list as the groups prompt (day-hikes; backpacking; road; gravel; mountain-biking; trail-running; paddleboard; indoor; trail-work; beginners; and so on)
+- pass: host | affinity | new_host
+- activities: semicolon-separated, from the groups prompt's list (day-hikes; backpacking; road; gravel; mountain-biking; casual-rides; trail-running; road-running; kayaking; whitewater; paddleboard; bouldering; indoor; birding; fly-fishing; trail-work; conservation; beginners; and so on)
 - audience: semicolon-separated: everyone | women | queer | bipoc | adaptive | youth | families | seniors | beginners
+- start_time and end_time: 24-hour HH:MM as on the page; end_time blank if the page has none
 - price: as written on the page ("Free", "$25"), or blank
-- confidence: high (the event's own page shows this date and you checked it today) | medium (only a public post or a listing site shows it) | low (no year, tentative, or couldn't confirm). Be strict.
+- checked_on: the date you opened the page (YYYY-MM-DD)
+- confidence: high (the host's own page or registration page shows this date and time, checked today) | medium (only the host's public social post shows it) | low (anything else; these will be left off the board)
 
 If the CSV is too long, stop after a complete row and write CONTINUE; I'll reply "continue" and you carry on without repeating rows.
 ```
