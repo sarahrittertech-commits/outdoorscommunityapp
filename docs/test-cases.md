@@ -219,6 +219,11 @@ web app is not the thing enforcing the rule.
 | PT-217 | Members and outsiders can't move a group (FR-RG-7) | Anyone moves a group |
 | PT-218 | A new group can start in any live region, not a coming-soon one (FR-RG-7) | A group created in a closed region |
 | PT-219 | A group whose region later closes can still be edited, and moved back to a live one (FR-RG-7) | Closing a region freezes its groups |
+| PT-220 | Only the site admin sees the kept guides and shops (UC-12) | A member reads the research |
+| PT-221 | Only the site admin lists a guide or shop, only in a live region; a guide becomes a guide listing with its tags | Anyone lists a business, or into a closed region |
+| PT-222 | Everyone reads active listings | Listings hidden from visitors |
+| PT-223 | Nobody writes listings directly, not even the site admin | A listing changed outside the functions |
+| PT-224 | The site admin skips a kept shop and removes a listing; a removed one is gone | Removed listings still showing |
 
 ## Automated — unit
 

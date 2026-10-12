@@ -305,7 +305,14 @@ event without having to join the group first.
 
 ## UC-12 — A bike shop on the board
 
-> **Draft, awaiting review.** Sarah decided on 8 October 2026 that
+> **First part built 11 October 2026,** on Sarah's go ("go ahead and add
+> guide services and gear stores now"): the site admin lists guide
+> services and gear shops from the research as unclaimed listings, each
+> with its own page, in a *Guides and shops* directory kept apart from
+> the communities. Steps 1 to 7 below (claiming, admins, linked groups,
+> sponsor links) are still a draft awaiting review.
+>
+> Sarah decided on 8 October 2026 that
 > businesses are on the board: a business page is owned by an account
 > signed in with the business's email, has its own admins, and can run a
 > group whose admins are separate. Businesses host events only through

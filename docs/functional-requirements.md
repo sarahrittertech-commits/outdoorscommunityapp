@@ -341,6 +341,14 @@ added later on 9 October 2026.
 Businesses are on the board (decided 8 October 2026). They host events
 only through a group, so events stay one feature with one set of rules.
 
+**Built 11 October 2026 (first part):** unclaimed listings of guide
+services and gear shops (FR-BZ-1 without services, locations or places;
+FR-BZ-2 listing only, by the site admin from kept research candidates, in
+a live region it picks), the site admin removing a listing, and the
+separate *Guides and shops* directory at `/guides-and-shops` (FR-BZ-7).
+Claiming, admins, linked groups and sponsor links (rest of FR-BZ-2,
+FR-BZ-3 to FR-BZ-6) wait for UC-12's review.
+
 | ID | Draft requirement | Proposed | Accepted when |
 | --- | --- | --- | --- |
 | FR-BZ-1 | **Business pages.** Name, description, services (plain list), activities, locations (FR-BR-16 places with role *its location*) and places it operates (role *operates at*), and a website link. No prices, booking or payments. | Should | — |

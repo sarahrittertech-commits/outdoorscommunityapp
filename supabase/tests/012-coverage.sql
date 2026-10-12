@@ -175,6 +175,7 @@ set local search_path = public, extensions, pg_catalog;
 create temporary table definer_allowed (signature text primary key) on commit drop;
 insert into definer_allowed values
   ('admin_candidate_counts()'),
+  ('admin_business_candidates()'),
   ('admin_candidates()'),
   ('answer_message_request(uuid, boolean)'),
   ('approve_claim(uuid)'),
@@ -229,6 +230,7 @@ insert into definer_allowed values
   ('is_site_admin()'),
   ('join_answers(uuid)'),
   ('join_by_invite(text)'),
+  ('list_business_candidate(uuid, uuid)'),
   ('list_candidate(uuid, uuid)'),
   ('move_from_waitlist(uuid, uuid)'),
   ('member_list_visible(uuid)'),
@@ -255,6 +257,8 @@ insert into definer_allowed values
   ('set_member_role(uuid, uuid, member_role)'),
   ('set_suggestion_status(uuid, suggestion_status, text)'),
   ('set_thread_flags(uuid, boolean, boolean)'),
+  ('remove_business(uuid)'),
+  ('skip_business_candidate(uuid)'),
   ('skip_candidate(uuid)'),
   ('suggestions_before_insert()'),
   ('suspend_user(uuid, text)'),

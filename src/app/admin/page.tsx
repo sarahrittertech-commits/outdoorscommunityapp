@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { listCandidate, skipCandidate } from "@/app/actions/candidates";
+import { listBusinessCandidate, listCandidate, skipBusinessCandidate, skipCandidate } from "@/app/actions/candidates";
 import { approveClaim, declineClaim } from "@/app/actions/claims";
 import { approveNewGroup, declineNewGroup, removeGroup, resolveReport, suspendUser, unsuspendUser } from "@/app/actions/moderation";
 import { setSuggestionStatus } from "@/app/actions/suggestions";
@@ -47,7 +47,7 @@ export default async function AdminPage({ searchParams }: Props) {
     .limit(100);
   if (kind) suggestionQuery = suggestionQuery.eq("kind", kind);
 
-  const [{ data: reports }, { data: log }, { data: suspended }, { data: claims }, { data: candidates }, { data: kept }, { data: newGroups }] = await Promise.all([
+  const [{ data: reports }, { data: log }, { data: suspended }, { data: claims }, { data: candidates }, { data: kept }, { data: newGroups }, { data: businesses }] = await Promise.all([
     supabase
       .from("reports")
       .select("id, target_type, target_id, reason, note, group_id, created_at, groups(slug, name)")
@@ -76,6 +76,8 @@ export default async function AdminPage({ searchParams }: Props) {
       .eq("group_members.role", "owner")
       .order("created_at")
       .limit(100),
+    // UC-12: kept guides and shops waiting to be listed.
+    supabase.rpc("admin_business_candidates"),
   ]);
   const { data: suggestions } = await suggestionQuery;
 
@@ -284,7 +286,53 @@ export default async function AdminPage({ searchParams }: Props) {
       </ul>
       {Boolean(kept?.length) && (
         <p className="mt-2 text-sm text-muted">
-          Kept in the research area for later: {kept!.map((k) => `${k.kept} ${k.kept === 1 ? k.kind : k.kind === "business" ? "businesses" : `${k.kind}s`}`).join(", ")}.
+          Kept in the research area for later: {kept!.map((k) => `${k.kept} ${k.kept === 1 ? k.kind : k.kind === "business" ? "businesses" : `${k.kind}s`}`).join(", ")}
+
+      <h2 id="guides-and-shops">Guides and shops ({businesses?.length ?? 0})</h2>
+      <p className="mt-1 text-sm text-muted">
+        Guide services and gear shops the research kept, oldest first. <em>List it</em> puts it in{" "}
+        <Link href="/guides-and-shops">Guides and shops</Link> as an unclaimed listing, never among the groups; <em>Skip</em> means
+        it won&apos;t be suggested again.
+      </p>
+      <ul className="mt-2 divide-y divide-rule border-y border-rule">
+        {businesses?.map((c) => (
+          <li key={c.id} className="py-3">
+            <p>
+              <strong>{c.name}</strong>{" "}
+              <span className="text-sm text-muted">
+                · {c.kind === "guide" ? "guide service" : "shop"} · {c.subcategory_name} · {c.area}
+              </span>
+              <AffinityTags tags={c.affinity_tags} className="ml-2 align-middle" />
+            </p>
+            <p className="mt-1 text-sm">{c.description}</p>
+            <p className="mt-1 text-sm text-muted">
+              <a href={c.source_url} rel="nofollow noopener">
+                {c.source_url}
+              </a>{" "}
+              · found {formatPostDate(c.found_at, tz)}
+            </p>
+            <div className="mt-2 flex flex-wrap gap-3 text-sm">
+              <form action={listBusinessCandidate.bind(null, c.id)} className="flex flex-wrap items-center gap-2">
+                <label htmlFor={`business-region-${c.id}`} className="sr-only">
+                  Region for {c.name}
+                </label>
+                <select id={`business-region-${c.id}`} name="region" defaultValue={candidateRegion(c.area).slug} className="mt-0 w-auto py-1 text-sm">
+                  {liveRegions().map((r) => (
+                    <option key={r.slug} value={r.slug}>
+                      {r.name}
+                    </option>
+                  ))}
+                </select>
+                <button className="button">List it</button>
+              </form>
+              <form action={skipBusinessCandidate.bind(null, c.id)}>
+                <button className="button button-plain">Skip</button>
+              </form>
+            </div>
+          </li>
+        ))}
+        {!businesses?.length && <li className="py-2 text-muted">No guides or shops waiting.</li>}
+      </ul>.
         </p>
       )}
 

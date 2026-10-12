@@ -178,6 +178,17 @@ Setting it up or changing the token:
 If the token leaks, change it in both places; the old one stops working at
 once.
 
+## Listing guides and shops (UC-12)
+
+The research keeps guide services and shops (`kind` *guide* or
+*business*) instead of offering them as groups. They wait on the site
+admin page under **Guides and shops**: check the source link, pick the
+region and press *List it*, or *Skip*. A listed one appears at
+`/guides-and-shops` and `/b/<slug>`, never among the communities. To
+take one down, open its page signed in as the site admin and press
+*Remove this listing*. Listings carry no prices, hours or contact
+details; those stay on the business's own site.
+
 ## Opening a region
 
 How a new region goes from research to the board (UC-35, FR-RG-9,

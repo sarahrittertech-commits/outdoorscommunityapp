@@ -71,6 +71,8 @@ export const notices = {
   claim_declined: "Claim declined.",
   candidate_listed: "Listed. It's on the board as an unclaimed listing.",
   candidate_skipped: "Skipped. It won't be suggested again.",
+  business_listed: "Listed. It's in Guides and shops as an unclaimed listing.",
+  business_removed: "Removed. It's no longer on the board.",
   suggestion_sent: "Thanks, the site admin reads every suggestion.",
   suggestion_updated: "Suggestion updated.",
   message_sent: "Sent.",

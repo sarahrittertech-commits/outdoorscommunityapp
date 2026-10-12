@@ -130,6 +130,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <Link href="/browse">browse all</Link>
             <Link href="/events">all events</Link>
             <Link href="/communities">communities</Link>
+            <Link href="/guides-and-shops">guides and shops</Link>
             <Link href="/regions">regions</Link>
             <Link href="/about">about</Link>
             <Link href="/suggest">suggest something</Link>

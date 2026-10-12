@@ -20,6 +20,27 @@ export type Database = {
   };
   public: {
     Tables: {
+      businesses: {
+        Row: {
+          id: string;
+          slug: string;
+          name: string;
+          kind: "guide" | "shop";
+          description: string;
+          subcategory_id: string;
+          region_id: string;
+          area: string;
+          website: string;
+          affinity_tags: string[];
+          is_unclaimed: boolean;
+          status: "active" | "removed";
+          created_at: string;
+          listed_by: string | null;
+        };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
       regions: {
         Row: {
           id: string;
@@ -920,6 +941,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      business_listings: {
+        Row: {
+          id: string | null;
+          slug: string | null;
+          name: string | null;
+          kind: "guide" | "shop" | null;
+          description: string | null;
+          area: string | null;
+          website: string | null;
+          affinity_tags: string[] | null;
+          is_unclaimed: boolean | null;
+          region_id: string | null;
+          region_slug: string | null;
+          region_name: string | null;
+          category_slug: string | null;
+          category_name: string | null;
+          subcategory_slug: string | null;
+          subcategory_name: string | null;
+        };
+        Relationships: [];
+      };
       subcategory_region_counts: {
         Row: {
           region_id: string | null;
@@ -938,6 +980,23 @@ export type Database = {
       };
     };
     Functions: {
+      admin_business_candidates: {
+        Args: never;
+        Returns: {
+          id: string;
+          name: string;
+          kind: "guide" | "business";
+          subcategory_name: string;
+          area: string;
+          description: string;
+          source_url: string;
+          affinity_tags: string[];
+          found_at: string;
+        }[];
+      };
+      list_business_candidate: { Args: { p_candidate_id: string; p_region_id: string }; Returns: string };
+      skip_business_candidate: { Args: { p_candidate_id: string }; Returns: undefined };
+      remove_business: { Args: { p_business_id: string }; Returns: undefined };
       can_view_profile: { Args: { p_user: string }; Returns: boolean };
       profile_section_visible: { Args: { p_user: string; p_section: string }; Returns: boolean };
       profile_goal_year: { Args: never; Returns: number };

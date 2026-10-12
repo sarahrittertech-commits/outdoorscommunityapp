@@ -166,7 +166,19 @@ flowchart TD
 
 ## UC-12 — A bike shop on the board
 
-*Draft, awaiting review.*
+*First part built 11 October 2026: listings and the directory.*
+
+```mermaid
+flowchart TD
+  research["Research keeps a guide service or shop"] --> admin["Site admin page: Guides and shops<br/>List it in a region · Skip"]
+  admin -->|List it| listing["Business page<br/>kind · activity · area · website · unclaimed listing"]
+  visitor(["Visitor"]) -->|footer: guides and shops| dir["Guides and shops<br/>A to Z · kind and activity filters · region"]
+  dir --> listing
+  listing -->|website| site(["The business's own site for prices and booking"])
+  listing -->|wrong, or yours?| suggest["Suggest something"]
+```
+
+*The rest is a draft, awaiting review.*
 
 ```mermaid
 flowchart TD

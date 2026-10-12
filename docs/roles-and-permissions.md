@@ -194,6 +194,16 @@ a claim approved.
 | Skip a candidate | ❌ | ❌ | ✅ |
 | Add a candidate | ❌ | ❌ | ❌ research agent only |
 
+### Guides and shops (UC-12, first part)
+
+| Action | Visitor | User | Site admin |
+| --- | --- | --- | --- |
+| See listed guides and shops | ✅ | ✅ | ✅ |
+| See the kept guides and shops waiting to be listed | ❌ | ❌ | ✅ |
+| List one (into a live region) or skip it | ❌ | ❌ | ✅ |
+| Remove a listing | ❌ | ❌ | ✅ |
+| Write to the listings any other way | ❌ | ❌ | ❌ |
+
 ### Regions (UC-34, UC-35, FR-RG-1 to FR-RG-10)
 
 | Action | Visitor | User | Page manager | Page admin | Site admin |
