@@ -51,11 +51,11 @@ export default async function RegionsPage({ searchParams }: Props) {
           return (
             <li key={r.slug} className="flex flex-wrap items-center justify-between gap-4 py-5">
               <div>
-                <h2 className="m-0 text-xl">
+                <h2 className="m-0 text-xl text-heading">
                   {r.name}
                   {isCurrent && <span className="ml-2 align-middle text-sm font-normal text-muted">(you&rsquo;re browsing this one)</span>}
                 </h2>
-                <p className="m-0 mt-1.5 text-sm text-muted">
+                <p className="m-0 mt-1.5 text-sm text-meta-plum">
                   Around {hubs(r.hubs)} · {count} {count === 1 ? "group" : "groups"}
                 </p>
               </div>

@@ -34,6 +34,7 @@
   --color-notice: var(--notice);
   --color-warning: var(--warning);
   --color-heading: var(--heading);
+  --color-meta-plum: var(--meta-plum);
   --font-sans: var(--font-atkinson), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-serif: var(--font-young-serif), Georgia, serif;
 }
