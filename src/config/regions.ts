@@ -192,4 +192,21 @@ export const regions: Region[] = [
     heroIntro:
       "Groups, meetups and events for getting outside in Sedona, Flagstaff and the Verde Valley. Join a group, show up, try something new.",
   },
+  {
+    slug: "upstate-sc",
+    name: "Greenville and the Upstate",
+    shortName: "Greenville–Upstate",
+    state: "SC",
+    timezone: "America/New_York",
+    hubs: ["Greenville"],
+    center: { lat: 34.85, lng: -82.4 },
+    zoom: 8,
+    radiusMiles: 100,
+    status: "live",
+    exampleTown: "Travelers Rest",
+    exampleMeetingPlace: "Swamp Rabbit Trail at Trailblazer Park",
+    exampleZip: "29690",
+    heroIntro:
+      "Groups, meetups and events for getting outside in Greenville and Upstate South Carolina. Join a group, show up, try something new.",
+  },
 ];
