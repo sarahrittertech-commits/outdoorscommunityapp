@@ -236,6 +236,7 @@ web app is not the thing enforcing the rule.
 | PT-232 | A group that failed verification is kept, not queued | Dead links flood the review queue |
 | PT-233 | Date-only and unverified events are stored but never published | An event without a start time reaches the board |
 | PT-234 | A later find updates a kept candidate's verification and evidence | Research can't improve what it already knows |
+| PT-235 | The site admin sees an event company among business candidates and lists it as an event company | Race organizers are filed as shops, or can't be listed |
 
 ## Automated — unit
 
