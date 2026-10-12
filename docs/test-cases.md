@@ -237,6 +237,13 @@ web app is not the thing enforcing the rule.
 | PT-233 | Date-only and unverified events are stored but never published | An event without a start time reaches the board |
 | PT-234 | A later find updates a kept candidate's verification and evidence | Research can't improve what it already knows |
 | PT-235 | The site admin sees an event company among business candidates and lists it as an event company | Race organizers are filed as shops, or can't be listed |
+| PT-236 | The site admin skips an event company | Skip answers "not found" and the company never leaves the queue |
+| PT-237 | A research event sent without a verification is stored as unverified and not published | Events fail open: anything the agent forgets to mark goes live |
+| PT-238 | A start time with no UTC offset is read in the event's own time zone | A 9 a.m. Denver ride shows at 3 a.m. |
+| PT-239 | An event with an unknown time zone is kept as unverified with a note, and its group still lists | One bad zone blocks the whole listing |
+| PT-240 | An end time equal to the start is dropped and a bad event link falls back to the find's link | One bad event loses the whole find |
+| PT-241 | A listed guide, shop, venue or company takes new research events only from its own site or a registration site; the rest are kept, not published; event_listings carries the subcategory | Aggregator events go live with no review |
+| PT-242 | A failed find can't be listed by id | A find whose website failed reaches the board |
 
 ## Automated — unit
 

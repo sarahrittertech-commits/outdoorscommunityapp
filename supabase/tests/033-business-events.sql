@@ -17,7 +17,7 @@ select is(
   research.add_candidate(jsonb_build_object(
     'kind', 'venue', 'name', 'Test Nature Center', 'subcategory', (select slug from public.subcategories order by sort_order, slug limit 1),
     'area', 'Brevard', 'description', 'A venue for tests.', 'source_url', 'https://venue.example.org',
-    'events', jsonb_build_array(jsonb_build_object('title', 'Learn to Ride', 'starts_at', (now() + interval '3 days')::text,
+    'events', jsonb_build_array(jsonb_build_object('verification', 'verified', 'title', 'Learn to Ride', 'starts_at', (now() + interval '3 days')::text,
       'timezone', 'America/New_York', 'location_name', 'The pump track', 'source_url', 'https://venue.example.org/learn')))) ->> 'result',
   'updated', 'PT-225 a kept venue keeps its new events while it waits');
 select tests.as('siteadmin');
@@ -56,7 +56,7 @@ select is(
   research.add_candidate(jsonb_build_object(
     'kind', 'venue', 'name', 'Test Nature Center', 'subcategory', (select slug from public.subcategories order by sort_order, slug limit 1),
     'area', 'Brevard', 'description', 'Again.', 'source_url', 'https://venue.example.org',
-    'events', jsonb_build_array(jsonb_build_object('title', 'Owl Prowl', 'starts_at', (now() + interval '5 days')::text,
+    'events', jsonb_build_array(jsonb_build_object('verification', 'verified', 'title', 'Owl Prowl', 'starts_at', (now() + interval '5 days')::text,
       'timezone', 'America/New_York', 'location_name', 'The meadow', 'source_url', 'https://venue.example.org/owls')))) ->> 'result',
   'events_added', 'PT-228 a listed venue takes new events');
 

@@ -84,8 +84,8 @@ select is(
   'region_id', 'PT-213 region_id is appended to event_listings (UC-37 appends more after it)'
 );
 select is(
-  (select count(*)::int from pg_attribute where attrelid = 'public.event_listings'::regclass and attnum > 0), 25,
-  'PT-213 and every earlier column is still there (20, plus five UC-37 host columns)'
+  (select count(*)::int from pg_attribute where attrelid = 'public.event_listings'::regclass and attnum > 0), 26,
+  'PT-213 and every earlier column is still there (20, five UC-37 host columns, then subcategory_id)'
 );
 update public.groups set region_id = pg_temp.region('triangle') where slug = 'g1';
 select tests.as_anon();

@@ -38,9 +38,9 @@ select is(
     'area', 'Brevard', 'description', 'A paddling club found on its public page.',
     'source_url', 'https://riverrats.example.org', 'affinity_tags', '["women"]'::jsonb,
     'events', jsonb_build_array(
-      jsonb_build_object('title', 'Saturday float', 'starts_at', now() + interval '5 days',
+      jsonb_build_object('verification', 'verified', 'title', 'Saturday float', 'starts_at', now() + interval '5 days',
                          'location_name', 'Hap Simpson Park', 'source_url', 'https://riverrats.example.org/float'),
-      jsonb_build_object('title', 'Last month''s float', 'starts_at', now() - interval '30 days',
+      jsonb_build_object('verification', 'verified', 'title', 'Last month''s float', 'starts_at', now() - interval '30 days',
                          'location_name', 'Hap Simpson Park', 'source_url', 'https://riverrats.example.org/old')
     ))) ->> 'result',
   'added', 'FR-RS-2 the agent adds a group candidate'
@@ -122,7 +122,7 @@ select is(
   research.add_candidate(jsonb_build_object(
     'kind', 'group', 'name', 'River Rats Paddle Club', 'subcategory', (select sub from finds),
     'area', 'Brevard', 'description', 'Found again with a new trip.', 'source_url', 'https://riverrats.example.org',
-    'events', jsonb_build_array(jsonb_build_object('title', 'Moonlight paddle', 'starts_at', now() + interval '12 days',
+    'events', jsonb_build_array(jsonb_build_object('verification', 'verified', 'title', 'Moonlight paddle', 'starts_at', now() + interval '12 days',
       'location_name', 'Lake Julia', 'source_url', 'https://riverrats.example.org/moon')))) ->> 'events',
   '1', 'FR-RS-8 new events reach a group that is still unclaimed'
 );
@@ -131,7 +131,7 @@ select is(
   research.add_candidate(jsonb_build_object(
     'kind', 'group', 'name', 'River Rats Paddle Club', 'subcategory', (select sub from finds),
     'area', 'Brevard', 'description', 'Found again after being claimed.', 'source_url', 'https://riverrats.example.org',
-    'events', jsonb_build_array(jsonb_build_object('title', 'Owner-run trip', 'starts_at', now() + interval '20 days',
+    'events', jsonb_build_array(jsonb_build_object('verification', 'verified', 'title', 'Owner-run trip', 'starts_at', now() + interval '20 days',
       'location_name', 'Lake Julia', 'source_url', 'https://riverrats.example.org/owner')))) ->> 'result',
   'duplicate', 'FR-RS-8 once claimed, the agent adds no events'
 );

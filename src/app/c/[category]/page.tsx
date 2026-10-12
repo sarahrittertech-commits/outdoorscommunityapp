@@ -38,7 +38,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   // Regions: the region being browsed, or every region with ?region=all.
   const current = await getCurrentRegion(query.region);
   const regionId = await regionFilterId(current);
-  const scoped = (path: string) => (current.all ? `${path}?region=all` : path);
+  // Links keep the region asked for (?region=<slug> or all), not just "all".
+  const scoped = (path: string) => (current.param ? `${path}?region=${current.param}` : path);
+  const eventsLink = `/events?category=${category.slug}${current.param ? `&region=${current.param}` : ""}`;
   const listPage = (n: number) => {
     let list = supabase
       .from("group_listings")
@@ -96,15 +98,13 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               <EventList events={events} />
               {(eventCount ?? 0) > events.length && (
                 <p className="text-sm">
-                  <Link href={`/events?category=${category.slug}${current.all ? "&region=all" : ""}`}>
-                    All {eventCount} upcoming {category.name.toLowerCase()} events
-                  </Link>
+                  <Link href={eventsLink}>More {category.name.toLowerCase()} events</Link>
                 </p>
               )}
             </>
           ) : (
             <p className="text-muted">
-              No upcoming events here yet. The groups below post them; <Link href="/events">see every event</Link>.
+              No upcoming events here yet. The groups below post them; <Link href={eventsLink}>see every event</Link>.
             </p>
           )}
         </section>
