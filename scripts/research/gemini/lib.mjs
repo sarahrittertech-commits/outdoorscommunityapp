@@ -240,7 +240,7 @@ export function buildPrompt({ area, pass, subcategories, knownNames, today }) {
 Area: ${area} and within about 60 miles.
 Kind of organization: ${pass}.
 
-Use Google Search. List at most 12 real organizations of this kind that are active now (a dated post, event or update from 2025 or 2026 on their own page or public social page). Fewer is fine: if you find 3 real ones, list 3. Never guess, never fill a list, never build a URL that you did not see in a search result. Skip any whose name is in this list the board already has: ${knownNames.slice(0, 400).join("; ")}.
+You must run Google searches before answering; do not answer from memory. List at most 12 real organizations of this kind that are active now (a dated post, event or update from 2025 or 2026 on their own page or public social page). Fewer is fine: if you find 3 real ones, list 3. Never guess, never fill a list, never build a URL that you did not see in a search result. Skip any whose name is in this list the board already has: ${knownNames.slice(0, 400).join("; ")}.
 
 Do NOT list event dates. Instead, for each organization give events_url: the page where it posts its own dates (its events or calendar page, its Meetup group, or its organizer page on a race sign-up site such as RunSignup, UltraSignup or BikeReg), or null if it has none.
 

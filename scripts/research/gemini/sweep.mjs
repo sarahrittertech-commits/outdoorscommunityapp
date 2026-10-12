@@ -219,7 +219,7 @@ async function askGemini() {
             },
           ],
           tools: [{ google_search: {} }],
-          generationConfig: { temperature: 0.1 },
+          generationConfig: { temperature: 0.1, thinkingConfig: { thinkingLevel: "low" } },
         }),
       },
     );
@@ -283,6 +283,8 @@ for (const raw of finds) {
   }
   if (known.has(find.name.trim().toLowerCase())) {
     tally.dropped++;
+    tally.already_listed = (tally.already_listed ?? 0) + 1;
+    console.log(`  already on the board: ${find.name}`);
     continue;
   }
   const home = await page(find.source_url);
@@ -300,6 +302,12 @@ if (looksInvented(checked.map((c) => (c.home.ok ? "ok" : c.home.why)))) {
   console.log(JSON.stringify({ ...tally, invented: true }));
   process.exit(0);
 }
+
+// An answer that ran no Google searches came from the model's memory, which
+// is how invented lists happen: its finds are kept as unverified, never
+// sent to the review queue as verified (12 October 2026).
+const searched = searches.length > 0;
+if (!searched) console.log("No Google searches in this answer: finds are kept as unverified.");
 
 for (const { find, home, homeOk, inSearch } of checked) {
   if (inSearch) tally.grounded++;
@@ -345,7 +353,7 @@ for (const { find, home, homeOk, inSearch } of checked) {
     description: find.description.trim(),
     other_urls: eventsUrl && eventsUrl !== find.source_url ? [eventsUrl] : [],
     events,
-    verification: homeOk ? "verified" : "failed",
+    verification: !homeOk ? "failed" : searched ? "verified" : "unverified",
     evidence: evidence.slice(0, 1000),
     checked_at: new Date().toISOString(),
   };
