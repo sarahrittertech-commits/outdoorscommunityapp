@@ -151,6 +151,12 @@ details and internal notes.
 
 ### Gemini sweep (the inexpensive one, from 12 October 2026)
 
+**Paused on 12 October 2026** (`gh workflow disable research-sweep.yml`). With a new key the
+free tier can't run it: Gemini 2.5 answers 404 and Gemini 3 has no Google Search grounding on
+the free tier (429). Paid API billing is separate from a Gemini app subscription, and Sarah
+chose not to pay for it, since Gemini's finds needed heavy correction. Research continues with
+Claude. To resume: attach billing to the key's project, then `gh workflow enable research-sweep.yml`.
+
 `.github/workflows/research-sweep.yml` runs `scripts/research/gemini/sweep.mjs`
 every three hours on GitHub's free runners. Each run takes one area and one
 search pass from `scripts/research/gemini/areas.json`, in turn (26 areas ×
