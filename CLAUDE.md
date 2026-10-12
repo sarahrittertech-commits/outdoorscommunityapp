@@ -100,7 +100,7 @@ from what's new.
 
 The look follows the branch outdoors brand guide (v2, Claude Design),
 summarized in [docs/brand.md](docs/brand.md): plum, paper and autumn leaf
-colors, Young Serif headings, Atkinson Hyperlegible text, on white. The page
+colors, Atkinson Hyperlegible bold headings and text (Young Serif for the wordmark only), on white. The page
 structure follows the Magic Patterns design (home with search, activity line
 drawings and event cards; Events and Communities with side filters); the
 directory lives at /browse. All colors are tokens at the top of
