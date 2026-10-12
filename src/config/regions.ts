@@ -209,4 +209,21 @@ export const regions: Region[] = [
     heroIntro:
       "Groups, meetups and events for getting outside in Greenville and Upstate South Carolina. Join a group, show up, try something new.",
   },
+  {
+    slug: "durango-san-juans",
+    name: "Durango and the San Juans",
+    shortName: "Durango–San Juans",
+    state: "CO",
+    timezone: "America/Denver",
+    hubs: ["Durango"],
+    center: { lat: 37.27, lng: -107.88 },
+    zoom: 8,
+    radiusMiles: 100,
+    status: "live",
+    exampleTown: "Bayfield",
+    exampleMeetingPlace: "Animas River Trail at Santa Rita Park",
+    exampleZip: "81122",
+    heroIntro:
+      "Groups, meetups and events for getting outside in Durango, the San Juan Mountains and the Four Corners. Join a group, show up, try something new.",
+  },
 ];

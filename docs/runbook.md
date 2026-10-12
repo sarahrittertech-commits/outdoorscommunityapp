@@ -314,6 +314,13 @@ towns' own codes listed so they don't all fall to Greenville. It sits
 about 50 miles from Asheville, so a group near the state line goes in
 whichever region its meetups are in.
 
+Then `durango-san-juans` (Durango and the San Juans; migration
+`20261012000007_region_durango_san_juans.sql`): Mountain time, 21 towns
+from Durango to Silverton, Ouray, Telluride, Cortez, Pagosa Springs,
+Montrose and Farmington, NM; zip prefixes 813 and 874, with the towns in
+other prefixes (Pagosa, Silverton, Ouray, Telluride) listed by their own
+codes.
+
 To check a region's reach before opening it:
 `select name, hub_towns, radius_miles, status from public.regions order by sort_order;`
 
