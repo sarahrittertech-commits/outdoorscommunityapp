@@ -327,6 +327,7 @@ Instagram.
 | **Not featured** | Sarah, the same day: affinity groups must not be put front and centre, which would attract the wrong kind of attention; they just must not be left off. No affinity showcase on the home page; the existing affinity tags (FR-GR-11) stay as they are. |
 | **Safety for affinity groups (draft)** | UC-36 (keep our space our own) is drafted for review. |
 | **Balanced research** | Sarah, the same evening: the Front Range lists came back mostly affinity groups and missed the big events. Research now runs anchors first (large clubs, major races, festivals and film tours), then everyday groups and recurring events, then the required affinity pass, across every activity category, and reports coverage per category so a lopsided list shows (FR-RS-11; `scripts/research/gemini-prompt.md`). |
+| **Guides and shops now** | Sarah, the same night: "go ahead and add guide services and gear stores now." The first part of UC-12 is built: the site admin lists guide services and gear shops from the research as unclaimed listings, on their own *Guides and shops* page, never among the groups (FR-BZ-7). Claiming and the rest of UC-12 wait for review. |
 
 ## Open questions
 

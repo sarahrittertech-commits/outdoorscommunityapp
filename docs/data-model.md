@@ -654,7 +654,8 @@ written when each is approved, with its migration and permission tests.
 | `places` | UC-15, UC-12 | Name, kind, activities, coordinates, description; seeded from the research workspace's places |
 | `towns` | UC-14, UC-34 | Bundled US towns and zip codes with coordinates. Today a hand-made list per region in `src/config/towns.ts` and `zips.ts`; a full national list (Census gazetteer) waits until a region needs it (ADR-0010) |
 | `organizations` | UC-13 | National organizations that chapters link to |
-| `businesses`, `business_admins`, `business_places`, `business_groups` | UC-12 | Owner is the account that claimed it with the business email; admins are people's own accounts; places have role *its location* or *operates at*; linked groups keep their own roles. No events table of its own |
+| `businesses` | UC-12 (built 11 Oct) | Slug, name, kind (*guide* or *shop*), description, activity, region (live), area, website, affinity tags, unclaimed, status (*active* or *removed*). Readable while active; written only by the site admin's `list_business_candidate` and `remove_business`. `business_listings` view adds region and activity names. `research.candidates.business_id` records which listing a candidate became |
+| `business_admins`, `business_places`, `business_groups` | UC-12 (later) | Owner is the account that claimed it with the business email; admins are people's own accounts; places have role *its location* or *operates at*; linked groups keep their own roles. No events table of its own |
 
 | `group_claims`: `confirmed_domain`, `confirmed_at`, plus a temporary address, link token, expiry and send count | UC-26 | The address and token are cleared once the link is used or the last one expires; only the domain and date stay |
 
