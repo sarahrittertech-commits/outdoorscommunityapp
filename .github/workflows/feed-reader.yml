@@ -1,0 +1,37 @@
+name: Feed reader (public calendars)
+
+# Weekly read of public calendar feeds (scripts/research/feeds/), with no AI:
+# today North Carolina State Parks' Localist calendar. Timed, future programs
+# near a live region go to the research intake under that region's parks
+# venue; the board refuses events it already has. Free to run (UC-39).
+on:
+  schedule:
+    - cron: "17 11 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry:
+        description: "Dry run: read the feeds but send nothing"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: feed-reader
+  cancel-in-progress: false
+
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Read feeds
+        env:
+          RESEARCH_AGENT_TOKEN: ${{ secrets.RESEARCH_AGENT_TOKEN }}
+          DRY: ${{ inputs.dry }}
+        run: node scripts/research/feeds/read.mjs $([ "$DRY" = "true" ] && echo --dry)
