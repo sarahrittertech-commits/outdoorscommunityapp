@@ -1251,8 +1251,8 @@ follower counts, or anything that turns the board into a feed.
 
 ## UC-39 — Keep a region's events complete
 
-> **Draft, awaiting review. Decisions needed.** Requested by Sarah on 12
-> October 2026: the priority is the most complete list of events. Research
+> **Approved 12 October 2026** (Sarah merged the reviewed draft, PR #91;
+> requirements FR-ES-1 to FR-ES-12). Requested by Sarah the same day: the priority is the most complete list of events. Research
 > so far finds each event once and forgets where it came from, so every
 > refresh searches the web again, and AI search (Gemini) invented many
 > groups and dates. Most real events came from a few kinds of pages per

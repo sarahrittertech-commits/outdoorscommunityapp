@@ -5,7 +5,7 @@ title: ADR-0011 Event sources
 
 # ADR-0011 — Event sources: read feeds first, AI only where there is none
 
-**Status:** Proposed · **Date:** 12 October 2026 · goes with UC-39 (draft)
+**Status:** Accepted · **Date:** 12 October 2026 (Sarah merged the reviewed draft) · goes with UC-39
 
 ## Context
 
@@ -59,7 +59,20 @@ building, not assumed here.
 Commercial event APIs exist, but they cover ticketed and big events, not
 Saturday club rides, and cost money every month. Not now.
 
-## Decision (proposed)
+## What each site allows (12 October 2026)
+
+| Site | How it can be read | Use |
+| --- | --- | --- |
+| RunSignup (also GiveSignup, BikeSignup) | Public race search by state, date and type; start times, prices, registration open or closed; free affiliate program for sites that list races | First |
+| NC State Parks (Localist calendar) | Public events API: hundreds of park programs with times, places and prices | Second |
+| Club WordPress sites | The Events Calendar's public listing, calendar feed and schema.org data | Per listed club |
+| Meetup | Each group's public calendar feed (the API needs a paid Pro plan) | Per listed group |
+| BikeReg | Event search with organizer, website, prices and capacity; docs now behind a login | After the owner agrees |
+| UltraSignup | schema.org data on event pages; an undocumented search | After the owner agrees |
+| Race Roster, ItsYourRace, Eventbrite search, Instagram, Facebook | No public route, or terms forbid it | Not read |
+
+## Decision
+
 
 Track sources and read feeds first. Publishing stays as it is: only events
 from a host's own page, feed or official sign-up page, with a date and a
