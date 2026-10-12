@@ -19,7 +19,7 @@
 //
 // --dry prints what would be sent and sends nothing. Never logs a key.
 
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 
 import {
   buildPrompt,
@@ -44,6 +44,15 @@ const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.8-flash";
 const args = process.argv.slice(2);
 const dry = args.includes("--dry");
 const runArg = args.indexOf("--run");
+// Topic search (12 October 2026): --topic "fly tying clinics" --area "Western North Carolina"
+// replaces the area-and-pass rotation with Sarah's own search, and every
+// run writes research-results.csv for download.
+const argValue = (flag) => {
+  const i = args.indexOf(flag);
+  return i >= 0 && args[i + 1] && !args[i + 1].startsWith("--") ? args[i + 1] : (process.env[flag.slice(2).toUpperCase()] || "").trim() || null;
+};
+const topic = argValue("--topic");
+const topicArea = argValue("--area");
 const runNumber =
   runArg >= 0
     ? Number(args[runArg + 1])
@@ -145,7 +154,9 @@ async function readEvents(eventsUrl, homeUrl, timezone) {
 const config = JSON.parse(
   await readFile(new URL("./areas.json", import.meta.url), "utf8"),
 );
-const job = pick(config, runNumber);
+const job = topic
+  ? { area: topicArea ?? "the live regions of the board", pass: topic, timezone: argValue("--timezone") ?? "America/New_York", out_of_region: false }
+  : pick(config, runNumber);
 const today = new Date().toISOString().slice(0, 10);
 
 // What the board already knows: subcategory slugs and names to skip.
@@ -256,6 +267,8 @@ console.log(
 );
 
 const known = new Set(knownNames);
+const rows = [];
+const csvCell = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
 const tally = {
   suggested: finds.length,
   dropped: 0,
@@ -285,6 +298,7 @@ for (const raw of finds) {
     tally.dropped++;
     tally.already_listed = (tally.already_listed ?? 0) + 1;
     console.log(`  already on the board: ${find.name}`);
+    rows.push({ name: find.name, kind: find.kind, area: find.area, website: find.source_url, events_page: find.events_url ?? "", status: "already on the board", dated_events: "", evidence: "" });
     continue;
   }
   const home = await page(find.source_url);
@@ -358,6 +372,16 @@ for (const { find, home, homeOk, inSearch } of checked) {
     checked_at: new Date().toISOString(),
   };
   delete candidate.events_url;
+  rows.push({
+    name: candidate.name,
+    kind: candidate.kind,
+    area: candidate.area,
+    website: candidate.source_url,
+    events_page: eventsUrl ?? "",
+    status: candidate.verification,
+    dated_events: events.length,
+    evidence,
+  });
   if (dry) {
     console.log(
       `  would send ${candidate.kind}: ${candidate.name} (${candidate.source_url}) [${evidence}]`,
@@ -375,4 +399,10 @@ for (const { find, home, homeOk, inSearch } of checked) {
   );
 }
 
+const header = ["name", "kind", "area", "website", "events_page", "status", "dated_events", "evidence"];
+await writeFile(
+  "research-results.csv",
+  [header.join(","), ...rows.map((r) => header.map((h) => csvCell(r[h])).join(","))].join("\n") + "\n",
+);
+console.log(`Wrote research-results.csv (${rows.length} rows).`);
 console.log(JSON.stringify(tally));
