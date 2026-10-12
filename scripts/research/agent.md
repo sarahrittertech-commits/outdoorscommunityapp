@@ -72,15 +72,17 @@ the intake answers `401`, stop and say so in your summary.
      reach, and any city on Sarah's research list (see the PRD's open
      questions).
 
-   **Affinity first (FR-RS-11).** In every region, every week, before the
-   activity searches: women's, queer and LGBTQ+, BIPOC, adaptive, youth and
-   family groups for the week's activities, including national networks'
-   local chapters (Trail Sisters, Ladies Climbing Coalition, Radical
-   Adventure Riders, Brown Girls Climb, Outdoor Afro, Latino Outdoors,
-   Unlikely Hikers, Catalyst Sports, SheJumps, Girls Go Shred) and pages
-   anyone can read on Instagram, Facebook and Meetup. Tag what you find
-   with `affinity_tags`, and say in your summary how many affinity groups
-   you found and which searches you ran.
+   **Every kind of group, affinity included (FR-RS-11).** In every region,
+   cover the anchors (large, long-running clubs, chapters of national clubs,
+   trail nonprofits, gyms, parks, shops and major annual events) and
+   everyday groups, then run the required affinity pass: women's, queer and
+   LGBTQ+, BIPOC, adaptive, youth and family groups for the week's
+   activities, including national networks' local chapters (Trail Sisters,
+   Ladies Climbing Coalition, Radical Adventure Riders, Brown Girls Climb,
+   Outdoor Afro, Latino Outdoors, Unlikely Hikers, Catalyst Sports,
+   SheJumps, Girls Go Shred) and pages anyone can read on Instagram,
+   Facebook and Meetup. Tag affinity finds with `affinity_tags`, and say in
+   your summary how many you found per pass and which searches you ran.
 
    Useful searches:
    - `<activity> club <area>`, `<activity> group <area>`
