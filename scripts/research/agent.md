@@ -119,6 +119,11 @@ the intake answers `401`, stop and say so in your summary.
    `other_urls`. Events with a date but no start time: `date_only: true`
    and a `note`; events you couldn't prove: `verification: "unverified"`
    or `"failed"` with a `note`. None of these ever reach the board.
+   Every event you checked on the organizer's own page needs
+   `verification: "verified"` and a start time with its UTC offset
+   (`2026-10-20T09:00:00-06:00`) and an IANA `timezone`
+   (`America/Denver`): an event without a verification is kept as
+   unverified and never published.
 
 5. **Save it** by calling the intake with
    `{"action": "add", "candidate": <the find>}`, one call per find. The

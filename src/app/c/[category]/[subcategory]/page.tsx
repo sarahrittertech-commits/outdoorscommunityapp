@@ -43,47 +43,42 @@ export default async function SubcategoryPage({ params, searchParams }: Props) {
   const p = await params;
   const { supabase, subcategory, category } = await loadSubcategory(p.category, p.subcategory);
   const query = await searchParams;
-  const page = pageFrom(query.page);
+  const asked = pageFrom(query.page);
   // Regions: the region being browsed, or every region with ?region=all.
   const current = await getCurrentRegion(query.region);
   const regionId = await regionFilterId(current);
-  const scoped = (path: string) => (current.all ? `${path}?region=all` : path);
+  // Links keep the region asked for (?region=<slug> or all), not just "all".
+  const scoped = (path: string) => (current.param ? `${path}?region=${current.param}` : path);
 
-  let list = supabase
-    .from("group_listings")
-    .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags", { count: "exact" })
-    .eq("subcategory_id", subcategory.id)
-    .eq("status", "active");
-  if (regionId) list = list.eq("region_id", regionId);
-  const { data: groups, count } = await list.order("name").range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+  const listPage = (n: number) => {
+    let list = supabase
+      .from("group_listings")
+      .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags", { count: "exact" })
+      .eq("subcategory_id", subcategory.id)
+      .eq("status", "active");
+    if (regionId) list = list.eq("region_id", regionId);
+    return list.order("name").range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
+  };
+  // A page number past the end shows the last page, as on the category page.
+  const first = await listPage(asked);
+  const counted = first.count === null && asked > 1 ? await listPage(1) : first;
+  const page = pageFrom(query.page, Math.ceil((counted.count ?? 0) / PAGE_SIZE));
+  const { data: groups, count } = page === asked ? first : page === 1 ? counted : await listPage(page);
   const path = `/c/${category.slug}/${subcategory.slug}`;
 
   // Events first (Sarah, 12 October), whoever hosts them: groups, guides,
   // shops, venues and event companies in this subcategory.
-  let groupHosts = supabase.from("groups").select("slug").eq("subcategory_id", subcategory.id).eq("status", "active");
-  let businessHosts = supabase.from("businesses").select("slug").eq("subcategory_id", subcategory.id).eq("status", "active");
-  if (regionId) {
-    groupHosts = groupHosts.eq("region_id", regionId);
-    businessHosts = businessHosts.eq("region_id", regionId);
-  }
-  const [{ data: gh }, { data: bh }] = await Promise.all([groupHosts, businessHosts]);
-  const hostFilter = [
-    gh?.length ? `group_slug.in.(${gh.map((g) => `"${g.slug}"`).join(",")})` : null,
-    bh?.length ? `business_slug.in.(${bh.map((b) => `"${b.slug}"`).join(",")})` : null,
-  ].filter(Boolean);
-  const { data: events, count: eventCount } = hostFilter.length
-    ? await supabase
-        .from("event_listings")
-        .select(
-          "id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text",
-          { count: "exact" },
-        )
-        .eq("status", "scheduled")
-        .gt("starts_at", new Date().toISOString())
-        .or(hostFilter.join(","))
-        .order("starts_at")
-        .limit(EVENTS_SHOWN)
-    : { data: [], count: 0 };
+  let upcoming = supabase
+    .from("event_listings")
+    .select(
+      "id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text",
+      { count: "exact" },
+    )
+    .eq("status", "scheduled")
+    .eq("subcategory_id", subcategory.id)
+    .gt("starts_at", new Date().toISOString());
+  if (regionId) upcoming = upcoming.eq("region_id", regionId);
+  const { data: events, count: eventCount } = page === 1 ? await upcoming.order("starts_at").limit(EVENTS_SHOWN) : { data: [], count: 0 };
 
   return (
     <>
@@ -100,7 +95,7 @@ export default async function SubcategoryPage({ params, searchParams }: Props) {
               <EventList events={events} />
               {(eventCount ?? 0) > events.length && (
                 <p className="text-sm">
-                  <Link href={`/events?category=${category.slug}${current.all ? "&region=all" : ""}`}>
+                  <Link href={`/events?category=${category.slug}${current.param ? `&region=${current.param}` : ""}`}>
                     More {category.name.toLowerCase()} events
                   </Link>
                 </p>

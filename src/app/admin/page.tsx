@@ -10,6 +10,7 @@ import { Notice } from "@/components/Notice";
 import { ReportTargetLink, resolveReportTargets } from "@/components/ReportTarget";
 import { site } from "@/config/site";
 import { requireSiteAdmin } from "@/lib/auth";
+import { BUSINESS_KIND_LABEL } from "@/lib/hosts";
 import { getCurrentRegion } from "@/lib/currentRegion";
 import { townForArea } from "@/lib/geo";
 import { liveRegions, nearestRegion, regionForTown } from "@/lib/regions";
@@ -22,6 +23,17 @@ import { SUGGESTION_KINDS } from "@/lib/validation";
 export const metadata: Metadata = { title: "Site admin", robots: { index: false } };
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
+
+/** "1 event company", "3 event companies", "2 youth programs" for the kept-finds line. */
+const KEPT_PLURALS: Record<string, [string, string]> = {
+  business: ["business", "businesses"],
+  company: ["event company", "event companies"],
+  youth_program: ["youth program", "youth programs"],
+};
+const keptLabel = (kind: string, n: number) => {
+  const [one, many] = KEPT_PLURALS[kind] ?? [kind, `${kind}s`];
+  return `${n} ${n === 1 ? one : many}`;
+};
 
 /** FR-AD-2, FR-AD-6, FR-MD-3, FR-MD-6. The database refuses all of this to anyone but the site admin. */
 export default async function AdminPage({ searchParams }: Props) {
@@ -286,13 +298,13 @@ export default async function AdminPage({ searchParams }: Props) {
       </ul>
       {Boolean(kept?.length) && (
         <p className="mt-2 text-sm text-muted">
-          Kept in the research area for later: {kept!.map((k) => `${k.kept} ${k.kept === 1 ? k.kind : k.kind === "business" ? "businesses" : `${k.kind}s`}`).join(", ")}.
+          Kept in the research area for later: {kept!.map((k) => keptLabel(k.kind, k.kept)).join(", ")}.
         </p>
       )}
 
-      <h2 id="guides-and-shops">Guides, shops and venues ({businesses?.length ?? 0})</h2>
+      <h2 id="guides-and-shops">Guides, shops, venues and event companies ({businesses?.length ?? 0})</h2>
       <p className="mt-1 text-sm text-muted">
-        Guide services and gear shops the research kept, oldest first. <em>List it</em> puts it in{" "}
+        Guide services, gear shops, venues and event companies the research kept, oldest first. <em>List it</em> puts it in{" "}
         <Link href="/guides-and-shops">Guides and shops</Link> as an unclaimed listing, never among the groups; <em>Skip</em> means
         it won&apos;t be suggested again.
       </p>
@@ -302,7 +314,7 @@ export default async function AdminPage({ searchParams }: Props) {
             <p>
               <strong>{c.name}</strong>{" "}
               <span className="text-sm text-muted">
-                · {c.kind === "guide" ? "guide service" : c.kind === "venue" ? "venue" : "shop"} · {c.subcategory_name} · {c.area}
+                · {BUSINESS_KIND_LABEL[c.kind] ?? "shop"} · {c.subcategory_name} · {c.area}
               </span>
               <AffinityTags tags={c.affinity_tags} className="ml-2 align-middle" />
             </p>

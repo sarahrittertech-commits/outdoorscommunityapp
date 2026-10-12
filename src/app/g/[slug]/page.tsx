@@ -14,6 +14,7 @@ import { PlainText } from "@/components/PlainText";
 import { site } from "@/config/site";
 import { groupCoverUrl } from "@/lib/groupCovers";
 import { archivedGroupEvents } from "@/lib/groupEvents";
+import { regionOfGroup } from "@/lib/currentRegion";
 import { loadGroup, roleLabel } from "@/lib/groups";
 
 type Props = {
@@ -49,6 +50,8 @@ export default async function GroupPage({ params, searchParams }: Props) {
   const { supabase, group, viewer, membership, isMember, isAdmin, isOwner, isActive, isListed, canManage, seesMemberList } = loaded;
   const now = new Date().toISOString();
   const query = await searchParams;
+  // The breadcrumb stays in the group's own region, whatever the visitor last browsed.
+  const inRegion = `?region=${(await regionOfGroup(group.region_id)).slug}`;
 
   const [{ data: listing }, { data: organizers }, { data: upcoming }, { count: pastCount }, { count: pendingCount }, { data: myClaim }] =
     await Promise.all([
@@ -121,8 +124,8 @@ export default async function GroupPage({ params, searchParams }: Props) {
       )}
       {listing && (
         <p className="breadcrumb">
-          <Link href={`/c/${listing.category_slug}`}>{listing.category_name}</Link> ›{" "}
-          <Link href={`/c/${listing.category_slug}/${listing.subcategory_slug}`}>{listing.subcategory_name}</Link> ›
+          <Link href={`/c/${listing.category_slug}${inRegion}`}>{listing.category_name}</Link> ›{" "}
+          <Link href={`/c/${listing.category_slug}/${listing.subcategory_slug}${inRegion}`}>{listing.subcategory_name}</Link> ›
         </p>
       )}
       <h1>{group.name}</h1>

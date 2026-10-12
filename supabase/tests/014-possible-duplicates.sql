@@ -53,7 +53,7 @@ language sql as $$
   select research.add_candidate(jsonb_build_object(
     'kind', p_kind, 'name', p_name, 'subcategory', (select sub from finds), 'area', 'Brevard',
     'description', 'Events for the listing tests.', 'source_url', 'https://realtrail.example.org',
-    'events', jsonb_build_array(jsonb_build_object('title', 'Event from ' || p_event_url,
+    'events', jsonb_build_array(jsonb_build_object('verification', 'verified', 'title', 'Event from ' || p_event_url,
       'starts_at', now() + interval '3 days', 'location_name', 'Trailhead', 'source_url', p_event_url))))
 $$;
 select is(pg_temp.events_for('REAL TRAIL CLUB', 'group', 'https://attacker.example/phish') ->> 'events', '0',

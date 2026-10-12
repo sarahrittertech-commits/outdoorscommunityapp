@@ -970,6 +970,7 @@ export type Database = {
           business_name: string | null;
           host_area: string | null;
           price_text: string | null;
+          subcategory_id: string | null;
         };
         Relationships: [];
       };
@@ -1017,7 +1018,7 @@ export type Database = {
         Returns: {
           id: string;
           name: string;
-          kind: "guide" | "business" | "venue";
+          kind: "guide" | "business" | "venue" | "company";
           subcategory_name: string;
           area: string;
           description: string;

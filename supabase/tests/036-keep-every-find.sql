@@ -30,7 +30,7 @@ select research.add_candidate(jsonb_build_object('kind', 'group', 'name', 'Test 
     jsonb_build_object('title', 'Rumored Ride', 'starts_at', (now() + interval '10 days')::text, 'timezone', 'America/New_York',
       'location_name', 'The shop', 'source_url', 'https://fest.example.org/ride', 'verification', 'unverified'),
     jsonb_build_object('title', 'Real Ride', 'starts_at', (now() + interval '12 days')::text, 'timezone', 'America/New_York',
-      'location_name', 'The shop', 'source_url', 'https://fest.example.org/real'))));
+      'location_name', 'The shop', 'source_url', 'https://fest.example.org/real', 'verification', 'verified'))));
 select is((select count(*)::integer from research.candidate_events e join research.candidates c on c.id = e.candidate_id
            where c.name = 'Test Festival Club'), 3, 'PT-233 all three events are stored');
 create temporary table fest as
