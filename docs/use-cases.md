@@ -1249,6 +1249,96 @@ and the organizer never has to update their bio link.
 **Not part of this:** reading or posting to anyone's social accounts,
 follower counts, or anything that turns the board into a feed.
 
+## UC-39 — Keep a region's events complete
+
+> **Draft, awaiting review. Decisions needed.** Requested by Sarah on 12
+> October 2026: the priority is the most complete list of events. Research
+> so far finds each event once and forgets where it came from, so every
+> refresh searches the web again, and AI search (Gemini) invented many
+> groups and dates. Most real events came from a few kinds of pages per
+> region: race sign-up sites, Meetup, park program pages, and club and shop
+> calendars.
+
+**Actor:** The site admin, keeping a region's Events list complete
+
+**Trigger:** Once a week, or right after opening a region.
+
+**Flow:**
+
+1. On the admin page, opens **Event sources** for a region, for example
+   Greenville and the Upstate.
+2. Sees every place the region's hosts post dates, one line each:
+   the host, the kind of page (own calendar, calendar feed, Meetup,
+   race sign-up site, park programs), when it was last read, and how many
+   real events it has given.
+3. Sees the region's coverage at the top: how many hosts have a known
+   source, how many sources were read this week, how many upcoming
+   events the board shows, and how many annual events are watched and
+   how many have next year's date.
+4. Adds a source when research finds one (a club's calendar page, its
+   race page on RunSignup), or the reader adds it when it notices one.
+5. **Discovery.** Once a week the reader also searches the sign-up and
+   listing sites where most events are posted (race sign-up sites for
+   running, cycling and paddling; Meetup; park and city program
+   calendars) for new events in each region, by state and date.
+6. **Finding the organizer.** Each event found on another site names who
+   runs it. The reader matches that organizer to a host the board already
+   lists; if it's new, it looks for the organizer's own website, and the
+   organizer goes to the admin's review queue with its events attached
+   (Sarah, 12 October: find the groups behind events posted elsewhere).
+   Listing it adds its own pages as sources, so its next events are found
+   without searching again.
+7. The weekly reader goes through the sources by itself:
+   - **Feeds first.** Calendar feeds and sign-up sites with open data are
+     read directly, with no AI and no cost.
+   - **Pages next.** A page with dates but no feed is read by an AI agent,
+     which copies only what the page shows.
+8. **Keeping events up to date.** On each pass the reader compares what
+   a page shows with what the board has: a start time posted for an event
+   that had only a date, a changed date or place, registration opening,
+   closing or selling out, a cancellation. Changes to events on the board
+   are made by the same rules that list them, and each change is logged
+   for the admin. Registration status shows on the event as a plain fact
+   ("registration opens 1 November", "sold out").
+9. New dated events from a host's own page or its official sign-up page
+   go on the board under the existing rules; everything else is kept in
+   the research tables with the reason (FR-RS-13).
+10. **Annual events are watched.** Past editions are kept (Sarah, 12
+   October: most outdoor events come back every year, and a missed date
+   means a missed event). Each watched event records when it happened
+   before ("first Saturday in April, 2025 and 2026"), its page, and a
+   window for the next one. The reader checks that page as the window
+   comes up; when the host posts the new date and time, the event goes on
+   the board. A window that passes with no date marks the event "may have
+   ended" for the admin.
+11. Sources that gave nothing for a long time, or broke, are marked so the
+   admin can fix the link or retire them.
+
+**Requirements:** to be written after review.
+
+**Succeeds when:** every listed host in a region has at least one known
+source, each source is read at least weekly, a region's Events list grows
+without new web searches, and the coverage numbers can be quoted in the
+business plan.
+
+**Options and their cost:**
+
+| Decision | Recommended | Alternatives and their cost |
+| --- | --- | --- |
+| **How sources are read** | Feeds first (calendar feeds, sign-up sites' open data), with no AI. AI only for pages without a feed, and only weekly. See ADR-0011. | AI web search for everything: what Gemini did. It costs credits on every run and invents groups and dates. |
+| **Where the reader runs** | A Supabase scheduled function (ADR-0004), next to the database. Feeds cost nothing; the AI part runs as the weekly research agent (UC-9). | GitHub Actions (like the paused Gemini sweep): also free, but the work is split across two places. |
+| **What gets published without review** | Only events from a host's own page, feed or official sign-up page, with a date and time, for a host already listed. Exactly today's rule. | Publishing anything a feed returns: faster, but one bad feed could flood a region. |
+| **Meetup, Eventbrite and Facebook** | Meetup and Eventbrite pages are read like any public page; whether they offer a usable feed is checked when building. Facebook events are not read (Meta doesn't allow it). | Paid API access, if a source turns out to be worth it. |
+| **Discovery on listing sites** | Weekly search of the big sign-up sites by state and date, using their public search or data where they offer it (to be confirmed per site when building), and Meetup group pages. | AI-generated lists: tried on 12 October; whole files of North Carolina and Colorado events turned out invented (made-up websites, "winter hiking" in June). |
+| **New organizers** | Found from event listings, matched to known hosts, new ones queued for the admin with their events. Never listed without review. | Listing organizers automatically: faster, but a wrong match would put an event under the wrong group. |
+| **Registration status and changes** | Read on every pass and shown as plain facts; changes logged. | Notifying members of changes: possible later with email (UC-25/UC-26). |
+| **Past and annual events** | Kept as watched events in the research tables, never shown as upcoming; checked when their window comes up. | Showing "usually in April" on the board: tempting, but it's a guess, and the board lists only confirmed dates. |
+| **Coverage numbers** | Counted from the sources table, admin only. | A public "events this week" figure: possible later, as a fact, not a ranking. |
+
+**Not part of this:** ranking hosts or events, scraping social media,
+sponsor and partner tracking (a later use of the same organization
+records), and anything visitors see apart from more events.
+
 ---
 
 ## Journeys the seed data must cover
