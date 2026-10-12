@@ -81,6 +81,15 @@ const PATHS: Record<string, React.ReactNode> = {
   ),
 };
 
+/** Folded paper map with a pin: the Regions page title (not a category). */
+export const MAP_ICON = (
+  <>
+    <path d="M3 6.5 8.5 4l7 2.5L21 4v13.5L15.5 20l-7-2.5L3 20Z" />
+    <path d="M8.5 4v13.5M15.5 6.5V11" />
+    <path d="M15.5 19c-1.8-2-2.7-3.4-2.7-4.6a2.7 2.7 0 0 1 5.4 0c0 1.2-.9 2.6-2.7 4.6Z" />
+  </>
+);
+
 export function ActivityIcon({ slug, className = "h-9 w-9" }: { slug: string; className?: string }) {
   return (
     <svg
@@ -94,7 +103,7 @@ export function ActivityIcon({ slug, className = "h-9 w-9" }: { slug: string; cl
       aria-hidden="true"
       focusable="false"
     >
-      {PATHS[slug] ?? <circle cx="12" cy="12" r="8" />}
+      {slug === "regions" ? MAP_ICON : (PATHS[slug] ?? <circle cx="12" cy="12" r="8" />)}
     </svg>
   );
 }
