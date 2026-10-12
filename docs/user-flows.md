@@ -625,3 +625,18 @@ flowchart TD
   member -->|turns out wrong| ban(["Remove and ban; logged"])
 ```
 
+
+## UC-37 — Events from guides, shops and venues
+
+*Built 12 October 2026.*
+
+```mermaid
+flowchart TD
+  research["Research finds an event on a guide's, shop's or venue's own page"] --> admin["Site admin: list the host (guide · shop · venue) if new"]
+  admin --> event["Event on the host's listing<br/>date, time, place, price as written, link to sign up"]
+  visitor(["Visitor"]) --> events["Events: date order<br/>marked 'by Outdoor Chattanooga · venue'<br/>filter: community groups only"]
+  event --> events
+  events --> page["Event page: who runs it, link to the host to sign up<br/>no RSVPs or discussion"]
+  page --> host["Host's page in Guides, shops and venues<br/>its upcoming events"]
+```
+

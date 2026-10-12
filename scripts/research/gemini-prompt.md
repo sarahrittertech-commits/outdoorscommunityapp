@@ -163,9 +163,9 @@ b. List every upcoming event the host runs and the public can join: rides, runs,
 c. Record what you found in the HOST CHECK list (see the end), including hosts with nothing upcoming.
 
 Put the events in one CSV, in three passes:
-- PASS "host": events run by a host on the list. This is the main work; do it first and completely.
+- PASS "host": events run by a host on the list, including guides, shops and venues (a learn-to-ride class, a gym's community night, a nature center's guided walk count). This is the main work; do it first and completely.
 - PASS "affinity": women's, queer, BIPOC, adaptive and beginner events run by a host on the list (rides, climbing nights, clinics, skills days). Mark them here instead of under "host".
-- PASS "new_host": only after every listed host is done, the area's major events run by a group NOT on the list (a race series, a festival, a film tour stop, a big trail day). For these, give the host's own website in "host_url" so I can add the host first.
+- PASS "new_host": only after every listed host is done, events run by anyone NOT on the list: a club, a race company, a guide service, a shop, a nature center, a gym or a city outdoor program (a race series, a festival, a film tour stop, a learn-to-ride class, a big trail day). For these, give the host's own website in "host_url" so I can add the host first.
 
 Proof rules. An event that fails any rule is left out and named under "Left out":
 1. "event_url" must be the event's own page on the host's website, or a registration page (BikeReg, RunSignup, UltraSignup, a single Eventbrite event, a single Meetup event) that names the host. NEVER use a search or results page (an Eventbrite or Google search), a listing or aggregator site (onthesnow, allevents, happeningnext, a tourism calendar), a news article, or a homepage that doesn't show the event. Never reuse one link for two events unless the page lists both with their dates (a ride schedule or calendar page).

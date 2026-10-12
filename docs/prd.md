@@ -328,6 +328,7 @@ Instagram.
 | **Safety for affinity groups (draft)** | UC-36 (keep our space our own) is drafted for review. |
 | **Balanced research** | Sarah, the same evening: the Front Range lists came back mostly affinity groups and missed the big events. Research now runs anchors first (large clubs, major races, festivals and film tours), then everyday groups and recurring events, then the required affinity pass, across every activity category, and reports coverage per category so a lopsided list shows (FR-RS-11; `scripts/research/gemini-prompt.md`). |
 | **Guides and shops now** | Sarah, the same night: "go ahead and add guide services and gear stores now." The first part of UC-12 is built: the site admin lists guide services and gear shops from the research as unclaimed listings, on their own *Guides and shops* page, never among the groups (FR-BZ-7). Claiming and the rest of UC-12 wait for review. |
+| **Events from guides, shops and venues** | Sarah, 12 October 2026: "lets make sure we don't miss events just because they are not hosted by a club". UC-37: a listing's events sit in the Events list by date, marked with the host, with a *community groups only* filter; venues (nature centers, gyms, city programs, ski areas) became a third kind. Replaces FR-BZ-5 (events through groups only). No paid placement: same order for everyone (P2). |
 
 ## Open questions
 

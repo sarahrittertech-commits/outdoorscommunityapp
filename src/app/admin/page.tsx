@@ -288,7 +288,7 @@ export default async function AdminPage({ searchParams }: Props) {
         <p className="mt-2 text-sm text-muted">
           Kept in the research area for later: {kept!.map((k) => `${k.kept} ${k.kept === 1 ? k.kind : k.kind === "business" ? "businesses" : `${k.kind}s`}`).join(", ")}
 
-      <h2 id="guides-and-shops">Guides and shops ({businesses?.length ?? 0})</h2>
+      <h2 id="guides-and-shops">Guides, shops and venues ({businesses?.length ?? 0})</h2>
       <p className="mt-1 text-sm text-muted">
         Guide services and gear shops the research kept, oldest first. <em>List it</em> puts it in{" "}
         <Link href="/guides-and-shops">Guides and shops</Link> as an unclaimed listing, never among the groups; <em>Skip</em> means
@@ -300,7 +300,7 @@ export default async function AdminPage({ searchParams }: Props) {
             <p>
               <strong>{c.name}</strong>{" "}
               <span className="text-sm text-muted">
-                · {c.kind === "guide" ? "guide service" : "shop"} · {c.subcategory_name} · {c.area}
+                · {c.kind === "guide" ? "guide service" : c.kind === "venue" ? "venue" : "shop"} · {c.subcategory_name} · {c.area}
               </span>
               <AffinityTags tags={c.affinity_tags} className="ml-2 align-middle" />
             </p>

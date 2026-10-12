@@ -1144,6 +1144,57 @@ in without the organizers saying yes.
 **Not part of this:** checking anyone's gender or identity. The board can't
 verify it and won't ask; the organizers' approval is the gate.
 
+## UC-37 — Events from guides, shops and venues
+
+> **Built 12 October 2026** on Sarah's go, with the recommended options:
+> mixed into Events with a *community groups only* filter, venues as a
+> third kind, the site admin adding them, gym nights kept as groups.
+>
+> Requested by Sarah on 12
+> October 2026: "lets make sure we don't miss events just because they are
+> not hosted by a club it is ok if events are hosted just at a venue or by
+> a guide or company learn to mountain bike is pretty cool". This reverses
+> FR-BZ-5 (events through groups only, 8 October 2026).
+
+**Actor:** A visitor looking for something to do; behind it, the site admin
+listing events the research found
+
+**Trigger:** Outdoor Chattanooga runs a free *Learn to Mountain Bike:
+FUNdamentals* class on a Tuesday evening. No club hosts it, so today the
+board can't show it.
+
+**Flow:**
+
+1. The research finds the class on the host's own page, with its date and
+   start time (the events prompt already checks guides, shops and venues).
+2. The site admin lists the host as a guide, shop or **venue** (new kind:
+   nature centers, gyms, city outdoor programs, ski areas), if it isn't
+   listed already, and the event goes on that listing.
+3. The visitor opens Events. The class sits in date order with everything
+   else, marked *by Outdoor Chattanooga · venue*, with the price as the
+   host writes it.
+4. The event page says who runs it and links to the host's page to sign
+   up; there are no RSVPs or discussions for it on the board.
+5. The host's own page in *Guides and shops* lists its upcoming events.
+
+**Requirements:** to be written after review (FR-BZ-5 to be replaced).
+
+**Succeeds when:** a beginner finds a learn-to-ride class, a gym's
+community night or a park's guided hike as easily as a club ride, and no
+business can buy its way up the list.
+
+**Options and their cost:**
+
+| Decision | Recommended | Alternatives and their cost |
+| --- | --- | --- |
+| **Where these events show** | In the Events list in date order like every event, marked with the host and its kind, with a *community groups only* filter. | Only on the host's page and a separate tab: keeps Events purely community, but people miss them, which is the problem. |
+| **Venues as a third kind** | Yes: nature centers, gyms, parks departments and ski areas that run public programs. Shown in *Guides and shops*, renamed *Guides, shops and venues*. | Guides and shops only: gyms' community nights and city programs stay off. |
+| **Who adds them** | The site admin, from research, as now. Businesses add their own once claiming exists (rest of UC-12). | Businesses post from day one: needs claiming and business admins first. |
+| **Gym nights already listed as groups** | Keep them (Women Who Rock, Death Moth, Queer Climbing Night): people treat them as communities. | Move them under the gym: tidier, but they'd lose their place in Communities. |
+
+**Not part of this:** paid placement, featured events, ads. Business
+events follow P2 (lists, not feeds): same order and filters for everyone.
+
 ---
 
 ## Journeys the seed data must cover

@@ -20,12 +20,39 @@ export type Database = {
   };
   public: {
     Tables: {
+      business_events: {
+        Row: {
+          id: string;
+          business_id: string;
+          title: string;
+          starts_at: string;
+          ends_at: string;
+          timezone: string;
+          location_name: string;
+          price_text: string | null;
+          is_paid: boolean;
+          source_url: string;
+          status: "scheduled" | "cancelled";
+          created_at: string;
+        };
+        Insert: never;
+        Update: never;
+        Relationships: [
+          {
+            foreignKeyName: "business_events_business_id_fkey";
+            columns: ["business_id"];
+            isOneToOne: false;
+            referencedRelation: "businesses";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       businesses: {
         Row: {
           id: string;
           slug: string;
           name: string;
-          kind: "guide" | "shop";
+          kind: "guide" | "shop" | "venue";
           description: string;
           subcategory_id: string;
           region_id: string;
@@ -938,6 +965,11 @@ export type Database = {
           is_paid: boolean | null;
           takes_rsvps: boolean | null;
           region_id: string | null;
+          host_kind: string | null;
+          business_slug: string | null;
+          business_name: string | null;
+          host_area: string | null;
+          price_text: string | null;
         };
         Relationships: [];
       };
@@ -946,7 +978,7 @@ export type Database = {
           id: string | null;
           slug: string | null;
           name: string | null;
-          kind: "guide" | "shop" | null;
+          kind: "guide" | "shop" | "venue" | null;
           description: string | null;
           area: string | null;
           website: string | null;
@@ -985,7 +1017,7 @@ export type Database = {
         Returns: {
           id: string;
           name: string;
-          kind: "guide" | "business";
+          kind: "guide" | "business" | "venue";
           subcategory_name: string;
           area: string;
           description: string;
@@ -997,6 +1029,7 @@ export type Database = {
       list_business_candidate: { Args: { p_candidate_id: string; p_region_id: string }; Returns: string };
       skip_business_candidate: { Args: { p_candidate_id: string }; Returns: undefined };
       remove_business: { Args: { p_business_id: string }; Returns: undefined };
+      remove_business_event: { Args: { p_event_id: string }; Returns: undefined };
       can_view_profile: { Args: { p_user: string }; Returns: boolean };
       profile_section_visible: { Args: { p_user: string; p_section: string }; Returns: boolean };
       profile_goal_year: { Args: never; Returns: number };

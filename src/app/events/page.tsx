@@ -35,6 +35,9 @@ export default async function EventsPage({ searchParams }: Props) {
   const category = typeof params.category === "string" ? params.category : undefined;
   const days = WINDOWS.find((w) => String(w.days) === params.days)?.days ?? 30;
   const type = isGroupType(params.type) ? params.type : undefined;
+  // UC-37: events from guides, shops and venues sit in the same list; this
+  // narrows it to community groups only.
+  const groupsOnly = params.hosts === "groups";
   // UC-14: near a town or zip code the visitor gives, never their device's location.
   const location = resolveLocation(params.near, params.zip);
   const near = location.town;
@@ -70,7 +73,7 @@ export default async function EventsPage({ searchParams }: Props) {
   let listing = supabase
     .from("event_listings")
     .select(
-      "id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps",
+      "id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text",
     )
     .eq("status", "scheduled")
     .gt("starts_at", startsInWindow.from)
@@ -78,14 +81,16 @@ export default async function EventsPage({ searchParams }: Props) {
   if (category) listing = listing.eq("category_slug", category);
   if (type) listing = listing.in("group_slug", (groupRows ?? []).filter((g) => g.group_type === type).map((g) => g.slug));
   if (regionId) listing = listing.eq("region_id", regionId);
+  if (groupsOnly) listing = listing.eq("host_kind", "group");
 
   let countQuery = supabase
     .from("event_listings")
-    .select("category_slug, group_slug")
+    .select("category_slug, group_slug, host_kind, host_area")
     .eq("status", "scheduled")
     .gt("starts_at", startsInWindow.from)
     .lt("starts_at", startsInWindow.to);
   if (regionId) countQuery = countQuery.eq("region_id", regionId);
+  if (groupsOnly) countQuery = countQuery.eq("host_kind", "group");
 
   const [{ data: all }, { data: categories }, { data: countRows }] = await Promise.all([
     listing.order("starts_at").limit(300),
@@ -101,13 +106,21 @@ export default async function EventsPage({ searchParams }: Props) {
       if (t) milesOf.set(g.slug, milesBetween(near, t));
     }
   }
-  const inRange = (groupSlug: string | null) => !near || (milesOf.get(groupSlug ?? "") ?? Infinity) <= within;
-  const events = (all ?? []).filter((e) => inRange(e.group_slug));
+  // UC-37: a guide's, shop's or venue's event is measured from the host's town.
+  type Placed = { group_slug: string | null; host_area: string | null };
+  const milesFor = (r: Placed): number | undefined => {
+    if (!near) return undefined;
+    if (r.group_slug) return milesOf.get(r.group_slug);
+    const t = townForArea(r.host_area);
+    return t ? milesBetween(near, t) : undefined;
+  };
+  const inRange = (r: Placed) => !near || (milesFor(r) ?? Infinity) <= within;
+  const events = (all ?? []).filter((e) => inRange(e));
 
   // Counts for the sidebar: over the whole window, not the page. Each list
   // counts what its links would show: activities under the chosen type and
   // place, types under the chosen activity and place.
-  const placed = (countRows ?? []).filter((r) => inRange(r.group_slug));
+  const placed = (countRows ?? []).filter((r) => inRange(r));
   const counts = new Map<string, number>();
   for (const e of placed.filter((r) => ofType(r.group_slug))) counts.set(e.category_slug ?? "", (counts.get(e.category_slug ?? "") ?? 0) + 1);
   // "all" is every activity together, whichever one is picked.
@@ -122,7 +135,7 @@ export default async function EventsPage({ searchParams }: Props) {
   // Near a town, events whose group area isn't a known town have no
   // distance, so they drop out; the page says how many (UC-14).
   const unplaced = near
-    ? (countRows ?? []).filter((r) => (!category || r.category_slug === category) && ofType(r.group_slug) && !milesOf.has(r.group_slug ?? ""))
+    ? (countRows ?? []).filter((r) => (!category || r.category_slug === category) && ofType(r.group_slug) && milesFor(r) === undefined)
         .length
     : 0;
 
@@ -135,13 +148,15 @@ export default async function EventsPage({ searchParams }: Props) {
     months.at(-1)!.events.push(e);
   }
 
-  const href = (next: { category?: string; type?: string; days?: number; anywhere?: boolean }) => {
+  const href = (next: { category?: string; type?: string; days?: number; anywhere?: boolean; hosts?: string }) => {
     const q = new URLSearchParams();
     const c = "category" in next ? next.category : category;
     const t = "type" in next ? next.type : type;
     const d = next.days ?? days;
     if (c) q.set("category", c);
     if (t) q.set("type", t);
+    const h = "hosts" in next ? next.hosts : groupsOnly ? "groups" : undefined;
+    if (h) q.set("hosts", h);
     if (d !== 30) q.set("days", String(d));
     if (near && !next.anywhere) {
       if (location.zip) q.set("zip", location.zip);
@@ -171,7 +186,7 @@ export default async function EventsPage({ searchParams }: Props) {
       <LocationFilter
         action="/events"
         idPrefix={`events-${where}`}
-        keep={{ category, type, days: days !== 30 ? String(days) : undefined, region: regionParam }}
+        keep={{ category, type, days: days !== 30 ? String(days) : undefined, region: regionParam, hosts: groupsOnly ? "groups" : undefined }}
         town={location.zip || !near ? undefined : townKey(near)}
         region={browsing.region.slug}
         zipPlaceholder={browsing.region.exampleZip}
@@ -222,6 +237,12 @@ export default async function EventsPage({ searchParams }: Props) {
         ))}
       </ul>
 
+      <h2 className="filter-heading">hosted by</h2>
+      <ul className="mt-1 space-y-0.5">
+        <li>{groupsOnly ? <Link href={href({ hosts: undefined })}>everyone</Link> : <strong>everyone</strong>}</li>
+        <li>{groupsOnly ? <strong>community groups only</strong> : <Link href={href({ hosts: "groups" })}>community groups only</Link>}</li>
+      </ul>
+
       <h2 className="filter-heading">when</h2>
       <ul className="mt-1 space-y-0.5">
         {WINDOWS.map((w) => (
@@ -249,7 +270,7 @@ export default async function EventsPage({ searchParams }: Props) {
           <RegionScope
             current={browsing}
             path="/events"
-            query={{ category, type, days: days !== 30 ? String(days) : undefined }}
+            query={{ category, type, days: days !== 30 ? String(days) : undefined, hosts: groupsOnly ? "groups" : undefined }}
             className="mt-2 text-sm text-muted"
           />
         )}

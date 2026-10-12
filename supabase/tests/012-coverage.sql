@@ -258,6 +258,7 @@ insert into definer_allowed values
   ('set_suggestion_status(uuid, suggestion_status, text)'),
   ('set_thread_flags(uuid, boolean, boolean)'),
   ('remove_business(uuid)'),
+  ('remove_business_event(uuid)'),
   ('skip_business_candidate(uuid)'),
   ('skip_candidate(uuid)'),
   ('suggestions_before_insert()'),

@@ -64,3 +64,12 @@ export async function removeBusiness(businessId: string) {
   failOnError("/guides-and-shops", error);
   succeed("/guides-and-shops", "business_removed");
 }
+
+/** UC-37: takes one hosted event off the board (cancelled at the source, or wrong). */
+export async function removeBusinessEvent(eventId: string) {
+  const { supabase } = await actingUser("/events");
+  if (!idSchema.safeParse(eventId).success) fail("/events", "invalid");
+  const { error } = await supabase.rpc("remove_business_event", { p_event_id: eventId });
+  failOnError("/events", error);
+  succeed("/events", "business_event_removed");
+}

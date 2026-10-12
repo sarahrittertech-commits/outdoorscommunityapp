@@ -14,6 +14,7 @@ import { parseCalendarParams } from "@/lib/calendar";
 import { getCurrentRegion, regionIds } from "@/lib/currentRegion";
 import { aboutMiles, countWithin, findTown, milesBetween, townForArea, townKey } from "@/lib/geo";
 import { hubTown, regionForTown } from "@/lib/regions";
+import { eventHref, hostHref, hostKindLabel, hostName, isGroupEvent } from "@/lib/hosts";
 import { createClient } from "@/lib/supabase/server";
 import { dateParts } from "@/lib/time";
 
@@ -51,7 +52,7 @@ export default async function Home({ searchParams }: Props) {
   const upcoming = (regionSlug: string | null) => {
     let query = supabase
       .from("event_listings")
-      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count, is_unclaimed, is_paid, takes_rsvps")
+      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text")
       .eq("status", "scheduled")
       .gt("starts_at", new Date().toISOString());
     if (regionSlug) query = query.eq("region_id", ids.get(regionSlug) ?? "00000000-0000-0000-0000-000000000000");
@@ -68,8 +69,9 @@ export default async function Home({ searchParams }: Props) {
 
   // Each event is placed at its group's town (UC-14).
   const townOfGroup = new Map<string, Town | undefined>((groups ?? []).map((g) => [g.slug, townForArea(g.area)]));
-  const place = <E extends { group_slug: string | null }>(list: E[] | null) =>
-    (list ?? []).map((e) => ({ ...e, town: townOfGroup.get(e.group_slug ?? "") }));
+  // UC-37: a guide's, shop's or venue's event is placed at the host's town.
+  const place = <E extends { group_slug: string | null; host_area: string | null }>(list: E[] | null) =>
+    (list ?? []).map((e) => ({ ...e, town: e.group_slug ? townOfGroup.get(e.group_slug) : townForArea(e.host_area) }));
   const placed = place(events);
 
   const nearby = (nearEvents ? place(nearEvents) : placed)
@@ -250,17 +252,26 @@ export default async function Home({ searchParams }: Props) {
                       </span>
                     )}
                   </div>
-                  <Link href={`/e/${e.id}`} className="mt-3 font-bold">
+                  <Link href={eventHref(e)} className="mt-3 font-bold">
                     {e.title}
                   </Link>
                   <p className="m-0 mt-1 text-sm text-muted">
                     {e.town?.name ?? e.location_name} · {aboutMiles(e.miles)}
                   </p>
                   <p className="m-0 mt-auto flex justify-between border-t border-rule pt-2 text-sm text-muted">
-                    <Link href={`/g/${e.group_slug}`}>{e.group_name}</Link>
+                    <Link href={hostHref(e)}>
+                      {hostName(e)}
+                      {hostKindLabel(e) && ` (${hostKindLabel(e)})`}
+                    </Link>
                     <span>
                       {e.is_paid && "Paid · "}
-                      {e.is_unclaimed ? "via organizer" : e.takes_rsvps ? `${e.going_count} going` : "sign up with the organizer"}
+                      {!isGroupEvent(e)
+                        ? "via host"
+                        : e.is_unclaimed
+                          ? "via organizer"
+                          : e.takes_rsvps
+                            ? `${e.going_count} going`
+                            : "sign up with the organizer"}
                     </span>
                   </p>
                 </li>

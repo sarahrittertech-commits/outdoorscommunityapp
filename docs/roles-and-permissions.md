@@ -203,6 +203,9 @@ a claim approved.
 | List one (into a live region) or skip it | ❌ | ❌ | ✅ |
 | Remove a listing | ❌ | ❌ | ✅ |
 | Write to the listings any other way | ❌ | ❌ | ❌ |
+| See a listing's events (UC-37) | ✅ | ✅ | ✅ |
+| Add a listing's events (from the research) or remove one | ❌ | ❌ | ✅ |
+| RSVP to a listing's event | ❌ | ❌ | ❌ (sign up with the host) |
 
 ### Regions (UC-34, UC-35, FR-RG-1 to FR-RG-10)
 
