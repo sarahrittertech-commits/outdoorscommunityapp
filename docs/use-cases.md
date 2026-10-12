@@ -1249,6 +1249,65 @@ and the organizer never has to update their bio link.
 **Not part of this:** reading or posting to anyone's social accounts,
 follower counts, or anything that turns the board into a feed.
 
+## UC-39 — Keep a region's events complete
+
+> **Draft, awaiting review. Decisions needed.** Requested by Sarah on 12
+> October 2026: the priority is the most complete list of events. Research
+> so far finds each event once and forgets where it came from, so every
+> refresh searches the web again, and AI search (Gemini) invented many
+> groups and dates. Most real events came from a few kinds of pages per
+> region: race sign-up sites, Meetup, park program pages, and club and shop
+> calendars.
+
+**Actor:** The site admin, keeping a region's Events list complete
+
+**Trigger:** Once a week, or right after opening a region.
+
+**Flow:**
+
+1. On the admin page, opens **Event sources** for a region, for example
+   Greenville and the Upstate.
+2. Sees every place the region's hosts post dates, one line each:
+   the host, the kind of page (own calendar, calendar feed, Meetup,
+   race sign-up site, park programs), when it was last read, and how many
+   real events it has given.
+3. Sees the region's coverage at the top: how many hosts have a known
+   source, how many sources were read this week, and how many upcoming
+   events the board shows.
+4. Adds a source when research finds one (a club's calendar page, its
+   race page on RunSignup), or the reader adds it when it notices one.
+5. The weekly reader goes through the sources by itself:
+   - **Feeds first.** Calendar feeds and sign-up sites with open data are
+     read directly, with no AI and no cost.
+   - **Pages next.** A page with dates but no feed is read by an AI agent,
+     which copies only what the page shows.
+6. New dated events from a host's own page or its official sign-up page
+   go on the board under the existing rules; everything else is kept in
+   the research tables with the reason (FR-RS-13).
+7. Sources that gave nothing for a long time, or broke, are marked so the
+   admin can fix the link or retire them.
+
+**Requirements:** to be written after review.
+
+**Succeeds when:** every listed host in a region has at least one known
+source, each source is read at least weekly, a region's Events list grows
+without new web searches, and the coverage numbers can be quoted in the
+business plan.
+
+**Options and their cost:**
+
+| Decision | Recommended | Alternatives and their cost |
+| --- | --- | --- |
+| **How sources are read** | Feeds first (calendar feeds, sign-up sites' open data), with no AI. AI only for pages without a feed, and only weekly. See ADR-0011. | AI web search for everything: what Gemini did. It costs credits on every run and invents groups and dates. |
+| **Where the reader runs** | A Supabase scheduled function (ADR-0004), next to the database. Feeds cost nothing; the AI part runs as the weekly research agent (UC-9). | GitHub Actions (like the paused Gemini sweep): also free, but the work is split across two places. |
+| **What gets published without review** | Only events from a host's own page, feed or official sign-up page, with a date and time, for a host already listed. Exactly today's rule. | Publishing anything a feed returns: faster, but one bad feed could flood a region. |
+| **Meetup, Eventbrite and Facebook** | Meetup and Eventbrite pages are read like any public page; whether they offer a usable feed is checked when building. Facebook events are not read (Meta doesn't allow it). | Paid API access, if a source turns out to be worth it. |
+| **Coverage numbers** | Counted from the sources table, admin only. | A public "events this week" figure: possible later, as a fact, not a ranking. |
+
+**Not part of this:** ranking hosts or events, scraping social media,
+sponsor and partner tracking (a later use of the same organization
+records), and anything visitors see apart from more events.
+
 ---
 
 ## Journeys the seed data must cover

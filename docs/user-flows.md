@@ -657,3 +657,20 @@ flowchart TD
   bio --> page
 ```
 
+## UC-39 — Keep a region's events complete
+
+*Draft, awaiting review (12 October 2026).*
+
+```mermaid
+flowchart TD
+  admin(["Site admin"]) --> sources["Admin: Event sources for a region<br/>coverage at the top · one line per source<br/>kind · last read · events given"]
+  research["Research finds a club calendar,<br/>a race page, a park program page"] --> sources
+  sources --> reader{"Weekly reader"}
+  reader -->|calendar feed or open data| feed["Read directly, no AI"]
+  reader -->|page without a feed| ai["AI agent copies what the page shows"]
+  feed --> check{"Host's own page or official sign-up,<br/>date and time, host listed?"}
+  ai --> check
+  check -->|yes| board["Event on the board"]
+  check -->|no| kept["Kept in research with the reason"]
+  reader -->|nothing for weeks or broken| stale["Marked for the admin to fix or retire"]
+```
