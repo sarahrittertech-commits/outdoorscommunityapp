@@ -37,51 +37,74 @@ import {
   shapeProblem,
 } from "./lib.mjs";
 
-const INTAKE = process.env.RESEARCH_INTAKE_URL ?? "https://rxszqxwpgbrdytbkyxwp.supabase.co/functions/v1/research-intake";
+const INTAKE =
+  process.env.RESEARCH_INTAKE_URL ??
+  "https://rxszqxwpgbrdytbkyxwp.supabase.co/functions/v1/research-intake";
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.8-flash";
 const args = process.argv.slice(2);
 const dry = args.includes("--dry");
 const runArg = args.indexOf("--run");
-const runNumber = runArg >= 0 ? Number(args[runArg + 1]) : Number(process.env.GITHUB_RUN_NUMBER ?? Math.floor(Date.now() / 7.2e6));
+const runNumber =
+  runArg >= 0
+    ? Number(args[runArg + 1])
+    : Number(process.env.GITHUB_RUN_NUMBER ?? Math.floor(Date.now() / 7.2e6));
 
 const geminiKey = process.env.GEMINI_API_KEY;
 const intakeToken = process.env.RESEARCH_AGENT_TOKEN;
 if (!geminiKey || (!dry && !intakeToken)) {
-  console.log("GEMINI_API_KEY or RESEARCH_AGENT_TOKEN is not set; nothing to do.");
+  console.log(
+    "GEMINI_API_KEY or RESEARCH_AGENT_TOKEN is not set; nothing to do.",
+  );
   process.exit(0);
 }
 
 async function intake(body) {
   const res = await fetch(INTAKE, {
     method: "POST",
-    headers: { Authorization: `Bearer ${intakeToken}`, "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${intakeToken}`,
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(body),
   });
   const json = await res.json().catch(() => ({}));
   return { status: res.status, json };
 }
 
-const UA = "BranchOutdoorsResearch/1.1 (+public community board; reads public pages only)";
+const UA =
+  "BranchOutdoorsResearch/1.1 (+public community board; reads public pages only)";
 
 /** A public page: its raw HTML and plain text, or why it couldn't be read. */
 async function page(url) {
   try {
-    const res = await fetch(url, { redirect: "follow", signal: AbortSignal.timeout(15000), headers: { "User-Agent": UA } });
+    const res = await fetch(url, {
+      redirect: "follow",
+      signal: AbortSignal.timeout(15000),
+      headers: { "User-Agent": UA },
+    });
     if (!res.ok) return { ok: false, why: `HTTP ${res.status}` };
     const type = res.headers.get("content-type") ?? "";
-    if (!type.includes("html") && !type.includes("text")) return { ok: false, why: type };
+    if (!type.includes("html") && !type.includes("text"))
+      return { ok: false, why: type };
     const html = await res.text();
     return { ok: true, html, text: htmlText(html) };
   } catch (e) {
-    return { ok: false, why: e.name === "TimeoutError" ? "timeout" : "unreachable" };
+    return {
+      ok: false,
+      why: e.name === "TimeoutError" ? "timeout" : "unreachable",
+    };
   }
 }
 
 /** JSON from a public endpoint, or null. */
 async function json(url) {
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(15000), headers: { "User-Agent": UA, Accept: "application/json" } });
-    if (!res.ok || !(res.headers.get("content-type") ?? "").includes("json")) return null;
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(15000),
+      headers: { "User-Agent": UA, Accept: "application/json" },
+    });
+    if (!res.ok || !(res.headers.get("content-type") ?? "").includes("json"))
+      return null;
     return await res.json();
   } catch {
     return null;
@@ -95,18 +118,33 @@ async function json(url) {
 async function readEvents(eventsUrl, homeUrl, timezone) {
   const evPage = await page(eventsUrl);
   if (!evPage.ok) return { events: [], how: `events page: ${evPage.why}` };
-  let events = eventsFromJsonLd(jsonLdEvents(evPage.html), { pageUrl: eventsUrl, timezone });
-  if (events.length) return { events, how: "schema.org event data on the events page" };
-  if (domainOf(eventsUrl) === domainOf(homeUrl) && /wp-content|wp-json|tribe-events/i.test(evPage.html)) {
+  let events = eventsFromJsonLd(jsonLdEvents(evPage.html), {
+    pageUrl: eventsUrl,
+    timezone,
+  });
+  if (events.length)
+    return { events, how: "schema.org event data on the events page" };
+  if (
+    domainOf(eventsUrl) === domainOf(homeUrl) &&
+    /wp-content|wp-json|tribe-events/i.test(evPage.html)
+  ) {
     const origin = new URL(eventsUrl).origin;
-    const tribe = await json(`${origin}/wp-json/tribe/events/v1/events?per_page=50&start_date=${new Date().toISOString().slice(0, 10)}`);
+    const tribe = await json(
+      `${origin}/wp-json/tribe/events/v1/events?per_page=50&start_date=${new Date().toISOString().slice(0, 10)}`,
+    );
     events = eventsFromTribe(tribe, { timezone });
-    if (events.length) return { events, how: "the site's WordPress events calendar" };
+    if (events.length)
+      return { events, how: "the site's WordPress events calendar" };
   }
-  return { events: [], how: "events page has no structured dates (left for the weekly reader)" };
+  return {
+    events: [],
+    how: "events page has no structured dates (left for the weekly reader)",
+  };
 }
 
-const config = JSON.parse(await readFile(new URL("./areas.json", import.meta.url), "utf8"));
+const config = JSON.parse(
+  await readFile(new URL("./areas.json", import.meta.url), "utf8"),
+);
 const job = pick(config, runNumber);
 const today = new Date().toISOString().slice(0, 10);
 
@@ -119,47 +157,124 @@ if (intakeToken) {
     console.log(`Intake answered ${known.status}; stopping.`);
     process.exit(1);
   }
-  subcategories = known.json.subcategories.map((s) => s.subcategory).filter(Boolean);
+  subcategories = known.json.subcategories
+    .map((s) => s.subcategory)
+    .filter(Boolean);
   knownNames = known.json.names ?? [];
 } else {
-  subcategories = ["day-hikes", "backpacking", "mountain-biking", "road", "gravel", "trail-running", "road-running", "kayaking", "whitewater", "paddleboard", "bouldering", "sport", "trad", "indoor", "birding", "fly-fishing", "trail-work", "conservation", "ski-snowboard", "beginners"];
+  subcategories = [
+    "day-hikes",
+    "backpacking",
+    "mountain-biking",
+    "road",
+    "gravel",
+    "trail-running",
+    "road-running",
+    "kayaking",
+    "whitewater",
+    "paddleboard",
+    "bouldering",
+    "sport",
+    "trad",
+    "indoor",
+    "birding",
+    "fly-fishing",
+    "trail-work",
+    "conservation",
+    "ski-snowboard",
+    "beginners",
+  ];
 }
 
-console.log(`Run ${runNumber}: ${job.area} — ${job.pass.split(":")[0]} (${MODEL})`);
+console.log(
+  `Run ${runNumber}: ${job.area} — ${job.pass.split(":")[0]} (${MODEL})`,
+);
 
-const answer = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
-  body: JSON.stringify({
-    contents: [{ role: "user", parts: [{ text: buildPrompt({ ...job, subcategories, knownNames, today }) }] }],
-    tools: [{ google_search: {} }],
-    generationConfig: { temperature: 0.1 },
-  }),
-});
+// Google sometimes answers 500/503 when the model is busy; those aren't
+// billed, so wait and try again, at most twice.
+async function askGemini() {
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": geminiKey,
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: buildPrompt({
+                    ...job,
+                    subcategories,
+                    knownNames,
+                    today,
+                  }),
+                },
+              ],
+            },
+          ],
+          tools: [{ google_search: {} }],
+          generationConfig: { temperature: 0.1 },
+        }),
+      },
+    );
+    if (![500, 503].includes(res.status) || attempt === 3) return res;
+    console.log(
+      `Gemini answered ${res.status} (busy); retrying in ${attempt * 20} s.`,
+    );
+    await new Promise((r) => setTimeout(r, attempt * 20000));
+  }
+}
+const answer = await askGemini();
 if (!answer.ok) {
-  console.log(`Gemini answered ${answer.status} (quota, billing or model name?); stopping.`);
+  console.log(
+    `Gemini answered ${answer.status} (quota, billing or model name?); stopping.`,
+  );
   process.exit(answer.status === 429 ? 0 : 1);
 }
 const data = await answer.json();
-const text = (data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join("");
+const text = (data.candidates?.[0]?.content?.parts ?? [])
+  .map((p) => p.text ?? "")
+  .join("");
 const grounded = groundedDomains(data);
 // What this run used, so the cost per run can be read off the log (12 October 2026).
 const usage = data.usageMetadata ?? {};
-const searches = data.candidates?.[0]?.groundingMetadata?.webSearchQueries ?? [];
+const searches =
+  data.candidates?.[0]?.groundingMetadata?.webSearchQueries ?? [];
 console.log(
   `Usage: ${usage.promptTokenCount ?? "?"} input tokens, ${usage.candidatesTokenCount ?? "?"} output tokens, ` +
     `${usage.thoughtsTokenCount ?? 0} thinking tokens, ${searches.length} Google searches.`,
 );
 const finds = parseFinds(text).slice(0, 12);
-console.log(`Gemini suggested ${finds.length}; Google returned ${grounded.size} sites.`);
+console.log(
+  `Gemini suggested ${finds.length}; Google returned ${grounded.size} sites.`,
+);
 
 const known = new Set(knownNames);
-const tally = { suggested: finds.length, dropped: 0, grounded: 0, failed: 0, sent: 0, events_verified: 0, events_kept: 0, results: {} };
+const tally = {
+  suggested: finds.length,
+  dropped: 0,
+  grounded: 0,
+  failed: 0,
+  sent: 0,
+  events_verified: 0,
+  events_kept: 0,
+  results: {},
+};
 
 // First check every homepage, so an invented batch is caught before anything is sent.
 const checked = [];
 for (const raw of finds) {
-  const find = { ...raw, out_of_region: job.out_of_region, affinity_tags: Array.isArray(raw.affinity_tags) ? raw.affinity_tags : [] };
+  const find = {
+    ...raw,
+    out_of_region: job.out_of_region,
+    affinity_tags: Array.isArray(raw.affinity_tags) ? raw.affinity_tags : [],
+  };
   const problem = shapeProblem(find, subcategories);
   if (problem) {
     tally.dropped++;
@@ -171,10 +286,17 @@ for (const raw of finds) {
     continue;
   }
   const home = await page(find.source_url);
-  checked.push({ find, home, homeOk: home.ok && pageNames(home.text, find.name), inSearch: isGrounded(find.source_url, grounded) });
+  checked.push({
+    find,
+    home,
+    homeOk: home.ok && pageNames(home.text, find.name),
+    inSearch: isGrounded(find.source_url, grounded),
+  });
 }
 if (looksInvented(checked.map((c) => (c.home.ok ? "ok" : c.home.why)))) {
-  console.log(`Most suggested sites don't exist; treating this answer as invented and sending nothing.`);
+  console.log(
+    `Most suggested sites don't exist; treating this answer as invented and sending nothing.`,
+  );
   console.log(JSON.stringify({ ...tally, invented: true }));
   process.exit(0);
 }
@@ -183,16 +305,38 @@ for (const { find, home, homeOk, inSearch } of checked) {
   if (inSearch) tally.grounded++;
   if (!homeOk) {
     tally.failed++;
-    console.log(`  failed ${find.name}: ${home.ok ? "page doesn't name it" : home.why} (kept as failed)`);
+    console.log(
+      `  failed ${find.name}: ${home.ok ? "page doesn't name it" : home.why} (kept as failed)`,
+    );
   }
-  const eventsUrl = typeof find.events_url === "string" && /^https?:\/\/[^\s]+$/.test(find.events_url) ? find.events_url : null;
-  const { events, how } = homeOk && eventsUrl ? await readEvents(eventsUrl, find.source_url, job.timezone) : { events: [], how: eventsUrl ? "not read (homepage failed)" : "no events page named" };
-  tally.events_verified += events.filter((e) => e.verification === "verified").length;
+  const eventsUrl =
+    typeof find.events_url === "string" &&
+    /^https?:\/\/[^\s]+$/.test(find.events_url)
+      ? find.events_url
+      : null;
+  const { events, how } =
+    homeOk && eventsUrl
+      ? await readEvents(eventsUrl, find.source_url, job.timezone)
+      : {
+          events: [],
+          how: eventsUrl
+            ? "not read (homepage failed)"
+            : "no events page named",
+        };
+  tally.events_verified += events.filter(
+    (e) => e.verification === "verified",
+  ).length;
   tally.events_kept += events.length;
   const evidence = [
-    homeOk ? "Homepage loads and names it" : `Homepage ${home.ok ? "doesn't name it" : home.why}`,
-    inSearch ? "site was in Google's results" : "site NOT among Google's results",
-    eventsUrl ? `events page ${eventsUrl}: ${events.length} dated (${how})` : how,
+    homeOk
+      ? "Homepage loads and names it"
+      : `Homepage ${home.ok ? "doesn't name it" : home.why}`,
+    inSearch
+      ? "site was in Google's results"
+      : "site NOT among Google's results",
+    eventsUrl
+      ? `events page ${eventsUrl}: ${events.length} dated (${how})`
+      : how,
     `Gemini sweep, ${job.area}, ${job.pass.split(":")[0]}`,
   ].join("; ");
   const candidate = {
@@ -207,14 +351,20 @@ for (const { find, home, homeOk, inSearch } of checked) {
   };
   delete candidate.events_url;
   if (dry) {
-    console.log(`  would send ${candidate.kind}: ${candidate.name} (${candidate.source_url}) [${evidence}]`);
+    console.log(
+      `  would send ${candidate.kind}: ${candidate.name} (${candidate.source_url}) [${evidence}]`,
+    );
     continue;
   }
   const res = await intake({ action: "add", candidate });
-  const result = res.json.result ?? `HTTP ${res.status}${res.json.detail ? `: ${res.json.detail}` : ""}`;
+  const result =
+    res.json.result ??
+    `HTTP ${res.status}${res.json.detail ? `: ${res.json.detail}` : ""}`;
   tally.results[result] = (tally.results[result] ?? 0) + 1;
   tally.sent++;
-  console.log(`  ${result}: ${candidate.kind} ${candidate.name}, ${events.length} events`);
+  console.log(
+    `  ${result}: ${candidate.kind} ${candidate.name}, ${events.length} events`,
+  );
 }
 
 console.log(JSON.stringify(tally));
