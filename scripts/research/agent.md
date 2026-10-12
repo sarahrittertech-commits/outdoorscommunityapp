@@ -9,7 +9,10 @@ Requirements: FR-RS-1 to FR-RS-9 in `docs/functional-requirements.md`.
 
 A second routine, the **area sweep**, follows `scripts/research/area-sweep.md`
 every few hours to work through Sarah's list of target areas. It uses the
-rules below and replaces steps 2 and 3.
+rules below and replaces steps 2 and 3. The inexpensive option is the
+**Gemini sweep** (`scripts/research/gemini/`, a GitHub Action every three
+hours): Gemini suggests, the script checks every link, and only verified
+finds reach the intake.
 
 ## What you are allowed to do
 

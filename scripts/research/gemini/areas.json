@@ -1,0 +1,37 @@
+{
+  "_note": "Sarah's target list, 12 October 2026. The sweep takes one area per run, in turn (run number mod the list length). out_of_region is true where no live region covers the area yet.",
+  "areas": [
+    { "area": "Greenville, SC", "timezone": "America/New_York", "out_of_region": false },
+    { "area": "Chattanooga, TN", "timezone": "America/New_York", "out_of_region": false },
+    { "area": "Fort Collins, CO", "timezone": "America/Denver", "out_of_region": false },
+    { "area": "Boulder, CO", "timezone": "America/Denver", "out_of_region": false },
+    { "area": "Denver, CO", "timezone": "America/Denver", "out_of_region": false },
+    { "area": "Salt Lake City, UT", "timezone": "America/Denver", "out_of_region": false },
+    { "area": "Reno, NV", "timezone": "America/Los_Angeles", "out_of_region": false },
+    { "area": "Flagstaff, AZ", "timezone": "America/Phoenix", "out_of_region": false },
+    { "area": "Charleston, SC", "timezone": "America/New_York", "out_of_region": true },
+    { "area": "Portland, ME", "timezone": "America/New_York", "out_of_region": true },
+    { "area": "Boise, ID", "timezone": "America/Boise", "out_of_region": true },
+    { "area": "Missoula, MT", "timezone": "America/Denver", "out_of_region": true },
+    { "area": "Bozeman, MT", "timezone": "America/Denver", "out_of_region": true },
+    { "area": "Chicago, IL", "timezone": "America/Chicago", "out_of_region": true },
+    { "area": "Bend, OR", "timezone": "America/Los_Angeles", "out_of_region": true },
+    { "area": "Portland, OR", "timezone": "America/Los_Angeles", "out_of_region": true },
+    { "area": "Ashland, OR", "timezone": "America/Los_Angeles", "out_of_region": true },
+    { "area": "Spokane, WA", "timezone": "America/Los_Angeles", "out_of_region": true },
+    { "area": "Ithaca, NY", "timezone": "America/New_York", "out_of_region": true },
+    { "area": "Durango, CO", "timezone": "America/Denver", "out_of_region": true },
+    { "area": "Carbondale, CO (Roaring Fork Valley)", "timezone": "America/Denver", "out_of_region": true },
+    { "area": "Madison, WI", "timezone": "America/Chicago", "out_of_region": true },
+    { "area": "Grand Rapids, MI", "timezone": "America/Detroit", "out_of_region": true },
+    { "area": "Burlington, VT", "timezone": "America/New_York", "out_of_region": true },
+    { "area": "Waitsfield, VT (Mad River Valley)", "timezone": "America/New_York", "out_of_region": true },
+    { "area": "Tucson, AZ", "timezone": "America/Phoenix", "out_of_region": true }
+  ],
+  "passes": [
+    "anchors: the large, long-running clubs and chapters of national clubs (hiking, mountaineering, cycling, paddling, running, climbing access groups, Audubon, Trout Unlimited) and trail or conservation nonprofits",
+    "everyday groups: Meetup groups, shop and brewery group rides, run clubs, gym climbing clubs, paddling meetups, volunteer trail crews",
+    "affinity groups: women's, queer and LGBTQ+, BIPOC, adaptive and youth outdoor groups, including local chapters of Trail Sisters, Ladies Climbing Coalition, Radical Adventure Riders, Brown Girls Climb, Outdoor Afro, Latino Outdoors, Unlikely Hikers, Catalyst Sports, SheJumps, Black Girls Do Bike (a chapter only if it has its own page)",
+    "venues, guides, shops and event companies that run public outdoor events: climbing gyms, nature centers, city outdoor programs, ski areas, guide services, bike and outdoor shops, race companies"
+  ]
+}

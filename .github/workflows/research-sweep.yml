@@ -1,0 +1,33 @@
+name: Research sweep (Gemini)
+
+# Inexpensive research runs: Gemini's free API tier suggests outdoor groups,
+# venues and events for one area at a time (scripts/research/gemini/), the
+# script checks every link itself, and survivors go to the research intake
+# as candidates for the site admin. Does nothing until both secrets exist.
+on:
+  schedule:
+    - cron: "23 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: research-sweep
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Sweep one area
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          RESEARCH_AGENT_TOKEN: ${{ secrets.RESEARCH_AGENT_TOKEN }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
+        run: node scripts/research/gemini/sweep.mjs

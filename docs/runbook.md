@@ -149,10 +149,38 @@ details and internal notes.
    group's own page and approve or decline it on the site admin page. The
    claimant becomes the owner and the listing becomes an ordinary group.
 
+### Gemini sweep (the inexpensive one, from 12 October 2026)
+
+`.github/workflows/research-sweep.yml` runs `scripts/research/gemini/sweep.mjs`
+every three hours on GitHub's free runners. Each run takes one area and one
+search pass from `scripts/research/gemini/areas.json`, in turn (26 areas ×
+4 passes: anchors, everyday groups, affinity groups, venues and companies),
+and makes **one** Gemini API call with Google Search. The script then opens
+every link itself: a find is kept only if its page loads and names it, and
+an event only if its own page shows its date. Survivors go to the research
+intake as candidates; nothing is listed and the website doesn't change.
+
+It does nothing until two repository secrets exist (GitHub → the repo →
+Settings → Secrets and variables → Actions):
+
+1. `GEMINI_API_KEY`: a free key from Google AI Studio
+   (aistudio.google.com → Get API key). The free tier is separate from the
+   Gemini app's Deep Research allowance. Google may use free-tier prompts to
+   improve its products; the sweep only sends public information.
+2. `RESEARCH_AGENT_TOKEN`: the same value as the Supabase secret of that name
+   (see *Weekly research agent* below).
+
+Optional: a repository *variable* `GEMINI_MODEL` if Google renames the
+model (default `gemini-2.5-flash`). To try it once by hand: Actions →
+*Research sweep (Gemini)* → *Run workflow*, or locally with
+`node scripts/research/gemini/sweep.mjs --dry --run 0` (sends nothing).
+Edit `areas.json` to change the list. A run that hits the free quota stops
+quietly and the next one tries again.
+
 ### Area sweep (from 12 October 2026)
 
-A Claude routine on claude.ai, *Branch Outdoors area sweep*, runs every two
-hours and follows `scripts/research/area-sweep.md`: Sarah's list of target
+A Claude routine on claude.ai, *Branch Outdoors area sweep*, can run every two
+hours (more thorough than the Gemini sweep, but it uses Claude credits) and follows `scripts/research/area-sweep.md`: Sarah's list of target
 areas, two per run, saved as candidates only. It needs the same
 `RESEARCH_AGENT_TOKEN` and the same permission as the weekly agent (below).
 Pause it from claude.ai when the list is done or the review queue is too
