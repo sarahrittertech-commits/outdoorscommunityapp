@@ -64,7 +64,7 @@ for (const feed of config.feeds) {
         body: JSON.stringify({ action: "add", candidate }),
       });
       const json = await res.json().catch(() => ({}));
-      console.log(`  ${json.result ?? `HTTP ${res.status}`}: ${chunk.length} events`);
+      console.log(json.result ? `  ${json.events ?? 0} new on the board of ${chunk.length} sent (${json.result})` : `  HTTP ${res.status}: ${chunk.length} events not sent`);
     }
   }
 }
