@@ -322,10 +322,11 @@ Instagram.
 | Decision | What it means |
 | --- | --- |
 | **Principle P8, complete, not featured** | Above. |
-| **Research looks for affinity groups first** | Every research run, Gemini or the weekly agent, searches for women's and inclusive groups first, from a per-city list of known groups and national networks' local chapters, and reports how many it found (FR-RS-11). |
+| **Research never leaves affinity groups out** | Every research run, Gemini or the weekly agent, includes a required affinity pass from a per-city list of known groups and national networks' local chapters, and reports how many it found (FR-RS-11). Revised the same evening: the affinity pass comes after the anchors and everyday groups, not first (below). |
 | **A bias check before a region opens** | A region doesn't go live until its research includes an affinity pass and its candidates have been checked against the known-groups list (FR-RS-12). Measured on 11 October: 34 of 692 researched organizations (5%) were women-specific; 12 of Western North Carolina's 62 listed groups and none of the Triangle's 14 carry an affinity tag. |
 | **Not featured** | Sarah, the same day: affinity groups must not be put front and centre, which would attract the wrong kind of attention; they just must not be left off. No affinity showcase on the home page; the existing affinity tags (FR-GR-11) stay as they are. |
 | **Safety for affinity groups (draft)** | UC-36 (keep our space our own) is drafted for review. |
+| **Balanced research** | Sarah, the same evening: the Front Range lists came back mostly affinity groups and missed the big events. Research now runs anchors first (large clubs, major races, festivals and film tours), then everyday groups and recurring events, then the required affinity pass, across every activity category, and reports coverage per category so a lopsided list shows (FR-RS-11; `scripts/research/gemini-prompt.md`). |
 
 ## Open questions
 
