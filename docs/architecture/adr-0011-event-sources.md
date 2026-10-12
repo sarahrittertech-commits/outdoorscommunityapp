@@ -63,18 +63,18 @@ Saturday club rides, and cost money every month. Not now.
 
 | Site | How it can be read | Use |
 | --- | --- | --- |
-| RunSignup (also GiveSignup, BikeSignup) | Public race search by state, date and type; start times, prices, registration open or closed; free affiliate program for sites that list races | Not read: the board doesn't compete with race registration (Sarah, 12 October) |
+| RunSignup (also GiveSignup, BikeSignup) | Public race search by state, date and type; start times, prices, registration open or closed; free affiliate program for sites that list races | Later: the board doesn't compete with race registration for now (Sarah, 12 October) |
 | NC State Parks (Localist calendar) | Public events API: hundreds of park programs with times, places and prices | Second |
 | Club WordPress sites | The Events Calendar's public listing, calendar feed and schema.org data | First, per listed club |
 | Meetup | Each group's public calendar feed (the API needs a paid Pro plan) | First, per listed group |
-| BikeReg | Event search with organizer, website, prices and capacity; docs now behind a login | Not read (race registration) |
-| UltraSignup | schema.org data on event pages; an undocumented search | Not read (race registration) |
+| BikeReg | Event search with organizer, website, prices and capacity; docs now behind a login | Later (race registration) |
+| UltraSignup | schema.org data on event pages; an undocumented search | Later (race registration) |
 | Race Roster, ItsYourRace, Eventbrite search, Instagram, Facebook | No public route, or terms forbid it | Not read |
 
 ## Decision
 
 
-Track sources and read feeds first, community calendars before anything else; race registration sites are not read automatically (Sarah, 12 October: the board is a community board, not a race calendar). Publishing stays as it is: only events
+Track sources and read feeds first, community calendars before anything else; race registration sites wait until later (Sarah, 12 October: the board is a community board, not a race calendar; its aim is getting people to try something new with other people). Publishing stays as it is: only events
 from a host's own page, feed or official sign-up page, with a date and a
 time, for a host already listed, reach the board without review.
 
