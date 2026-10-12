@@ -340,6 +340,14 @@ Instagram.
 | **Guides and shops now** | Sarah, the same night: "go ahead and add guide services and gear stores now." The first part of UC-12 is built: the site admin lists guide services and gear shops from the research as unclaimed listings, on their own *Guides and shops* page, never among the groups (FR-BZ-7). Claiming and the rest of UC-12 wait for review. |
 | **Events from guides, shops and venues** | Sarah, 12 October 2026: "lets make sure we don't miss events just because they are not hosted by a club". UC-37: a listing's events sit in the Events list by date, marked with the host, with a *community groups only* filter; venues (nature centers, gyms, city programs, ski areas) became a third kind. Replaces FR-BZ-5 (events through groups only). No paid placement: same order for everyone (P2). |
 
+## Decisions — 12 October 2026
+
+| Decision | What it means |
+| --- | --- |
+| **The aim: try something, meet people** | The board exists to get people to try something new with others (a first camping or backpacking trip, a hard hike, mountain biking). Research favors beginner clinics, intro trips, no-drop group outings and trail days over races. |
+| **Community calendars before race sites** | Event sources (UC-39) read groups' own calendars and park programs first; race registration sites (RunSignup, BikeReg) may come later. |
+| **Outdoor & music festivals** | A subcategory under Camping, because festivals overlap with the board's activities (camping, paddling, riding at the same weekend). Only festivals with camping or outdoor activities; plain concerts stay off. |
+
 ## Open questions
 
 These need Sarah's decision before or during build:
