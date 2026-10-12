@@ -149,6 +149,15 @@ details and internal notes.
    group's own page and approve or decline it on the site admin page. The
    claimant becomes the owner and the listing becomes an ordinary group.
 
+### Area sweep (from 12 October 2026)
+
+A Claude routine on claude.ai, *Branch Outdoors area sweep*, runs every two
+hours and follows `scripts/research/area-sweep.md`: Sarah's list of target
+areas, two per run, saved as candidates only. It needs the same
+`RESEARCH_AGENT_TOKEN` and the same permission as the weekly agent (below).
+Pause it from claude.ai when the list is done or the review queue is too
+long.
+
 ### Weekly research agent (UC-9)
 
 A scheduled Claude Code session runs once a week, follows
@@ -174,6 +183,13 @@ Setting it up or changing the token:
    and allow `rxszqxwpgbrdytbkyxwp.supabase.co` under network access.
 4. Deploy the function: `npx supabase functions deploy research-intake`
    (its JWT check is off in `supabase/config.toml`; it checks the token).
+5. Let the routine call the intake. The 9 October run was stopped by
+   claude.ai's auto-mode safety check, which read the authenticated `curl`
+   to Supabase as possible data exfiltration. In claude.ai → Code → the
+   routine's environment (or the account's auto-mode settings), add an
+   allow rule for POSTs to
+   `https://rxszqxwpgbrdytbkyxwp.supabase.co/functions/v1/research-intake`.
+   Only Sarah can change these permissions.
 
 If the token leaks, change it in both places; the old one stops working at
 once.
