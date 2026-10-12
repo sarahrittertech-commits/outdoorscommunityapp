@@ -89,8 +89,10 @@ that work in any browser.
 Built on 11 October 2026: UC-34 and UC-35 (regions: one board,
 many regions built around hub cities; see ADR-0010) and the first part of
 UC-12 (guide services and gear shops as unclaimed listings in their own
-*Guides and shops* directory). Draft use cases awaiting review:
-UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28, UC-36 and UC-37. UC-25 and UC-26 wait on a domain and email. On 8 October
+*Guides and shops* directory). Built on 12 October 2026: UC-37 (events
+from guides, shops and venues in the Events list, marked with the host,
+with a *community groups only* filter; venues as a third kind). Draft use cases awaiting review:
+UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28 and UC-36. UC-25 and UC-26 wait on a domain and email. On 8 October
 Sarah brought direct messages, group photo galleries, event prices,
 saving, reminders and waitlists into scope (PRD, *Decisions — 8 October
 2026*). [docs/feature-map.md](docs/feature-map.md) separates what's live
@@ -135,7 +137,7 @@ src/config/site.ts     everything deployment-specific
 src/proxy.ts           session refresh + Content Security Policy
 src/lib/               auth, validation (Zod), time zones, plain-text rendering, .ics
 src/app/actions/       every form's server action, grouped by area
-src/app/               pages: / browse c/ g/ e/ b/ events communities guides-and-shops search post me u/ admin report signin signup forgot-password reset-password welcome
+src/app/               pages: / browse c/ g/ e/ b/ h/ events communities guides-and-shops search post me u/ admin report signin signup forgot-password reset-password welcome
 src/components/        listings, forms, notices, plain text
 ```
 

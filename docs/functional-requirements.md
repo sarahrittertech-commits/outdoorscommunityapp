@@ -347,7 +347,8 @@ FR-BZ-2 listing only, by the site admin from kept research candidates, in
 a live region it picks), the site admin removing a listing, and the
 separate *Guides and shops* directory at `/guides-and-shops` (FR-BZ-7).
 Claiming, admins, linked groups and sponsor links (rest of FR-BZ-2,
-FR-BZ-3 to FR-BZ-6) wait for UC-12's review.
+FR-BZ-3, FR-BZ-4, FR-BZ-6) wait for UC-12's review. Built 12 October
+2026 (UC-37): FR-BZ-5 as rewritten, and venues.
 
 | ID | Draft requirement | Proposed | Accepted when |
 | --- | --- | --- | --- |
@@ -355,9 +356,9 @@ FR-BZ-3 to FR-BZ-6) wait for UC-12's review.
 | FR-BZ-2 | **Listing and claiming.** Businesses come from the research agent's kept candidates, listed by the site admin, and are claimed like groups (FR-GR-10), by an account signed in with the business's own email. The site admin checks that the email matches the business's website before approving. | Should | Only the site admin can approve a business claim. |
 | FR-BZ-3 | **Business admins.** The claiming account owns the page. The owner adds and removes admins, each a person's own account; admins edit the page. Ownership transfers like a group's (FR-MB-6). There is no shared login. | Should | A non-admin can't change a business page, and a removed admin loses access at once. |
 | FR-BZ-4 | **The business's group.** A business owner can link one or more groups to the business page; the group's owner must accept the link. The group keeps its own owner, admins and members, separate from the business page's admins. The business page lists its groups and their upcoming events. | Should | Being a business admin gives no rights in its group, and the reverse. |
-| FR-BZ-5 | **Events through groups only.** A business page has no events of its own; its events are its group's events, posted and managed as any group's. | Should | The database has no way to post an event without a group. |
+| FR-BZ-5 | **Events from guides, shops and venues** *(replaced 12 October 2026, UC-37; was "events through groups only")*. A listed guide, shop or venue can have events of its own: title, start and end, time zone, place, price as the host writes it, and a link to the host's page to sign up. They sit in the Events list, home and search in date order with every other event, marked with the host and its kind; Events has a *community groups only* filter. No RSVPs, waitlists or discussion on the board for them. Only the site admin adds or removes them (from the research) until businesses can claim their listings. | Should | Nobody but the site admin's functions can write them; a removed listing's events leave every list. |
 | FR-BZ-6 | **As sponsors.** A sponsor on an event (FR-EV-14) can link to a business page; the business page lists the upcoming events it sponsors. | Should | — |
-| FR-BZ-7 | **Never above groups.** Businesses have their own directory page; they don't appear in group listings and never affect the order of anything. | Should | A business never appears in the Communities list or changes any list's order. |
+| FR-BZ-7 | **Never above groups.** Businesses have their own directory page (*Guides, shops and venues*, which since 12 October 2026 includes venues: nature centers, gyms, city outdoor programs, ski areas); they don't appear in group listings and never affect the order of anything. Their events follow the same date order as everyone's (FR-BZ-5). | Should | A business never appears in the Communities list or changes any list's order. |
 
 ### Sign-in email (UC-25)
 

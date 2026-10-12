@@ -80,12 +80,12 @@ select throws_ok(
 
 -- PT-213  event_listings carries the region --------------------------------
 select is(
-  (select attname::text from pg_attribute where attrelid = 'public.event_listings'::regclass and attnum > 0 order by attnum desc limit 1),
-  'region_id', 'PT-213 region_id is appended to event_listings'
+  (select attname::text from pg_attribute where attrelid = 'public.event_listings'::regclass and attnum = 20),
+  'region_id', 'PT-213 region_id is appended to event_listings (UC-37 appends more after it)'
 );
 select is(
-  (select count(*)::int from pg_attribute where attrelid = 'public.event_listings'::regclass and attnum > 0), 20,
-  'PT-213 and every earlier column is still there'
+  (select count(*)::int from pg_attribute where attrelid = 'public.event_listings'::regclass and attnum > 0), 25,
+  'PT-213 and every earlier column is still there (20, plus five UC-37 host columns)'
 );
 update public.groups set region_id = pg_temp.region('triangle') where slug = 'g1';
 select tests.as_anon();

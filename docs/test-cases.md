@@ -224,6 +224,11 @@ web app is not the thing enforcing the rule.
 | PT-222 | Everyone reads active listings | Listings hidden from visitors |
 | PT-223 | Nobody writes listings directly, not even the site admin | A listing changed outside the functions |
 | PT-224 | The site admin skips a kept shop and removes a listing; a removed one is gone | Removed listings still showing |
+| PT-225 | A kept venue keeps its events while it waits and lists as a venue (UC-37) | Venues refused, or their events lost |
+| PT-226 | Everyone sees a listing's events, in event_listings with the host | Hosted events missing from Events |
+| PT-227 | Nobody writes a listing's events directly | Visitors or members add or change them |
+| PT-228 | A later research find adds events to a listed venue | Listed hosts never get new events |
+| PT-229 | A removed listing's events leave every list | Events of a removed listing still showing |
 
 ## Automated — unit
 

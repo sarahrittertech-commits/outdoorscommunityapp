@@ -1146,7 +1146,11 @@ verify it and won't ask; the organizers' approval is the gate.
 
 ## UC-37 — Events from guides, shops and venues
 
-> **Draft, awaiting review. Decisions needed.** Requested by Sarah on 12
+> **Built 12 October 2026** on Sarah's go, with the recommended options:
+> mixed into Events with a *community groups only* filter, venues as a
+> third kind, the site admin adding them, gym nights kept as groups.
+>
+> Requested by Sarah on 12
 > October 2026: "lets make sure we don't miss events just because they are
 > not hosted by a club it is ok if events are hosted just at a venue or by
 > a guide or company learn to mountain bike is pretty cool". This reverses

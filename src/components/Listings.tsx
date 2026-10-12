@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ActivityIcon } from "@/brand/ActivityIcon";
 import { AffinityTags } from "@/components/AffinityTags";
 import { site } from "@/config/site";
+import { eventHref, hostHref, hostKindLabel, hostName, isGroupEvent } from "@/lib/hosts";
 import type { Views } from "@/lib/supabase/database.types";
 import { formatShortDate } from "@/lib/time";
 
@@ -13,7 +14,16 @@ type GroupListing = Pick<Views<"group_listings">, "slug" | "name" | "area" | "me
 type EventListing = Pick<
   Views<"event_listings">,
   "id" | "title" | "starts_at" | "timezone" | "group_name" | "group_slug" | "location_name" | "status" | "going_count"
-> & { category_slug?: string | null; is_unclaimed?: boolean | null; is_paid?: boolean | null; takes_rsvps?: boolean | null };
+> & {
+  category_slug?: string | null;
+  is_unclaimed?: boolean | null;
+  is_paid?: boolean | null;
+  takes_rsvps?: boolean | null;
+  host_kind?: string | null;
+  business_slug?: string | null;
+  business_name?: string | null;
+  price_text?: string | null;
+};
 
 /** One row per group: the facts a newcomer needs to judge it (FR-BR-2). */
 export function GroupList({ groups }: { groups: GroupListing[] }) {
@@ -49,17 +59,25 @@ export function EventList({ events, showGroup = true }: { events: EventListing[]
           <span className="w-full font-mono text-sm sm:w-28 sm:shrink-0">{formatShortDate(e.starts_at!, e.timezone!)}</span>
           <span className="min-w-0 flex-1">
             {e.category_slug && <ActivityIcon slug={e.category_slug} className="mr-1.5 inline h-4 w-4 align-[-2px]" />}
-            <Link href={`/e/${e.id}`}>{e.title}</Link>
+            <Link href={eventHref(e)}>{e.title}</Link>
             {e.is_paid && <span className="tag ml-2 align-middle">Paid</span>}
             {e.status === "cancelled" && <strong className="ml-2 text-danger">cancelled</strong>}
             <span className="block text-sm text-muted">
               {showGroup && (
                 <>
-                  <Link href={`/g/${e.group_slug}`}>{e.group_name}</Link> ·{" "}
+                  {/* UC-37: a guide, shop or venue says what it is. */}
+                  <Link href={hostHref(e)}>{hostName(e)}</Link>
+                  {hostKindLabel(e) && ` (${hostKindLabel(e)})`} ·{" "}
                 </>
               )}
               {e.location_name}
-              {e.is_unclaimed ? " · sign up with the organizer" : e.takes_rsvps === false ? null : ` · ${e.going_count} going`}
+              {!isGroupEvent(e)
+                ? ` · sign up with the host${e.price_text ? ` · ${e.price_text}` : ""}`
+                : e.is_unclaimed
+                  ? " · sign up with the organizer"
+                  : e.takes_rsvps === false
+                    ? null
+                    : ` · ${e.going_count} going`}
             </span>
           </span>
         </li>

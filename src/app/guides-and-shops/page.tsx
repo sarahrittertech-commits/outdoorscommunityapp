@@ -6,11 +6,12 @@ import { AffinityTags } from "@/components/AffinityTags";
 import { Notice } from "@/components/Notice";
 import { RegionScope } from "@/components/RegionScope";
 import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
+import { BUSINESS_KIND_LABEL } from "@/lib/hosts";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Guides and shops",
-  description: "Guide services and gear shops, A to Z, kept apart from the community groups.",
+  title: "Guides, shops and venues",
+  description: "Guide services, gear shops and venues, A to Z, kept apart from the community groups.",
 };
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
@@ -18,6 +19,7 @@ type Props = { searchParams: Promise<Record<string, string | string[] | undefine
 const KINDS = [
   { value: "guide", label: "guide services" },
   { value: "shop", label: "gear shops" },
+  { value: "venue", label: "venues" },
 ] as const;
 type Kind = (typeof KINDS)[number]["value"];
 const isKind = (v: unknown): v is Kind => KINDS.some((k) => k.value === v);
@@ -66,10 +68,10 @@ export default async function GuidesAndShopsPage({ searchParams }: Props) {
         <Notice params={params} />
         <h1 className="m-0 flex items-center gap-3">
           {current && <ActivityIcon slug={current.slug} />}
-          {current ? `${current.name}: guides and shops` : "Guides and shops"}
+          {current ? `${current.name}: guides, shops and venues` : "Guides, shops and venues"}
         </h1>
         <p className="mt-2 border-b border-rule pb-3 text-subtle">
-          Guide services and gear shops {browsing.all ? "in every region" : `in ${browsing.region.name}`}, A to Z. Listed
+          Guide services, gear shops and venues {browsing.all ? "in every region" : `in ${browsing.region.name}`}, A to Z. Listed
           from their public websites; they don&apos;t pay to be here and are never mixed into the{" "}
           <Link href="/communities">communities</Link>.
         </p>
@@ -84,7 +86,7 @@ export default async function GuidesAndShopsPage({ searchParams }: Props) {
                 </Link>
                 <span className="ml-2 inline-flex items-center gap-1 text-sm text-muted">
                   {b.category_slug && <ActivityIcon slug={b.category_slug} className="h-4 w-4" />}
-                  {b.kind === "guide" ? "guide service" : "shop"} · {b.subcategory_name} · {b.area}
+                  {BUSINESS_KIND_LABEL[b.kind ?? ""] ?? "listing"} · {b.subcategory_name} · {b.area}
                 </span>
                 <AffinityTags tags={b.affinity_tags} className="ml-2 align-middle" />
                 {b.description && <p className="m-0 mt-1 line-clamp-2 max-w-prose text-sm text-muted">{b.description}</p>}
@@ -92,7 +94,7 @@ export default async function GuidesAndShopsPage({ searchParams }: Props) {
             ))}
           </ul>
         ) : (
-          <p className="mt-4 text-muted">No guides or shops listed here yet.</p>
+          <p className="mt-4 text-muted">No guides, shops or venues listed here yet.</p>
         )}
       </div>
 
@@ -122,7 +124,7 @@ export default async function GuidesAndShopsPage({ searchParams }: Props) {
           ))}
         </ul>
         <p className="mt-6">
-          Run a guide service or shop that should be here? <Link href="/suggest">Suggest it</Link>.
+          Run a guide service, shop or venue that should be here? <Link href="/suggest">Suggest it</Link>.
         </p>
       </aside>
     </div>

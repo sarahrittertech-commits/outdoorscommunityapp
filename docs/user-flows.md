@@ -628,7 +628,7 @@ flowchart TD
 
 ## UC-37 — Events from guides, shops and venues
 
-*Draft, awaiting review (12 October 2026).*
+*Built 12 October 2026.*
 
 ```mermaid
 flowchart TD
