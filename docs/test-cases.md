@@ -231,6 +231,7 @@ web app is not the thing enforcing the rule.
 | PT-227b | A hosted event with an unknown time zone is refused (12 Oct review) | One bad zone takes down every events list |
 | PT-228 | A later research find adds events to a listed venue | Listed hosts never get new events |
 | PT-229 | A removed listing's events leave every list | Events of a removed listing still showing |
+| PT-230 | A declined group's discussions are read-only in the database, not only in the UI (12 Oct review) | The owner of a declined group posts through the API |
 
 ## Automated — unit
 

@@ -231,9 +231,13 @@ export default async function GroupPage({ params, searchParams }: Props) {
       {!group.is_unclaimed && (
         <section aria-label="Membership" className="mt-4">
           {!viewer ? (
-            <Link href={`/signin?next=/g/${group.slug}`} className="button">
-              Sign in to join
-            </Link>
+            // Only where joining is possible: not an archived group, one
+            // waiting for review, or one that needs an organizer.
+            isActive && isListed && !group.needs_owner ? (
+              <Link href={`/signin?next=/g/${group.slug}`} className="button">
+                Sign in to join
+              </Link>
+            ) : null
           ) : isMember ? (
             <div className="text-sm">
               You&apos;re {isOwner ? "the page admin" : isAdmin ? "a page manager" : "a member"}.{" "}
@@ -269,7 +273,8 @@ export default async function GroupPage({ params, searchParams }: Props) {
       {canManage && (
         <nav aria-label="Page admin tools" className="mt-4 flex flex-wrap gap-x-4 rounded bg-panel px-3 py-2 text-sm">
           <strong>{isOwner ? "Page admin:" : isAdmin ? "Page manager:" : "Site admin:"}</strong>
-          <Link href={`/g/${group.slug}/events/new`}>post an event</Link>
+          {/* The site admin moderates but doesn't post events for a group (the database agrees). */}
+          {isAdmin && <Link href={`/g/${group.slug}/events/new`}>post an event</Link>}
           <Link href={`/g/${group.slug}/members`}>members and invites{pendingCount ? ` (${pendingCount} waiting)` : ""}</Link>
           <Link href={`/g/${group.slug}/edit`}>edit group</Link>
           <Link href={`/g/${group.slug}/reports`}>reports</Link>

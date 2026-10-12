@@ -25,12 +25,15 @@ export async function GroupForm({
   action,
   group,
   coverUrl,
+  canEditCover = true,
   submitLabel,
 }: {
   action: (formData: FormData) => Promise<void>;
   group?: Group;
   /** FR-GR-14: the current cover's public URL, when the group has one. */
   coverUrl?: string | null;
+  /** Cover files are written by the group's own organizers only (storage policy); the site admin edits the rest. */
+  canEditCover?: boolean;
   submitLabel: string;
 }) {
   const supabase = await createClient();
@@ -171,7 +174,9 @@ export async function GroupForm({
       </fieldset>
 
       {/* FR-GR-14: on the edit form only, since the photo goes in the group's own folder. */}
-      {group && (
+      {/* Without the cover fields, the current alt text still goes back, so a save keeps the cover. */}
+      {group && !canEditCover && group.cover_alt && <input type="hidden" name="coverAlt" value={group.cover_alt} />}
+      {group && canEditCover && (
         <fieldset className="mt-6">
           <legend className="font-semibold">Cover photo</legend>
           {coverUrl && (

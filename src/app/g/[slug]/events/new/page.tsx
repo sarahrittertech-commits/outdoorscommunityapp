@@ -19,8 +19,9 @@ type Props = {
 export default async function NewEventPage({ params, searchParams }: Props) {
   const { slug } = await params;
   await requireViewer(`/g/${slug}/events/new`);
-  const { group, canManage } = await loadGroup(slug);
-  if (!canManage) redirect(`/g/${slug}?e=not_allowed`);
+  // Owner and page managers only: the site admin can't insert events (RLS).
+  const { group, canManage, isAdmin } = await loadGroup(slug);
+  if (!canManage || !isAdmin) redirect(`/g/${slug}?e=not_allowed`);
 
   return (
     <>

@@ -36,8 +36,10 @@ const dateFormat = new Intl.DateTimeFormat("en-US", { month: "long", day: "numer
 export default async function MembersPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const viewer = await requireViewer(`/g/${slug}/members`);
-  const { supabase, group, isMember, isAdmin, isOwner, isActive, canManage, seesMemberList } = await loadGroup(slug);
-  const canInvite = Boolean(viewer.canWrite && isActive && isAdmin);
+  const { supabase, group, isMember, isAdmin, isOwner, isActive, isListed, canManage, seesMemberList } = await loadGroup(slug);
+  // Invite links only work once the group is approved (UC-27), so they're
+  // offered only then.
+  const canInvite = Boolean(viewer.canWrite && isActive && isListed && isAdmin);
   // FR-MB-10: members always reach this page (with organizers only, they see
   // the organizers and the count); "anyone signed in" opens it to everyone.
   if (!isMember && !seesMemberList) redirect(`/g/${slug}?e=not_allowed`);
