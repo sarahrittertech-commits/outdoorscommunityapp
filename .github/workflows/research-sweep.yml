@@ -1,7 +1,7 @@
 name: Research sweep (Gemini)
 
-# Inexpensive research runs: Gemini's free API tier suggests outdoor groups,
-# venues and events for one area at a time (scripts/research/gemini/), the
+# Research runs: Gemini (paid API tier, with Google Search) suggests outdoor groups
+# and the pages where they post events, one live region at a time (scripts/research/gemini/), the
 # script checks every link itself, and survivors go to the research intake
 # as candidates for the site admin. Does nothing until both secrets exist.
 on:

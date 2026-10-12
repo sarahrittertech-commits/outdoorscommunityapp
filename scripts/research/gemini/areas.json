@@ -1,37 +1,181 @@
 {
-  "_note": "Sarah's target list, 12 October 2026. The sweep takes one area per run, in turn (run number mod the list length). out_of_region is true where no live region covers the area yet.",
+  "_note": "Revised 12 October 2026: live regions only (deep before wide, docs/go-to-market.md); the sweep takes one area per run, in turn. 'later' holds Sarah's other target towns until their regions open.",
   "areas": [
-    { "area": "Greenville, SC", "timezone": "America/New_York", "out_of_region": false },
-    { "area": "Chattanooga, TN", "timezone": "America/New_York", "out_of_region": false },
-    { "area": "Fort Collins, CO", "timezone": "America/Denver", "out_of_region": false },
-    { "area": "Boulder, CO", "timezone": "America/Denver", "out_of_region": false },
-    { "area": "Denver, CO", "timezone": "America/Denver", "out_of_region": false },
-    { "area": "Salt Lake City, UT", "timezone": "America/Denver", "out_of_region": false },
-    { "area": "Reno, NV", "timezone": "America/Los_Angeles", "out_of_region": false },
-    { "area": "Flagstaff, AZ", "timezone": "America/Phoenix", "out_of_region": false },
-    { "area": "Charleston, SC", "timezone": "America/New_York", "out_of_region": true },
-    { "area": "Portland, ME", "timezone": "America/New_York", "out_of_region": true },
-    { "area": "Boise, ID", "timezone": "America/Boise", "out_of_region": true },
-    { "area": "Missoula, MT", "timezone": "America/Denver", "out_of_region": true },
-    { "area": "Bozeman, MT", "timezone": "America/Denver", "out_of_region": true },
-    { "area": "Chicago, IL", "timezone": "America/Chicago", "out_of_region": true },
-    { "area": "Bend, OR", "timezone": "America/Los_Angeles", "out_of_region": true },
-    { "area": "Portland, OR", "timezone": "America/Los_Angeles", "out_of_region": true },
-    { "area": "Ashland, OR", "timezone": "America/Los_Angeles", "out_of_region": true },
-    { "area": "Spokane, WA", "timezone": "America/Los_Angeles", "out_of_region": true },
-    { "area": "Ithaca, NY", "timezone": "America/New_York", "out_of_region": true },
-    { "area": "Durango, CO", "timezone": "America/Denver", "out_of_region": true },
-    { "area": "Carbondale, CO (Roaring Fork Valley)", "timezone": "America/Denver", "out_of_region": true },
-    { "area": "Madison, WI", "timezone": "America/Chicago", "out_of_region": true },
-    { "area": "Grand Rapids, MI", "timezone": "America/Detroit", "out_of_region": true },
-    { "area": "Burlington, VT", "timezone": "America/New_York", "out_of_region": true },
-    { "area": "Waitsfield, VT (Mad River Valley)", "timezone": "America/New_York", "out_of_region": true },
-    { "area": "Tucson, AZ", "timezone": "America/Phoenix", "out_of_region": true }
+    {
+      "area": "Asheville, NC",
+      "timezone": "America/New_York",
+      "out_of_region": false
+    },
+    {
+      "area": "Raleigh-Durham, NC",
+      "timezone": "America/New_York",
+      "out_of_region": false
+    },
+    {
+      "area": "Seattle and Bellingham, WA",
+      "timezone": "America/Los_Angeles",
+      "out_of_region": false
+    },
+    {
+      "area": "Fayetteville, WV (New River Gorge)",
+      "timezone": "America/New_York",
+      "out_of_region": false
+    },
+    {
+      "area": "Knoxville, TN",
+      "timezone": "America/New_York",
+      "out_of_region": false
+    },
+    {
+      "area": "Sedona, AZ",
+      "timezone": "America/Phoenix",
+      "out_of_region": false
+    },
+    {
+      "area": "Durango, CO",
+      "timezone": "America/Denver",
+      "out_of_region": false
+    },
+    {
+      "area": "Greenville, SC",
+      "timezone": "America/New_York",
+      "out_of_region": false
+    },
+    {
+      "area": "Chattanooga, TN",
+      "timezone": "America/New_York",
+      "out_of_region": false
+    },
+    {
+      "area": "Fort Collins, CO",
+      "timezone": "America/Denver",
+      "out_of_region": false
+    },
+    {
+      "area": "Boulder, CO",
+      "timezone": "America/Denver",
+      "out_of_region": false
+    },
+    {
+      "area": "Denver, CO",
+      "timezone": "America/Denver",
+      "out_of_region": false
+    },
+    {
+      "area": "Salt Lake City, UT",
+      "timezone": "America/Denver",
+      "out_of_region": false
+    },
+    {
+      "area": "Reno, NV",
+      "timezone": "America/Los_Angeles",
+      "out_of_region": false
+    },
+    {
+      "area": "Flagstaff, AZ",
+      "timezone": "America/Phoenix",
+      "out_of_region": false
+    }
   ],
   "passes": [
-    "anchors: the large, long-running clubs and chapters of national clubs (hiking, mountaineering, cycling, paddling, running, climbing access groups, Audubon, Trout Unlimited) and trail or conservation nonprofits",
-    "everyday groups: Meetup groups, shop and brewery group rides, run clubs, gym climbing clubs, paddling meetups, volunteer trail crews",
-    "affinity groups: women's, queer and LGBTQ+, BIPOC, adaptive and youth outdoor groups, including local chapters of Trail Sisters, Ladies Climbing Coalition, Radical Adventure Riders, Brown Girls Climb, Outdoor Afro, Latino Outdoors, Unlikely Hikers, Catalyst Sports, SheJumps, Black Girls Do Bike (a chapter only if it has its own page)",
-    "venues, guides, shops and event companies that run public outdoor events: climbing gyms, nature centers, city outdoor programs, ski areas, guide services, bike and outdoor shops, race companies"
+    "cycling: mountain bike, road and gravel clubs, SORBA and IMBA chapters, bike shop group rides, cycling race organizers",
+    "running: running clubs, trail running groups, run clubs at shops and breweries, trail and road race organizers",
+    "hiking and trail stewardship: hiking clubs, trail-maintaining clubs, trail and land conservation nonprofits, Friends of state parks groups",
+    "paddling and fishing: paddling and whitewater clubs, Trout Unlimited chapters, outfitters that run public trips or classes",
+    "climbing and snow: climbing coalitions and access groups, climbing gyms, ski and outing clubs, nordic clubs, ski areas with public events",
+    "nature: Audubon chapters, native plant societies, nature centers, park and city programs with public walks and classes",
+    "affinity: women's, queer and LGBTQ+, BIPOC, adaptive and youth outdoor groups, including local chapters of Trail Sisters, Ladies Climbing Coalition, Radical Adventure Riders, Brown Girls Climb, Outdoor Afro, Latino Outdoors, Unlikely Hikers, Catalyst Sports, SheJumps, Black Girls Do Bike (only chapters with their own page)"
+  ],
+  "later": [
+    {
+      "area": "Charleston, SC",
+      "timezone": "America/New_York",
+      "out_of_region": true
+    },
+    {
+      "area": "Portland, ME",
+      "timezone": "America/New_York",
+      "out_of_region": true
+    },
+    {
+      "area": "Boise, ID",
+      "timezone": "America/Boise",
+      "out_of_region": true
+    },
+    {
+      "area": "Missoula, MT",
+      "timezone": "America/Denver",
+      "out_of_region": true
+    },
+    {
+      "area": "Bozeman, MT",
+      "timezone": "America/Denver",
+      "out_of_region": true
+    },
+    {
+      "area": "Chicago, IL",
+      "timezone": "America/Chicago",
+      "out_of_region": true
+    },
+    {
+      "area": "Bend, OR",
+      "timezone": "America/Los_Angeles",
+      "out_of_region": true
+    },
+    {
+      "area": "Portland, OR",
+      "timezone": "America/Los_Angeles",
+      "out_of_region": true
+    },
+    {
+      "area": "Ashland, OR",
+      "timezone": "America/Los_Angeles",
+      "out_of_region": true
+    },
+    {
+      "area": "Spokane, WA",
+      "timezone": "America/Los_Angeles",
+      "out_of_region": true
+    },
+    {
+      "area": "Ithaca, NY",
+      "timezone": "America/New_York",
+      "out_of_region": true
+    },
+    {
+      "area": "Durango, CO",
+      "timezone": "America/Denver",
+      "out_of_region": true
+    },
+    {
+      "area": "Carbondale, CO (Roaring Fork Valley)",
+      "timezone": "America/Denver",
+      "out_of_region": true
+    },
+    {
+      "area": "Madison, WI",
+      "timezone": "America/Chicago",
+      "out_of_region": true
+    },
+    {
+      "area": "Grand Rapids, MI",
+      "timezone": "America/Detroit",
+      "out_of_region": true
+    },
+    {
+      "area": "Burlington, VT",
+      "timezone": "America/New_York",
+      "out_of_region": true
+    },
+    {
+      "area": "Waitsfield, VT (Mad River Valley)",
+      "timezone": "America/New_York",
+      "out_of_region": true
+    },
+    {
+      "area": "Tucson, AZ",
+      "timezone": "America/Phoenix",
+      "out_of_region": true
+    }
   ]
 }
