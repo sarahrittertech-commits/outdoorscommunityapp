@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { GroupList } from "@/components/Listings";
+import { EventList, GroupList } from "@/components/Listings";
 import { pageFrom, Pagination } from "@/components/Pagination";
 import { RegionScope } from "@/components/RegionScope";
 import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
 import { createClient } from "@/lib/supabase/server";
 
 const PAGE_SIZE = 50;
+/** Events shown above the groups: the next few, with a link to the rest. */
+const EVENTS_SHOWN = 8;
 
 type Props = {
   params: Promise<{ category: string }>;
@@ -27,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: category.name, description: `${category.name} groups, listed A to Z.` };
 }
 
-/** FR-BR-3: every group in a category, alphabetically. */
+/** FR-BR-3: the next events in a category, then every group in it, alphabetically. */
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { supabase, category } = await loadCategory((await params).category);
   const query = await searchParams;
@@ -47,9 +49,23 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     return list.order("name").range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
   };
 
-  const [{ data: subcategories }, first] = await Promise.all([
+  // Events first (Sarah, 12 October): the page's job is to get people to
+  // show up, so the next events in this activity come before the groups.
+  let upcoming = supabase
+    .from("event_listings")
+    .select(
+      "id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text",
+      { count: "exact" },
+    )
+    .eq("status", "scheduled")
+    .eq("category_slug", category.slug)
+    .gt("starts_at", new Date().toISOString());
+  if (regionId) upcoming = upcoming.eq("region_id", regionId);
+
+  const [{ data: subcategories }, first, { data: events, count: eventCount }] = await Promise.all([
     supabase.from("subcategories").select("slug, name").eq("category_id", category.id).order("sort_order"),
     listPage(asked),
+    upcoming.order("starts_at").limit(EVENTS_SHOWN),
   ]);
   // A page number past the end shows the last page, not an empty one. The
   // database refuses a range past the end without a count, so take the
@@ -72,6 +88,28 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         ))}
       </p>
       <RegionScope current={current} path={`/c/${category.slug}`} className="mt-4 text-sm text-muted" />
+      {page === 1 && (
+        <section aria-labelledby="events-h">
+          <h2 id="events-h">Upcoming events</h2>
+          {events?.length ? (
+            <>
+              <EventList events={events} />
+              {(eventCount ?? 0) > events.length && (
+                <p className="text-sm">
+                  <Link href={`/events?category=${category.slug}${current.all ? "&region=all" : ""}`}>
+                    All {eventCount} upcoming {category.name.toLowerCase()} events
+                  </Link>
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="text-muted">
+              No upcoming events here yet. The groups below post them; <Link href="/events">see every event</Link>.
+            </p>
+          )}
+        </section>
+      )}
+      <h2>Groups</h2>
       <p className="mt-1 mb-2 text-sm text-muted">Groups sorted A to Z.</p>
       <GroupList groups={groups ?? []} />
       <Pagination basePath={scoped(`/c/${category.slug}`)} page={page} pageCount={Math.ceil((count ?? 0) / PAGE_SIZE)} />
