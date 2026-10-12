@@ -223,6 +223,11 @@ running it); with `--values` it prints a single statement. Watch for plain
 town names used in more than one state (Burlington, Monroe, Clinton,
 Louisville, Charleston).
 
+Opened so far: the six launch regions and, the same evening, `wasatch`
+(Salt Lake City; migration `20261011000003_region_wasatch.sql`). At
+opening the Wasatch had no listed groups; its research (about 55
+organizations, mostly bike shops) still needs the affinity pass (FR-RS-12).
+
 To check a region's reach before opening it:
 `select name, hub_towns, radius_miles, status from public.regions order by sort_order;`
 
