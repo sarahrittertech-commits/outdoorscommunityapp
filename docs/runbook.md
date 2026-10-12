@@ -149,6 +149,20 @@ details and internal notes.
    group's own page and approve or decline it on the site admin page. The
    claimant becomes the owner and the listing becomes an ordinary group.
 
+### Feed reader (from 12 October 2026)
+
+`.github/workflows/feed-reader.yml` runs `scripts/research/feeds/read.mjs`
+every Monday, with no AI and no cost. It reads the public calendar feeds in
+`scripts/research/feeds/feeds.json` (today: North Carolina State Parks,
+through Localist's public `/api/2/events`), keeps timed, future programs
+within 100 miles of a live region, and sends them to the research intake
+under that region's parks venue (*North Carolina State Parks: Western NC*,
+*… Triangle and Piedmont*). The board refuses events it already has, so a
+re-run adds only new ones. To add another Localist calendar (other states'
+parks, counties, universities), add an entry to `feeds.json` and list its
+venue once. Run by hand: Actions → *Feed reader* → *Run workflow* (tick
+*Dry run* to only count).
+
 ### Gemini sweep (the inexpensive one, from 12 October 2026)
 
 **Revised 12 October 2026, still switched off until Sarah runs it.**

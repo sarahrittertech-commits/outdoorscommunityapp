@@ -1,0 +1,29 @@
+{
+  "_note": "Public calendar feeds read weekly without AI (UC-39, FR-ES-3, FR-ES-12). Each feed's events are grouped by the nearest live region within 100 miles and sent to the research intake under one venue per region, which the site admin listed once. Added 12 October 2026.",
+  "feeds": [
+    {
+      "kind": "localist",
+      "api": "https://events.dncr.nc.gov/api/2/events",
+      "department": "North Carolina State Parks",
+      "days": 60,
+      "calendar_url": "https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar",
+      "timezone": "America/New_York",
+      "hosts": [
+        {
+          "region": "western-nc",
+          "center": [35.6, -82.55],
+          "name": "North Carolina State Parks: Western NC",
+          "area": "Western North Carolina",
+          "description": "Ranger-led hikes, nature programs and volunteer days at North Carolina state parks in the western mountains and foothills."
+        },
+        {
+          "region": "triangle",
+          "center": [35.85, -78.8],
+          "name": "North Carolina State Parks: Triangle and Piedmont",
+          "area": "Raleigh and the Piedmont",
+          "description": "Ranger-led hikes, nature programs and volunteer days at North Carolina state parks around the Triangle and Piedmont."
+        }
+      ]
+    }
+  ]
+}
