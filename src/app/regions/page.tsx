@@ -44,28 +44,31 @@ export default async function RegionsPage({ searchParams }: Props) {
       </p>
       <Notice params={params} />
 
-      <ul className="mt-6 divide-y divide-rule border-y border-rule">
+      <ul className="mt-8 divide-y divide-rule border-y border-rule">
         {live.map((r) => {
           const count = groupCount.get(r.slug) ?? 0;
           const isCurrent = r.slug === current.region.slug;
           return (
-            <li key={r.slug} className="flex flex-wrap items-center justify-between gap-3 py-3">
+            <li key={r.slug} className="flex flex-wrap items-center justify-between gap-4 py-5">
               <div>
                 <h2 className="m-0 text-xl">
                   {r.name}
                   {isCurrent && <span className="ml-2 align-middle text-sm font-normal text-muted">(you&rsquo;re browsing this one)</span>}
                 </h2>
-                <p className="m-0 mt-0.5 text-sm text-muted">
+                <p className="m-0 mt-1.5 text-sm text-muted">
                   Around {hubs(r.hubs)} · {count} {count === 1 ? "group" : "groups"}
                 </p>
               </div>
-              <form action={chooseRegion}>
-                <input type="hidden" name="region" value={r.slug} />
-                <input type="hidden" name="next" value={next} />
-                <button className={isCurrent ? "button button-plain" : "button"}>
-                  Choose<span className="sr-only"> {r.name}</span>
-                </button>
-              </form>
+              {/* Outlined, and none on the current region: a list of solid plum buttons was a wall of purple. */}
+              {!isCurrent && (
+                <form action={chooseRegion}>
+                  <input type="hidden" name="region" value={r.slug} />
+                  <input type="hidden" name="next" value={next} />
+                  <button className="button button-plain">
+                    Choose<span className="sr-only"> {r.name}</span>
+                  </button>
+                </form>
+              )}
             </li>
           );
         })}

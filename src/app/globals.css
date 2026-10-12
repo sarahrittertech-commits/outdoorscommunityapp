@@ -72,11 +72,19 @@
   }
 
   /* Young Serif for H1 and H2 (one weight only); Atkinson bold for H3. */
+  /* Colors step down (Sarah, 12 October): plum page title, bark-brown
+     sections, ink small headings, so headings stand apart from links. */
   h1,
   h2 {
     font-family: var(--font-serif);
     font-weight: 400;
     color: var(--heading);
+  }
+  h2 {
+    color: var(--heading-2);
+  }
+  h3 {
+    color: var(--heading-3);
   }
   h1 {
     font-size: 2.625rem;
@@ -86,7 +94,7 @@
   h2 {
     font-size: 1.625rem;
     line-height: 1.2;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
   }
   h3 {
     font-size: 1.25rem;

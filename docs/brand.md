@@ -30,14 +30,19 @@ the letters, or put it over busy photos.
 
 ## Color
 
-Plum does the work: headings, links, buttons (the UI plum; the logo keeps the original). The autumn colors live in the
+Plum does the work: page titles, links, buttons (the UI plum; the logo keeps the original).
+Headings step down so a page isn't purple everywhere (Sarah, 12 October 2026):
+plum page titles (H1), bark-brown section and list headings (H2), ink small
+headings (H3). Lists of the same action use the outlined button, so a long
+list isn't a column of solid plum. The autumn colors live in the
 leaves and small highlights. Pages stay mostly paper (about 70% paper, 14% ink,
 10% plum, 6% autumn accents).
 
 | Name | Hex | Used for | Contrast on paper |
 | --- | --- | --- | --- |
 | Plum | `#39204D` | Wordmark and logo twig | 13.1:1 (AAA) |
-| UI plum | `#382A63` | Headings, links, buttons (slightly bluer, from the 8 October design) | 12.5:1 on white (AAA) |
+| UI plum | `#382A63` | Page titles (H1), links, buttons (slightly bluer, from the 8 October design) | 12.5:1 on white (AAA) |
+| Bark | `#4A3426` | Section and list headings (H2), from 12 October | 11.6:1 on white (AAA) |
 | Search orange | `#B94F1C` | The hero's Search button only, white text; hover `#A2441A` | 5.0:1 white on orange (AA) |
 | Band | `#EFEDF7` | Light purple section bars in long lists (month headings) | — |
 | Subtle | `#464B5E` | Line under page titles | 8.6:1 on white |
@@ -66,7 +71,7 @@ Google.
 | **Young Serif** (one weight) | Wordmark, H1, H2. Sentence case or lowercase. |
 | **Atkinson Hyperlegible** (400, 700) | H3, body, labels, buttons, data. Bold for emphasis, not color. |
 
-Scale: H1 42/1.1 (32 on phones), H2 26/1.2, H3 20 bold, body 18/1.55, small 15/1.45.
+Scale: H1 42/1.1 (32 on phones), H2 26/1.2 with 2rem above it, H3 20 bold, body 18/1.55, small 15/1.45.
 
 ## Links and buttons
 
