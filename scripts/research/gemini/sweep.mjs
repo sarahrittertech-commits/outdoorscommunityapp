@@ -2,10 +2,12 @@
 // Gemini sweep (UC-9 tooling, 12 October 2026): an inexpensive research
 // runner. One area and one search pass per run, from areas.json in turn.
 // Gemini (free API tier, with Google Search) suggests finds; this script
-// then OPENS every link itself and keeps only finds whose page loads and
-// names them, and events whose own page shows their date. Survivors go to
-// the research intake as candidates for the site admin to review. Nothing
-// is listed and the website doesn't change.
+// then OPENS every link itself. A find whose page loads and names it is
+// sent as verified, an event as verified when its own page shows its date.
+// Finds and events that fail are still sent, marked failed with the reason
+// (keep every find, 12 October 2026), so later runs don't pay to find them
+// again; nothing unverified ever reaches the board. Nothing is listed and
+// the website doesn't change.
 //
 //   GEMINI_API_KEY=… RESEARCH_AGENT_TOKEN=… node scripts/research/gemini/sweep.mjs [--dry] [--run N]
 //
@@ -110,10 +112,10 @@ for (const raw of finds) {
     continue;
   }
   const home = await page(find.source_url);
-  if (!home.ok || !pageNames(home.text, find.name)) {
+  const homeOk = home.ok && pageNames(home.text, find.name);
+  if (!homeOk) {
     tally.dropped++;
-    console.log(`  drop ${find.name}: ${home.ok ? "page doesn't name it" : home.why}`);
-    continue;
+    console.log(`  failed ${find.name}: ${home.ok ? "page doesn't name it" : home.why} (kept as failed)`);
   }
   const events = [];
   for (const ev of Array.isArray(find.events) ? find.events : []) {
@@ -128,14 +130,33 @@ for (const raw of finds) {
       typeof ev.source_url === "string" &&
       /^https?:\/\//.test(ev.source_url);
     const evPage = ok ? await page(ev.source_url) : { ok: false };
-    if (ok && evPage.ok && pageShowsDate(evPage.text, ev.starts_at, tz)) {
-      events.push({ title: ev.title.trim().slice(0, 120), starts_at: ev.starts_at, ...(ev.ends_at ? { ends_at: ev.ends_at } : {}), timezone: tz, location_name: ev.location_name.trim().slice(0, 200), source_url: ev.source_url });
-      tally.events_kept++;
-    } else {
+    if (!ok) {
       tally.events_dropped++;
+      continue;
     }
+    const proven = homeOk && evPage.ok && pageShowsDate(evPage.text, ev.starts_at, tz);
+    events.push({
+      title: ev.title.trim().slice(0, 120),
+      starts_at: ev.starts_at,
+      ...(ev.ends_at ? { ends_at: ev.ends_at } : {}),
+      timezone: tz,
+      location_name: ev.location_name.trim().slice(0, 200),
+      source_url: ev.source_url,
+      verification: proven ? "verified" : "failed",
+      ...(proven ? {} : { note: evPage.ok ? "Date not found on the event page" : `Event page: ${evPage.why ?? "unreachable"}` }),
+    });
+    if (proven) tally.events_kept++;
+    else tally.events_dropped++;
   }
-  const candidate = { ...find, name: find.name.trim(), description: find.description.trim(), events };
+  const candidate = {
+    ...find,
+    name: find.name.trim(),
+    description: find.description.trim(),
+    events,
+    verification: homeOk ? "verified" : "failed",
+    evidence: homeOk ? `Gemini sweep: page loads and names it (${job.area})` : `Gemini sweep: ${home.ok ? "page doesn't name it" : home.why} (${job.area})`,
+    checked_at: new Date().toISOString(),
+  };
   if (dry) {
     console.log(`  would send ${candidate.kind}: ${candidate.name} (${candidate.source_url}), ${events.length} events`);
     continue;

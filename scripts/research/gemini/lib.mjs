@@ -1,7 +1,7 @@
 // Pure helpers for the Gemini sweep (scripts/research/gemini/sweep.mjs).
 // No network here, so they can be unit-tested.
 
-export const KINDS = ["group", "guide", "business", "venue"];
+export const KINDS = ["group", "guide", "business", "venue", "company", "brand", "camp", "place", "youth_program"];
 
 /** The run's area and pass, in turn: run n takes area n mod A, pass (n div A) mod P. */
 export function pick(config, runNumber) {
@@ -110,7 +110,7 @@ Rules:
 - One real organization per item, its official name.
 - source_url: its own website homepage (or its public Instagram/Facebook/Meetup page if it has no website). Only URLs you actually found in search results.
 - description: 1-2 neutral sentences in your own words, 10-300 characters, what it does and where. No marketing words, no people's names, emails or phone numbers.
-- kind: "group" (club, nonprofit, meetup, volunteer crew), "guide" (paid guide service or instructor), "business" (shop, outfitter, race or event company), "venue" (gym, nature center, park program, ski area).
+- kind: "group" (club, nonprofit, meetup, volunteer crew), "guide" (paid guide service or instructor), "business" (shop or outfitter), "company" (race or event company), "venue" (gym, nature center, park program, ski area), "camp" (summer or outdoor camp), "youth_program" (youth team or program), "brand" (outdoor gear or bike brand), "place" (trail system, crag, park or trailhead where events happen).
 - subcategory: exactly one of: ${subcategories.join(", ")}.
 - affinity_tags: any of "women", "youth", "bipoc", "lgbtqia" only when its page says so plainly; else [].
 - Event times in ISO 8601 with the correct UTC offset for ${timezone} on that date.

@@ -106,6 +106,19 @@ the intake answers `401`, stop and say so in your summary.
    - `guide`: a person or company that leads trips or teaches for a fee.
    - `business`: a shop, outfitter, rental, brewery or other business.
    - `venue`: a place events happen (a park, a gym, a campground).
+   - `company`: a race or event company. `brand`: an outdoor gear or bike
+     brand. `camp`: a summer or outdoor camp. `youth_program`: a youth team
+     or program. `place`: a trail system, crag, park or trailhead.
+
+   **Keep every find (FR-RS-13).** Save what you found even when it isn't
+   ready for the board, instead of leaving it out: set `verification` to
+   `verified` (you opened its own page and it's active), `unverified` (only
+   third-party pages, nothing recent) or `failed` (dead site, wrong name, a
+   national page with no local chapter), and say why in `evidence` (up to
+   1000 characters). Put Instagram, Facebook and Meetup pages in
+   `other_urls`. Events with a date but no start time: `date_only: true`
+   and a `note`; events you couldn't prove: `verification: "unverified"`
+   or `"failed"` with a `note`. None of these ever reach the board.
 
 5. **Save it** by calling the intake with
    `{"action": "add", "candidate": <the find>}`, one call per find. The
