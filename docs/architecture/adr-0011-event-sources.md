@@ -44,7 +44,11 @@ events it gave. A weekly reader goes through them:
 3. **Annual events by their calendar.** Past editions are kept as
    watched events; their page is read only as the next edition's window
    comes up, a few times a year.
-4. **Web search only to find new sources**, when a region opens or a
+4. **Discovery on the big listing sites** (race sign-up sites, Meetup,
+   park calendars), searched by state and date through whatever public
+   search or data each offers. Each listing names its organizer, which is
+   matched to a known host or queued for review as a new one.
+5. **Web search only to find new sources**, when a region opens or a
    region looks thin, not to find events.
 
 Which sign-up sites and Meetup pages offer usable feeds is checked when
