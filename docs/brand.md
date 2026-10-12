@@ -32,8 +32,9 @@ the letters, or put it over busy photos.
 
 Plum does the work: page titles, links, buttons (the UI plum; the logo keeps the original).
 Headings step down so a page isn't purple everywhere (Sarah, 12 October 2026):
-plum page titles (H1), bark-brown section and list headings (H2), ink small
-headings (H3). Lists of the same action use the outlined button, so a long
+plum page titles (H1), charcoal section and list headings (H2 and H3), and
+warm grays for secondary text. Plum is kept for titles, links and buttons, so
+lines next to each other differ in shade instead of all reading as plum. Lists of the same action use the outlined button, so a long
 list isn't a column of solid plum. The autumn colors live in the
 leaves and small highlights. Pages stay mostly paper (about 70% paper, 14% ink,
 10% plum, 6% autumn accents).
@@ -42,16 +43,15 @@ leaves and small highlights. Pages stay mostly paper (about 70% paper, 14% ink,
 | --- | --- | --- | --- |
 | Plum | `#39204D` | Wordmark and logo twig | 13.1:1 (AAA) |
 | UI plum | `#382A63` | Page titles (H1), links, buttons (slightly bluer, from the 8 October design) | 12.5:1 on white (AAA) |
-| Bark | `#4A3426` | Section and list headings (H2), from 12 October | 11.6:1 on white (AAA) |
 | Search orange | `#B94F1C` | The hero's Search button only, white text; hover `#A2441A` | 5.0:1 white on orange (AA) |
 | Band | `#EFEDF7` | Light purple section bars in long lists (month headings) | — |
-| Subtle | `#464B5E` | Line under page titles | 8.6:1 on white |
+| Subtle | `#4F4A45` | Line under page titles (warm gray, 12 October) | 8.8:1 on white |
 | Ember | `#DD7242` | Leaves, small highlights, illustrations | 3.0:1 — graphics only |
 | Marigold | `#E7A855` | Leaves, "new" tags as a tint | 1.9:1 — decorative only |
 | Rust | `#B43C34` | Leaves, errors, cancelled events | 5.4:1 (AA) |
 | Lake | `#50759F` | Focus rings, notices | 4.4:1 — large text and UI |
-| Ink | `#2A2230` | Body text | 14.2:1 |
-| Muted | `#6B6072` | Secondary text | 5.5:1 |
+| Ink | `#262320` | Body text, section headings (warm charcoal, 12 October) | 15.6:1 |
+| Muted | `#6B645D` | Secondary text (warm gray, 12 October) | 5.8:1 |
 | Rule | `#E4DACB` | Borders | — |
 | Paper | `#FAF6EF` | Page | — |
 | White | `#FFFFFF` | Cards, form fields | — |
