@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  areaFor,
   buildPrompt,
+  csvCell,
   eventsFromJsonLd,
   eventsFromTribe,
   groundedDomains,
@@ -101,5 +103,38 @@ describe("gemini sweep helpers", () => {
     expect(prompt).toContain("events_url");
     expect(prompt).toContain("at most 12");
     expect(prompt).not.toContain("starts_at");
+  });
+});
+
+describe("review fixes (12 October)", () => {
+  const now = new Date("2026-10-12T00:00:00Z");
+  it("drops an end equal to the start and a link with spaces", () => {
+    const events = eventsFromJsonLd(
+      [{ "@type": "Event", name: "Night ride", startDate: "2026-11-01T18:00:00-04:00", endDate: "2026-11-01T18:00:00-04:00", url: " https://club.example/ride " }],
+      { pageUrl: "https://club.example/events", timezone: "America/New_York", now },
+    );
+    expect(events).toHaveLength(1);
+    expect(events[0].ends_at).toBeUndefined();
+    expect(events[0].source_url).toBe("https://club.example/events");
+  });
+  it("drops a Tribe end that isn't after the start", () => {
+    const events = eventsFromTribe(
+      { events: [{ title: "Trail day", utc_start_date: "2026-11-02 13:00:00", utc_end_date: "2026-11-02 13:00:00", url: "https://club.example/e/1" }] },
+      { timezone: "America/New_York", now },
+    );
+    expect(events[0].ends_at).toBeUndefined();
+  });
+  it("keeps spreadsheet formulas from running", () => {
+    expect(csvCell("=HYPERLINK(1)")).toBe(`"'=HYPERLINK(1)"`);
+    expect(csvCell('Say "hi"')).toBe('"Say ""hi"""');
+  });
+  it("finds a topic search's time zone from its area", () => {
+    const config = {
+      areas: [{ area: "Durango, CO", timezone: "America/Denver", out_of_region: false }],
+      later: [{ area: "Charleston, SC", timezone: "America/New_York", out_of_region: true }],
+    };
+    expect(areaFor(config, "Durango")?.timezone).toBe("America/Denver");
+    expect(areaFor(config, "Charleston, SC")?.out_of_region).toBe(true);
+    expect(areaFor(config, "Boise")).toBeNull();
   });
 });

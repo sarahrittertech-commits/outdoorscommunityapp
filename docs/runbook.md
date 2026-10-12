@@ -205,6 +205,12 @@ spreadsheet, `research-results.csv`, under the run's *Artifacts*: each
 organization with its kind, area, website, events page, whether it checked
 out, and how many dated events its page published.
 
+Name the area the way `areas.json` does (a town such as "Durango" or
+"Asheville") so the search knows the region's time zone. An area it doesn't
+know is marked out of region, and its timed events are kept as unverified
+rather than shown in the wrong zone. Events read from a page on another
+site than the organization's are kept as unverified too.
+
 `.github/workflows/research-sweep.yml` runs `scripts/research/gemini/sweep.mjs`
 every three hours on GitHub's free runners. Each run takes one area and one
 search pass from `scripts/research/gemini/areas.json`, in turn (26 areas ×

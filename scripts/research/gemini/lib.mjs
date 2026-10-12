@@ -190,10 +190,10 @@ export function eventsFromJsonLd(nodes, { pageUrl, timezone, now = new Date() })
     events.push({
       title: title.slice(0, 120),
       starts_at: exact ? start : `${start.slice(0, 10)}T09:00:00Z`,
-      ...(exact && hasTime(n.endDate) && hasOffset(n.endDate) ? { ends_at: n.endDate } : {}),
+      ...(exact && hasTime(n.endDate) && hasOffset(n.endDate) && new Date(n.endDate) > when ? { ends_at: n.endDate } : {}),
       timezone,
       location_name: (place.length >= 2 ? place : "See the event page").slice(0, 200),
-      source_url: typeof n.url === "string" && /^https?:\/\//.test(n.url) ? n.url : pageUrl,
+      source_url: isUrl(n.url) ? n.url : pageUrl,
       verification: exact ? "verified" : "unverified",
       ...(exact ? {} : { date_only: true, note: "Structured data gives a date without a start time" }),
     });
@@ -218,7 +218,9 @@ export function eventsFromTribe(json, { timezone, now = new Date() }) {
     events.push({
       title: title.slice(0, 120),
       starts_at: when.toISOString(),
-      ...(!allDay && e.utc_end_date ? { ends_at: `${String(e.utc_end_date).replace(" ", "T")}Z` } : {}),
+      ...(!allDay && e.utc_end_date && new Date(`${String(e.utc_end_date).replace(" ", "T")}Z`) > when
+        ? { ends_at: `${String(e.utc_end_date).replace(" ", "T")}Z` }
+        : {}),
       timezone: typeof e.timezone === "string" && e.timezone.includes("/") ? e.timezone : timezone,
       location_name: (venue.length >= 2 ? venue : "See the event page").slice(0, 200),
       source_url: typeof e.url === "string" ? e.url : "",
@@ -226,7 +228,7 @@ export function eventsFromTribe(json, { timezone, now = new Date() }) {
       ...(allDay ? { date_only: true, note: "All-day listing, no start time" } : {}),
     });
   }
-  return events.filter((e) => /^https?:\/\//.test(e.source_url));
+  return events.filter((e) => isUrl(e.source_url));
 }
 
 /**
@@ -256,4 +258,21 @@ Answer with ONLY a JSON array in a \`\`\`json code block, each item:
 {"kind": "...", "name": "...", "subcategory": "...", "area": "<town>", "description": "...", "source_url": "https://...", "events_url": "https://..." or null, "affinity_tags": []}
 
 If you find nothing that meets the rules, answer [].`;
+}
+
+/** A CSV cell, quoted; text that a spreadsheet would run as a formula is prefixed with '. */
+export function csvCell(v) {
+  const text = String(v ?? "");
+  return `"${(/^[=+\-@\t\r]/.test(text) ? `'${text}` : text).replace(/"/g, '""')}"`;
+}
+
+/** The sweep's area entry for a topic search's area, if one matches (for its time zone). */
+export function areaFor(config, area) {
+  if (!area) return null;
+  const want = area.toLowerCase();
+  const all = [...config.areas, ...(config.later ?? [])];
+  return (
+    all.find((a) => typeof a.area === "string" && (a.area.toLowerCase().includes(want) || want.includes(a.area.toLowerCase().split(",")[0]))) ??
+    null
+  );
 }

@@ -54,8 +54,8 @@ jobs:
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.8-flash' }}
           DRY: ${{ inputs.dry }}
           RUN: ${{ inputs.run }}
-          TOPIC: ${{ inputs.topic }}
-          AREA: ${{ inputs.area }}
+          SWEEP_TOPIC: ${{ inputs.topic }}
+          SWEEP_AREA: ${{ inputs.area }}
         run: node scripts/research/gemini/sweep.mjs $([ "$DRY" = "true" ] && echo --dry) $([ -n "$RUN" ] && echo --run "$RUN")
       - name: Results spreadsheet
         if: always()

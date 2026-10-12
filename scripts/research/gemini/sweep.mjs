@@ -35,6 +35,8 @@ import {
   parseFinds,
   pick,
   shapeProblem,
+  areaFor,
+  csvCell,
 } from "./lib.mjs";
 
 const INTAKE =
@@ -49,7 +51,7 @@ const runArg = args.indexOf("--run");
 // run writes research-results.csv for download.
 const argValue = (flag) => {
   const i = args.indexOf(flag);
-  return i >= 0 && args[i + 1] && !args[i + 1].startsWith("--") ? args[i + 1] : (process.env[flag.slice(2).toUpperCase()] || "").trim() || null;
+  return i >= 0 && args[i + 1] && !args[i + 1].startsWith("--") ? args[i + 1] : (process.env[`SWEEP_${flag.slice(2).toUpperCase()}`] || "").trim() || null;
 };
 const topic = argValue("--topic");
 const topicArea = argValue("--area");
@@ -57,6 +59,10 @@ const runNumber =
   runArg >= 0
     ? Number(args[runArg + 1])
     : Number(process.env.GITHUB_RUN_NUMBER ?? Math.floor(Date.now() / 7.2e6));
+if (!Number.isInteger(runNumber) || runNumber < 0) {
+  console.log(`--run must be a whole number, not "${args[runArg + 1]}".`);
+  process.exit(1);
+}
 
 const geminiKey = process.env.GEMINI_API_KEY;
 const intakeToken = process.env.RESEARCH_AGENT_TOKEN;
@@ -125,6 +131,20 @@ async function json(url) {
  * then, on its own WordPress site, The Events Calendar's public listing.
  */
 async function readEvents(eventsUrl, homeUrl, timezone) {
+  const read = await readEventsPage(eventsUrl, homeUrl, timezone ?? "America/New_York");
+  const doubt = !timezone
+    ? "Time zone unknown for this search"
+    : domainOf(eventsUrl) !== domainOf(homeUrl)
+      ? "Events page is on another site than the organization's"
+      : null;
+  if (!doubt) return read;
+  return {
+    events: read.events.map((e) => ({ ...e, verification: "unverified", note: e.note ? `${e.note}. ${doubt}` : doubt })),
+    how: `${read.how}; kept as unverified: ${doubt.toLowerCase()}`,
+  };
+}
+
+async function readEventsPage(eventsUrl, homeUrl, timezone) {
   const evPage = await page(eventsUrl);
   if (!evPage.ok) return { events: [], how: `events page: ${evPage.why}` };
   let events = eventsFromJsonLd(jsonLdEvents(evPage.html), {
@@ -154,8 +174,17 @@ async function readEvents(eventsUrl, homeUrl, timezone) {
 const config = JSON.parse(
   await readFile(new URL("./areas.json", import.meta.url), "utf8"),
 );
+// A topic search takes its time zone and region from the matching area, or
+// --timezone; with neither, its timed events are kept as unverified, since
+// the board would show them in the wrong zone.
+const topicMatch = topic ? areaFor(config, topicArea) : null;
 const job = topic
-  ? { area: topicArea ?? "the live regions of the board", pass: topic, timezone: argValue("--timezone") ?? "America/New_York", out_of_region: false }
+  ? {
+      area: topicArea ?? "the live regions of the board",
+      pass: topic,
+      timezone: argValue("--timezone") ?? topicMatch?.timezone ?? null,
+      out_of_region: topicMatch ? topicMatch.out_of_region : Boolean(topicArea),
+    }
   : pick(config, runNumber);
 const today = new Date().toISOString().slice(0, 10);
 
@@ -233,7 +262,8 @@ async function askGemini() {
           generationConfig: { temperature: 0.1, thinkingConfig: { thinkingLevel: "low" } },
         }),
       },
-    );
+      // A dropped connection counts as busy: retried, and reported if it lasts.
+    ).catch(() => ({ ok: false, status: 503 }));
     if (![500, 503].includes(res.status) || attempt === 3) return res;
     console.log(
       `Gemini answered ${res.status} (busy); retrying in ${attempt * 20} s.`,
@@ -268,7 +298,6 @@ console.log(
 
 const known = new Set(knownNames);
 const rows = [];
-const csvCell = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
 const tally = {
   suggested: finds.length,
   dropped: 0,
