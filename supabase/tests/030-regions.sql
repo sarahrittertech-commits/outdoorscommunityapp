@@ -17,7 +17,7 @@ values ('test-soon', 'Coming Soon Test', 'America/Chicago', 41.88, -87.63, 'IL',
 select tests.as_anon();
 select is(
   array(select slug from public.regions where status = 'live' order by sort_order),
-  array['western-nc', 'front-range', 'triangle', 'puget-sound', 'new-river-gorge', 'east-tennessee', 'wasatch', 'reno-tahoe', 'sedona-flagstaff', 'upstate-sc'],
+  array['western-nc', 'front-range', 'triangle', 'puget-sound', 'new-river-gorge', 'east-tennessee', 'wasatch', 'reno-tahoe', 'sedona-flagstaff', 'upstate-sc', 'durango-san-juans'],
   'PT-210 visitors read the live regions, in order'
 );
 select is(
@@ -63,7 +63,7 @@ select is(
 );
 select is(
   array(select slug || ':' || timezone from public.regions where slug <> 'test-soon' order by slug),
-  array['east-tennessee:America/New_York', 'front-range:America/Denver', 'new-river-gorge:America/New_York',
+  array['durango-san-juans:America/Denver', 'east-tennessee:America/New_York', 'front-range:America/Denver', 'new-river-gorge:America/New_York',
         'puget-sound:America/Los_Angeles', 'reno-tahoe:America/Los_Angeles', 'sedona-flagstaff:America/Phoenix', 'triangle:America/New_York', 'upstate-sc:America/New_York', 'wasatch:America/Denver', 'western-nc:America/New_York'],
   'PT-212 the five new regions carry their time zones'
 );

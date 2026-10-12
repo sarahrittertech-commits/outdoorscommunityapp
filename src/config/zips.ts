@@ -73,9 +73,33 @@ export const zipPrefixTowns: Record<string, string> = {
   // Greenville and the Upstate
   "293": "Spartanburg",
   "296": "Greenville",
+  // Durango and the San Juans
+  "813": "Durango",
+  "874": "Farmington",
 };
 
 export const zipTowns: Record<string, string> = {
+  // Durango and the San Juans (813 otherwise points to Durango; Pagosa,
+  // Bayfield, Silverton, Ouray, Ridgway and Telluride are in other prefixes)
+  "81122": "Bayfield",
+  "81137": "Ignacio",
+  "81326": "Hesperus",
+  "81328": "Mancos",
+  "81321": "Cortez",
+  "81323": "Dolores",
+  "81324": "Dove Creek",
+  "81332": "Rico",
+  "81147": "Pagosa Springs",
+  "81128": "Arboles",
+  "81433": "Silverton",
+  "81427": "Ouray",
+  "81432": "Ridgway",
+  "81435": "Telluride",
+  "81401": "Montrose",
+  "81403": "Montrose",
+  "87410": "Aztec",
+  "87413": "Bloomfield",
+  "87520": "Chama",
   // Greenville and the Upstate (the 296 prefix otherwise points to Greenville)
   "29690": "Travelers Rest",
   "29650": "Greer",
