@@ -178,6 +178,58 @@ recruiting users.
 A plain weekly email per region: this week's events, new groups. Opt-in,
 no tracking pixels (TR-OPS-7). It brings people back without a feed.
 
+## Becoming the authoritative source
+
+*Added 12 October 2026, after a day of loading research for Raleigh,
+Greenville, Durango, North Carolina and Virginia.*
+
+The goal is that people, clubs and AI assistants check the board first
+when they want to know what's happening outdoors in a region, because it
+is the most complete and the most often right. Five moves, cheapest and
+most durable first:
+
+1. **Deep before wide.** Authority comes from being complete somewhere,
+   not thin everywhere. Pick one pilot region (Western North Carolina:
+   it's home, so gaps are easy to spot) and fill it until the coverage
+   numbers from UC-39 say nearly everything is there: every club ride,
+   race, park program and trail day. Other regions follow Phase 3's bar.
+2. **Organizers post for themselves.** Their own posts are the only data
+   better than our checking. Make claiming worth it: the share kit and one
+   stable bio link (UC-38), and later a calendar feed or embed for the
+   group's own website, so their site shows the board's listing and the
+   board becomes the original. Every claimed group is one fewer page to
+   crawl.
+3. **Be what search engines and assistants read.** Structured event data
+   and calendar feeds per region and activity (Phase 4, *Search engines
+   and AI assistants*). When someone asks "group rides near Asheville this
+   weekend", the answer should come from a page that is complete, dated
+   and labeled.
+4. **Make accuracy visible.** Show where an event was checked and when
+   ("checked on the organizer's page, 12 Oct"), registration as plain fact
+   ("registration opens 1 November", "sold out"), and an easy way to
+   report a correction. Directories are often wrong; being visibly right
+   is what people notice. Part of UC-39.
+5. **Borrow reach from those who already have it.** One relationship can
+   cover hundreds of groups: national networks with chapters (SORBA, Trout
+   Unlimited, Audubon, Trail Sisters, Black Girls RUN!), race companies
+   that run many events (Pisgah Productions, Trivium Racing, Tanawha
+   Adventures), park Friends groups, tourism boards, and shops and gyms
+   with community boards.
+
+**What we learned about data on 12 October.** AI-generated event lists
+can't be the base. Asked for hundreds of events across every activity,
+Gemini returned whole files for North Carolina, Colorado, Utah and West
+Virginia with invented websites and template names ("winter hiking" in
+June, "Meetup #1" to "#220"); none was loaded. Its short lists of clubs
+and its long reports were useful only as names to check. What worked:
+checking each name on the organizer's own page or its official sign-up
+page (RunSignup, UltraSignup, BikeReg), which is how UC-39 proposes to
+find events routinely.
+
+**What not to do:** add feed mechanics, ranking or engagement tricks to
+grow, or publish anything unchecked. Either would spend the trust the
+board is trying to earn.
+
 ## Measures
 
 The board counts from its own database (TR-PRIV-3); search numbers come
@@ -190,6 +242,9 @@ from the search consoles.
 | RSVPs marked going, and repeat RSVPs | People actually get outside (the north star) |
 | Search impressions and clicks for activity × town queries | Search is finding the board |
 | Mentions and links from clubs, parks and local media | The board is becoming the reference |
+| Coverage per region: hosts with a known event source, sources read this week, upcoming events (UC-39) | The board is complete where it claims to be |
+| Share of upcoming events posted by organizers rather than found by research | The board is the original, not a copy |
+| Corrections reported and how fast they're fixed | Accuracy people can see |
 
 ## What needs a use case before it's built
 
@@ -199,6 +254,9 @@ from the search consoles.
 - Share buttons and image link previews for events.
 - The AI-crawler `robots.txt` decision (ADR).
 - The weekly regional email (after email setup).
+- Event sources, discovery and keeping events current, with "checked"
+  labels and registration status (UC-39, draft).
+- A calendar feed or embed for a group's own website.
 
 ## Order of work
 
