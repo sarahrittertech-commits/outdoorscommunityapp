@@ -52,7 +52,7 @@ export type Database = {
           id: string;
           slug: string;
           name: string;
-          kind: "guide" | "shop" | "venue";
+          kind: "guide" | "shop" | "venue" | "company";
           description: string;
           subcategory_id: string;
           region_id: string;
@@ -978,7 +978,7 @@ export type Database = {
           id: string | null;
           slug: string | null;
           name: string | null;
-          kind: "guide" | "shop" | "venue" | null;
+          kind: "guide" | "shop" | "venue" | "company" | null;
           description: string | null;
           area: string | null;
           website: string | null;

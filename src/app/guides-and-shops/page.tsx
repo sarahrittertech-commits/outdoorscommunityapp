@@ -20,6 +20,7 @@ const KINDS = [
   { value: "guide", label: "guide services" },
   { value: "shop", label: "gear shops" },
   { value: "venue", label: "venues" },
+  { value: "company", label: "event companies" },
 ] as const;
 type Kind = (typeof KINDS)[number]["value"];
 const isKind = (v: unknown): v is Kind => KINDS.some((k) => k.value === v);

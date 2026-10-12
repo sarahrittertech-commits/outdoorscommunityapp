@@ -24,6 +24,7 @@ export const BUSINESS_KIND_LABEL: Record<string, string> = {
   guide: "guide service",
   shop: "shop",
   venue: "venue",
+  company: "event company",
 };
 
 /** "guide service", "shop", "venue", or nothing for a group. */
