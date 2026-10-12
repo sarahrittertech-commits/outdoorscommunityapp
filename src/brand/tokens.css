@@ -12,9 +12,10 @@
   When the tool adds a new slot, every board must define it: the contract
   test in src/brand/tokens.test.ts fails by name until it does.
 
-  Plum does the work: page titles, links, buttons. Section headings are
-  bark brown and small headings ink, so a page isn't purple everywhere
-  (Sarah, 12 October). Ember, Marigold and Rust
+  Plum does the work: page titles, links, buttons, and nothing else. Text
+  and section headings are warm charcoal and grays with no purple in them,
+  so lines next to each other differ in shade instead of all reading as
+  plum (Sarah, 12 October). Ember, Marigold and Rust
   live in the leaves and small highlights; they are below 4.5:1 on paper,
   so never use Ember or Marigold for text. Pages stay mostly paper.
 */
@@ -26,18 +27,17 @@
   --marigold: #e7a855;
   --rust: #b43c34;
   --lake: #50759f;
-  --bark: #4a3426; /* section headings (12 October): warm brown, 11.6:1 on white */
 
   /* Roles */
   --paper: #ffffff;
-  --ink: #2a2230;
-  --muted: #6b6072;
+  --ink: #262320; /* warm charcoal, 15.6:1 */
+  --muted: #6b645d; /* warm gray, 5.8:1 */
   --rule: #e4dacb;
   --panel: #faf6ef;
-  --subtle: #464b5e; /* readable secondary text under page titles */
+  --subtle: #4f4a45; /* readable secondary text under page titles, 8.8:1 */
   --band: #efedf7; /* light purple section bars */
   --heading: var(--plum-ui); /* page titles (H1) */
-  --heading-2: var(--bark); /* section and list headings (H2), so not everything is plum */
+  --heading-2: var(--ink); /* section and list headings (H2): charcoal, so not everything is plum */
   --heading-3: var(--ink); /* small headings (H3) */
   --link: var(--plum-ui);
   --link-visited: #6a4c93;
