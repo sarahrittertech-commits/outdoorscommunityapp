@@ -675,7 +675,7 @@ reads it only through site-admin functions.
 | Field | Type | Notes |
 | --- | --- | --- |
 | `id` | uuid | |
-| `kind` | text | `group`, `guide`, `business`, `venue` |
+| `kind` | text | `group`, `guide`, `business`, `venue`; since 12 Oct also `company`, `brand`, `camp`, `place`, `youth_program` (FR-RS-13) |
 | `name` | text | 3–80 characters; unique, ignoring case |
 | `subcategory_id` | uuid | the board activity it fits |
 | `area` | text | town or area |
@@ -685,9 +685,16 @@ reads it only through site-admin functions.
 | `out_of_region` | boolean | Outside every live region (FR-RG-1) |
 | `status` | text | `new`, `listed`, `skipped`, `kept` |
 | `group_id` | uuid, optional | the listing it became |
+| `business_id` | uuid, optional | the guide, shop or venue listing it became (UC-12) |
+| `verification` | text | `verified`, `unverified`, `failed` (FR-RS-13) |
+| `evidence` | text, optional | why it's kept or waiting, what's missing, why it failed |
+| `other_urls` | text[] | other public pages (Instagram, Facebook, Meetup), up to 10 |
+| `checked_at` | timestamp, optional | when the find was last checked |
 | `found_at`, `decided_at` | timestamp | |
 
-Each candidate event has a title, start and end, time zone, place and
+Each candidate event also records `verification`, `date_only` (a date with
+no published start time) and a `note`; only verified, timed events are
+published (FR-RS-13). Each candidate event has a title, start and end, time zone, place and
 link, unique per candidate, title and start. There is deliberately no
 column for contact details.
 

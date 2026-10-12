@@ -232,6 +232,10 @@ web app is not the thing enforcing the rule.
 | PT-228 | A later research find adds events to a listed venue | Listed hosts never get new events |
 | PT-229 | A removed listing's events leave every list | Events of a removed listing still showing |
 | PT-230 | A declined group's discussions are read-only in the database, not only in the UI (12 Oct review) | The owner of a declined group posts through the API |
+| PT-231 | A brand find is stored, kept and out of the review queue (FR-RS-13) | Finds that aren't groups are dropped |
+| PT-232 | A group that failed verification is kept, not queued | Dead links flood the review queue |
+| PT-233 | Date-only and unverified events are stored but never published | An event without a start time reaches the board |
+| PT-234 | A later find updates a kept candidate's verification and evidence | Research can't improve what it already knows |
 
 ## Automated — unit
 

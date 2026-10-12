@@ -87,7 +87,11 @@ this order (the order is about completeness, never about featuring):
 
 ## The proof rules (learned on 11–12 October 2026)
 
-AI research invents things. Every find must pass these, or leave it out:
+AI research invents things. A find that fails a rule is not thrown away:
+save it with `verification` `failed` or `unverified` and the reason in
+`evidence` (events: `date_only` or `verification` plus a `note`), as
+`agent.md` step 4 says (FR-RS-13). Only finds that pass every rule are
+saved as `verified`:
 
 - **Open the page.** Never save a website you haven't opened. Dead domains,
   404s and redirects to something else mean leave it out (or use the page

@@ -27,7 +27,8 @@ describe("gemini sweep helpers", () => {
   it("checks the shape the database requires, and refuses contact details", () => {
     expect(shapeProblem(good, subs)).toBeNull();
     expect(shapeProblem({ ...good, subcategory: "kiting" }, subs)).toBe("subcategory");
-    expect(shapeProblem({ ...good, kind: "company" }, subs)).toBe("kind");
+    expect(shapeProblem({ ...good, kind: "company" }, subs)).toBeNull();
+    expect(shapeProblem({ ...good, kind: "person" }, subs)).toBe("kind");
     expect(shapeProblem({ ...good, description: "Call 828-555-1212 to join our rides." }, subs)).toBe("contact details in description");
   });
 

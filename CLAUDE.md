@@ -167,6 +167,10 @@ These are drawn from the technical requirements; the full list is in
 
 ## Working style
 
+- **Keep every research find** (FR-RS-13): what research turns up but
+  can't list yet (unverified groups, brands, camps, places, date-only
+  events, failed checks with the reason) goes into the research tables,
+  never thrown away. Only verified data reaches the board.
 - Small, frequent commits. The commit history is part of the deliverable
   because the repository is public.
 - Sarah is a technical product manager, not a systems engineer. Explain
