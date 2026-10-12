@@ -239,6 +239,12 @@ Opened so far: the six launch regions and, the same evening, `wasatch`
 opening the Wasatch had no listed groups; its research (about 55
 organizations, mostly bike shops) still needs the affinity pass (FR-RS-12).
 
+Then `reno-tahoe` (Reno and Lake Tahoe; migration
+`20261011000005_region_reno_tahoe.sql`): 21 towns from Susanville and
+Fernley to Carson City, South Lake Tahoe, Truckee and Grass Valley, zip
+prefixes 894, 895, 897 and 961. Its first research included an affinity
+pass.
+
 To check a region's reach before opening it:
 `select name, hub_towns, radius_miles, status from public.regions order by sort_order;`
 

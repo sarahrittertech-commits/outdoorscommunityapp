@@ -62,6 +62,11 @@ export const zipPrefixTowns: Record<string, string> = {
   "843": "Logan",
   "844": "Ogden",
   "846": "Provo",
+  // Reno and Lake Tahoe
+  "894": "Reno",
+  "895": "Reno",
+  "897": "Carson City",
+  "961": "Truckee",
 };
 
 export const zipTowns: Record<string, string> = {

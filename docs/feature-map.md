@@ -76,7 +76,7 @@ until the domain is chosen and email sending through Resend is set up.
 | Feature | Status | Use case | Draft requirements |
 | --- | --- | --- | --- |
 | **Location and distance search** by town or zip, with distance on results and shareable filtered links | **Built 9 Oct** (towns and zip codes from built-in lists, on home, Events and Communities) | UC-14 | FR-BR-12, FR-BR-13, FR-BR-15 |
-| **Regions**: one board, many regions built around hub cities; the header names the region with *change*; pages, *Near you* and the map follow it; organizers and the site admin pick a group's region | **Built 11 Oct** (Western NC, Front Range, Triangle, Seattle–Bellingham, New River Gorge, East Tennessee; Salt Lake–Wasatch added 11 Oct) | UC-34, UC-35 | FR-RG-1 to FR-RG-10, ADR-0010 |
+| **Regions**: one board, many regions built around hub cities; the header names the region with *change*; pages, *Near you* and the map follow it; organizers and the site admin pick a group's region | **Built 11 Oct** (Western NC, Front Range, Triangle, Seattle–Bellingham, New River Gorge, East Tennessee; Salt Lake–Wasatch and Reno–Tahoe added 11 Oct) | UC-34, UC-35 | FR-RG-1 to FR-RG-10, ADR-0010 |
 | **Near you** row on the home page | **Built 9 Oct** | UC-14 | FR-BR-14 |
 | **Destinations map** and place pages | **Map built 9 Oct** (towns with events); place pages wait on places | UC-15 | FR-BR-16 to FR-BR-18, ADR-0007 |
 

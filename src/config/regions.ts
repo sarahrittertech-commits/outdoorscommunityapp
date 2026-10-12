@@ -158,4 +158,21 @@ export const regions: Region[] = [
     heroIntro:
       "Groups, meetups and events for getting outside in Salt Lake City, Park City and the Wasatch. Join a group, show up, try something new.",
   },
+  {
+    slug: "reno-tahoe",
+    name: "Reno and Lake Tahoe",
+    shortName: "Reno–Tahoe",
+    state: "NV",
+    timezone: "America/Los_Angeles",
+    hubs: ["Reno"],
+    center: { lat: 39.4, lng: -119.95 },
+    zoom: 8,
+    radiusMiles: 100,
+    status: "live",
+    exampleTown: "Truckee",
+    exampleMeetingPlace: "Hunter Creek trailhead",
+    exampleZip: "89501",
+    heroIntro:
+      "Groups, meetups and events for getting outside in Reno, Truckee and around Lake Tahoe. Join a group, show up, try something new.",
+  },
 ];
