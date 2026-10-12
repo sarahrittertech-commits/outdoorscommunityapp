@@ -156,7 +156,10 @@ hours and follows `scripts/research/area-sweep.md`: Sarah's list of target
 areas, two per run, saved as candidates only. It needs the same
 `RESEARCH_AGENT_TOKEN` and the same permission as the weekly agent (below).
 Pause it from claude.ai when the list is done or the review queue is too
-long.
+long. It was created on 12 October 2026 switched **off**: before turning it
+on, add the allow rule in step 5 below and remove every connector from the
+routine (claude.ai attached all of the account's connectors, Supabase
+included, and the API couldn't detach them).
 
 ### Weekly research agent (UC-9)
 
