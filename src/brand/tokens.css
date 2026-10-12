@@ -39,6 +39,7 @@
   --heading: var(--plum-ui); /* page titles (H1) */
   --heading-2: var(--ink); /* section and list headings (H2): charcoal, so not everything is plum */
   --heading-3: var(--ink); /* small headings (H3) */
+  --current: #6a4c93; /* "you are here": the active tab, the region you're browsing, 6.8:1 */
   --meta-plum: #6e5560; /* brown-leaning plum for the line under a plum list name, 6.7:1 */
   --link: var(--plum-ui);
   --link-visited: #6a4c93;

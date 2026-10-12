@@ -21,7 +21,7 @@ export default async function MessageRequestsPage({ searchParams }: Props) {
       <h1>Messages</h1>
       <InboxTabs current="requests" requests={requests.length} />
       <Notice params={await searchParams} />
-      <p className="mt-3 max-w-prose text-sm text-muted">
+      <p className="mt-4 max-w-prose text-sm text-muted">
         Open a request to read it, then accept, decline or block. Until you accept, the sender can&apos;t send anything
         more, and they aren&apos;t told if you decline.
       </p>
