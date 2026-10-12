@@ -81,6 +81,10 @@ Scale: H1 42/1.1 (32 on phones), H2 26/1.2, H3 20 bold, body 18/1.55, small 15/1
 Write like a friendly trail steward posting on a notice board: useful facts
 first, no pressure. Plain, calm, local, welcoming.
 
+**Motto** (Sarah, 12 October 2026), under the wordmark in the footer:
+*Find outdoors community without constant scrolling. We want you to get
+offline and get outside.* It lives in `site.motto` in `src/config/site.ts`.
+
 | Write | Not |
 | --- | --- |
 | Next event: Sat 12 Oct, 6:15 am | Don't miss out on this epic adventure! |
