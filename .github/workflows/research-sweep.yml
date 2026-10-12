@@ -4,10 +4,24 @@ name: Research sweep (Gemini)
 # and the pages where they post events, one live region at a time (scripts/research/gemini/), the
 # script checks every link itself, and survivors go to the research intake
 # as candidates for the site admin. Does nothing until both secrets exist.
+#
+# Manual only for now (12 October 2026): Sarah wants to see the cost of a
+# test run before any schedule. Each run makes exactly one Gemini request.
+# "dry" (on by default) asks Gemini and checks the links but sends nothing
+# to the database. To schedule it later, add back:
+#   schedule:
+#     - cron: "23 */3 * * *"
 on:
-  schedule:
-    - cron: "23 */3 * * *"
   workflow_dispatch:
+    inputs:
+      dry:
+        description: "Dry run: ask Gemini and check links, but save nothing"
+        type: boolean
+        default: true
+      run:
+        description: "Which area and pass to take (a number; blank = next in turn)"
+        type: string
+        required: false
 
 permissions:
   contents: read
@@ -30,4 +44,6 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           RESEARCH_AGENT_TOKEN: ${{ secrets.RESEARCH_AGENT_TOKEN }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.8-flash' }}
-        run: node scripts/research/gemini/sweep.mjs
+          DRY: ${{ inputs.dry }}
+          RUN: ${{ inputs.run }}
+        run: node scripts/research/gemini/sweep.mjs $([ "$DRY" = "true" ] && echo --dry) $([ -n "$RUN" ] && echo --run "$RUN")

@@ -176,9 +176,13 @@ made-up websites):
 
 Cost on the paid tier: one request per run, with Google Search billed per
 search after the monthly free allowance (5,000 for Gemini 3 models), at
-eight runs a day well inside it. To run: `gh workflow enable
-research-sweep.yml`, then Actions → *Research sweep (Gemini)* → *Run
-workflow*; read the log before leaving it on its schedule.
+eight runs a day well inside it. Manual only for now: no schedule until Sarah has seen a test run's cost.
+Actions → *Research sweep (Gemini)* → *Run workflow*, with *Dry run* on
+(the default) to ask Gemini and check links without saving anything; each
+run logs its tokens and Google searches. Hard cap on spending: lower the
+Generative Language API's requests-per-day quota in the Google Cloud
+project, and add a billing budget alert (alerts don't stop spending). To
+schedule it later, add the cron lines noted in the workflow file.
 
 `.github/workflows/research-sweep.yml` runs `scripts/research/gemini/sweep.mjs`
 every three hours on GitHub's free runners. Each run takes one area and one

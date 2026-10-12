@@ -143,6 +143,13 @@ if (!answer.ok) {
 const data = await answer.json();
 const text = (data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join("");
 const grounded = groundedDomains(data);
+// What this run used, so the cost per run can be read off the log (12 October 2026).
+const usage = data.usageMetadata ?? {};
+const searches = data.candidates?.[0]?.groundingMetadata?.webSearchQueries ?? [];
+console.log(
+  `Usage: ${usage.promptTokenCount ?? "?"} input tokens, ${usage.candidatesTokenCount ?? "?"} output tokens, ` +
+    `${usage.thoughtsTokenCount ?? 0} thinking tokens, ${searches.length} Google searches.`,
+);
 const finds = parseFinds(text).slice(0, 12);
 console.log(`Gemini suggested ${finds.length}; Google returned ${grounded.size} sites.`);
 
