@@ -41,7 +41,10 @@ events it gave. A weekly reader goes through them:
    This costs nothing per run and copies dates exactly.
 2. **AI only for pages without a feed**, once a week, copying only what
    the page shows (the weekly research agent, UC-9).
-3. **Web search only to find new sources**, when a region opens or a
+3. **Annual events by their calendar.** Past editions are kept as
+   watched events; their page is read only as the next edition's window
+   comes up, a few times a year.
+4. **Web search only to find new sources**, when a region opens or a
    region looks thin, not to find events.
 
 Which sign-up sites and Meetup pages offer usable feeds is checked when

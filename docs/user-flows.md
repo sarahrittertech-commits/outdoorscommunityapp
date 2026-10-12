@@ -673,4 +673,7 @@ flowchart TD
   check -->|yes| board["Event on the board"]
   check -->|no| kept["Kept in research with the reason"]
   reader -->|nothing for weeks or broken| stale["Marked for the admin to fix or retire"]
+  past["Past editions of annual events"] --> watch["Watched event<br/>past dates · page · window for the next one"]
+  watch -->|window coming up| reader
+  watch -->|window passed, no date| ended["'May have ended' for the admin"]
 ```

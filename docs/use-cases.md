@@ -1272,8 +1272,9 @@ follower counts, or anything that turns the board into a feed.
    race sign-up site, park programs), when it was last read, and how many
    real events it has given.
 3. Sees the region's coverage at the top: how many hosts have a known
-   source, how many sources were read this week, and how many upcoming
-   events the board shows.
+   source, how many sources were read this week, how many upcoming
+   events the board shows, and how many annual events are watched and
+   how many have next year's date.
 4. Adds a source when research finds one (a club's calendar page, its
    race page on RunSignup), or the reader adds it when it notices one.
 5. The weekly reader goes through the sources by itself:
@@ -1284,7 +1285,15 @@ follower counts, or anything that turns the board into a feed.
 6. New dated events from a host's own page or its official sign-up page
    go on the board under the existing rules; everything else is kept in
    the research tables with the reason (FR-RS-13).
-7. Sources that gave nothing for a long time, or broke, are marked so the
+7. **Annual events are watched.** Past editions are kept (Sarah, 12
+   October: most outdoor events come back every year, and a missed date
+   means a missed event). Each watched event records when it happened
+   before ("first Saturday in April, 2025 and 2026"), its page, and a
+   window for the next one. The reader checks that page as the window
+   comes up; when the host posts the new date and time, the event goes on
+   the board. A window that passes with no date marks the event "may have
+   ended" for the admin.
+8. Sources that gave nothing for a long time, or broke, are marked so the
    admin can fix the link or retire them.
 
 **Requirements:** to be written after review.
@@ -1302,6 +1311,7 @@ business plan.
 | **Where the reader runs** | A Supabase scheduled function (ADR-0004), next to the database. Feeds cost nothing; the AI part runs as the weekly research agent (UC-9). | GitHub Actions (like the paused Gemini sweep): also free, but the work is split across two places. |
 | **What gets published without review** | Only events from a host's own page, feed or official sign-up page, with a date and time, for a host already listed. Exactly today's rule. | Publishing anything a feed returns: faster, but one bad feed could flood a region. |
 | **Meetup, Eventbrite and Facebook** | Meetup and Eventbrite pages are read like any public page; whether they offer a usable feed is checked when building. Facebook events are not read (Meta doesn't allow it). | Paid API access, if a source turns out to be worth it. |
+| **Past and annual events** | Kept as watched events in the research tables, never shown as upcoming; checked when their window comes up. | Showing "usually in April" on the board: tempting, but it's a guess, and the board lists only confirmed dates. |
 | **Coverage numbers** | Counted from the sources table, admin only. | A public "events this week" figure: possible later, as a fact, not a ranking. |
 
 **Not part of this:** ranking hosts or events, scraping social media,
