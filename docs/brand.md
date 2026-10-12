@@ -51,6 +51,7 @@ leaves and small highlights. Pages stay mostly paper (about 70% paper, 14% ink,
 | Rust | `#B43C34` | Leaves, errors, cancelled events | 5.4:1 (AA) |
 | Lake | `#50759F` | Focus rings, notices | 4.4:1 — large text and UI |
 | Ink | `#262320` | Body text, section headings (warm charcoal, 12 October) | 15.6:1 |
+| Current plum | `#6A4C93` | "You are here": the active tab, the region you're browsing (bold, on the light purple band) | 6.8:1 on white, 5.9:1 on the band |
 | Meta plum | `#6E5560` | The line under a plum list name (Regions: "Around Asheville, NC"), a brown-leaning plum | 6.7:1 on white |
 | Muted | `#6B645D` | Secondary text (warm gray, 12 October) | 5.8:1 |
 | Rule | `#E4DACB` | Borders | — |

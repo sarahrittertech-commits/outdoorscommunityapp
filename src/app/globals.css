@@ -254,6 +254,44 @@
     background: var(--search-hover);
   }
 
+  /* Tabs (Messages: Inbox, Requests): the current one sits on the light purple
+     band, bold in the lighter "current" plum; the others are plain links.
+     Sarah, 12 October. */
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-bottom: 2px solid var(--band);
+  }
+  .tabs a {
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px 6px 0 0;
+    text-decoration: none;
+    color: var(--link);
+  }
+  .tabs a:hover {
+    background: var(--panel);
+    text-decoration: underline;
+  }
+  .tabs a[aria-current="page"] {
+    background: var(--band);
+    color: var(--current);
+    font-weight: 700;
+  }
+
+  /* "You are here" in a list (the region you're browsing): band background. */
+  .is-current {
+    background: var(--band);
+    border-radius: 6px;
+    padding-inline: 0.75rem;
+  }
+  .current-label {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--current);
+  }
+
   /* Light purple bar for headings inside long lists (months on Events). */
   .section-bar {
     margin: 1.5rem 0 0.5rem;

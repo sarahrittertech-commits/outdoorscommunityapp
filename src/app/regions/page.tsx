@@ -68,14 +68,15 @@ export default async function RegionsPage({ searchParams }: Props) {
             return (
               <li
                 key={r.slug}
-                className="flex flex-wrap items-center justify-between gap-4 py-5"
+                className={`flex flex-wrap items-center justify-between gap-4 py-5 ${isCurrent ? "is-current" : ""}`}
+                aria-current={isCurrent ? "true" : undefined}
               >
                 <div>
                   <h2 className="m-0 text-xl text-heading">
                     {r.name}
                     {isCurrent && (
-                      <span className="ml-2 align-middle text-sm font-normal text-muted">
-                        (you&rsquo;re browsing this one)
+                      <span className="current-label ml-3 align-middle">
+                        you&rsquo;re browsing this one
                       </span>
                     )}
                   </h2>
