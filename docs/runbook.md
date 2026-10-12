@@ -184,6 +184,13 @@ Generative Language API's requests-per-day quota in the Google Cloud
 project, and add a billing budget alert (alerts don't stop spending). To
 schedule it later, add the cron lines noted in the workflow file.
 
+**Topic search** (12 October 2026): fill in *topic* (for example "fly tying
+clinics") and *area* (for example "Western North Carolina") when running
+the workflow, instead of the rotation. Every run, topic or not, leaves a
+spreadsheet, `research-results.csv`, under the run's *Artifacts*: each
+organization with its kind, area, website, events page, whether it checked
+out, and how many dated events its page published.
+
 `.github/workflows/research-sweep.yml` runs `scripts/research/gemini/sweep.mjs`
 every three hours on GitHub's free runners. Each run takes one area and one
 search pass from `scripts/research/gemini/areas.json`, in turn (26 areas ×

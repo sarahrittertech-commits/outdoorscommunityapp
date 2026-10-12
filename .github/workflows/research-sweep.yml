@@ -22,6 +22,14 @@ on:
         description: "Which area and pass to take (a number; blank = next in turn)"
         type: string
         required: false
+      topic:
+        description: "Topic search instead of the rotation, e.g. fly tying clinics (blank = rotation)"
+        type: string
+        required: false
+      area:
+        description: "Area for a topic search, e.g. Western North Carolina"
+        type: string
+        required: false
 
 permissions:
   contents: read
@@ -46,4 +54,13 @@ jobs:
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.8-flash' }}
           DRY: ${{ inputs.dry }}
           RUN: ${{ inputs.run }}
+          TOPIC: ${{ inputs.topic }}
+          AREA: ${{ inputs.area }}
         run: node scripts/research/gemini/sweep.mjs $([ "$DRY" = "true" ] && echo --dry) $([ -n "$RUN" ] && echo --run "$RUN")
+      - name: Results spreadsheet
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-results
+          path: research-results.csv
+          if-no-files-found: ignore
