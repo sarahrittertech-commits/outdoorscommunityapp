@@ -15,7 +15,7 @@ Live at https://branchoutapp-production.up.railway.app/ with every Must
 requirement, most Shoulds, 186 database permission tests and the unit
 tests passing. Since 11 October 2026 it covers several regions, each built
 around hub cities (Western North Carolina, the Colorado Front Range, the
-Triangle, Seattle and Bellingham, the New River Gorge, East Tennessee, Salt Lake City and the Wasatch, and Reno and Lake Tahoe).
+Triangle, Seattle and Bellingham, the New River Gorge, East Tennessee, Salt Lake City and the Wasatch, Reno and Lake Tahoe, and Sedona and Flagstaff).
 Real groups are listed until their organizers claim them, and a weekly
 research agent suggests new ones.
 

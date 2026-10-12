@@ -67,9 +67,18 @@ export const zipPrefixTowns: Record<string, string> = {
   "895": "Reno",
   "897": "Carson City",
   "961": "Truckee",
+  // Sedona and Flagstaff
+  "860": "Flagstaff",
+  "863": "Prescott",
 };
 
 export const zipTowns: Record<string, string> = {
+  // Sedona and Flagstaff (Sedona's 863 prefix otherwise points to Prescott)
+  "86336": "Sedona",
+  "86351": "Village of Oak Creek",
+  "86326": "Cottonwood",
+  "86324": "Clarkdale",
+  "86322": "Camp Verde",
   // Buncombe County
   "28801": "Asheville",
   "28802": "Asheville",

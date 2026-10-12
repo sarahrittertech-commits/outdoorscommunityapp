@@ -245,6 +245,13 @@ Fernley to Carson City, South Lake Tahoe, Truckee and Grass Valley, zip
 prefixes 894, 895, 897 and 961. Its first research included an affinity
 pass.
 
+Then `sedona-flagstaff` (Sedona and Flagstaff; migration
+`20261011000006_region_sedona_flagstaff.sql`): Arizona time (no daylight
+saving), 21 towns across the Verde Valley, Flagstaff, Williams, the Grand
+Canyon's South Rim, Prescott and Payson; zip prefixes 860 and 863, with
+Sedona's and the Verde Valley's own codes listed so they don't fall to
+Prescott. Its research included an affinity pass.
+
 To check a region's reach before opening it:
 `select name, hub_towns, radius_miles, status from public.regions order by sort_order;`
 
