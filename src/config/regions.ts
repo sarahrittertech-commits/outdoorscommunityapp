@@ -175,4 +175,21 @@ export const regions: Region[] = [
     heroIntro:
       "Groups, meetups and events for getting outside in Reno, Truckee and around Lake Tahoe. Join a group, show up, try something new.",
   },
+  {
+    slug: "sedona-flagstaff",
+    name: "Sedona and Flagstaff",
+    shortName: "Sedona–Flagstaff",
+    state: "AZ",
+    timezone: "America/Phoenix",
+    hubs: ["Sedona", "Flagstaff"],
+    center: { lat: 35.0, lng: -111.75 },
+    zoom: 8,
+    radiusMiles: 100,
+    status: "live",
+    exampleTown: "Cottonwood",
+    exampleMeetingPlace: "Posse Grounds Park",
+    exampleZip: "86336",
+    heroIntro:
+      "Groups, meetups and events for getting outside in Sedona, Flagstaff and the Verde Valley. Join a group, show up, try something new.",
+  },
 ];
