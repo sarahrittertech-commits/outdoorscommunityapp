@@ -55,21 +55,24 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <Link
               href={`/regions?next=${encodeURIComponent(requestPath)}`}
               prefetch={false}
-              className="whitespace-nowrap text-sm text-muted"
+              className="shrink-0 whitespace-nowrap text-sm text-muted"
               aria-label={`Region: ${region.name}. Change region`}
             >
               {region.shortName}
               <span className="hidden xl:inline"> · change</span>
             </Link>
-            <nav aria-label="Main" className="flex items-baseline gap-x-4 whitespace-nowrap text-base">
+            <nav aria-label="Main" className="flex shrink-0 items-baseline gap-x-4 whitespace-nowrap text-base">
               <Link href="/">explore</Link>
               <Link href="/events">events</Link>
               <Link href="/communities">communities</Link>
             </nav>
             {/* The search box takes whatever room is left and shrinks first, so
-                the header stays on one row when signed-in links are added. */}
-            <div className="ml-auto flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-base whitespace-nowrap lg:min-w-0 lg:flex-1 lg:flex-nowrap lg:gap-x-3 xl:gap-x-4">
-              <form action="/search" role="search" className="hidden min-w-32 max-w-60 flex-1 xl:block">
+                the header stays on one row when signed-in links are added. When
+                too little room is left it hides (a container query) instead of
+                sliding under the links; search is still on the home page and
+                Events. Nothing else here shrinks, so nothing overlaps. */}
+            <div className="ml-auto flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-base whitespace-nowrap lg:flex-1 lg:flex-nowrap lg:gap-x-3 xl:gap-x-4">
+              <form action="/search" role="search" className="@container hidden min-w-0 max-w-60 flex-1 xl:block">
                 <label htmlFor="site-search" className="sr-only">
                   Search events, places, groups
                 </label>
@@ -78,7 +81,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                   name="q"
                   type="search"
                   placeholder="search events, places, groups"
-                  className="mt-0 w-full py-1 text-sm"
+                  className="mt-0 hidden w-full py-1 text-sm @min-[9rem]:block"
                 />
               </form>
               <Link href="/post" className="button py-1.5">
