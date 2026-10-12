@@ -29,6 +29,8 @@ export const site = {
   defaultTimezone: "America/New_York",
   /** Who the board is for, shown on the about and guidelines pages. */
   audience: "Adults (18+) who want to find outdoor groups near them.",
+  /** The motto under the wordmark in the footer (Sarah, 12 October 2026). */
+  motto: "Find outdoors community without constant scrolling. We want you to get offline and get outside.",
   /** The home page headline, over the line drawing. A newline breaks the line. */
   heroTitle: "find your people.\nfind your outdoors.",
   /**

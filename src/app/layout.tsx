@@ -127,7 +127,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             {site.name}
           </Link>
           <p>
-            No ads. No feed. No tracking. Lists are sorted by name or date, the same for everyone.
+            {site.motto}
           </p>
           <p className="mt-2 flex flex-wrap gap-x-4">
             <Link href="/browse">browse all</Link>
