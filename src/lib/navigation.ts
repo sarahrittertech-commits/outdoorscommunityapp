@@ -39,6 +39,22 @@ export function safeNext(value: FormDataEntryValue | string | null | undefined, 
 }
 
 /**
+ * Where to go after a failed email link: never back to a password step.
+ * A sign-up link's `next` is `/set-password?next=…`; sending someone back
+ * through sign-in with that `next` ends on "open the reset link first", or
+ * nests it again on a new sign-up. Unwraps to the inner `next`.
+ */
+export function pastPasswordStep(next: string): string {
+  let path = safeNext(next);
+  for (let i = 0; i < 5; i++) {
+    const url = new URL(path, LOCAL);
+    if (url.pathname !== "/set-password" && url.pathname !== "/reset-password") return path;
+    path = safeNext(url.searchParams.get("next"));
+  }
+  return "/";
+}
+
+/**
  * A path with a notice (?m=) or error (?e=) code attached, replacing any
  * previous one. Used by every form action to report back. A path that
  * isn't on this site falls back to the home page.

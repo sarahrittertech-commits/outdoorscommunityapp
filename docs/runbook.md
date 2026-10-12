@@ -334,11 +334,10 @@ These are dashboard settings, not code, so check them on any new project
    set up, Supabase's built-in sender only reaches the project's own team,
    so the public can sign in to existing accounts but cannot confirm a new
    account or reset a password.
-5. **Optional, for links that open in any browser:** in **Authentication →
-   Emails → Templates**, point *Confirm signup* at
-   `{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email&next=/`
-   and *Reset password* at
-   `{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password`.
+5. **Optional, for links that open in any browser:** change the *Confirm
+   signup* and *Reset password* templates as *Email links that work in any
+   browser* below says (the `{{ .RedirectTo }}` versions). Don't point
+   *Confirm signup* at a fixed `next=/`: that skips creating a password.
    The default links work only in the browser that asked for them.
 6. **Existing accounts** (created with the old emailed link) have no
    password: use *Forgot password* on the sign-in page to set one.

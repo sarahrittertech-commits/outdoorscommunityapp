@@ -1,6 +1,6 @@
 -- UC-30, the event form: FR-EV-23 to FR-EV-28. PT-50 to PT-59.
 begin;
-select plan(34);
+select plan(35);
 select tests.build_fixture();
 
 -- A second member of g1 for the waitlist, and an event in g3 for photo paths.
@@ -169,6 +169,17 @@ select tests.as('member2');
 select lives_ok(
   format($$ delete from public.event_rsvps where event_id = %L and user_id = %L $$, tests.id('e1'), tests.uid('member2')),
   'PT-55 a member leaves the waitlist'
+);
+
+-- PT-54b (12 October 2026 review): the site admin moderates every group, so
+-- the site admin can move someone from the waitlist too (like manage_rsvp).
+select tests.as_admin();
+insert into public.event_rsvps (event_id, user_id, status) values (tests.id('e1'), tests.uid('member2'), 'waitlisted');
+delete from public.event_rsvps where event_id = tests.id('e1') and user_id = tests.uid('owner');
+select tests.as('siteadmin');
+select lives_ok(
+  format($$ select public.move_from_waitlist(%L, %L) $$, tests.id('e1'), tests.uid('member2')),
+  'PT-54b the site admin moves someone from the waitlist'
 );
 
 -- PT-56..PT-58: event photos in storage ---------------------------------------

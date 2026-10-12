@@ -75,6 +75,7 @@ web app is not the thing enforcing the rule.
 | PT-52 | An event that takes no RSVPs refuses new and changed RSVPs (FR-EV-26) | RSVPs made through the API to an event that says it takes none |
 | PT-53 | The waitlist opens only when the event is full, keeps join order set by the database, and waitlisted people don't count as going (FR-EV-28) | A member jumps the queue by sending their own join time |
 | PT-54 | Only an owner or admin moves someone from the waitlist to going, only into a free place; a waitlisted member can't move themselves; going never exceeds places (FR-EV-28) | Members skip the waitlist, or an event goes over capacity |
+| PT-54b | The site admin can move someone from the waitlist, like every other RSVP action (12 Oct review) | The site admin sees a button the database refuses |
 | PT-55 | Leaving the waitlist is always allowed (FR-EV-28) | Someone is stuck on a waitlist |
 | PT-56 | Only the group's owner and admins upload event photos; members and outsiders can't (FR-EV-24) | Anyone puts pictures on someone else's event |
 | PT-57 | A photo path must name an event of the same group (FR-EV-24) | An admin of one group writes into another group's folder |
@@ -227,6 +228,7 @@ web app is not the thing enforcing the rule.
 | PT-225 | A kept venue keeps its events while it waits and lists as a venue (UC-37) | Venues refused, or their events lost |
 | PT-226 | Everyone sees a listing's events, in event_listings with the host | Hosted events missing from Events |
 | PT-227 | Nobody writes a listing's events directly | Visitors or members add or change them |
+| PT-227b | A hosted event with an unknown time zone is refused (12 Oct review) | One bad zone takes down every events list |
 | PT-228 | A later research find adds events to a listed venue | Listed hosts never get new events |
 | PT-229 | A removed listing's events leave every list | Events of a removed listing still showing |
 

@@ -19,7 +19,9 @@ type Action = "approve" | "decline" | "waitlist" | "remove";
 
 const LISTS = [
   { status: "requested", title: "Requests", actions: ["approve", "waitlist", "decline"] },
-  { status: "going", title: "Going", actions: ["waitlist", "decline", "remove"] },
+  // Not "waitlist": the database only waitlists someone while the event is
+  // full counting everyone else, so from Going it nearly always failed.
+  { status: "going", title: "Going", actions: ["decline", "remove"] },
   { status: "waitlisted", title: "Waitlist", actions: ["approve", "decline", "remove"] },
   { status: "declined", title: "Declined", actions: ["approve", "remove"] },
 ] as const satisfies readonly { status: string; title: string; actions: readonly Action[] }[];
