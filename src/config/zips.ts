@@ -56,6 +56,12 @@ export const zipPrefixTowns: Record<string, string> = {
   "377": "Knoxville",
   "378": "Maryville",
   "379": "Knoxville",
+  // Salt Lake City and the Wasatch
+  "840": "Salt Lake City",
+  "841": "Salt Lake City",
+  "843": "Logan",
+  "844": "Ogden",
+  "846": "Provo",
 };
 
 export const zipTowns: Record<string, string> = {

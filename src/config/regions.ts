@@ -141,4 +141,21 @@ export const regions: Region[] = [
     heroIntro:
       "Groups, meetups and events for getting outside in Knoxville, the Smokies and East Tennessee. Join a group, show up, try something new.",
   },
+  {
+    slug: "wasatch",
+    name: "Salt Lake City and the Wasatch",
+    shortName: "Salt Lake–Wasatch",
+    state: "UT",
+    timezone: "America/Denver",
+    hubs: ["Salt Lake City"],
+    center: { lat: 40.76, lng: -111.89 },
+    zoom: 8,
+    radiusMiles: 100,
+    status: "live",
+    exampleTown: "Park City",
+    exampleMeetingPlace: "Round Valley trailhead",
+    exampleZip: "84101",
+    heroIntro:
+      "Groups, meetups and events for getting outside in Salt Lake City, Park City and the Wasatch. Join a group, show up, try something new.",
+  },
 ];
