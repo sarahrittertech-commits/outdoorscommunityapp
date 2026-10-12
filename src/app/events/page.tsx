@@ -5,6 +5,7 @@ import { ActivityIcon } from "@/brand/ActivityIcon";
 import { GroupTypeIcon } from "@/brand/GroupTypeIcon";
 import { EventList } from "@/components/Listings";
 import { LocationFilter, UnknownZip } from "@/components/LocationFilter";
+import { Notice } from "@/components/Notice";
 import { RegionScope } from "@/components/RegionScope";
 import { distances } from "@/config/towns";
 import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
@@ -256,6 +257,7 @@ export default async function EventsPage({ searchParams }: Props) {
     // The h1 comes first in the source; grid placement puts the filters on the left.
     <div className="grid gap-8 md:grid-cols-[14rem_1fr]">
       <div className="md:col-start-2 md:row-start-1">
+        <Notice params={params} />
         <h1 className="m-0 flex items-center gap-3">
           {current && <ActivityIcon slug={current.slug} />}
           {current ? `${current.name} events` : "Events"}

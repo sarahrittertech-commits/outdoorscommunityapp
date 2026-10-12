@@ -2,7 +2,7 @@ import type { EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { site } from "@/config/site";
-import { safeNext } from "@/lib/navigation";
+import { pastPasswordStep, safeNext } from "@/lib/navigation";
 import { afterEmailLink } from "@/lib/email-links";
 import { RESET_COOKIE, RESET_COOKIE_MAX_AGE, RESET_PATH } from "@/lib/password-reset";
 import { sessionCookieOptions } from "@/lib/supabase/env";
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     : { data: { user: null }, error: new Error("missing code") };
 
   if (error || !data.user) {
-    const back = isReset ? "/forgot-password?e=link_failed" : `/signin?e=link_failed&next=${encodeURIComponent(next)}`;
+    const back = isReset ? "/forgot-password?e=link_failed" : `/signin?e=link_failed&next=${encodeURIComponent(pastPasswordStep(next))}`;
     return NextResponse.redirect(new URL(back, site.url));
   }
 

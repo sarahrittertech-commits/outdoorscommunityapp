@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 import { site } from "@/config/site";
 import { fail, failOnError, succeed } from "@/lib/actions";
 import { getViewer } from "@/lib/auth";
-import { safeNext, withMessage } from "@/lib/navigation";
+import { pastPasswordStep, safeNext, withMessage } from "@/lib/navigation";
 import { removeProfilePhotoFile } from "@/lib/profilePhotos";
 import { afterEmailLink } from "@/lib/email-links";
 import { SET_PASSWORD_PATH, RESET_COOKIE, RESET_COOKIE_MAX_AGE, RESET_PATH } from "@/lib/password-reset";
@@ -235,7 +235,7 @@ export async function confirmEmailLink(formData: FormData) {
   const next = safeNext(formData.get("next"));
   const parsed = emailLinkSchema.safeParse(formFields(formData));
   const failed = (type?: string): never =>
-    redirect(type === "recovery" ? "/forgot-password?e=link_failed" : `/signin?e=link_failed&next=${encodeURIComponent(next)}`);
+    redirect(type === "recovery" ? "/forgot-password?e=link_failed" : `/signin?e=link_failed&next=${encodeURIComponent(pastPasswordStep(next))}`);
   if (!parsed.success) return failed();
   const link = parsed.data;
 

@@ -286,7 +286,9 @@ export default async function AdminPage({ searchParams }: Props) {
       </ul>
       {Boolean(kept?.length) && (
         <p className="mt-2 text-sm text-muted">
-          Kept in the research area for later: {kept!.map((k) => `${k.kept} ${k.kept === 1 ? k.kind : k.kind === "business" ? "businesses" : `${k.kind}s`}`).join(", ")}
+          Kept in the research area for later: {kept!.map((k) => `${k.kept} ${k.kept === 1 ? k.kind : k.kind === "business" ? "businesses" : `${k.kind}s`}`).join(", ")}.
+        </p>
+      )}
 
       <h2 id="guides-and-shops">Guides, shops and venues ({businesses?.length ?? 0})</h2>
       <p className="mt-1 text-sm text-muted">
@@ -331,10 +333,8 @@ export default async function AdminPage({ searchParams }: Props) {
             </div>
           </li>
         ))}
-        {!businesses?.length && <li className="py-2 text-muted">No guides or shops waiting.</li>}
-      </ul>.
-        </p>
-      )}
+        {!businesses?.length && <li className="py-2 text-muted">No guides, shops or venues waiting.</li>}
+      </ul>
 
       <h2 id="suggestions">Suggestions ({suggestions?.length ?? 0})</h2>
       <p className="mt-1 text-sm text-muted">

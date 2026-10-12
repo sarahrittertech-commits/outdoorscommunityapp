@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { safeNext, withMessage } from "./navigation";
+import { pastPasswordStep, safeNext, withMessage } from "./navigation";
 
 // Every payload a browser could read as another host.
 const offsite = [
@@ -46,5 +46,14 @@ describe("withMessage", () => {
   it.each(offsite.filter(Boolean))("never returns an offsite path for %j", (value) => {
     const result = withMessage(value, { e: "generic" });
     expect(result).toBe("/?e=generic");
+  });
+});
+
+describe("pastPasswordStep", () => {
+  it("unwraps a failed sign-up link's password step to where it was going", () => {
+    expect(pastPasswordStep("/set-password?next=%2Fg%2Fpisgah")).toBe("/g/pisgah");
+    expect(pastPasswordStep("/set-password?next=%2Fset-password%3Fnext%3D%252Fevents")).toBe("/events");
+    expect(pastPasswordStep("/reset-password")).toBe("/");
+    expect(pastPasswordStep("/events?days=7")).toBe("/events?days=7");
   });
 });

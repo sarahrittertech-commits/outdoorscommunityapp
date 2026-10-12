@@ -162,6 +162,7 @@ describe("returning after choosing a region", () => {
   it("stays on this site and drops the old region", () => {
     expect(regionReturnPath("/events?region=triangle&days=7")).toBe("/events?days=7");
     expect(regionReturnPath("//evil.example")).toBe("/");
+    expect(regionReturnPath("/g/x?m=joined&region=wasatch")).toBe("/g/x");
     expect(regionReturnPath("https://evil.example")).toBe("/");
     expect(regionReturnPath(undefined)).toBe("/");
   });

@@ -103,5 +103,8 @@ export function regionReturnPath(next: unknown): string {
   const path = safeNext(typeof next === "string" ? next : null);
   const url = new URL(path, "http://local.invalid");
   url.searchParams.delete("region");
+  // An old notice (?m=joined, ?e=…) would show again after the switch.
+  url.searchParams.delete("m");
+  url.searchParams.delete("e");
   return url.pathname + url.search + url.hash;
 }

@@ -73,7 +73,28 @@ export const zipPrefixTowns: Record<string, string> = {
 };
 
 export const zipTowns: Record<string, string> = {
+  // Reno and Lake Tahoe: lake towns 20-40 miles from their prefix hub
+  "96150": "South Lake Tahoe",
+  "96151": "South Lake Tahoe",
+  "96158": "South Lake Tahoe",
+  "89449": "Stateline",
+  "89448": "Stateline",
+  "89423": "Minden",
+  "89410": "Gardnerville",
+  "89451": "Incline Village",
+  "96145": "Tahoe City",
+  "96143": "Kings Beach",
+  // Salt Lake City and the Wasatch: the Park City side
+  "84060": "Park City",
+  "84098": "Park City",
+  "84032": "Heber City",
   // Sedona and Flagstaff (Sedona's 863 prefix otherwise points to Prescott)
+  "86023": "Grand Canyon Village",
+  "86046": "Williams",
+  "86339": "Sedona",
+  "86340": "Sedona",
+  "86341": "Sedona",
+  "86325": "Cornville",
   "86336": "Sedona",
   "86351": "Village of Oak Creek",
   "86326": "Cottonwood",

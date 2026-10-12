@@ -1,6 +1,6 @@
 -- Events from guides, shops and venues (UC-37).
 begin;
-select plan(9);
+select plan(10);
 select tests.build_fixture();
 
 select tests.as_admin();
@@ -41,6 +41,14 @@ select throws_ok(
 select tests.as('member');
 select throws_ok($$ update public.business_events set title = 'Changed' $$, '42501', null,
   'PT-227 members cannot change one');
+
+-- PT-227b  An unknown time zone is refused (it would break every list) ----
+select tests.as_admin();
+select throws_ok(
+  format($$ insert into public.business_events (business_id, title, starts_at, ends_at, timezone, location_name, source_url)
+            values (%L, 'Bad zone', now() + interval '1 day', now() + interval '2 days', 'Mountain Time', 'Somewhere', 'https://x.example.org') $$,
+         (select id from public.businesses where slug = 'test-nature-center')),
+  'P0001', null, 'PT-227b a hosted event with an unknown time zone is refused');
 
 -- PT-228  A later research find adds events to the listed venue -----------
 select tests.as_admin();

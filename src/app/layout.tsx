@@ -56,7 +56,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               href={`/regions?next=${encodeURIComponent(requestPath)}`}
               prefetch={false}
               className="shrink-0 whitespace-nowrap text-sm text-muted"
-              aria-label={`Region: ${region.name}. Change region`}
+              aria-label={`${region.shortName} (region). Change region`}
             >
               {region.shortName}
               <span className="hidden xl:inline"> · change</span>
