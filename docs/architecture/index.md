@@ -32,7 +32,7 @@ Each record has a status:
 | [0008](./adr-0008-brand-separation) | Keep the brand out of shared code so a cloned board can merge | Proposed |
 | [0009](./adr-0009-password-sign-in) | Email and password sign-in | Accepted |
 | [0010](./adr-0010-regions) | One board, many regions | Accepted |
-| [0011](./adr-0011-event-sources) | Event sources: read feeds first, AI only where there is none | Proposed |
+| [0011](./adr-0011-event-sources) | Event sources: read feeds first, AI only where there is none | Accepted |
 
 :::note Accepted 25 September 2026
 Drafted as Proposed in the morning; accepted the same day when Sarah
