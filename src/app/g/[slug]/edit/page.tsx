@@ -20,7 +20,7 @@ type Props = {
 export default async function EditGroupPage({ params, searchParams }: Props) {
   const { slug } = await params;
   await requireViewer(`/g/${slug}/edit`);
-  const { supabase, group, isOwner, canManage } = await loadGroup(slug);
+  const { supabase, group, isOwner, isAdmin, canManage } = await loadGroup(slug);
   if (!canManage) redirect(`/g/${slug}?e=not_allowed`);
 
   return (
@@ -32,6 +32,7 @@ export default async function EditGroupPage({ params, searchParams }: Props) {
       <Notice params={await searchParams} />
       <GroupForm action={updateGroup.bind(null, group.id, group.slug)} group={group}
         coverUrl={group.cover_image_path ? groupCoverUrl(supabase, group.cover_image_path) : null}
+        canEditCover={isAdmin}
         submitLabel="Save changes"
       />
 
