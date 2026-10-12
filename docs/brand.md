@@ -70,8 +70,8 @@ Google.
 
 | Font | Used for |
 | --- | --- |
-| **Young Serif** (one weight) | Wordmark, H1, H2. Sentence case or lowercase. |
-| **Atkinson Hyperlegible** (400, 700) | H3, body, labels, buttons, data. Bold for emphasis, not color. |
+| **Young Serif** (one weight) | The wordmark only (since 12 October 2026). |
+| **Atkinson Hyperlegible** (400, 700) | Every heading (bold, tight letter spacing, like the home headline; Sarah, 12 October 2026), body, labels, buttons, data. Bold for emphasis, not color. |
 
 Scale: H1 42/1.1 (32 on phones), H2 26/1.2 with 2rem above it, H3 20 bold, body 18/1.55, small 15/1.45.
 

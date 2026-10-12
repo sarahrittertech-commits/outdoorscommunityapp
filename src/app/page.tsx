@@ -239,7 +239,7 @@ export default async function Home({ searchParams }: Props) {
                 <li key={e.id} className="card flex flex-col">
                   <div className="flex items-start justify-between">
                     <p className="m-0 leading-tight">
-                      <span className="font-serif text-3xl text-heading">{when.day}</span>
+                      <span className="text-3xl font-bold tracking-tight text-heading">{when.day}</span>
                       <br />
                       <span className="text-sm text-muted">
                         {when.weekday}, {when.month} · {when.time}

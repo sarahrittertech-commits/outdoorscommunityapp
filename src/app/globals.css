@@ -72,13 +72,15 @@
     outline-offset: 2px;
   }
 
-  /* Young Serif for H1 and H2 (one weight only); Atkinson bold for H3. */
-  /* Colors step down (Sarah, 12 October): plum page title, charcoal
+  /* Headings are Atkinson bold with tight letter spacing, like the home
+     headline (Sarah, 12 October: she liked "find your people", not the
+     serif titles). Young Serif is kept for the wordmark only.
+     Colors step down (Sarah, 12 October): plum page title, charcoal
      sections and small headings, so headings stand apart from links. */
   h1,
   h2 {
-    font-family: var(--font-serif);
-    font-weight: 400;
+    font-family: var(--font-sans);
+    font-weight: 700;
     color: var(--heading);
   }
   h2 {
@@ -90,11 +92,12 @@
   h1 {
     font-size: 2.625rem;
     line-height: 1.1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
   h2 {
     font-size: 1.625rem;
     line-height: 1.2;
+    letter-spacing: -0.01em;
     margin-top: 2rem;
   }
   h3 {
