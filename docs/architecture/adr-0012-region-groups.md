@@ -48,7 +48,7 @@ blending the Indy Pass regions with the usual outdoor regions:
 | Big region | Areas live today | Areas that would open next (towns.json) |
 | --- | --- | --- |
 | **Southeast** (Southern Appalachians and Piedmont) | Western NC · Charlotte and Lake Norman · Raleigh and the Triangle · Greenville and the Upstate · Knoxville and East Tennessee | Atlanta and North Georgia · Coastal Carolinas · Kentucky · Nashville |
-| **Mid-Atlantic** | New River Gorge | Shenandoah and Central Virginia · Potomac and Laurel Highlands · Washington and Harpers Ferry · Coastal Virginia · Philadelphia |
+| **Mid-Atlantic** | New River Gorge · Roanoke and the New River Valley · Harrisonburg and the Shenandoah Valley (13 Oct) | Potomac and Laurel Highlands · Washington and Harpers Ferry · Coastal Virginia · Philadelphia |
 | **Northeast** | Burlington and Northern Vermont · Greater Boston | New Hampshire and Maine · Upstate New York and Pennsylvania |
 | **Midwest and Great Lakes** | none yet | Lake Superior and the Northwoods · Driftless · Northeast Ohio |
 | **Rockies** | Colorado Front Range · Durango and the San Juans · Wasatch | Colorado mountains · Montana and Wyoming · Idaho |

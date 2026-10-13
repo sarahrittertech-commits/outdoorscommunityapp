@@ -54,23 +54,11 @@
     ],
     "new-river-gorge": [
       "Fayetteville, WV",
-      "Pearisburg, VA",
       "Summersville, WV",
       "Hinton, WV",
       "Lewisburg, WV",
       "Marlinton, WV",
-      "Charleston, WV",
-      "Blacksburg, VA",
-      "Roanoke, VA",
-      "Salem, VA",
-      "Floyd, VA",
-      "Pulaski, VA",
-      "Wytheville, VA",
-      "Galax, VA",
-      "Bedford, VA",
-      "Lexington, VA",
-      "Clifton Forge, VA",
-      "Hot Springs, VA"
+      "Charleston, WV"
     ],
     "front-range": [
       "Denver, CO",
@@ -178,6 +166,30 @@
       "Julian, CA",
       "Borrego Springs, CA",
       "Temecula, CA"
+    ],
+    "roanoke-nrv": [
+      "Pearisburg, VA",
+      "Blacksburg, VA",
+      "Roanoke, VA",
+      "Salem, VA",
+      "Floyd, VA",
+      "Pulaski, VA",
+      "Wytheville, VA",
+      "Galax, VA",
+      "Bedford, VA",
+      "Lexington, VA",
+      "Clifton Forge, VA",
+      "Hot Springs, VA"
+    ],
+    "shenandoah": [
+      "Harrisonburg, VA",
+      "Staunton, VA",
+      "Waynesboro, VA",
+      "Charlottesville, VA",
+      "Luray, VA",
+      "Elkton, VA",
+      "Front Royal, VA",
+      "Woodstock, VA"
     ]
   },
   "next": {
@@ -238,18 +250,6 @@
       "Wellsboro, PA",
       "Jim Thorpe, PA"
     ],
-    "Shenandoah and Central Virginia": [
-      "Charlottesville, VA",
-      "Harrisonburg, VA",
-      "Staunton, VA",
-      "Waynesboro, VA",
-      "Luray, VA",
-      "Elkton, VA",
-      "Front Royal, VA",
-      "Woodstock, VA",
-      "Lynchburg, VA",
-      "Richmond, VA"
-    ],
     "Potomac and Laurel Highlands": [
       "Davis, WV",
       "Morgantown, WV",
@@ -265,12 +265,6 @@
       "Alexandria, VA",
       "Annapolis, MD",
       "Fredericksburg, VA"
-    ],
-    "Coastal Virginia": [
-      "Virginia Beach, VA",
-      "Chesapeake, VA",
-      "Hampton, VA",
-      "Cape Charles, VA"
     ],
     "Kentucky": [
       "Lexington, KY",
@@ -340,6 +334,14 @@
     "Alaska": [
       "Juneau, AK",
       "Homer, AK"
+    ],
+    "Central and Coastal Virginia": [
+      "Richmond, VA",
+      "Lynchburg, VA",
+      "Virginia Beach, VA",
+      "Chesapeake, VA",
+      "Hampton, VA",
+      "Cape Charles, VA"
     ]
   },
   "states": {

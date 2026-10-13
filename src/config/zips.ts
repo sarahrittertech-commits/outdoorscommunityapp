@@ -134,6 +134,16 @@ export const zipPrefixTowns: Record<string, string> = {
   "920": "Escondido",
   "921": "San Diego",
   "925": "Temecula",
+  // Roanoke and the New River Valley
+  "240": "Roanoke",
+  "241": "Blacksburg",
+  "243": "Wytheville",
+  "245": "Lynchburg",
+  "244": "Staunton",
+  // Harrisonburg and the Shenandoah Valley
+  "228": "Harrisonburg",
+  "229": "Charlottesville",
+  "226": "Winchester",
   // Greater Boston
   "021": "Boston",
   "022": "Boston",

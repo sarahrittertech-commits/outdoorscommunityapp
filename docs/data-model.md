@@ -50,7 +50,7 @@ a live one (FR-RG-7).
 | Field | Type | Notes |
 | --- | --- | --- |
 | `id` | uuid | |
-| `slug` | text, unique | `western-nc`, `front-range`, `triangle`, `puget-sound`, `new-river-gorge`, `east-tennessee`, `wasatch`, `reno-tahoe`, `sedona-flagstaff`, `upstate-sc`, `durango-san-juans`, `charlotte`, `northern-vermont`, `greater-boston`, `portland-gorge`, `central-oregon`, `bay-area`, `los-angeles`, `san-diego` |
+| `slug` | text, unique | `western-nc`, `front-range`, `triangle`, `puget-sound`, `new-river-gorge`, `east-tennessee`, `wasatch`, `reno-tahoe`, `sedona-flagstaff`, `upstate-sc`, `durango-san-juans`, `charlotte`, `northern-vermont`, `greater-boston`, `portland-gorge`, `central-oregon`, `bay-area`, `los-angeles`, `san-diego`, `roanoke-nrv`, `shenandoah` |
 | `name` | text | "Western North Carolina", "Colorado Front Range"… |
 | `timezone` | text | IANA zone; new events default to their group's region's zone (FR-RG-10) |
 | `center_lat`, `center_lng` | numeric | Where the map opens (FR-RG-5) |
