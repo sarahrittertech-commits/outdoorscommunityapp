@@ -1389,3 +1389,35 @@ the Smokies.
 
 **Not in this use case:** maps that span a big region, travel times
 between areas, and organizers choosing more than one area for a group.
+
+## UC-41 — Find a community that isn't in any area yet
+
+> **Draft, 13 October 2026, for Sarah's review.** Requested by Sarah that
+> day: people find communities by zip code on the Communities page, so a
+> verified community should be listed whether or not its town is in an
+> open area; ungrouped towns and communities get matched to areas later.
+> Today every community must belong to an area, so about 300 verified
+> communities found by research (Austin, Tucson, Spokane, Bentonville,
+> Ithaca, New York City and others) wait unseen until an area opens.
+
+**Actor:** The newcomer in a town the board hasn't grouped yet; the site
+admin, later
+
+**Trigger:** Lives in Austin, types their zip code on the Communities page.
+
+**Flow:**
+
+1. Enters a zip code (or picks a town) and a distance on Communities.
+2. Sees every verified community within that distance, in an area or not,
+   nearest first. Communities outside any area are marked *Not in an area
+   yet*; everything else about the listing is the same (join, claim,
+   events).
+3. Browsing an area or a big region with no zip code shows only that
+   area's communities, as today; *every region* also shows the ungrouped
+   ones.
+4. Later, the site admin opens *Ungrouped* in the admin pages: the towns
+   and communities with no area, counted by state and by the nearest open
+   area, and either assigns them to an area or opens a new one (UC-35).
+
+**Not in this use case:** guessing an area automatically when a listing
+is added, or a page per ungrouped town.
