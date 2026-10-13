@@ -19,8 +19,8 @@
 import { appendFile } from "node:fs/promises";
 
 import { regions } from "../../../src/config/regions.ts";
-import { eventsFromTribe, htmlText, jsonLdEvents } from "../gemini/lib.mjs";
-import { eventPageLinks, eventsFromIcs, meetupFeed, readJsonLd, robotsAllows } from "./lib.mjs";
+import { htmlText, jsonLdEvents } from "../gemini/lib.mjs";
+import { eventPageLinks, eventsFromIcs, meetupFeed, readJsonLd, readTribe, robotsAllows } from "./lib.mjs";
 
 const INTAKE = "https://rxszqxwpgbrdytbkyxwp.supabase.co/functions/v1/research-intake";
 const UA = "BranchOutdoorsResearch/1.2 (+public community board; reads public event pages weekly)";
@@ -109,7 +109,7 @@ async function readSource(source) {
       const res = await fetchText(api, "application/json");
       if (res.ok && res.type.includes("json")) {
         try {
-          events = eventsFromTribe(JSON.parse(res.text), { timezone });
+          events = readTribe(JSON.parse(res.text), { timezone, region });
           how = "the site's WordPress events calendar";
         } catch {
           // Not The Events Calendar after all.

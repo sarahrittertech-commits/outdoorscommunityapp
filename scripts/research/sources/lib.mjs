@@ -1,7 +1,7 @@
 // The weekly source reader's pure parts (UC-39, FR-ES-3). No network here,
 // so the tests run without the web. read.mjs does the fetching.
 
-import { domainOf, eventsFromJsonLd } from "../gemini/lib.mjs";
+import { domainOf, eventsFromJsonLd, eventsFromTribe } from "../gemini/lib.mjs";
 import { miles } from "../feeds/lib.mjs";
 
 /** States whose events can belong to a region (a hub near a state line). */
@@ -204,6 +204,31 @@ export function eventsFromIcs(text, { pageUrl, timezone, region, now = new Date(
         ev[m[1]] = { value: m[3], params };
       }
     }
+  }
+  return out;
+}
+
+/**
+ * Board-shaped events from The Events Calendar's REST answer, each checked
+ * against the region with its venue's map point or state when the site
+ * gives them.
+ */
+export function readTribe(json, { timezone, region, now = new Date() }) {
+  const out = [];
+  for (const e of Array.isArray(json?.events) ? json.events : []) {
+    const [event] = eventsFromTribe({ events: [e] }, { timezone, now });
+    if (!event) continue;
+    const v = e.venue && typeof e.venue === "object" ? e.venue : {};
+    const lat = Number(v.geo_lat);
+    const lng = Number(v.geo_lng);
+    const node = {
+      location: {
+        ...(Number.isFinite(lat) && Number.isFinite(lng) && (lat || lng) ? { geo: { latitude: lat, longitude: lng } } : {}),
+        address: { addressRegion: v.stateprovince || v.state || v.province || null },
+      },
+    };
+    const far = farReason(node, region);
+    out.push({ ...event, ...(far ? { far } : {}) });
   }
   return out;
 }

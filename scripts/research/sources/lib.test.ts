@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, robotsAllows, stateCode } from "./lib.mjs";
+import { eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode } from "./lib.mjs";
 
 const asheville = { slug: "western-nc", state: "NC", center: { lat: 35.6, lng: -82.55 }, radiusMiles: 100 };
 const now = new Date("2026-10-12T00:00:00Z");
@@ -90,5 +90,19 @@ describe("weekly source reader", () => {
     expect(events[0]).toMatchObject({ title: "Social Ride - Milky Way, BigDipper", starts_at: "2026-11-13T16:30:00", timezone: "America/Denver", verification: "verified" });
     expect(events[1]).toMatchObject({ date_only: true, verification: "unverified" });
     expect(events[2]).toMatchObject({ starts_at: "2026-11-21T15:00:00Z", cancelled: true });
+  });
+
+  it("checks WordPress calendar events against the region when the venue says where", () => {
+    const events = readTribe(
+      {
+        events: [
+          { title: "Park hike", utc_start_date: "2026-11-02 14:00:00", url: "https://parks.example/e/1", venue: { venue: "Gorge", stateprovince: "NC" } },
+          { title: "Desert hike", utc_start_date: "2026-11-03 14:00:00", url: "https://parks.example/e/2", venue: { geo_lat: "38.57", geo_lng: "-109.55" } },
+        ],
+      },
+      { timezone: "America/New_York", region: asheville, now },
+    );
+    expect(events[0].far).toBeUndefined();
+    expect(events[1].far).toMatch(/miles away/);
   });
 });
