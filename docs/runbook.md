@@ -163,6 +163,37 @@ parks, counties, universities), add an entry to `feeds.json` and list its
 venue once. Run by hand: Actions → *Feed reader* → *Run workflow* (tick
 *Dry run* to only count).
 
+### Source reader (from 12 October 2026)
+
+`.github/workflows/source-reader.yml` runs `scripts/research/sources/read.mjs`
+every Monday after the feed reader, with no AI and no cost (UC-39,
+FR-ES-3). It reads every active source in `research.event_sources`: each
+listed host's website, the events pages research recorded, and pages the
+reader noticed itself (an *Events* or *Calendar* link on a homepage, the
+host's Meetup group), which it adds as sources and reads in the same run.
+On each page it takes schema.org event data, or on a WordPress site The
+Events Calendar's public listing, and sends what it found to the research
+intake. `research.record_source_read` then:
+
+- publishes new, timed, verified events whose link is on the host's own
+  pages or a sign-up site, and keeps the rest in `research.source_events`
+  with the reason (no start time, another site, out of the region);
+- moves an event whose start time changed, updates a changed place, and
+  marks one the page calls cancelled, logging each change;
+- never touches a claimed group or anything an organizer posted;
+- marks a source *quiet* after twelve weeks with nothing, *broken* after
+  three failed reads.
+
+It identifies itself (`BranchOutdoorsResearch/1.2`), respects robots.txt,
+waits 1.5 seconds between requests and never signs in. A run leaves a
+summary on the workflow page. Pages with dates but no structured data are
+marked "no structured dates; the page shows dates" for the weekly research
+agent. The site admin sees coverage, quiet and broken sources, every
+region's sources and the change log at **/admin/sources**, and can add or
+retire a source there. Run by hand: Actions → *Source reader* → *Run
+workflow* (tick *Dry run* to read without sending; *limit* to read only a
+few).
+
 ### Gemini sweep (the inexpensive one, from 12 October 2026)
 
 **Revised 12 October 2026, still switched off until Sarah runs it.**

@@ -173,6 +173,17 @@ the intake answers `401`, stop and say so in your summary.
    database rejected a field; its `detail` says which. Fix it and try once
    more, or count it as failed.
 
-6. **Finish with a short summary** in the session: the week's activities,
+6. **Read the pages the source reader couldn't** (UC-39, FR-ES-3). Call
+   the intake with `{"action": "sources", "unstructured": true}`: the
+   listed hosts' pages that show dates but no structured data. Open each
+   one (at most 30 a week), copy only events the page itself shows with a
+   start time, and send them with
+   `{"action": "read", "read": {"source_id": <its id>, "ok": true,
+   "result": "read by the research agent", "events": [...]}}`, each event
+   with `verification: "verified"`, a start with its UTC offset and an IANA
+   `timezone`. A page that won't load: `"ok": false` and the reason in
+   `result`. The database decides what reaches the board.
+
+7. **Finish with a short summary** in the session: the week's activities,
    how many searches you ran, and how many finds came back added, updated,
    events_added and duplicate, plus anything that failed and why.

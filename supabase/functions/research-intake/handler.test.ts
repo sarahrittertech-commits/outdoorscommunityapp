@@ -8,6 +8,8 @@ function db(): Database {
   return {
     known: vi.fn(async () => ({ subcategories: [], names: ["pisgah area sorba"] })),
     addCandidate: vi.fn(async () => ({ result: "added" })),
+    sources: vi.fn(async () => [{ id: "s1" }]),
+    recordRead: vi.fn(async () => ({ result: "read" })),
   };
 }
 
@@ -83,5 +85,22 @@ describe("research intake", () => {
     expect(tokensMatch(TOKEN.slice(1), TOKEN)).toBe(false);
     expect(tokensMatch(`${TOKEN}x`, TOKEN)).toBe(false);
     expect(tokensMatch("", TOKEN)).toBe(false);
+  });
+
+  it("lists event sources and records a read (UC-39)", async () => {
+    const d = db();
+    expect(await (await handle(post({ action: "sources", unstructured: true }), TOKEN, d)).json()).toEqual([{ id: "s1" }]);
+    expect(d.sources).toHaveBeenCalledWith(true);
+    const read = { source_id: "6f1c1f5e-0d2a-4c3b-9a55-1f2e3d4c5b6a", ok: true, events: [] };
+    expect((await handle(post({ action: "read", read }), TOKEN, d)).status).toBe(200);
+    expect(d.recordRead).toHaveBeenCalledWith(read);
+  });
+
+  it("rejects a malformed read without touching the database", async () => {
+    const d = db();
+    for (const read of [null, [], { source_id: "x" }, { source_id: "6f1c1f5e-0d2a-4c3b-9a55-1f2e3d4c5b6a", events: Array(51).fill({}) }]) {
+      expect((await handle(post({ action: "read", read }), TOKEN, d)).status).toBe(400);
+    }
+    expect(d.recordRead).not.toHaveBeenCalled();
   });
 });

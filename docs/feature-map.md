@@ -109,7 +109,7 @@ until the domain is chosen and email sending through Resend is set up.
 | --- | --- | --- | --- |
 | **Guides and shops**: unclaimed listings of guide services and gear shops, listed by the site admin from the research, on their own directory page apart from the communities | **Built 11 Oct** | UC-12 (first part) | FR-BZ-1, FR-BZ-2 (listing), FR-BZ-7 |
 | **Events from guides, shops and venues**: in the Events list by date with the host marked, *community groups only* filter, venue listings, `/h/<id>` event pages that send people to the host | **Built 12 Oct** | UC-37 | FR-BZ-5 (rewritten), FR-BZ-7 |
-| **Event sources**: where each host posts dates, read weekly (feeds first, AI only where there is none), with coverage per region on the admin page | **Approved 12 Oct; first piece built 12 Oct** (weekly feed reader for NC State Parks; sources table, coverage and discovery next) | UC-39 | FR-ES-1 to FR-ES-12, ADR-0011 |
+| **Event sources**: where each host posts dates, read weekly (feeds first, AI only where there is none), with coverage per region on the admin page | **Approved 12 Oct; built 12 Oct** (weekly feed reader for NC State Parks; sources, the weekly source reader, change log, quiet and broken sources, coverage at /admin/sources. Next: registration status, watched annual events, discovery on listing sites) | UC-39 | FR-ES-1 to FR-ES-12, ADR-0011 |
 | **Business pages** owned by the business email account, with their own admins; services, locations and places they operate; a linked group (separate admins) that hosts their events; events they sponsor | In scope | UC-12 | FR-BZ-1 to FR-BZ-7 |
 
 ### Sign-in, claims and new groups

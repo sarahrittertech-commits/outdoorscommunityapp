@@ -666,6 +666,20 @@ from the tables above.
 
 ## Research workspace (not part of the app)
 
+### research.event_sources, research.source_events, research.event_changes
+
+UC-39, FR-ES-1 to FR-ES-5 and FR-ES-9 (built 12 October 2026). Private like
+the rest of the research schema; the site admin reads them only through
+`admin_source_coverage`, `admin_event_sources` and `admin_event_changes`,
+and changes them through `add_event_source` and `set_event_source_status`.
+The weekly reader writes only through `research.record_source_read`.
+
+| Table | Holds |
+| --- | --- |
+| `event_sources` | One page per listed host (a group or a business, never both): url, kind (*own page*, *calendar feed*, *sign-up page*, *Meetup group*, *park or city programs*), status (*active*, *quiet*, *broken*, *retired*), who added it (*research*, *reader*, *admin*), last read and its result, last time it showed an event, events given, failures in a row. Unique per host and url |
+| `source_events` | Every future event a read found, with what happened to it (*published*, *updated*, *cancelled*, *on_board*, *kept*) and, if kept, why. Unique per source, title and start |
+| `event_changes` | Each change the reader made to an event on the board (time, place, cancelled), old and new values, the source and when |
+
 ### research.candidates and research.candidate_events
 
 FR-RS-2 to FR-RS-8. What the weekly research agent finds, waiting for the

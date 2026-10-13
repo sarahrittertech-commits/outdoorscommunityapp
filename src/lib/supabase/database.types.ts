@@ -1031,6 +1031,51 @@ export type Database = {
       skip_business_candidate: { Args: { p_candidate_id: string }; Returns: undefined };
       remove_business: { Args: { p_business_id: string }; Returns: undefined };
       remove_business_event: { Args: { p_event_id: string }; Returns: undefined };
+      admin_source_coverage: {
+        Args: never;
+        Returns: {
+          region_id: string;
+          region_slug: string;
+          region_name: string;
+          hosts: number;
+          hosts_with_source: number;
+          sources_read_this_week: number;
+          needs_attention: number;
+          events_by_organizers: number;
+          events_by_research: number;
+        }[];
+      };
+      admin_event_sources: {
+        Args: { p_region_id: string | null };
+        Returns: {
+          id: string;
+          host_name: string;
+          host_kind: string;
+          host_slug: string;
+          url: string;
+          kind: string;
+          status: string;
+          added_by: string;
+          last_read_at: string | null;
+          last_result: string | null;
+          events_given: number;
+          last_event_at: string | null;
+        }[];
+      };
+      admin_event_changes: {
+        Args: { p_limit?: number };
+        Returns: {
+          changed_at: string;
+          title: string;
+          what: string;
+          old_value: string | null;
+          new_value: string | null;
+          host_name: string | null;
+          source_url: string | null;
+        }[];
+      };
+      add_event_source: { Args: { p_host_kind: string; p_host_slug: string; p_url: string; p_kind: string }; Returns: string };
+      set_event_source_status: { Args: { p_source_id: string; p_status: string }; Returns: undefined };
       can_view_profile: { Args: { p_user: string }; Returns: boolean };
       profile_section_visible: { Args: { p_user: string; p_section: string }; Returns: boolean };
       profile_goal_year: { Args: never; Returns: number };

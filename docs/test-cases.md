@@ -244,6 +244,16 @@ web app is not the thing enforcing the rule.
 | PT-240 | An end time equal to the start is dropped and a bad event link falls back to the find's link | One bad event loses the whole find |
 | PT-241 | A listed guide, shop, venue or company takes new research events only from its own site or a registration site; the rest are kept, not published; event_listings carries the subcategory | Aggregator events go live with no review |
 | PT-242 | A failed find can't be listed by id | A find whose website failed reaches the board |
+| PT-243 | Only the site admin adds, reads or changes event sources; members and visitors are refused, and the research tables are closed to them | Anyone can see or change where the reader looks |
+| PT-244 | A read publishes the host's new, timed, verified events from its own pages, and keeps the rest (no start time, another site, far away) with the reason | Partner or far-away events reach the board |
+| PT-245 | Reading the same page again recognizes events already on the board | Weekly reads duplicate events |
+| PT-246 | A moved start time updates the event and is written to the change log | Old times stay on the board, or changes go unrecorded |
+| PT-247 | An event the page calls cancelled is marked cancelled, not deleted | Cancelled events stay on the board |
+| PT-248 | A venue's source publishes the same way as a group's | Businesses' new events are missed |
+| PT-249 | A claimed group gets nothing from the reader, and its sources aren't read | The reader overwrites an organizer's events |
+| PT-250 | Three failed reads in a row mark a source broken | Dead pages are read forever without anyone noticing |
+| PT-251 | A page the reader notices on a host's site becomes a new source | Events pages linked from homepages are never read |
+| PT-252 | The site admin sees coverage per region and retires a source | The admin can't see or fix gaps |
 
 ## Automated — unit
 

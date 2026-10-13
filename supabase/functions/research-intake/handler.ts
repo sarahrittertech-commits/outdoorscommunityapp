@@ -3,10 +3,12 @@
  *
  * The weekly agent reads untrusted web pages, so it gets no database
  * access of its own. It calls this function with a shared token, and the
- * function runs one of two fixed queries: list what the board already
- * knows, or add one candidate through research.add_candidate, which
- * validates every field. Nothing else is reachable, whatever the agent is
- * told by a page it reads.
+ * function runs one of four fixed queries: list what the board already
+ * knows, add one candidate through research.add_candidate, list the event
+ * sources to read (UC-39), or record one read of a source through
+ * research.record_source_read. The database functions validate every
+ * field. Nothing else is reachable, whatever the agent is told by a page
+ * it reads.
  *
  * Kept free of Deno APIs so the unit tests run under Vitest.
  */
@@ -16,6 +18,8 @@ export type Known = { subcategories: { category: string; subcategory: string; na
 export type Database = {
   known(): Promise<Known>;
   addCandidate(candidate: Record<string, unknown>): Promise<unknown>;
+  sources(onlyUnstructured: boolean): Promise<unknown>;
+  recordRead(read: Record<string, unknown>): Promise<unknown>;
 };
 
 const MAX_BODY_BYTES = 64 * 1024;
@@ -55,9 +59,29 @@ export async function handle(req: Request, token: string | undefined, db: Databa
     return json(400, { error: "invalid_json" });
   }
   if (typeof body !== "object" || body === null || Array.isArray(body)) return json(400, { error: "invalid_request" });
-  const { action, candidate } = body as { action?: unknown; candidate?: unknown };
+  const { action, candidate, read, unstructured } = body as {
+    action?: unknown;
+    candidate?: unknown;
+    read?: unknown;
+    unstructured?: unknown;
+  };
 
   if (action === "known") return json(200, await db.known());
+
+  if (action === "sources") return json(200, await db.sources(unstructured === true));
+
+  if (action === "read") {
+    if (typeof read !== "object" || read === null || Array.isArray(read)) return json(400, { error: "invalid_read" });
+    const { source_id: sourceId, events, discovered } = read as { source_id?: unknown; events?: unknown; discovered?: unknown };
+    if (typeof sourceId !== "string" || !/^[0-9a-f-]{36}$/i.test(sourceId)) return json(400, { error: "invalid_source" });
+    if (events !== undefined && (!Array.isArray(events) || events.length > MAX_EVENTS)) return json(400, { error: "invalid_events" });
+    if (discovered !== undefined && (!Array.isArray(discovered) || discovered.length > 5)) return json(400, { error: "invalid_discovered" });
+    try {
+      return json(200, await db.recordRead(read as Record<string, unknown>));
+    } catch (error) {
+      return json(422, { error: "rejected", detail: error instanceof Error ? error.message : "rejected" });
+    }
+  }
 
   if (action === "add") {
     if (typeof candidate !== "object" || candidate === null || Array.isArray(candidate)) {
