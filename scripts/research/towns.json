@@ -1,41 +1,332 @@
 {
-  "_note": "The towns and states research cycles through (Sarah, 12 October 2026), from her outdoor-town lists (Reddit threads, small adventure towns, top mountain towns) and four articles (Sea to Summit's 23 cities, Day Trip Nomad's best outdoor towns, Yahoo's 13 small towns; Outside's list needs a sign-in and wasn't read). 'live' towns are inside a live region, so what research finds there can reach the board. 'next' towns are outside every live region: finds are kept as out of region (FR-RS-13) until a region opens there, grouped by the region they would belong to. For each town, search its parks and recreation calendar, its visitor bureau or tourism events calendar, and its economic development office's outdoor recreation page; for each state, its state parks events calendar and its outdoor recreation office, if it has one.",
+  "_note": "The towns and states research cycles through (Sarah, 12 October 2026), from her outdoor-town lists (Reddit threads, small adventure towns, top mountain towns, Blue Ridge Outdoors' tiny to large adventure towns, Great Lakes and Driftless hubs, New England and Mid-Atlantic hubs) and articles (Sea to Summit's 23 cities, Day Trip Nomad, Yahoo's 13 small towns, Deep Creek Times, New England Today; Outside's list needs a sign-in and wasn't read). Towns were placed by distance from each region's hub (100 miles). 'live' towns are inside a live region, so what research finds there can reach the board. 'next' towns are outside every live region: finds are kept as out of region (FR-RS-13) until a region opens there, grouped by the region they would belong to. For each town, search its parks and recreation calendar, its visitor bureau or tourism events calendar, and its economic development office's outdoor recreation page; for each state, its state parks events calendar and its outdoor recreation office, if it has one.",
   "live": {
-    "western-nc": ["Asheville, NC", "Brevard, NC", "Boone, NC", "Highlands, NC"],
-    "triangle": ["Raleigh, NC", "Durham, NC", "Chapel Hill, NC"],
-    "upstate-sc": ["Greenville, SC", "Walhalla, SC", "Highlands, NC"],
-    "east-tennessee": ["Knoxville, TN", "Chattanooga, TN"],
-    "new-river-gorge": ["Fayetteville, WV", "Pearisburg, VA"],
-    "front-range": ["Denver, CO", "Boulder, CO", "Fort Collins, CO", "Golden, CO"],
-    "durango-san-juans": ["Durango, CO", "Silverton, CO", "Telluride, CO"],
-    "wasatch": ["Salt Lake City, UT", "Park City, UT", "Ogden, UT"],
-    "puget-sound": ["Seattle, WA", "Bellingham, WA", "Mazama, WA"],
-    "reno-tahoe": ["Reno, NV", "Truckee, CA", "South Lake Tahoe, CA"],
-    "sedona-flagstaff": ["Flagstaff, AZ", "Sedona, AZ"]
+    "western-nc": [
+      "Asheville, NC",
+      "Brevard, NC",
+      "Boone, NC",
+      "Highlands, NC",
+      "Blowing Rock, NC",
+      "Hendersonville, NC",
+      "Morganton, NC",
+      "Old Fort, NC",
+      "Hot Springs, NC",
+      "Sylva, NC",
+      "Cherokee, NC",
+      "Franklin, NC",
+      "Lake Junaluska, NC",
+      "Johnson City, TN",
+      "Bristol, VA",
+      "Abingdon, VA",
+      "Damascus, VA"
+    ],
+    "triangle": [
+      "Raleigh, NC",
+      "Durham, NC",
+      "Chapel Hill, NC",
+      "Hillsborough, NC",
+      "Wentworth, NC",
+      "Danville, VA"
+    ],
+    "upstate-sc": [
+      "Greenville, SC",
+      "Walhalla, SC",
+      "Highlands, NC",
+      "Athens, GA",
+      "Dahlonega, GA",
+      "Augusta, GA",
+      "Ninety Six, SC"
+    ],
+    "east-tennessee": [
+      "Knoxville, TN",
+      "Chattanooga, TN",
+      "Maryville, TN",
+      "Gatlinburg, TN",
+      "Clinton, TN",
+      "Cleveland, TN",
+      "Bryson City, NC",
+      "Robbinsville, NC",
+      "Blue Ridge, GA",
+      "Ellijay, GA",
+      "Corbin, KY"
+    ],
+    "new-river-gorge": [
+      "Fayetteville, WV",
+      "Pearisburg, VA",
+      "Summersville, WV",
+      "Hinton, WV",
+      "Lewisburg, WV",
+      "Marlinton, WV",
+      "Charleston, WV",
+      "Blacksburg, VA",
+      "Roanoke, VA",
+      "Salem, VA",
+      "Floyd, VA",
+      "Pulaski, VA",
+      "Wytheville, VA",
+      "Galax, VA",
+      "Bedford, VA",
+      "Lexington, VA",
+      "Clifton Forge, VA",
+      "Hot Springs, VA"
+    ],
+    "front-range": [
+      "Denver, CO",
+      "Boulder, CO",
+      "Fort Collins, CO",
+      "Golden, CO"
+    ],
+    "durango-san-juans": [
+      "Durango, CO",
+      "Silverton, CO",
+      "Telluride, CO"
+    ],
+    "wasatch": [
+      "Salt Lake City, UT",
+      "Park City, UT",
+      "Ogden, UT"
+    ],
+    "puget-sound": [
+      "Seattle, WA",
+      "Bellingham, WA",
+      "Mazama, WA",
+      "Olympia, WA"
+    ],
+    "reno-tahoe": [
+      "Reno, NV",
+      "Truckee, CA",
+      "South Lake Tahoe, CA",
+      "Auburn, CA",
+      "Folsom, CA"
+    ],
+    "sedona-flagstaff": [
+      "Flagstaff, AZ",
+      "Sedona, AZ"
+    ],
+    "charlotte": [
+      "Charlotte, NC",
+      "Huntersville, NC",
+      "Hickory, NC",
+      "Winston-Salem, NC",
+      "Elkin, NC",
+      "Columbia, SC",
+      "Chester, SC"
+    ],
+    "northern-vermont": [
+      "Burlington, VT",
+      "Stowe, VT",
+      "Waterbury, VT",
+      "Waitsfield, VT",
+      "East Burke, VT",
+      "Lake Placid, NY",
+      "Saranac Lake, NY",
+      "Rumney, NH"
+    ],
+    "greater-boston": [
+      "Boston, MA",
+      "Cambridge, MA",
+      "Concord, MA",
+      "Quincy, MA",
+      "Providence, RI"
+    ]
   },
   "next": {
-    "Oregon": ["Portland, OR", "Bend, OR", "Ashland, OR"],
-    "Idaho": ["Boise, ID", "McCall, ID"],
-    "Montana and Wyoming": ["Missoula, MT", "Bozeman, MT", "Jackson, WY", "Cody, WY"],
-    "Colorado mountains": ["Aspen, CO", "Carbondale, CO"],
-    "Utah and Arizona canyon country": ["Moab, UT", "Kanab, UT", "Page, AZ"],
-    "Southern Arizona": ["Tucson, AZ", "Patagonia, AZ"],
-    "New Mexico": ["Albuquerque, NM"],
-    "Nevada": ["Las Vegas, NV"],
-    "California": ["San Francisco, CA", "Los Angeles, CA", "San Diego, CA", "Santa Barbara, CA", "Mammoth Lakes, CA"],
-    "Eastern Washington": ["Spokane, WA", "Winthrop, WA"],
-    "Vermont": ["Burlington, VT", "Stowe, VT", "Waitsfield, VT"],
-    "Maine": ["Portland, ME", "Bethel, ME"],
-    "Upstate New York and Pennsylvania": ["Ithaca, NY", "Wellsboro, PA"],
-    "Kentucky": ["Stanton, KY"],
-    "Coastal South Carolina": ["Charleston, SC", "Hilton Head, SC"],
-    "Alabama": ["Mentone, AL"],
-    "Great Lakes and Midwest": ["Chicago, IL", "Utica, IL", "Madison, WI", "Sturgeon Bay, WI", "Grand Rapids, MI", "Minneapolis, MN", "Ely, MN", "Nashville, IN"],
-    "Texas and the Plains": ["Austin, TX", "Tyler, TX", "Scott City, KS"],
-    "Florida": ["Orlando, FL"]
+    "Oregon": [
+      "Portland, OR",
+      "Bend, OR",
+      "Ashland, OR"
+    ],
+    "Idaho": [
+      "Boise, ID",
+      "McCall, ID"
+    ],
+    "Montana and Wyoming": [
+      "Missoula, MT",
+      "Bozeman, MT",
+      "Jackson, WY",
+      "Cody, WY"
+    ],
+    "Colorado mountains": [
+      "Aspen, CO",
+      "Carbondale, CO"
+    ],
+    "Utah and Arizona canyon country": [
+      "Moab, UT",
+      "Kanab, UT",
+      "Page, AZ"
+    ],
+    "Southern Arizona": [
+      "Tucson, AZ",
+      "Patagonia, AZ"
+    ],
+    "New Mexico": [
+      "Albuquerque, NM"
+    ],
+    "Nevada": [
+      "Las Vegas, NV"
+    ],
+    "California coast": [
+      "San Francisco, CA",
+      "Los Angeles, CA",
+      "San Diego, CA",
+      "Santa Barbara, CA"
+    ],
+    "Eastern Sierra": [
+      "Mammoth Lakes, CA",
+      "Bishop, CA"
+    ],
+    "Eastern Washington": [
+      "Spokane, WA",
+      "Winthrop, WA"
+    ],
+    "New Hampshire and Maine": [
+      "North Conway, NH",
+      "Portland, ME",
+      "Bethel, ME",
+      "Bar Harbor, ME"
+    ],
+    "Upstate New York and Pennsylvania": [
+      "Ithaca, NY",
+      "Wellsboro, PA"
+    ],
+    "Shenandoah and Central Virginia": [
+      "Charlottesville, VA",
+      "Harrisonburg, VA",
+      "Staunton, VA",
+      "Waynesboro, VA",
+      "Luray, VA",
+      "Elkton, VA",
+      "Front Royal, VA",
+      "Woodstock, VA",
+      "Lynchburg, VA",
+      "Richmond, VA"
+    ],
+    "Potomac and Laurel Highlands": [
+      "Davis, WV",
+      "Morgantown, WV",
+      "Ohiopyle, PA",
+      "Frostburg, MD",
+      "Cumberland, MD",
+      "Pittsburgh, PA"
+    ],
+    "Washington and Harpers Ferry": [
+      "Harpers Ferry, WV",
+      "Boonsboro, MD",
+      "Frederick, MD",
+      "Alexandria, VA",
+      "Annapolis, MD",
+      "Fredericksburg, VA"
+    ],
+    "Coastal Virginia": [
+      "Virginia Beach, VA",
+      "Chesapeake, VA",
+      "Hampton, VA",
+      "Cape Charles, VA"
+    ],
+    "Kentucky": [
+      "Lexington, KY",
+      "Slade, KY (Red River Gorge)",
+      "Stanton, KY",
+      "Frankfort, KY",
+      "Whitesburg, KY",
+      "Shepherdsville, KY",
+      "Bowling Green, KY"
+    ],
+    "Atlanta and North Georgia": [
+      "Alpharetta, GA",
+      "Roswell, GA",
+      "Woodstock, GA",
+      "Columbus, GA"
+    ],
+    "Coastal Carolinas": [
+      "Wilmington, NC",
+      "Charleston, SC",
+      "Hilton Head, SC"
+    ],
+    "Nashville and Middle Tennessee": [
+      "Clarksville, TN"
+    ],
+    "Philadelphia": [
+      "Philadelphia, PA"
+    ],
+    "Alabama": [
+      "Mentone, AL"
+    ],
+    "Ozarks": [
+      "Bentonville, AR"
+    ],
+    "Lake Superior and the Northwoods": [
+      "Duluth, MN",
+      "Marquette, MI",
+      "Copper Harbor, MI",
+      "Hayward, WI",
+      "Ely, MN"
+    ],
+    "Driftless and Great Lakes": [
+      "Decorah, IA",
+      "Galena, IL",
+      "Utica, IL",
+      "Madison, WI",
+      "Sturgeon Bay, WI",
+      "Grand Rapids, MI",
+      "Chicago, IL",
+      "Minneapolis, MN",
+      "Nashville, IN"
+    ],
+    "Northeast Ohio": [
+      "Peninsula, OH"
+    ],
+    "Texas and the Plains": [
+      "Austin, TX",
+      "Tyler, TX",
+      "Scott City, KS"
+    ],
+    "Florida": [
+      "Orlando, FL"
+    ]
   },
   "states": {
-    "live": ["NC", "SC", "TN", "WV", "VA", "CO", "UT", "WA", "NV", "CA", "AZ"],
-    "next": ["OR", "ID", "MT", "WY", "NM", "VT", "ME", "NY", "PA", "KY", "AL", "IL", "WI", "MI", "MN", "IN", "TX", "KS", "FL"]
+    "live": [
+      "NC",
+      "SC",
+      "TN",
+      "WV",
+      "VA",
+      "GA",
+      "CO",
+      "UT",
+      "WA",
+      "NV",
+      "CA",
+      "AZ",
+      "VT",
+      "NY",
+      "NH",
+      "MA",
+      "RI"
+    ],
+    "next": [
+      "OR",
+      "ID",
+      "MT",
+      "WY",
+      "NM",
+      "ME",
+      "PA",
+      "MD",
+      "KY",
+      "AL",
+      "AR",
+      "IL",
+      "WI",
+      "MI",
+      "MN",
+      "IA",
+      "IN",
+      "OH",
+      "TX",
+      "KS",
+      "FL"
+    ]
   }
 }
