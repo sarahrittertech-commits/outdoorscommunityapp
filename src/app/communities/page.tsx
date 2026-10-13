@@ -10,7 +10,7 @@ import { pageFrom, Pagination } from "@/components/Pagination";
 import { RegionScope } from "@/components/RegionScope";
 import { site } from "@/config/site";
 import { distances } from "@/config/towns";
-import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
+import { getCurrentRegion, regionFilterIds, scopeName } from "@/lib/currentRegion";
 import { aboutMiles, milesBetween, resolveLocation, townForArea, townKey } from "@/lib/geo";
 import { groupCoverUrl } from "@/lib/groupCovers";
 import { GROUP_TYPES, isGroupType } from "@/lib/groupTypes";
@@ -61,7 +61,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
   // with ?region=all). Near a town or zip, distance decides, across every
   // region, so a town outside the region still works.
   const browsing = await getCurrentRegion(params.region);
-  const regionId = near ? null : await regionFilterId(browsing);
+  const areaIds = near ? null : await regionFilterIds(browsing);
   // The other filters' links keep the place, so filters combine.
   const kept: Filters = near
     ? { category, type, near: townKey(near), zip: location.zip, within }
@@ -73,7 +73,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
     let query = supabase.from("group_listings").select(COLUMNS, { count: "exact" }).eq("status", "active").order("name");
     if (category) query = query.eq("category_slug", category);
     if (type) query = query.eq("group_type", type);
-    if (regionId) query = query.eq("region_id", regionId);
+    if (areaIds) query = query.in("region_id", areaIds);
     return query;
   };
   const listPage = (n: number) => listQuery().range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
@@ -82,8 +82,8 @@ export default async function CommunitiesPage({ searchParams }: Props) {
     // Near a place, distance comes from each group's free-text area, worked
     // out here, so every matching group is fetched and paged after sorting.
     near ? listQuery().limit(2000) : listPage(asked),
-    regionId
-      ? supabase.from("subcategory_region_counts").select("category_slug, group_count").eq("region_id", regionId)
+    areaIds
+      ? supabase.from("subcategory_region_counts").select("category_slug, group_count").in("region_id", areaIds)
       : supabase.from("subcategory_group_counts").select("category_slug, group_count"),
     supabase.from("categories").select("slug, name").order("sort_order"),
   ]);
@@ -241,7 +241,7 @@ export default async function CommunitiesPage({ searchParams }: Props) {
               {unmappedCount > 0 && `, then ${unmappedCount} whose area isn’t on the map`}. Anyone can look; sign in to join.
             </>
           ) : (
-            <>Local groups and clubs {browsing.all ? "in every region" : `in ${browsing.region.name}`}, A to Z. Anyone can look; sign in to join.</>
+            <>Local groups and clubs in {scopeName(browsing)}, A to Z. Anyone can look; sign in to join.</>
           )}
         </p>
         {!near && <RegionScope current={browsing} path="/communities" query={{ category, type }} className="mt-2 text-sm text-muted" />}

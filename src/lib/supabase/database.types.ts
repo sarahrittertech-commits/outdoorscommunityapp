@@ -68,6 +68,12 @@ export type Database = {
         Update: never;
         Relationships: [];
       };
+      region_groups: {
+        Row: { id: string; slug: string; name: string; sort_order: number };
+        Insert: { id?: string; slug: string; name: string; sort_order?: number };
+        Update: { id?: string; slug?: string; name?: string; sort_order?: number };
+        Relationships: [];
+      };
       regions: {
         Row: {
           id: string;
@@ -81,6 +87,7 @@ export type Database = {
           status: "live" | "coming_soon";
           sort_order: number;
           hub_towns: string[];
+          group_id: string | null;
         };
         Insert: {
           id?: string;

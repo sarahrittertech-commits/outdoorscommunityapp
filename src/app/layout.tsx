@@ -8,6 +8,7 @@ import { Mark } from "@/brand/Mark";
 import { site } from "@/config/site";
 import { getViewer } from "@/lib/auth";
 import { getCurrentRegion } from "@/lib/currentRegion";
+import { groupOf } from "@/lib/regions";
 import { safeNext } from "@/lib/navigation";
 import { REQUEST_PATH_HEADER } from "@/lib/regions";
 import { createClient } from "@/lib/supabase/server";
@@ -36,7 +37,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   // FR-DM-4: conversations with unread messages, counted when the page loads.
   // Nothing updates by itself, and nothing about the other person is shown.
   const unread = viewer ? ((await (await createClient()).rpc("unread_conversation_count")).data ?? 0) : 0;
-  const { region } = await getCurrentRegion();
+  const current = await getCurrentRegion();
+  const { region } = current;
+  // UC-40: "Southeast › Charlotte", or "All of the Southeast", or "All regions".
+  const browsingLabel = current.all
+    ? "All regions"
+    : current.group
+      ? `All of the ${current.group.name}`
+      : `${groupOf(region).name} › ${region.shortName}`;
   const requestPath = safeNext((await headers()).get(REQUEST_PATH_HEADER));
 
   return (
@@ -56,9 +64,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               href={`/regions?next=${encodeURIComponent(requestPath)}`}
               prefetch={false}
               className="shrink-0 whitespace-nowrap text-sm text-muted"
-              aria-label={`${region.shortName} (region). Change region`}
+              aria-label={`${browsingLabel}. Change`}
             >
-              {region.shortName}
+              {browsingLabel}
               <span className="hidden xl:inline"> · change</span>
             </Link>
             <nav aria-label="Main" className="flex shrink-0 items-baseline gap-x-4 whitespace-nowrap text-base">

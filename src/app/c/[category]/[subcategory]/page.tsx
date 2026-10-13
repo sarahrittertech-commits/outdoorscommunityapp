@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { EventList, GroupList } from "@/components/Listings";
 import { pageFrom, Pagination } from "@/components/Pagination";
 import { RegionScope } from "@/components/RegionScope";
-import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
+import { getCurrentRegion, regionFilterIds } from "@/lib/currentRegion";
 import { createClient } from "@/lib/supabase/server";
 
 const PAGE_SIZE = 50;
@@ -46,7 +46,7 @@ export default async function SubcategoryPage({ params, searchParams }: Props) {
   const asked = pageFrom(query.page);
   // Regions: the region being browsed, or every region with ?region=all.
   const current = await getCurrentRegion(query.region);
-  const regionId = await regionFilterId(current);
+  const areaIds = await regionFilterIds(current);
   // Links keep the region asked for (?region=<slug> or all), not just "all".
   const scoped = (path: string) => (current.param ? `${path}?region=${current.param}` : path);
 
@@ -56,7 +56,7 @@ export default async function SubcategoryPage({ params, searchParams }: Props) {
       .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags", { count: "exact" })
       .eq("subcategory_id", subcategory.id)
       .eq("status", "active");
-    if (regionId) list = list.eq("region_id", regionId);
+    if (areaIds) list = list.in("region_id", areaIds);
     return list.order("name").range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
   };
   // A page number past the end shows the last page, as on the category page.
@@ -77,7 +77,7 @@ export default async function SubcategoryPage({ params, searchParams }: Props) {
     .eq("status", "scheduled")
     .eq("subcategory_id", subcategory.id)
     .gt("starts_at", new Date().toISOString());
-  if (regionId) upcoming = upcoming.eq("region_id", regionId);
+  if (areaIds) upcoming = upcoming.in("region_id", areaIds);
   const { data: events, count: eventCount } = page === 1 ? await upcoming.order("starts_at").limit(EVENTS_SHOWN) : { data: [], count: 0 };
 
   return (

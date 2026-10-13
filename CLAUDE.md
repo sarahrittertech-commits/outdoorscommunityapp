@@ -89,7 +89,7 @@ that work in any browser.
 Built on 11 October 2026: UC-34 and UC-35 (regions: one board,
 many regions built around hub cities; see ADR-0010) and the first part of
 UC-12 (guide services and gear shops as unclaimed listings in their own
-*Guides and shops* directory). Built on 12 October 2026: three more regions (Charlotte and Lake Norman, Burlington and Northern Vermont, Greater Boston; fourteen live in all), UC-39's event sources with a weekly source reader (/admin/sources), UC-37 (events
+*Guides and shops* directory). Built on 13 October 2026: UC-40, eight big regions over the fourteen local areas (ADR-0012), browsable at either level. Built on 12 October 2026: three more regions (Charlotte and Lake Norman, Burlington and Northern Vermont, Greater Boston; fourteen live in all), UC-39's event sources with a weekly source reader (/admin/sources), UC-37 (events
 from guides, shops and venues in the Events list, marked with the host,
 with a *community groups only* filter; venues as a third kind). Draft use cases awaiting review:
 UC-10 (series only), UC-11 to UC-13, UC-23, UC-25, UC-26, UC-28, UC-36 and UC-38. UC-39 (event sources, ADR-0011) was approved on 12 October; its requirements are FR-ES. UC-25 and UC-26 wait on a domain and email. On 8 October

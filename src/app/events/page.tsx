@@ -8,7 +8,7 @@ import { LocationFilter, UnknownZip } from "@/components/LocationFilter";
 import { Notice } from "@/components/Notice";
 import { RegionScope } from "@/components/RegionScope";
 import { distances } from "@/config/towns";
-import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
+import { getCurrentRegion, regionFilterIds, scopeName } from "@/lib/currentRegion";
 import { milesBetween, resolveLocation, townForArea, townKey } from "@/lib/geo";
 import { regionForTown } from "@/lib/regions";
 import { GROUP_TYPES, isGroupType } from "@/lib/groupTypes";
@@ -48,7 +48,7 @@ export default async function EventsPage({ searchParams }: Props) {
   // with ?region=all). Near a town or zip, distance decides, across every
   // region, so a town outside the region still works.
   const browsing = await getCurrentRegion(params.region);
-  const regionId = near ? null : await regionFilterId(browsing);
+  const areaIds = near ? null : await regionFilterIds(browsing);
   const regionParam = near ? undefined : browsing.param;
   const monthFormat = new Intl.DateTimeFormat("en-US", {
     timeZone: (near && regionForTown(near)?.timezone) || browsing.region.timezone,
@@ -81,7 +81,7 @@ export default async function EventsPage({ searchParams }: Props) {
     .lt("starts_at", startsInWindow.to);
   if (category) listing = listing.eq("category_slug", category);
   if (type) listing = listing.in("group_slug", (groupRows ?? []).filter((g) => g.group_type === type).map((g) => g.slug));
-  if (regionId) listing = listing.eq("region_id", regionId);
+  if (areaIds) listing = listing.in("region_id", areaIds);
   if (groupsOnly) listing = listing.eq("host_kind", "group");
 
   let countQuery = supabase
@@ -90,7 +90,7 @@ export default async function EventsPage({ searchParams }: Props) {
     .eq("status", "scheduled")
     .gt("starts_at", startsInWindow.from)
     .lt("starts_at", startsInWindow.to);
-  if (regionId) countQuery = countQuery.eq("region_id", regionId);
+  if (areaIds) countQuery = countQuery.in("region_id", areaIds);
   if (groupsOnly) countQuery = countQuery.eq("host_kind", "group");
 
   const [{ data: all }, { data: categories }, { data: countRows }] = await Promise.all([
@@ -266,7 +266,7 @@ export default async function EventsPage({ searchParams }: Props) {
         </h1>
         <p className="mt-2 border-b border-rule pb-3 text-subtle">
           {events.length} upcoming in the {WINDOWS.find((w) => w.days === days)!.label}
-          {near ? `, within ${within} miles of ${place}` : browsing.all ? " in every region" : ` in ${browsing.region.name}`}, soonest first
+          {near ? `, within ${within} miles of ${place}` : ` in ${scopeName(browsing)}`}, soonest first
         </p>
         {!near && (
           <RegionScope

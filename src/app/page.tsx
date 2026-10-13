@@ -13,7 +13,7 @@ import { getViewer } from "@/lib/auth";
 import { parseCalendarParams } from "@/lib/calendar";
 import { getCurrentRegion, regionIds } from "@/lib/currentRegion";
 import { aboutMiles, countWithin, findTown, milesBetween, townForArea, townKey } from "@/lib/geo";
-import { hubTown, regionForTown } from "@/lib/regions";
+import { hubTown, liveAreasIn, regionForTown } from "@/lib/regions";
 import { eventHref, hostHref, hostKindLabel, hostName, isGroupEvent } from "@/lib/hosts";
 import { createClient } from "@/lib/supabase/server";
 import { dateParts } from "@/lib/time";
@@ -49,21 +49,22 @@ export default async function Home({ searchParams }: Props) {
 
   const supabase = await createClient();
   const ids = await regionIds();
-  const upcoming = (regionSlug: string | null) => {
+  const upcoming = (regionSlugs: string[] | null) => {
     let query = supabase
       .from("event_listings")
       .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text")
       .eq("status", "scheduled")
       .gt("starts_at", new Date().toISOString());
-    if (regionSlug) query = query.eq("region_id", ids.get(regionSlug) ?? "00000000-0000-0000-0000-000000000000");
+    if (regionSlugs) query = query.in("region_id", regionSlugs.map((slug) => ids.get(slug) ?? "00000000-0000-0000-0000-000000000000"));
     return query.order("starts_at").limit(300);
   };
-  const shownRegion = current.all ? null : region.slug;
+  // One area, every area of a big region (UC-40), or everything.
+  const shownRegions = current.all ? null : current.group ? liveAreasIn(current.group.slug).map((r) => r.slug) : [region.slug];
   const [{ data: categories }, { data: events }, { data: nearEvents }, { data: groups }] = await Promise.all([
     supabase.from("categories").select("slug, name").order("sort_order"),
-    upcoming(shownRegion),
+    upcoming(shownRegions),
     // Only a second query when Near you is in another region than the page.
-    shownRegion && nearRegion.slug !== shownRegion ? upcoming(nearRegion.slug) : Promise.resolve({ data: null }),
+    shownRegions && !shownRegions.includes(nearRegion.slug) ? upcoming([nearRegion.slug]) : Promise.resolve({ data: null }),
     supabase.from("groups").select("slug, area").eq("status", "active").eq("review_status", "approved"),
   ]);
 

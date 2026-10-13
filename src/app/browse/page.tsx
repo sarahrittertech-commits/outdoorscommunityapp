@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { ActivityIcon } from "@/brand/ActivityIcon";
 import { RegionScope } from "@/components/RegionScope";
-import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
+import { getCurrentRegion, regionFilterIds } from "@/lib/currentRegion";
 import { createClient } from "@/lib/supabase/server";
 
 type Subcategory = { slug: string; name: string; count: number };
@@ -23,19 +23,19 @@ type Props = { searchParams: Promise<Record<string, string | string[] | undefine
  */
 export default async function BrowsePage({ searchParams }: Props) {
   const current = await getCurrentRegion((await searchParams).region);
-  const regionId = await regionFilterId(current);
+  const areaIds = await regionFilterIds(current);
   const supabase = await createClient();
   const columns = "category_slug, category_name, subcategory_slug, subcategory_name, group_count";
-  const { data: rows } = regionId
+  const { data: rows } = areaIds
     ? await supabase
         .from("subcategory_region_counts")
         .select(columns)
-        .eq("region_id", regionId)
+        .in("region_id", areaIds)
         .order("category_sort_order")
         .order("subcategory_sort_order")
     : await supabase.from("subcategory_group_counts").select(columns).order("category_sort_order").order("subcategory_sort_order");
-  // Category and subcategory links carry "all regions" along when it's on.
-  const scoped = (path: string) => (current.all ? `${path}?region=all` : path);
+  // Category and subcategory links carry the region asked for (an area, a big region or "all").
+  const scoped = (path: string) => (current.param ? `${path}?region=${current.param}` : path);
 
   const categories: Category[] = [];
   for (const row of rows ?? []) {
@@ -44,7 +44,10 @@ export default async function BrowsePage({ searchParams }: Props) {
       category = { slug: row.category_slug!, name: row.category_name!, subcategories: [] };
       categories.push(category);
     }
-    category.subcategories.push({ slug: row.subcategory_slug!, name: row.subcategory_name!, count: row.group_count ?? 0 });
+    // A big region (UC-40) gives one row per area: add them up.
+    const sub = category.subcategories.find((x) => x.slug === row.subcategory_slug);
+    if (sub) sub.count += row.group_count ?? 0;
+    else category.subcategories.push({ slug: row.subcategory_slug!, name: row.subcategory_name!, count: row.group_count ?? 0 });
   }
   const total = categories.flatMap((c) => c.subcategories).reduce((sum, s) => sum + s.count, 0);
 

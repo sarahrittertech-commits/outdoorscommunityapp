@@ -254,6 +254,8 @@ web app is not the thing enforcing the rule.
 | PT-250 | Three failed reads in a row mark a source broken | Dead pages are read forever without anyone noticing |
 | PT-251 | A page the reader notices on a host's site becomes a new source | Events pages linked from homepages are never read |
 | PT-252 | The site admin sees coverage per region and retires a source | The admin can't see or fix gaps |
+| PT-253 | Visitors read the eight big regions; nobody adds or renames one outside a migration | Big regions changed from the app |
+| PT-254 | Every live area belongs to a big region | An area missing from every big region's view |
 
 ## Automated — unit
 

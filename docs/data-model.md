@@ -58,6 +58,20 @@ a live one (FR-RG-7).
 | `state` | text | Two-letter state of the main hub |
 | `status` | text | `live` or `coming_soon` |
 | `sort_order` | integer | Order on the Regions page |
+| `group_id` | uuid → `region_groups` | The big region the area belongs to (UC-40, added 13 Oct 2026) |
+
+### region_groups
+
+Big regions over the local areas (UC-40, [ADR-0012](./architecture/adr-0012-region-groups),
+added 13 October 2026). On the site these are *regions* and each `regions`
+row is an *area*. Readable by everyone; written only by migrations.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `slug` | text, unique | `southeast`, `mid-atlantic`, `northeast`, `midwest`, `rockies`, `southwest`, `far-west`, `pacific-northwest` |
+| `name` | text | "Southeast", "Far West and Sierra"… |
+| `sort_order` | integer | Order on the Regions page |
 | `hub_towns` | text[] | Hub town names, as in the app's town list |
 
 The app keeps a matching list in `src/config/regions.ts` (short name for

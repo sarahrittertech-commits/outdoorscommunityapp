@@ -1,3 +1,4 @@
+import { regionGroups, type RegionGroup } from "@/config/regionGroups";
 import { regions, type Region } from "@/config/regions";
 import { site } from "@/config/site";
 import { towns, type Town } from "@/config/towns";
@@ -38,6 +39,26 @@ export function isLiveRegion(slug: unknown): slug is string {
   return typeof slug === "string" && getRegion(slug)?.status === "live";
 }
 
+/** A big region by slug (UC-40), or undefined. */
+export function getGroup(slug: string | null | undefined): RegionGroup | undefined {
+  return slug ? regionGroups.find((g) => g.slug === slug) : undefined;
+}
+
+/** The big region an area belongs to. */
+export function groupOf(region: Region): RegionGroup {
+  return getGroup(region.group)!;
+}
+
+/** An area's live neighbours in its big region, itself included, in list order. */
+export function liveAreasIn(groupSlug: string): Region[] {
+  return liveRegions().filter((r) => r.group === groupSlug);
+}
+
+/** Whether a slug names a big region with at least one live area. */
+export function isLiveGroup(slug: unknown): slug is string {
+  return typeof slug === "string" && liveAreasIn(slug).length > 0;
+}
+
 /** The region a town (a Town, or a name or key) is in. */
 export function regionForTown(town: Town | string | null | undefined): Region | undefined {
   const t = typeof town === "string" ? findTown(town) : town;
@@ -69,28 +90,41 @@ export function nearestRegion(lat: number, lng: number, { anyDistance = false } 
 }
 
 /**
- * Which region a visitor is browsing, in this order:
+ * Which area a visitor is browsing, in this order:
  *
- * 1. `?region=` in the address (a shared link, or "All regions": `all`);
- * 2. the `region` cookie, set when they chose one on /regions;
- * 3. the region of the home town on their profile, if signed in;
- * 4. the board's default region.
+ * 1. `?region=` in the address (a shared link; "All regions": `all`; a big
+ *    region such as `southeast`, UC-40);
+ * 2. the `region` cookie, set when they chose an area or a big region on
+ *    /regions;
+ * 3. the area of the home town on their profile, if signed in;
+ * 4. the board's default area.
  *
- * Anything that isn't a live region is skipped. Nothing here is stored.
+ * Anything that isn't a live area or a big region with one is skipped.
+ * With a big region, `slug` is the area its pages centre on (the remembered
+ * area if it is in that region, else the region's first). Nothing here is
+ * stored.
  */
 export function resolveRegionSlug(sources: { param?: unknown; cookie?: string | null; profileTown?: string | null }): {
   slug: string;
   all: boolean;
+  group?: string;
 } {
   const param = Array.isArray(sources.param) ? sources.param[0] : sources.param;
   const fallback = () => {
     if (isLiveRegion(sources.cookie)) return sources.cookie;
+    if (isLiveGroup(sources.cookie)) return liveAreasIn(sources.cookie)[0].slug;
     const fromTown = regionForTown(sources.profileTown);
     if (fromTown?.status === "live") return fromTown.slug;
     return site.defaultRegionSlug;
   };
+  const inGroup = (group: string) => {
+    const area = fallback();
+    return getRegion(area)?.group === group ? area : liveAreasIn(group)[0].slug;
+  };
   if (param === ALL_REGIONS) return { slug: fallback(), all: true };
   if (isLiveRegion(param)) return { slug: param, all: false };
+  if (isLiveGroup(param)) return { slug: inGroup(param), all: false, group: param };
+  if (param === undefined && isLiveGroup(sources.cookie)) return { slug: inGroup(sources.cookie), all: false, group: sources.cookie };
   return { slug: fallback(), all: false };
 }
 

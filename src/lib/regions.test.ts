@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { regionGroups } from "@/config/regionGroups";
 import { regions } from "@/config/regions";
 import { site } from "@/config/site";
 import { towns } from "@/config/towns";
@@ -8,7 +9,10 @@ import { zipPrefixTowns, zipTowns } from "@/config/zips";
 import { findTown, milesBetween, townForArea, townForZip, townKey } from "./geo";
 import {
   getRegion,
+  groupOf,
   hubTown,
+  isLiveGroup,
+  liveAreasIn,
   liveRegions,
   nearestRegion,
   regionForTown,
@@ -155,6 +159,35 @@ describe("which region a visitor is browsing", () => {
 
   it("shows every region for all, keeping the region it would have used", () => {
     expect(resolveRegionSlug({ param: "all", cookie: "triangle" })).toEqual({ slug: "triangle", all: true });
+  });
+});
+
+describe("big regions over local areas (UC-40)", () => {
+  it("put every area in a big region that exists, with unique slugs that never clash with an area's", () => {
+    expect(new Set(regionGroups.map((g) => g.slug)).size).toBe(regionGroups.length);
+    for (const r of regions) expect(groupOf(r), r.slug).toBeDefined();
+    for (const g of regionGroups) expect(getRegion(g.slug), g.slug).toBeUndefined();
+  });
+
+  it("group the Southeast's areas and know which big regions have none yet", () => {
+    expect(liveAreasIn("southeast").map((r) => r.slug)).toEqual(expect.arrayContaining(["western-nc", "charlotte", "triangle", "upstate-sc", "east-tennessee"]));
+    expect(groupOf(getRegion("new-river-gorge")!).slug).toBe("mid-atlantic");
+    expect(isLiveGroup("southeast")).toBe(true);
+    expect(isLiveGroup("midwest")).toBe(false);
+  });
+
+  it("browse a whole big region from the address, centred on the remembered area if it is in it", () => {
+    expect(resolveRegionSlug({ param: "southeast", cookie: "charlotte" })).toEqual({ slug: "charlotte", all: false, group: "southeast" });
+    expect(resolveRegionSlug({ param: "southeast", cookie: "front-range" })).toEqual({ slug: liveAreasIn("southeast")[0].slug, all: false, group: "southeast" });
+  });
+
+  it("remember a big region in the cookie, and let an area in the address win", () => {
+    expect(resolveRegionSlug({ cookie: "rockies" })).toEqual({ slug: liveAreasIn("rockies")[0].slug, all: false, group: "rockies" });
+    expect(resolveRegionSlug({ param: "wasatch", cookie: "rockies" })).toEqual({ slug: "wasatch", all: false });
+  });
+
+  it("skip a big region with no live area", () => {
+    expect(resolveRegionSlug({ param: "midwest", cookie: "triangle" })).toEqual({ slug: "triangle", all: false });
   });
 });
 

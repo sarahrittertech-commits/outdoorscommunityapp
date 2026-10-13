@@ -1353,3 +1353,39 @@ Launch data should let a reviewer walk every use case above on the live site:
 - A group with an owner and two admins
 - Unclaimed listings with upcoming events (UC-8), from the
   [listings import](./runbook#seeding-real-groups)
+
+## UC-40 — Browse by big region, then local area
+
+> **Approved 13 October 2026** (Sarah: "the grouping you have above is
+> good") **and built the same day.** Requested by Sarah that day: Western North Carolina and Charlotte together cover about as much
+> ground as one Colorado region, and the board now has fourteen areas
+> across the country. Big regions group them the way skiers and travelers
+> already think (Indy Pass: East, Mid-Atlantic, Midwest, Rockies, West;
+> outdoor guides: Southeast and Southern Appalachians, Pacific Northwest,
+> and so on). Decisions in [ADR-0012](./architecture/adr-0012-region-groups).
+
+**Actor:** The newcomer, and the person planning a weekend away
+
+**Trigger:** Lives in Charlotte, sees *Charlotte* in the header, and wants
+to know what else is happening within a few hours: Asheville, Greenville,
+the Smokies.
+
+**Flow:**
+
+1. The header shows both levels: *Southeast › Charlotte · change*.
+2. Picks *change* and sees the big regions, each with its local areas and
+   how many groups and upcoming events each has: *Southeast* (Western NC,
+   Charlotte and Lake Norman, Raleigh and the Triangle, Greenville and the
+   Upstate, Knoxville and East Tennessee), *Mid-Atlantic*, *Northeast*,
+   *Rockies*, *Southwest*, *Far West and Sierra*, *Pacific Northwest*.
+   Big regions with no local area yet show as *coming soon*.
+3. Chooses *All of the Southeast*. Events, Communities, Guides and shops
+   and the activity pages now show every local area in the Southeast, each
+   listing marked with its area (*Western NC*, *Charlotte*), soonest first.
+4. Narrows back to one area with a filter on those pages (*Area: Western
+   NC*), or picks a single area under *change* as today.
+5. The choice is remembered on this device, as the region is today
+   (UC-34). Nothing is stored about the visitor.
+
+**Not in this use case:** maps that span a big region, travel times
+between areas, and organizers choosing more than one area for a group.

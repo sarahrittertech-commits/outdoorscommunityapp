@@ -682,3 +682,17 @@ flowchart TD
   watch -->|window coming up| reader
   watch -->|window passed, no date| ended["'May have ended' for the admin"]
 ```
+
+## UC-40 — Browse by big region, then local area
+
+*Approved and built 13 October 2026.*
+
+```mermaid
+flowchart TD
+  header["Header: Southeast › Charlotte · change"] --> change["Change: big regions<br/>each with its local areas<br/>groups and upcoming events per area"]
+  change -->|pick an area| area["One local area, as today<br/>Events · Communities · activity pages"]
+  change -->|pick 'All of the Southeast'| big["Whole big region<br/>every listing marked with its area<br/>soonest first"]
+  big -->|filter: Area| area
+  area -->|change| change
+  change -->|big region with no area yet| soon["Coming soon<br/>(suggest a town, UC-32)"]
+```
