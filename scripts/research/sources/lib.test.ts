@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason } from "./lib.mjs";
+import { eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason, wallClockIfUtc } from "./lib.mjs";
 
 const asheville = { slug: "western-nc", state: "NC", center: { lat: 35.6, lng: -82.55 }, radiusMiles: 100 };
 const now = new Date("2026-10-12T00:00:00Z");
@@ -114,5 +114,18 @@ describe("weekly source reader", () => {
     expect(statewideReason({ title: "River walk", location_name: "Downtown Hinton" }, site, nrg, towns)).toBeNull();
     expect(statewideReason({ title: "Hike", location_name: "Oglebay, Wheeling" }, site, nrg, towns)).toMatch(/Statewide/);
     expect(statewideReason({ title: "WonderFall Hike: North Bend State Park", location_name: "North Bend State Park" }, site, nrg, towns)).toMatch(/Statewide/);
+  });
+
+  it("reads a zero offset as local time, from event data and from WordPress sites on UTC", () => {
+    expect(wallClockIfUtc({ starts_at: "2026-10-19T17:30:00+00:00", ends_at: "2026-10-19T19:30:00Z", timezone: "America/New_York" })).toMatchObject({
+      starts_at: "2026-10-19T17:30:00",
+      ends_at: "2026-10-19T19:30:00",
+    });
+    expect(wallClockIfUtc({ starts_at: "2026-10-19T17:30:00-04:00", timezone: "America/New_York" }).starts_at).toBe("2026-10-19T17:30:00-04:00");
+    const [e] = readTribe(
+      { events: [{ title: "Bird walk", start_date: "2026-11-02 09:00:00", utc_start_date: "2026-11-02 09:00:00", timezone: "UTC", url: "https://friends.example/e/1" }] },
+      { timezone: "America/Denver", region: null, now },
+    );
+    expect(e).toMatchObject({ starts_at: "2026-11-02T09:00:00", timezone: "America/Denver" });
   });
 });
