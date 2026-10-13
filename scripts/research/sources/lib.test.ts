@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { eventPageLinks, farReason, readJsonLd, robotsAllows, stateCode } from "./lib.mjs";
+import { eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, robotsAllows, stateCode } from "./lib.mjs";
 
 const asheville = { slug: "western-nc", state: "NC", center: { lat: 35.6, lng: -82.55 }, radiusMiles: 100 };
 const now = new Date("2026-10-12T00:00:00Z");
@@ -39,7 +39,9 @@ describe("weekly source reader", () => {
       <a href="https://club.example/group-rides?x=1">Rides</a>
       <a href="https://www.meetup.com/asheville-hikers/">Meetup</a>
       <a href="https://other.example/events">Partner</a>
-      <a href="/2026/05/tag/news/">Old</a>`;
+      <a href="/2026/05/tag/news/">Old</a>
+      <a href="/calendar/2026/October/17/notch-peak-day-hike">One hike</a>
+      <a href="/event-6810339">One event</a>`;
     expect(eventPageLinks(html, "https://club.example/")).toEqual([
       { url: "https://club.example/events/", kind: "own_page" },
       { url: "https://club.example/group-rides", kind: "own_page" },
@@ -54,5 +56,39 @@ describe("weekly source reader", () => {
     expect(robotsAllows(txt, "/private/events")).toBe(true);
     expect(robotsAllows("User-agent: *\nDisallow: /", "/events")).toBe(false);
     expect(robotsAllows("", "/anything")).toBe(true);
+  });
+
+  it("never takes Meetup's own pages for groups", () => {
+    expect(eventPageLinks('<a href="https://www.meetup.com/login/">x</a>', "https://club.example/")).toEqual([]);
+    expect(eventPageLinks('<a href="/start/">x</a><a href="/other-group/">y</a>', "https://www.meetup.com/slcmtb/events/")).toEqual([]);
+    expect(meetupFeed("https://www.meetup.com/slcmtb/events/")).toBe("https://www.meetup.com/slcmtb/events/ical/");
+    expect(meetupFeed("https://www.meetup.com/login/")).toBeNull();
+  });
+
+  it("reads an iCal feed: zones, all-day entries, cancellations, folded lines", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART;TZID=America/Denver:20261113T163000",
+      "DTEND;TZID=America/Denver:20261113T183000",
+      "SUMMARY:Social Ride - Milky Way\\, Big",
+      " Dipper",
+      "URL:https://www.meetup.com/slcmtb/events/1/",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      "DTSTART;VALUE=DATE:20261120",
+      "SUMMARY:Trail day",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      "DTSTART:20261121T150000Z",
+      "SUMMARY:Called off ride",
+      "STATUS:CANCELLED",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const events = eventsFromIcs(ics, { pageUrl: "https://www.meetup.com/slcmtb/events/", timezone: "America/Denver", region: null, now });
+    expect(events[0]).toMatchObject({ title: "Social Ride - Milky Way, BigDipper", starts_at: "2026-11-13T16:30:00", timezone: "America/Denver", verification: "verified" });
+    expect(events[1]).toMatchObject({ date_only: true, verification: "unverified" });
+    expect(events[2]).toMatchObject({ starts_at: "2026-11-21T15:00:00Z", cancelled: true });
   });
 });

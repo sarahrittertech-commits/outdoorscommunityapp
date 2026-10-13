@@ -1,7 +1,8 @@
 // The weekly source reader (UC-39, FR-ES-3). For every active source of a
-// listed host, it reads the page the way the Gemini sweep checks pages:
-// schema.org event data first, then, on a WordPress site, The Events
-// Calendar's public listing. No AI and no cost. Each read goes to the
+// listed host, it reads calendar feeds first (a Meetup group's public iCal
+// feed, any .ics address), then pages the way the Gemini sweep checks them:
+// schema.org event data, then, on a WordPress site, The Events Calendar's
+// public listing. No AI and no cost. Each read goes to the
 // research intake, where research.record_source_read decides what reaches
 // the board (FR-ES-4) and logs every change (FR-ES-5).
 //
@@ -19,7 +20,7 @@ import { appendFile } from "node:fs/promises";
 
 import { regions } from "../../../src/config/regions.ts";
 import { eventsFromTribe, htmlText, jsonLdEvents } from "../gemini/lib.mjs";
-import { eventPageLinks, readJsonLd, robotsAllows } from "./lib.mjs";
+import { eventPageLinks, eventsFromIcs, meetupFeed, readJsonLd, robotsAllows } from "./lib.mjs";
 
 const INTAKE = "https://rxszqxwpgbrdytbkyxwp.supabase.co/functions/v1/research-intake";
 const UA = "BranchOutdoorsResearch/1.2 (+public community board; reads public event pages weekly)";
@@ -84,6 +85,17 @@ async function fetchText(url, accept) {
 async function readSource(source) {
   const region = regions.find((r) => r.slug === source.region);
   const timezone = source.timezone ?? region?.timezone ?? "America/New_York";
+  // Calendar feeds first: a Meetup group's public iCal feed (its terms allow
+  // it, ADR-0011), or any .ics address.
+  const feed = meetupFeed(source.url) ?? (/\.ics([?#]|$)/i.test(source.url) ? source.url : null);
+  if (feed) {
+    if (!(await allowed(feed))) return { ok: false, result: "blocked by robots.txt", events: [], discovered: [] };
+    const res = await fetchText(feed, "text/calendar");
+    if (!res.ok) return { ok: false, result: res.why, events: [], discovered: [] };
+    if (!/BEGIN:VCALENDAR/.test(res.text)) return { ok: false, result: "not a calendar feed", events: [], discovered: [] };
+    const events = eventsFromIcs(res.text, { pageUrl: source.url, timezone, region });
+    return { ok: true, result: `${events.length} dated events from the calendar feed`, events: events.slice(0, 50), discovered: [] };
+  }
   if (!(await allowed(source.url))) return { ok: false, result: "blocked by robots.txt", events: [], discovered: [] };
   const page = await fetchText(source.url, "text/html");
   if (!page.ok) return { ok: false, result: page.why, events: [], discovered: [] };
