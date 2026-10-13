@@ -294,3 +294,20 @@ export function textStateReason(event, region) {
   }
   return null;
 }
+
+/** Dates of one repeating event shown at a time; the weekly read adds the next as each passes. */
+export const MAX_DATES_PER_TITLE = 6;
+
+/** Marks every date of a repeating event after the next six, so the board shows a rolling window, not a year of the same ride. */
+export function rollingWindow(events, max = MAX_DATES_PER_TITLE) {
+  const seen = new Map();
+  const order = [...events].map((e, i) => ({ e, i, at: Date.parse(e.starts_at) || 0 })).sort((a, b) => a.at - b.at);
+  const marked = new Set();
+  for (const { e, i } of order) {
+    const key = (e.title ?? "").trim().toLowerCase();
+    const n = (seen.get(key) ?? 0) + 1;
+    seen.set(key, n);
+    if (n > max) marked.add(i);
+  }
+  return events.map((e, i) => (marked.has(i) && !e.far ? { ...e, far: "Beyond the next six dates of a repeating event" } : e));
+}

@@ -182,6 +182,9 @@ intake. `research.record_source_read` then:
 - moves an event whose start time changed, updates a changed place, and
   marks one the page calls cancelled, logging each change;
 - never touches a claimed group or anything an organizer posted;
+- shows a rolling window of a repeating event: its next six dates (a
+  weekly ride, a daily program); later dates are kept in research and
+  appear as earlier ones pass;
 - marks a source *quiet* after twelve weeks with nothing, *broken* after
   three failed reads.
 

@@ -21,7 +21,7 @@ import { appendFile, readFile } from "node:fs/promises";
 import { regions } from "../../../src/config/regions.ts";
 import { towns } from "../../../src/config/towns.ts";
 import { htmlText, jsonLdEvents } from "../gemini/lib.mjs";
-import { decodeEntities, eventPageLinks, eventsFromIcs, meetupFeed, readJsonLd, readTribe, robotsAllows, statewideReason, textStateReason } from "./lib.mjs";
+import { decodeEntities, eventPageLinks, eventsFromIcs, meetupFeed, readJsonLd, readTribe, robotsAllows, rollingWindow, statewideReason, textStateReason } from "./lib.mjs";
 
 const { sites: statewide } = JSON.parse(await readFile(new URL("./statewide.json", import.meta.url), "utf8"));
 
@@ -86,7 +86,11 @@ async function fetchText(url, accept) {
   }
 }
 
-/** One source, with titles and places decoded and statewide calendars' far-away events marked (statewide.json). */
+/**
+ * One source, with titles and places decoded, far-away events marked
+ * (statewide.json, states named in titles), and repeating events cut to
+ * their next six dates.
+ */
 async function readSource(source) {
   const raw = await readSourceRaw(source);
   const read = {
@@ -99,7 +103,7 @@ async function readSource(source) {
     const far = e.far ?? textStateReason(e, region) ?? (site ? statewideReason(e, site, region, towns) : null);
     return far ? { ...e, far } : e;
   });
-  return { ...read, events };
+  return { ...read, events: rollingWindow(events) };
 }
 
 /** One source: its events, how they were read, and pages worth reading next. */
