@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { decodeEntities, eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason, textStateReason, wallClockIfUtc } from "./lib.mjs";
+import { decodeEntities, eventPageLinks, rollingWindow, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason, textStateReason, wallClockIfUtc } from "./lib.mjs";
 
 const asheville = { slug: "western-nc", state: "NC", center: { lat: 35.6, lng: -82.55 }, radiusMiles: 100 };
 const now = new Date("2026-10-12T00:00:00Z");
@@ -140,5 +140,14 @@ describe("weekly source reader", () => {
     expect(textStateReason({ title: "Ride, OK pace", location_name: "Park" }, frontRange)).toBeNull();
     expect(textStateReason({ title: "Moab trip", location_name: "Slickrock, Moab, UT 84532" }, frontRange)).toMatch(/UT/);
     expect(textStateReason({ title: "Hike, AND picnic", location_name: "Park" }, frontRange)).toBeNull();
+  });
+
+  it("keeps only the next six dates of a repeating event", () => {
+    const weekly = Array.from({ length: 10 }, (_, i) => ({ title: "Monday Ride", starts_at: `2026-11-${String(2 + i).padStart(2, "0")}T17:30:00` }));
+    const out = rollingWindow([...weekly.reverse(), { title: "Trail Day", starts_at: "2026-12-01T09:00:00" }]);
+    type Out = { title: string; starts_at: string; far?: string };
+    const rows = out as Out[];
+    expect(rows.filter((e) => !e.far)).toHaveLength(7);
+    expect(rows.filter((e) => e.far && e.title === "Monday Ride").map((e) => e.starts_at.slice(0, 10)).sort()[0]).toBe("2026-11-08");
   });
 });
