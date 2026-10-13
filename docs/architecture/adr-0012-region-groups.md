@@ -72,10 +72,19 @@ Alaska and the Plains wait until there is research for them.
 
 ## Open questions for Sarah
 
-1. Eight big regions as above, or the Indy Pass five (East, Mid-Atlantic,
-   Midwest, Rockies, West)? The five would put the Southeast inside East or
-   Mid-Atlantic and join the Southwest, Sierra and Pacific Northwest as
-   West.
+1. Which grouping? Three on the table:
+   - **Eight, as above** (blending the two lists below; covers the East,
+     where most areas are today).
+   - **Indy Pass five** (East, Mid-Atlantic, Midwest, Rockies, West): puts
+     the Southeast inside East or Mid-Atlantic and joins the Southwest,
+     Sierra and Pacific Northwest as West.
+   - **MT Sobek's six adventure regions** (Sierra Nevada, Rockies from New
+     Mexico to Montana, Alaska, Southwest as Arizona and Utah, Pacific
+     Northwest, Appalachia as North Carolina and Tennessee): close to the
+     eight, but names the Southeast *Appalachia*, puts Utah (so the
+     Wasatch) in the Southwest, and has no place for the Northeast,
+     Mid-Atlantic, Midwest or the Piedmont cities (Charlotte, the
+     Triangle), which the board would have to add.
 2. New River Gorge: Mid-Atlantic (Indy Pass, the Virginias) or Southeast
    (Southern Appalachians)?
 3. Words on the site: *region* and *area*, or keep *region* for today's
