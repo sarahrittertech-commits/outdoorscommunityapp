@@ -76,6 +76,21 @@ export const zipPrefixTowns: Record<string, string> = {
   // Durango and the San Juans
   "813": "Durango",
   "874": "Farmington",
+  // Charlotte and Lake Norman
+  "280": "Charlotte",
+  "281": "Gastonia",
+  "282": "Charlotte",
+  "297": "Rock Hill",
+  // Burlington and Northern Vermont
+  "054": "Burlington, VT",
+  "056": "Montpelier",
+  "057": "Rutland",
+  // Greater Boston
+  "021": "Boston",
+  "022": "Boston",
+  "024": "Newton",
+  "017": "Framingham",
+  "018": "Lowell",
 };
 
 export const zipTowns: Record<string, string> = {
