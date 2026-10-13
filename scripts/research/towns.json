@@ -18,7 +18,12 @@
       "Johnson City, TN",
       "Bristol, VA",
       "Abingdon, VA",
-      "Damascus, VA"
+      "Damascus, VA",
+      "Maggie Valley, NC",
+      "Chimney Rock, NC",
+      "Linville, NC",
+      "Todd, NC",
+      "Hiddenite, NC"
     ],
     "triangle": [
       "Raleigh, NC",
@@ -26,7 +31,9 @@
       "Chapel Hill, NC",
       "Hillsborough, NC",
       "Wentworth, NC",
-      "Danville, VA"
+      "Danville, VA",
+      "Rougemont, NC",
+      "New Hill, NC"
     ],
     "upstate-sc": [
       "Greenville, SC",
@@ -50,7 +57,8 @@
       "Blue Ridge, GA",
       "Ellijay, GA",
       "Corbin, KY",
-      "Pigeon Forge, TN"
+      "Pigeon Forge, TN",
+      "Mountain City, TN"
     ],
     "new-river-gorge": [
       "Fayetteville, WV",
@@ -113,9 +121,9 @@
       "East Burke, VT",
       "Lake Placid, NY",
       "Saranac Lake, NY",
-      "Rumney, NH",
       "Woodstock, VT",
-      "Lake George, NY"
+      "Lake George, NY",
+      "Keene Valley, NY"
     ],
     "greater-boston": [
       "Boston, MA",
@@ -190,6 +198,33 @@
       "Elkton, VA",
       "Front Royal, VA",
       "Woodstock, VA"
+    ],
+    "white-mountains": [
+      "North Conway, NH",
+      "Conway, NH",
+      "Jackson, NH",
+      "Bartlett, NH",
+      "Gorham, NH",
+      "Berlin, NH",
+      "Lincoln, NH",
+      "Franconia, NH",
+      "Littleton, NH",
+      "Bethlehem, NH",
+      "Bretton Woods, NH",
+      "Waterville Valley, NH",
+      "Plymouth, NH",
+      "Rumney, NH",
+      "Holderness, NH",
+      "Meredith, NH",
+      "Laconia, NH",
+      "Wolfeboro, NH",
+      "Tamworth, NH",
+      "Fryeburg, ME",
+      "Bridgton, ME",
+      "Bethel, ME",
+      "Rangeley, ME",
+      "Kingfield, ME",
+      "Portland, ME"
     ]
   },
   "next": {
@@ -238,13 +273,6 @@
       "Winthrop, WA",
       "Leavenworth, WA"
     ],
-    "New Hampshire and Maine": [
-      "North Conway, NH",
-      "Portland, ME",
-      "Bethel, ME",
-      "Bar Harbor, ME",
-      "Rangeley, ME"
-    ],
     "Upstate New York and Pennsylvania": [
       "Ithaca, NY",
       "Wellsboro, PA",
@@ -276,6 +304,7 @@
       "Bowling Green, KY"
     ],
     "Atlanta and North Georgia": [
+      "Atlanta, GA",
       "Alpharetta, GA",
       "Roswell, GA",
       "Woodstock, GA",
@@ -284,7 +313,8 @@
     "Coastal Carolinas": [
       "Wilmington, NC",
       "Charleston, SC",
-      "Hilton Head, SC"
+      "Hilton Head, SC",
+      "Edenton, NC"
     ],
     "Nashville and Middle Tennessee": [
       "Clarksville, TN"
@@ -315,7 +345,9 @@
       "Grand Rapids, MI",
       "Chicago, IL",
       "Minneapolis, MN",
-      "Nashville, IN"
+      "Nashville, IN",
+      "Winona, MN",
+      "Lanesboro, MN"
     ],
     "Northeast Ohio": [
       "Peninsula, OH"
@@ -333,7 +365,8 @@
     ],
     "Alaska": [
       "Juneau, AK",
-      "Homer, AK"
+      "Homer, AK",
+      "Valdez, AK"
     ],
     "Central and Coastal Virginia": [
       "Richmond, VA",
@@ -342,6 +375,9 @@
       "Chesapeake, VA",
       "Hampton, VA",
       "Cape Charles, VA"
+    ],
+    "Coastal Maine": [
+      "Bar Harbor, ME"
     ]
   },
   "states": {
@@ -362,15 +398,15 @@
       "NY",
       "NH",
       "MA",
-      "RI"
+      "RI",
+      "OR",
+      "ME"
     ],
     "next": [
-      "OR",
       "ID",
       "MT",
       "WY",
       "NM",
-      "ME",
       "PA",
       "MD",
       "KY",

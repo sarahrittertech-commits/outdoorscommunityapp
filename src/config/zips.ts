@@ -150,6 +150,13 @@ export const zipPrefixTowns: Record<string, string> = {
   "024": "Newton",
   "017": "Framingham",
   "018": "Lowell",
+  // North Conway and the White Mountains (038 also covers the Seacoast,
+  // closer to Boston, so the Mount Washington Valley is listed zip by zip)
+  "032": "Plymouth, NH",
+  "035": "Littleton, NH",
+  "040": "Portland, ME",
+  "041": "Portland, ME",
+  "042": "Lewiston",
 };
 
 export const zipTowns: Record<string, string> = {
@@ -519,4 +526,21 @@ export const zipTowns: Record<string, string> = {
   "37402": "Chattanooga",
   "37403": "Chattanooga",
   "37405": "Chattanooga",
+  // North Conway and the White Mountains
+  "03860": "North Conway",
+  "03818": "Conway",
+  "03813": "Conway", // Center Conway
+  "03845": "Intervale",
+  "03846": "Jackson",
+  "03838": "Glen",
+  "03812": "Bartlett",
+  "03894": "Wolfeboro",
+  "03864": "Ossipee",
+  "03886": "Tamworth",
+  "03817": "Tamworth", // Chocorua
+  "04037": "Fryeburg",
+  "04009": "Bridgton",
+  "04217": "Bethel",
+  "04970": "Rangeley",
+  "04947": "Kingfield",
 };
