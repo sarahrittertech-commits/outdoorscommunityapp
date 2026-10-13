@@ -1,17 +1,20 @@
+import { regions } from "@/config/regions";
 import { site } from "@/config/site";
 import { towns, type Town } from "@/config/towns";
 import { zipPrefixTowns, zipTowns } from "@/config/zips";
 
 /** State names a group's area might spell out ("Red River Gorge, Kentucky"). */
 const STATE_NAMES: Record<string, string> = {
-  CO: "Colorado",
-  KY: "Kentucky",
-  NC: "North Carolina",
-  TN: "Tennessee",
-  VA: "Virginia",
-  WA: "Washington",
-  WV: "West Virginia",
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California", CO: "Colorado", CT: "Connecticut",
+  DC: "District of Columbia", DE: "Delaware", FL: "Florida", GA: "Georgia", ID: "Idaho", IL: "Illinois", IN: "Indiana",
+  IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland", MA: "Massachusetts",
+  MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada",
+  NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota",
+  OH: "Ohio", OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+  SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia", WA: "Washington",
+  WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
 };
+const STATE_BY_NAME = new Map(Object.entries(STATE_NAMES).map(([code, name]) => [name.toLowerCase(), code]));
 
 const nameCount = new Map<string, number>();
 for (const t of towns) nameCount.set(t.name.toLowerCase(), (nameCount.get(t.name.toLowerCase()) ?? 0) + 1);
@@ -53,14 +56,61 @@ export function findTown(name: string | null | undefined): Town | undefined {
   return name ? byName.get(name.trim().replace(/\s+/g, " ").toLowerCase()) : undefined;
 }
 
+// Every town a key can mean, for townForArea: a name used in two states
+// keeps both, so the area's state or region can choose between them.
+const allByName = new Map<string, Town[]>();
+const addAll = (key: string, t: Town) => {
+  const k = key.toLowerCase();
+  const list = allByName.get(k) ?? [];
+  if (!list.includes(t)) allByName.set(k, [...list, t]);
+};
+for (const t of towns) {
+  addAll(t.name, t);
+  for (const a of t.aliases ?? []) addAll(a, t);
+}
+
+/** The state an area names at its end: "Augusta, GA", "Atlanta GA", "Red River Gorge, Kentucky". */
+function stateOf(text: string): string | undefined {
+  const code = text.match(/(?:,\s*|\s)([A-Z]{2})\.?$/)?.[1];
+  if (code && STATE_NAMES[code]) return code;
+  const name = text.match(/,\s*([A-Za-z ]+)$/)?.[1]?.trim().toLowerCase();
+  return name ? STATE_BY_NAME.get(name) : undefined;
+}
+
+/** "Augusta, GA" → "Augusta"; "Fort Collins CO" → "Fort Collins". */
+function withoutState(text: string): string {
+  return text.replace(/(?:,\s*|\s)[A-Z]{2}\.?$/, "").replace(/,\s*[A-Za-z ]+$/, (m) => (STATE_BY_NAME.has(m.replace(/^,\s*/, "").trim().toLowerCase()) ? "" : m)).trim();
+}
+
 /**
  * The town a group's free-text area refers to. "Boone and Blowing Rock"
  * counts as Boone; "Western North Carolina" matches nothing.
  */
-export function townForArea(area: string | null | undefined): Town | undefined {
+export function townForArea(area: string | null | undefined, regionSlug?: string): Town | undefined {
   if (!area) return undefined;
-  const first = area.split(/\s+and\s+/)[0];
-  return findTown(area) ?? findTown(first) ?? findTown(first.split(",")[0]);
+  const text = area.trim().replace(/\s+/g, " ");
+  const first = text.split(/\s+and\s+/)[0];
+  // A state named in the area must match: "Augusta, GA" is never Augusta,
+  // Maine. With no state, the listing's own region chooses between towns
+  // of the same name ("Lexington" in the Triangle), else the usual default.
+  const state = stateOf(first) ?? stateOf(text);
+  for (const key of [text, first, withoutState(first)]) {
+    let options = allByName.get(key.toLowerCase()) ?? [];
+    if (state) options = options.filter((t) => t.state === state);
+    if (!options.length) continue;
+    const inRegion = regionSlug ? options.find((t) => t.region === regionSlug) : undefined;
+    if (inRegion) return inRegion;
+    // A region's listing whose town is in another region is kept only when
+    // that town is still near the region ("Lexington" in the Triangle is
+    // not Lexington, Massachusetts).
+    const home = regionSlug ? regions.find((r) => r.slug === regionSlug) : undefined;
+    if (home) options = options.filter((t) => milesBetween(t, home.center) <= home.radiusMiles + 50);
+    if (!options.length) return undefined;
+    if (state || options.length === 1) return options[0];
+    const usual = findTown(key);
+    return usual && options.includes(usual) ? usual : options[0];
+  }
+  return undefined;
 }
 
 /** Great-circle distance in miles. */

@@ -10,7 +10,7 @@ import { pageFrom, Pagination } from "@/components/Pagination";
 import { RegionScope } from "@/components/RegionScope";
 import { site } from "@/config/site";
 import { distances } from "@/config/towns";
-import { getCurrentRegion, regionFilterIds, scopeName } from "@/lib/currentRegion";
+import { getCurrentRegion, regionFilterIds, regionSlugsById, scopeName } from "@/lib/currentRegion";
 import { aboutMiles, milesBetween, resolveLocation, townForArea, townKey } from "@/lib/geo";
 import { groupCoverUrl } from "@/lib/groupCovers";
 import { GROUP_TYPES, isGroupType } from "@/lib/groupTypes";
@@ -41,7 +41,7 @@ function communitiesHref(filters: Filters): string {
 }
 
 const COLUMNS =
-  "slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags, group_type, cover_image_path, cover_alt";
+  "slug, name, description, area, category_slug, subcategory_name, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags, group_type, cover_image_path, cover_alt, region_id";
 
 /**
  * Every active group in one table, A to Z, filterable by activity and type
@@ -95,8 +95,9 @@ export default async function CommunitiesPage({ searchParams }: Props) {
   let closeCount = 0;
   let unmappedCount = 0;
   if (near) {
+    const slugOf = await regionSlugsById();
     const measured: Row[] = (first.data ?? []).map((g) => {
-      const town = townForArea(g.area);
+      const town = townForArea(g.area, g.region_id ? slugOf.get(g.region_id) : undefined);
       return { ...g, miles: town ? milesBetween(near, town) : undefined };
     });
     const close = measured
