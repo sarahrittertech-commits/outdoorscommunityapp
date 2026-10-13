@@ -26,8 +26,6 @@
       "Greenville, SC",
       "Walhalla, SC",
       "Highlands, NC",
-      "Athens, GA",
-      "Dahlonega, GA",
       "Augusta, GA",
       "Ninety Six, SC",
       "Travelers Rest, SC"
@@ -389,7 +387,16 @@
       "Boonsboro, MD",
       "Hagerstown, MD",
       "Harpers Ferry, WV",
-      "Shepherdstown, WV"
+      "Shepherdstown, WV",
+      "Richmond, VA",
+      "Petersburg, VA",
+      "Ashland, VA",
+      "Mechanicsville, VA",
+      "Glen Allen, VA",
+      "Midlothian, VA",
+      "Chester, VA",
+      "Goochland, VA",
+      "Powhatan, VA"
     ],
     "laurel-highlands": [
       "Pittsburgh, PA",
@@ -636,6 +643,200 @@
       "Nags Head, NC",
       "Manteo, NC",
       "Rodanthe, NC"
+    ],
+    "atlanta": [
+      "Atlanta, GA",
+      "Decatur, GA",
+      "Marietta, GA",
+      "Kennesaw, GA",
+      "Smyrna, GA",
+      "Roswell, GA",
+      "Alpharetta, GA",
+      "Woodstock, GA",
+      "Canton, GA",
+      "Cumming, GA",
+      "Stone Mountain, GA",
+      "Lawrenceville, GA",
+      "Peachtree City, GA",
+      "Newnan, GA",
+      "Gainesville, GA",
+      "Athens, GA",
+      "Dahlonega, GA",
+      "Helen, GA",
+      "Cleveland, GA",
+      "Columbus, GA",
+      "Madison, GA"
+    ],
+    "north-alabama": [
+      "Birmingham, AL",
+      "Hoover, AL",
+      "Pelham, AL",
+      "Homewood, AL",
+      "Trussville, AL",
+      "Bessemer, AL",
+      "Tuscaloosa, AL",
+      "Gadsden, AL",
+      "Fort Payne, AL",
+      "Mentone, AL",
+      "Huntsville, AL",
+      "Madison, AL",
+      "Decatur, AL",
+      "Guntersville, AL",
+      "Scottsboro, AL",
+      "Cullman, AL",
+      "Oneonta, AL",
+      "Jasper, AL",
+      "Anniston, AL",
+      "Talladega, AL",
+      "Florence, AL"
+    ],
+    "florida": [
+      "Orlando, FL",
+      "Winter Park, FL",
+      "Apopka, FL",
+      "Kissimmee, FL",
+      "Sanford, FL",
+      "DeLand, FL",
+      "Daytona Beach, FL",
+      "Titusville, FL",
+      "Melbourne, FL",
+      "Gainesville, FL",
+      "High Springs, FL",
+      "Ocala, FL",
+      "Tampa, FL",
+      "St. Petersburg, FL",
+      "Clearwater, FL",
+      "Sarasota, FL",
+      "Fort Myers, FL",
+      "Naples, FL",
+      "Jupiter, FL",
+      "West Palm Beach, FL",
+      "Fort Lauderdale, FL",
+      "Miami, FL",
+      "Key Largo, FL",
+      "St. Augustine, FL",
+      "Jacksonville, FL",
+      "Tallahassee, FL"
+    ],
+    "cleveland-akron": [
+      "Cleveland, OH",
+      "Akron, OH",
+      "Peninsula, OH",
+      "Brecksville, OH",
+      "Hudson, OH",
+      "Kent, OH",
+      "Cuyahoga Falls, OH",
+      "Lakewood, OH",
+      "Shaker Heights, OH",
+      "Strongsville, OH",
+      "Medina, OH",
+      "Bath, OH",
+      "Chagrin Falls, OH",
+      "Mentor, OH",
+      "Painesville, OH",
+      "Canton, OH",
+      "Wooster, OH",
+      "Oberlin, OH",
+      "Lorain, OH",
+      "Sandusky, OH",
+      "Ravenna, OH",
+      "Youngstown, OH"
+    ],
+    "coastal-maine": [
+      "Bar Harbor, ME",
+      "Southwest Harbor, ME",
+      "Northeast Harbor, ME",
+      "Winter Harbor, ME",
+      "Ellsworth, ME",
+      "Blue Hill, ME",
+      "Castine, ME",
+      "Deer Isle, ME",
+      "Stonington, ME",
+      "Bucksport, ME",
+      "Bangor, ME",
+      "Orono, ME",
+      "Belfast, ME",
+      "Searsport, ME",
+      "Lincolnville, ME",
+      "Camden, ME",
+      "Rockport, ME",
+      "Rockland, ME",
+      "Thomaston, ME",
+      "Damariscotta, ME",
+      "Boothbay Harbor, ME",
+      "Augusta, ME"
+    ],
+    "pa-wilds-poconos": [
+      "Wellsboro, PA",
+      "Mansfield, PA",
+      "Galeton, PA",
+      "Coudersport, PA",
+      "Renovo, PA",
+      "Lock Haven, PA",
+      "Williamsport, PA",
+      "Lewisburg, PA",
+      "State College, PA",
+      "Bloomsburg, PA",
+      "Benton, PA",
+      "Eagles Mere, PA",
+      "Laporte, PA",
+      "Towanda, PA",
+      "Scranton, PA",
+      "Wilkes-Barre, PA",
+      "Hazleton, PA",
+      "White Haven, PA",
+      "Jim Thorpe, PA",
+      "Lake Harmony, PA",
+      "Stroudsburg, PA",
+      "Milford, PA"
+    ],
+    "philadelphia": [
+      "Philadelphia, PA",
+      "Conshohocken, PA",
+      "King of Prussia, PA",
+      "Norristown, PA",
+      "Phoenixville, PA",
+      "Ambler, PA",
+      "Jenkintown, PA",
+      "Media, PA",
+      "West Chester, PA",
+      "Doylestown, PA",
+      "New Hope, PA",
+      "Bristol, PA",
+      "Allentown, PA",
+      "Reading, PA",
+      "Lambertville, NJ",
+      "Trenton, NJ",
+      "Princeton, NJ",
+      "Cherry Hill, NJ",
+      "Haddonfield, NJ",
+      "Camden, NJ",
+      "Wilmington, DE",
+      "Newark, DE"
+    ],
+    "nashville": [
+      "Nashville, TN",
+      "Franklin, TN",
+      "Brentwood, TN",
+      "Murfreesboro, TN",
+      "Hendersonville, TN",
+      "Gallatin, TN",
+      "Lebanon, TN",
+      "Clarksville, TN",
+      "Dickson, TN",
+      "Columbia, TN",
+      "Cookeville, TN",
+      "Sparta, TN",
+      "McMinnville, TN",
+      "Spencer, TN",
+      "Smyrna, TN",
+      "Mount Juliet, TN",
+      "Spring Hill, TN",
+      "Kingston Springs, TN",
+      "Ashland City, TN",
+      "Springfield, TN",
+      "Shelbyville, TN",
+      "Tullahoma, TN"
     ]
   },
   "next": {
@@ -668,33 +869,9 @@
       "Leavenworth, WA",
       "Wenatchee, WA"
     ],
-    "Upstate New York and Pennsylvania": [
-      "Ithaca, NY",
-      "Wellsboro, PA",
-      "Jim Thorpe, PA"
-    ],
     "Kentucky": [
       "Whitesburg, KY",
       "Bowling Green, KY"
-    ],
-    "Atlanta and North Georgia": [
-      "Atlanta, GA",
-      "Alpharetta, GA",
-      "Roswell, GA",
-      "Woodstock, GA",
-      "Columbus, GA"
-    ],
-    "Nashville and Middle Tennessee": [
-      "Nashville, TN",
-      "Clarksville, TN"
-    ],
-    "Philadelphia": [
-      "Philadelphia, PA"
-    ],
-    "Alabama": [
-      "Mentone, AL",
-      "Birmingham, AL",
-      "Huntsville, AL"
     ],
     "Ozarks": [
       "Bentonville, AR",
@@ -706,18 +883,10 @@
       "Grand Rapids, MI",
       "Nashville, IN"
     ],
-    "Northeast Ohio": [
-      "Peninsula, OH",
-      "Cleveland, OH",
-      "Akron, OH"
-    ],
     "Texas and the Plains": [
       "Austin, TX",
       "Tyler, TX",
       "Scott City, KS"
-    ],
-    "Florida": [
-      "Orlando, FL"
     ],
     "Black Hills": [
       "Custer, SD",
@@ -729,17 +898,30 @@
       "Valdez, AK",
       "Anchorage, AK"
     ],
-    "Central and Coastal Virginia": [
-      "Richmond, VA"
-    ],
-    "Coastal Maine": [
-      "Bar Harbor, ME",
-      "Camden, ME"
-    ],
     "Southern Oregon": [
       "Ashland, OR",
       "Klamath Falls, OR",
       "Medford, OR"
+    ],
+    "Hudson Valley and the Catskills": [
+      "New Paltz, NY",
+      "Woodstock, NY",
+      "Tannersville, NY",
+      "Kingston, NY",
+      "Beacon, NY"
+    ],
+    "New York City": [
+      "New York, NY"
+    ],
+    "Seacoast New Hampshire": [
+      "Portsmouth, NH",
+      "Hampton, NH"
+    ],
+    "Cincinnati": [
+      "Cincinnati, OH"
+    ],
+    "Finger Lakes": [
+      "Ithaca, NY"
     ]
   },
   "states": {
@@ -796,20 +978,16 @@
     "Southern Arizona": "southwest",
     "New Mexico": "southwest",
     "Nevada": "southwest",
-    "Philadelphia": "mid-atlantic",
-    "Central and Coastal Virginia": "mid-atlantic",
     "Kentucky": "southeast",
-    "Atlanta and North Georgia": "southeast",
-    "Nashville and Middle Tennessee": "southeast",
-    "Alabama": "southeast",
-    "Florida": "southeast",
     "Ozarks": "southeast",
     "Driftless and Great Lakes": "midwest",
-    "Northeast Ohio": "midwest",
-    "Upstate New York and Pennsylvania": "northeast",
-    "Coastal Maine": "northeast",
     "Texas and the Plains": null,
-    "Alaska": null
+    "Alaska": null,
+    "Hudson Valley and the Catskills": "northeast",
+    "New York City": "northeast",
+    "Seacoast New Hampshire": "northeast",
+    "Cincinnati": "mid-atlantic",
+    "Finger Lakes": "northeast"
   },
   "_note_regions": "next_regions is a soft mapping (13 October 2026, for Sarah's review): the big region each future area would open under. null = no big region yet (Plains, Alaska). States may become a level between big region and area; each town carries its state."
 }
