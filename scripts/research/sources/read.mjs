@@ -28,6 +28,8 @@ const { sites: statewide } = JSON.parse(await readFile(new URL("./statewide.json
 const INTAKE = "https://rxszqxwpgbrdytbkyxwp.supabase.co/functions/v1/research-intake";
 const UA = "BranchOutdoorsResearch/1.2 (+public community board; reads public event pages weekly)";
 const PAUSE_MS = 1500;
+/** Events taken from one source per run; sent to the intake 50 at a time. */
+const MAX_PER_SOURCE = 200;
 
 const args = process.argv.slice(2);
 const dry = args.includes("--dry");
@@ -111,7 +113,7 @@ async function readSourceRaw(source) {
     if (!res.ok) return { ok: false, result: res.why, events: [], discovered: [] };
     if (!/BEGIN:VCALENDAR/.test(res.text)) return { ok: false, result: "not a calendar feed", events: [], discovered: [] };
     const events = eventsFromIcs(res.text, { pageUrl: source.url, timezone, region });
-    return { ok: true, result: `${events.length} dated events from the calendar feed`, events: events.slice(0, 50), discovered: [] };
+    return { ok: true, result: `${events.length} dated events from the calendar feed`, events: events.slice(0, MAX_PER_SOURCE), discovered: [] };
   }
   if (!(await allowed(source.url))) return { ok: false, result: "blocked by robots.txt", events: [], discovered: [] };
   const page = await fetchText(source.url, "text/html");
@@ -123,13 +125,17 @@ async function readSourceRaw(source) {
     const origin = new URL(source.url).origin;
     const api = `${origin}/wp-json/tribe/events/v1/events?per_page=50&start_date=${new Date().toISOString().slice(0, 10)}`;
     if (await allowed(api)) {
-      const res = await fetchText(api, "application/json");
-      if (res.ok && res.type.includes("json")) {
+      // Up to four pages of 50, so a park system's whole season is read.
+      for (let pageNo = 1; pageNo <= MAX_PER_SOURCE / 50; pageNo++) {
+        const res = await fetchText(`${api}&page=${pageNo}`, "application/json");
+        if (!res.ok || !res.type.includes("json")) break;
         try {
-          events = readTribe(JSON.parse(res.text), { timezone, region });
+          const json = JSON.parse(res.text);
+          events.push(...readTribe(json, { timezone, region }));
           how = "the site's WordPress events calendar";
+          if (!json.next_rest_url) break;
         } catch {
-          // Not The Events Calendar after all.
+          break; // Not The Events Calendar after all.
         }
       }
     }
@@ -141,7 +147,7 @@ async function readSourceRaw(source) {
     : hasDates
       ? "no structured dates; the page shows dates (for the research agent)"
       : "no structured dates and no dates on the page";
-  return { ok: true, result, events: events.slice(0, 50), discovered };
+  return { ok: true, result, events: events.slice(0, MAX_PER_SOURCE), discovered };
 }
 
 const sources = (await intake({ action: "sources" })).slice(0, limit);
@@ -161,8 +167,18 @@ while (queue.length) {
     continue;
   }
   try {
-    const answer = await intake({ action: "read", read: { source_id: source.id, ...read } });
-    for (const k of ["published", "updated", "cancelled", "kept"]) tally[k] += answer[k] ?? 0;
+    // The intake takes 50 events a call; the first call also carries the
+    // pages noticed on this one.
+    const answer = { published: 0, updated: 0, cancelled: 0, kept: 0, new_sources: [] };
+    for (let i = 0; i === 0 || i < read.events.length; i += 50) {
+      const part = await intake({
+        action: "read",
+        read: { source_id: source.id, ok: read.ok, result: read.result, events: read.events.slice(i, i + 50), discovered: i === 0 ? read.discovered : [] },
+      });
+      for (const k of ["published", "updated", "cancelled", "kept"]) answer[k] += part[k] ?? 0;
+      answer.new_sources.push(...(part.new_sources ?? []));
+    }
+    for (const k of ["published", "updated", "cancelled", "kept"]) tally[k] += answer[k];
     if (answer.published || answer.updated || answer.cancelled) {
       console.log(`  ${answer.published ?? 0} new on the board, ${answer.updated ?? 0} changed, ${answer.cancelled ?? 0} cancelled`);
     }
