@@ -419,4 +419,22 @@ export const regions: Region[] = [
     heroIntro:
       "Groups, meetups and events for getting outside in Harrisonburg, Charlottesville and the Shenandoah Valley, from Shenandoah National Park to the George Washington National Forest. Join a group, show up, try something new.",
   },
+  {
+    slug: "white-mountains",
+    group: "northeast",
+    name: "North Conway and the White Mountains",
+    shortName: "White Mountains",
+    state: "NH",
+    timezone: "America/New_York",
+    hubs: ["North Conway", "Lincoln, NH"],
+    center: { lat: 44.05, lng: -71.35 },
+    zoom: 8,
+    radiusMiles: 100,
+    status: "live",
+    exampleTown: "Jackson",
+    exampleMeetingPlace: "Pinkham Notch Visitor Center",
+    exampleZip: "03860",
+    heroIntro:
+      "Groups, meetups and events for getting outside in North Conway, the White Mountains and western Maine: hiking the Presidentials, climbing Cathedral Ledge, backcountry and nordic skiing. Join a group, show up, try something new.",
+  },
 ];
