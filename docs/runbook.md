@@ -195,6 +195,33 @@ retire a source there. Run by hand: Actions → *Source reader* → *Run
 workflow* (tick *Dry run* to read without sending; *limit* to read only a
 few).
 
+**Program calendars.** Public park and recreation calendars are listed
+once as a venue (for example *Seattle Parks and Recreation*, *Utah State
+Parks*, *Outdoor Chattanooga*) with the calendar as a source: a WordPress
+events calendar as *park or city programs*, an iCal address (Trumba,
+CivicPlus, The Events Calendar's `?ical=1`) as *calendar feed*. The reader
+pages through up to 200 events a source and sends them 50 at a time. For
+calendars that cover a whole state, `scripts/research/sources/statewide.json`
+lists the parks near the region; only events at those parks, or in a board
+town inside the region's radius, are published. Some sites block GitHub's
+runners (Legacy Parks' Outdoor Knoxville calendar shows *unreachable*):
+read those from a laptop with the same parsing and send the result through
+`research.record_source_read`, and expect the weekly run to mark them
+failed until then. Event data stamped with a zero UTC offset is read as
+local time, because sites often label local times that way.
+
+### Town sweeps (12 October 2026)
+
+`scripts/research/towns.json` lists the towns research cycles through, each
+placed in the live region whose hub is within 100 miles, or grouped under
+the region it would open. A sweep takes a handful of towns, finds the local
+clubs, guide services, shops that run group events and venues with public
+programs, checks each one's own website, and records its events page. The
+first sweep (12 October, about 80 towns) listed 283 verified finds; finds
+that couldn't be checked are kept as unverified. Each verified find is
+listed into its region and its website and events page become sources, so
+the next Monday read picks up its dates.
+
 ### Gemini sweep (the inexpensive one, from 12 October 2026)
 
 **Revised 12 October 2026, still switched off until Sarah runs it.**
