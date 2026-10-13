@@ -1,0 +1,17 @@
+{
+  "_note": "Statewide program calendars (state parks, a state's outdoor recreation office) list events hours away from a region's hub, often without a map point or town. For these sites the reader publishes an event only when its place names a town from src/config/towns.ts within the region's radius, or one of the parks listed here (each within about 100 miles of the hub). Everything else is kept in the research tables as out of the region. Added 12 October 2026.",
+  "sites": {
+    "wvstateparks.com": {
+      "region": "new-river-gorge",
+      "places": ["Babcock", "Hawks Nest", "Carnifex Ferry", "Little Beaver", "Pipestem", "Bluestone", "Camp Creek", "Twin Falls", "Summersville", "Watoga", "Beartown", "Droop Mountain", "Cass Scenic Railroad", "Kanawha State Forest", "Chief Logan", "Holly River", "Greenbrier State Forest", "Moncove Lake", "Panther State Forest", "Calvin Price"]
+    },
+    "stateparks.utah.gov": {
+      "region": "wasatch",
+      "places": ["Antelope Island", "Great Salt Lake", "Wasatch Mountain", "Jordanelle", "Deer Creek", "Rockport", "East Canyon", "Willard Bay", "Echo State Park", "Utah Lake", "Fort Buenaventura", "This Is The Place", "Hyrum", "Bear Lake", "Yuba", "Fielding Garr"]
+    },
+    "recreation.utah.gov": {
+      "region": "wasatch",
+      "places": ["Salt Lake", "Kearns", "Midway", "Heber", "Park City", "Ogden", "Provo", "Orem", "Sandy", "Draper", "Lehi", "Bountiful", "Layton", "Logan", "Kamas", "Tooele"]
+    }
+  }
+}
