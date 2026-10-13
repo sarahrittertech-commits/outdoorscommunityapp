@@ -53,8 +53,8 @@ blending the Indy Pass regions with the usual outdoor regions:
 | **Midwest and Great Lakes** | none yet | Lake Superior and the Northwoods · Driftless · Northeast Ohio |
 | **Rockies** | Colorado Front Range · Durango and the San Juans · Wasatch | Colorado mountains · Montana and Wyoming · Idaho |
 | **Southwest** | Sedona and Flagstaff | Canyon country · Southern Arizona · New Mexico · Las Vegas |
-| **Far West and Sierra** | Reno and Tahoe | Eastern Sierra · California coast |
-| **Pacific Northwest** | Seattle and Bellingham | Oregon · Eastern Washington |
+| **Far West and Sierra** | Reno and Tahoe · San Francisco Bay Area · Los Angeles and Santa Barbara · San Diego (13 Oct) | Eastern Sierra · Sacramento and Gold Country |
+| **Pacific Northwest** | Seattle, Bellingham and Olympia · Portland and the Columbia Gorge · Bend and Central Oregon (13 Oct) | Southern Oregon · Eastern Washington |
 
 Alaska and the Plains wait until there is research for them.
 

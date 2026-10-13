@@ -107,7 +107,7 @@ describe("zip codes", () => {
     expect(townForZip("28301")?.state).toBe("NC");
     expect(townForZip("37919")?.name).toBe("Knoxville");
     expect(townForZip("27609")?.name).toBe("Raleigh");
-    expect(townForZip("90210")).toBeUndefined();
+    expect(townForZip("59601")).toBeUndefined();
   });
 });
 
