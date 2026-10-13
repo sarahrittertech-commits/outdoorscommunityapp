@@ -79,7 +79,7 @@ export async function regionFilterIds(current: CurrentRegion): Promise<string[] 
   return found.length ? found : ["00000000-0000-0000-0000-000000000000"];
 }
 
-/** What a list covers, for its heading: "Western North Carolina", "the Southeast", "every region". */
+/** What a list covers, for its heading: "Western Carolinas", "the Southeast", "every region". */
 export function scopeName(current: CurrentRegion): string {
   if (current.all) return "every region";
   if (current.group) return `the ${current.group.name}`;

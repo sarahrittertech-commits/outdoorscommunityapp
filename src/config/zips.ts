@@ -15,7 +15,7 @@
 
 /** First three digits → the area's nearest listed town. */
 export const zipPrefixTowns: Record<string, string> = {
-  // Western North Carolina
+  // Western Carolinas (Western North Carolina)
   "286": "Morganton",
   "287": "Asheville",
   "288": "Asheville",

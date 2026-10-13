@@ -61,7 +61,7 @@ describe("towns (config/towns.ts)", () => {
     for (const t of towns.filter((t) => t.region)) {
       const region = getRegion(t.region);
       expect(region, t.name).toBeDefined();
-      expect(milesBetween(t, region!.center), `${t.name} from ${t.region}`).toBeLessThan(150);
+      expect(milesBetween(t, region!.center), `${t.name} from ${t.region}`).toBeLessThan(region!.radiusMiles + 50);
     }
   });
 
@@ -171,7 +171,7 @@ describe("big regions over local areas (UC-40)", () => {
   });
 
   it("group the Southeast's areas and know a big region by its live areas", () => {
-    expect(liveAreasIn("southeast").map((r) => r.slug)).toEqual(expect.arrayContaining(["western-nc", "charlotte", "triangle", "upstate-sc", "east-tennessee"]));
+    expect(liveAreasIn("southeast").map((r) => r.slug)).toEqual(expect.arrayContaining(["western-nc", "charlotte", "triangle", "coastal-carolinas", "east-tennessee"]));
     expect(groupOf(getRegion("new-river-gorge")!).slug).toBe("mid-atlantic");
     expect(isLiveGroup("southeast")).toBe(true);
     expect(isLiveGroup("midwest")).toBe(true);

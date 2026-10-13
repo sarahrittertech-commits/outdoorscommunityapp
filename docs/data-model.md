@@ -50,7 +50,7 @@ a live one (FR-RG-7).
 | Field | Type | Notes |
 | --- | --- | --- |
 | `id` | uuid | |
-| `slug` | text, unique | `western-nc`, `front-range`, `triangle`, `puget-sound`, `new-river-gorge`, `east-tennessee`, `wasatch`, `reno-tahoe`, `sedona-flagstaff`, `upstate-sc`, `durango-san-juans`, `charlotte`, `northern-vermont`, `greater-boston`, `portland-gorge`, `central-oregon`, `bay-area`, `los-angeles`, `san-diego`, `roanoke-nrv`, `shenandoah`, `white-mountains`, `missoula`, `bozeman`, `jackson-hole`, `boise-sun-valley`, `lowcountry`, `cape-fear`, `hampton-roads`, `bluegrass`, `washington-dc`, `laurel-highlands`, `duluth`, `marquette`, `chicago`, `twin-cities`, `madison-driftless`, `moab-grand-junction`, `zion-kanab` |
+| `slug` | text, unique | `western-nc`, `front-range`, `triangle`, `puget-sound`, `new-river-gorge`, `east-tennessee`, `wasatch`, `reno-tahoe`, `sedona-flagstaff`, `durango-san-juans`, `charlotte`, `northern-vermont`, `greater-boston`, `portland-gorge`, `central-oregon`, `bay-area`, `los-angeles`, `san-diego`, `roanoke-nrv`, `shenandoah`, `white-mountains`, `missoula`, `bozeman`, `jackson-hole`, `boise-sun-valley`, `coastal-carolinas`, `hampton-roads`, `bluegrass`, `washington-dc`, `laurel-highlands`, `duluth`, `marquette`, `chicago`, `twin-cities`, `madison-driftless`, `moab-grand-junction`, `zion-kanab`. `upstate-sc` merged into `western-nc` (now *Western Carolinas*) and `lowcountry` and `cape-fear` into `coastal-carolinas` on 13 October 2026 |
 | `name` | text | "Western North Carolina", "Colorado Front Range"… |
 | `timezone` | text | IANA zone; new events default to their group's region's zone (FR-RG-10) |
 | `center_lat`, `center_lng` | numeric | Where the map opens (FR-RG-5) |
@@ -756,3 +756,20 @@ display order.
 
 *Families & Kids* was left out: it sits awkwardly with "no users under 18".
 Family outings are covered by *Family & casual rides* and *Family camping*.
+
+### search_terms
+
+Keywords and names that mean an area, or the whole board when `region_id`
+is empty: former names, abbreviations, aliases and keywords, kept for
+tagging, search and SEO (13 October 2026). "Western North Carolina" and
+"WNC" mean the Western Carolinas this way. Anyone reads them; only the
+site admin writes them (PT-255, PT-256).
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | uuid | |
+| `term` | text | 1 to 120 characters; unique per area, ignoring case |
+| `kind` | text | `former_name`, `abbreviation`, `alias`, `geography` (a state's traditional regions: Piedmont, Tidewater, Upstate) or `keyword` |
+| `region_id` | uuid, null | The area it means; empty for the whole board |
+| `note` | text, null | Up to 300 characters |
+| `created_at` | timestamptz | |

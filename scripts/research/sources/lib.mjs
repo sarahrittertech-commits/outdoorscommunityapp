@@ -8,7 +8,6 @@ import { miles } from "../feeds/lib.mjs";
 export const NEARBY_STATES = {
   "western-nc": ["NC", "SC", "TN", "GA", "VA"],
   triangle: ["NC", "VA"],
-  "upstate-sc": ["SC", "NC", "GA"],
   "east-tennessee": ["TN", "NC", "VA", "KY", "GA"],
   "new-river-gorge": ["WV", "VA"],
   "front-range": ["CO", "WY"],
