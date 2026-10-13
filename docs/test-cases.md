@@ -258,6 +258,9 @@ web app is not the thing enforcing the rule.
 | PT-254 | Every live area belongs to a big region | An area missing from every big region's view |
 | PT-255 | Visitors read search terms (Western North Carolina means the Western Carolinas) but cannot add one | Old names stop finding their area, or anyone edits the keyword list |
 | PT-256 | Only the site admin adds, changes or removes a search term; a term is unique per area | Members edit keywords, or duplicates pile up |
+| PT-257 | Only the site admin lists a verified find with no area | Members publish listings, or unverified finds reach the board |
+| PT-258 | Visitors see a listing with no area in Communities and Guides and shops | Ungrouped listings hidden from zip search |
+| PT-259 | An owner can't take a group out of every area; only the site admin assigns an area, and only a live one | Groups vanish from every area, or land in a closed one |
 
 ## Automated — unit
 

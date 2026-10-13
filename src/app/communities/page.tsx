@@ -210,11 +210,14 @@ export default async function CommunitiesPage({ searchParams }: Props) {
         {g.description && <p className="m-0 mt-1 line-clamp-2 max-w-prose text-sm text-muted">{g.description}</p>}
         <p className="m-0 text-sm text-muted sm:hidden">
           {g.area}
+          {!g.region_id && " · not in an area yet"}
           {g.miles !== undefined && ` · ${aboutMiles(g.miles)}`}
         </p>
       </td>
       <td className="hidden py-3 pr-4 sm:table-cell">
         {g.area}
+        {/* UC-41: a community whose town isn't in any open area yet. */}
+        {!g.region_id && <span className="block text-sm text-muted">Not in an area yet</span>}
         {/* FR-BR-13: distance on each result, rounded (town centers). */}
         {g.miles !== undefined && <span className="block text-sm text-muted">{aboutMiles(g.miles)}</span>}
       </td>

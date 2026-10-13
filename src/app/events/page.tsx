@@ -104,7 +104,7 @@ export default async function EventsPage({ searchParams }: Props) {
   const milesOf = new Map<string, number>();
   if (near) {
     for (const g of groupRows ?? []) {
-      const t = townForArea(g.area, slugOf.get(g.region_id));
+      const t = townForArea(g.area, g.region_id ? slugOf.get(g.region_id) : undefined);
       if (t) milesOf.set(g.slug, milesBetween(near, t));
     }
   }

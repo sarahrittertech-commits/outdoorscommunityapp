@@ -55,7 +55,7 @@ export type Database = {
           kind: "guide" | "shop" | "venue" | "company";
           description: string;
           subcategory_id: string;
-          region_id: string;
+          region_id: string | null;
           area: string;
           website: string;
           affinity_tags: string[];
@@ -254,7 +254,7 @@ export type Database = {
           description: string;
           rules: string | null;
           subcategory_id: string;
-          region_id: string;
+          region_id: string | null;
           area: string;
           join_policy: Database["public"]["Enums"]["join_policy"];
           join_question: string | null;
@@ -1035,6 +1035,8 @@ export type Database = {
         }[];
       };
       list_business_candidate: { Args: { p_candidate_id: string; p_region_id: string }; Returns: string };
+      list_ungrouped_candidate: { Args: { p_candidate_id: string }; Returns: string };
+      assign_area: { Args: { p_kind: string; p_slug: string; p_region_slug: string }; Returns: string };
       skip_business_candidate: { Args: { p_candidate_id: string }; Returns: undefined };
       remove_business: { Args: { p_business_id: string }; Returns: undefined };
       remove_business_event: { Args: { p_event_id: string }; Returns: undefined };

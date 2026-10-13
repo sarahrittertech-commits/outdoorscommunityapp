@@ -118,6 +118,9 @@ export default async function AdminPage({ searchParams }: Props) {
       <p className="mt-1 text-sm">
         <Link href="/admin/sources">Event sources</Link>: where each region&apos;s hosts post dates, and what the weekly reader changed.
       </p>
+      <p className="mt-1 text-sm">
+        <Link href="/admin/ungrouped">Ungrouped</Link>: communities and guides whose town isn&apos;t in any area yet, to match to an area.
+      </p>
 
       <h2>Open reports ({reports?.length ?? 0})</h2>
       <p className="mt-1 text-sm text-muted">Oldest first. Group organizers see the ones about their own groups too.</p>
