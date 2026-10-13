@@ -157,6 +157,112 @@ export const zipPrefixTowns: Record<string, string> = {
   "040": "Portland, ME",
   "041": "Portland, ME",
   "042": "Lewiston",
+  // Missoula and Western Montana
+  "598": "Missoula",
+  // Bozeman and Big Sky
+  "597": "Bozeman",
+  // Jackson Hole and the Tetons
+  "830": "Jackson, WY",
+  "824": "Cody",
+  // Boise, McCall and Sun Valley
+  "836": "Boise",
+  "837": "Boise",
+  "833": "Ketchum",
+  // Charleston and the Lowcountry
+  "294": "Charleston, SC",
+  "299": "Beaufort",
+  "314": "Savannah",
+  // Wilmington and the Cape Fear Coast
+  "284": "Wilmington",
+  // Hampton Roads and the Outer Banks
+  "233": "Chesapeake",
+  "234": "Virginia Beach",
+  "235": "Norfolk",
+  "236": "Newport News",
+  "279": "Elizabeth City",
+  // Lexington, Louisville and the Red River Gorge
+  "400": "Louisville, KY",
+  "401": "Louisville, KY",
+  "402": "Louisville, KY",
+  "403": "Lexington, KY",
+  "404": "Lexington, KY",
+  "405": "Lexington, KY",
+  "406": "Frankfort",
+  // Washington, DC and Harpers Ferry
+  "200": "Washington, DC",
+  "202": "Washington, DC",
+  "203": "Washington, DC",
+  "204": "Washington, DC",
+  "205": "Washington, DC",
+  "206": "Washington, DC",
+  "207": "Washington, DC",
+  "208": "Rockville",
+  "209": "Silver Spring",
+  "210": "Baltimore",
+  "211": "Baltimore",
+  "212": "Baltimore",
+  "214": "Annapolis",
+  "217": "Frederick",
+  "220": "Fairfax",
+  "221": "Fairfax",
+  "222": "Arlington, VA",
+  "223": "Alexandria",
+  "224": "Fredericksburg",
+  "254": "Shepherdstown",
+  // Pittsburgh and the Laurel Highlands
+  "150": "Pittsburgh",
+  "151": "Pittsburgh",
+  "152": "Pittsburgh",
+  "154": "Uniontown",
+  "155": "Somerset",
+  "156": "Greensburg",
+  "159": "Johnstown",
+  "215": "Cumberland",
+  "262": "Elkins",
+  "265": "Morgantown",
+  // Duluth and the North Shore
+  "556": "Two Harbors",
+  "557": "Ely",
+  "558": "Duluth",
+  "548": "Hayward",
+  // Marquette and the Keweenaw
+  "498": "Marquette",
+  "499": "Houghton",
+  // Chicago and Starved Rock
+  "600": "Lake Forest",
+  "601": "Elgin",
+  "602": "Evanston",
+  "603": "Oak Park",
+  "604": "Joliet",
+  "605": "Aurora, IL",
+  "606": "Chicago",
+  "607": "Chicago",
+  "608": "Chicago",
+  "609": "Kankakee",
+  "613": "Ottawa",
+  "463": "Gary",
+  "464": "Gary",
+  // Minneapolis–St. Paul and the St. Croix
+  "550": "St. Paul",
+  "551": "St. Paul",
+  "553": "Minneapolis",
+  "554": "Minneapolis",
+  "555": "Minneapolis",
+  "559": "Rochester",
+  "540": "Hudson",
+  // Madison and the Driftless
+  "535": "Madison",
+  "537": "Madison",
+  "538": "Dodgeville",
+  "539": "Baraboo",
+  "546": "La Crosse",
+  "520": "Dubuque",
+  "521": "Decorah",
+  // Moab and Grand Junction
+  "845": "Moab",
+  "815": "Grand Junction",
+  // St. George, Zion and Kanab
+  "847": "St. George",
 };
 
 export const zipTowns: Record<string, string> = {
@@ -543,4 +649,64 @@ export const zipTowns: Record<string, string> = {
   "04217": "Bethel",
   "04970": "Rangeley",
   "04947": "Kingfield",
+  // Bozeman and Big Sky
+  "59716": "Big Sky",
+  // Jackson Hole and the Tetons
+  "83422": "Driggs",
+  "83455": "Victor",
+  // Boise, McCall and Sun Valley
+  "83638": "McCall",
+  "83340": "Ketchum",
+  "83353": "Sun Valley",
+  "83333": "Hailey",
+  // Charleston and the Lowcountry
+  "29926": "Hilton Head",
+  "29928": "Hilton Head",
+  // Wilmington and the Cape Fear Coast
+  "29577": "Myrtle Beach",
+  "29578": "Myrtle Beach",
+  "29582": "North Myrtle Beach",
+  "29526": "Conway, SC",
+  // Hampton Roads and the Outer Banks
+  "23185": "Williamsburg",
+  "23188": "Williamsburg",
+  "23310": "Cape Charles",
+  "27959": "Nags Head",
+  "27948": "Kill Devil Hills",
+  "27949": "Kitty Hawk",
+  "27932": "Edenton",
+  // Lexington, Louisville and the Red River Gorge
+  "40376": "Slade",
+  "40380": "Stanton",
+  // Washington, DC and Harpers Ferry
+  "25425": "Harpers Ferry",
+  "21713": "Boonsboro",
+  "21740": "Hagerstown",
+  "21788": "Thurmont",
+  // Pittsburgh and the Laurel Highlands
+  "15470": "Ohiopyle",
+  "26260": "Davis",
+  "21541": "McHenry",
+  "21532": "Frostburg",
+  // Duluth and the North Shore
+  "54880": "Superior, WI",
+  "54806": "Ashland",
+  "54814": "Bayfield, WI",
+  // Marquette and the Keweenaw
+  "49918": "Copper Harbor",
+  "49862": "Munising",
+  // Chicago and Starved Rock
+  "61373": "Utica",
+  "46304": "Chesterton",
+  // Madison and the Driftless
+  "61036": "Galena",
+  "55949": "Lanesboro",
+  "55987": "Winona",
+  // Moab and Grand Junction
+  "81521": "Fruita",
+  "81526": "Palisade",
+  // St. George, Zion and Kanab
+  "86040": "Page",
+  "84741": "Kanab",
+  "84767": "Springdale",
 };

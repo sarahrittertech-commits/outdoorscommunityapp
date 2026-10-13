@@ -47,12 +47,12 @@ blending the Indy Pass regions with the usual outdoor regions:
 
 | Big region | Areas live today | Areas that would open next (towns.json) |
 | --- | --- | --- |
-| **Southeast** (Southern Appalachians and Piedmont) | Western NC · Charlotte and Lake Norman · Raleigh and the Triangle · Greenville and the Upstate · Knoxville and East Tennessee | Atlanta and North Georgia · Coastal Carolinas · Kentucky · Nashville |
-| **Mid-Atlantic** | New River Gorge · Roanoke and the New River Valley · Harrisonburg and the Shenandoah Valley (13 Oct) | Potomac and Laurel Highlands · Washington and Harpers Ferry · Coastal Virginia · Philadelphia |
+| **Southeast** (Southern Appalachians and Piedmont) | Western NC · Charlotte and Lake Norman · Raleigh and the Triangle · Greenville and the Upstate · Knoxville and East Tennessee · Charleston and the Lowcountry · Wilmington and the Cape Fear Coast · Lexington, Louisville and the Red River Gorge (13 Oct) | Atlanta and North Georgia · Nashville · Alabama · Ozarks · Florida |
+| **Mid-Atlantic** | New River Gorge · Roanoke and the New River Valley · Harrisonburg and the Shenandoah Valley · Hampton Roads and the Outer Banks · Washington, DC and Harpers Ferry · Pittsburgh and the Laurel Highlands (13 Oct) | Richmond · Philadelphia |
 | **Northeast** | Burlington and Northern Vermont · Greater Boston · North Conway and the White Mountains (13 Oct) | Coastal Maine · Upstate New York and Pennsylvania |
-| **Midwest and Great Lakes** | none yet | Lake Superior and the Northwoods · Driftless · Northeast Ohio |
-| **Rockies** | Colorado Front Range · Durango and the San Juans · Wasatch | Colorado mountains · Montana and Wyoming · Idaho |
-| **Southwest** | Sedona and Flagstaff | Canyon country · Southern Arizona · New Mexico · Las Vegas |
+| **Midwest and Great Lakes** | Duluth and the North Shore · Marquette and the Keweenaw · Chicago and Starved Rock · Minneapolis–St. Paul and the St. Croix · Madison and the Driftless (13 Oct) | Door County · West Michigan · Northeast Ohio |
+| **Rockies** | Colorado Front Range · Durango and the San Juans · Wasatch · Missoula and Western Montana · Bozeman and Big Sky · Jackson Hole and the Tetons · Boise, McCall and Sun Valley (13 Oct) | Colorado mountains · Black Hills |
+| **Southwest** | Sedona and Flagstaff · Moab and Grand Junction · St. George, Zion and Kanab (13 Oct) | Southern Arizona · New Mexico · Las Vegas |
 | **Far West and Sierra** | Reno and Tahoe · San Francisco Bay Area · Los Angeles and Santa Barbara · San Diego (13 Oct) | Eastern Sierra · Sacramento and Gold Country |
 | **Pacific Northwest** | Seattle, Bellingham and Olympia · Portland and the Columbia Gorge · Bend and Central Oregon (13 Oct) | Southern Oregon · Eastern Washington |
 

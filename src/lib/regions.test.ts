@@ -124,8 +124,9 @@ describe("regions of places", () => {
     expect(nearestRegion(47.61, -122.33)?.slug).toBe("puget-sound");
     expect(nearestRegion(39.74, -104.99)?.slug).toBe("front-range");
     expect(nearestRegion(35.96, -83.92)?.slug).toBe("east-tennessee");
-    expect(nearestRegion(41.88, -87.63)).toBeUndefined(); // Chicago
-    expect(nearestRegion(41.88, -87.63, { anyDistance: true })).toBeDefined();
+    expect(nearestRegion(41.88, -87.63)?.slug).toBe("chicago");
+    expect(nearestRegion(39.1, -94.58)).toBeUndefined(); // Kansas City
+    expect(nearestRegion(39.1, -94.58, { anyDistance: true })).toBeDefined();
   });
 
   it("starts Near you at the first hub", () => {
@@ -169,11 +170,12 @@ describe("big regions over local areas (UC-40)", () => {
     for (const g of regionGroups) expect(getRegion(g.slug), g.slug).toBeUndefined();
   });
 
-  it("group the Southeast's areas and know which big regions have none yet", () => {
+  it("group the Southeast's areas and know a big region by its live areas", () => {
     expect(liveAreasIn("southeast").map((r) => r.slug)).toEqual(expect.arrayContaining(["western-nc", "charlotte", "triangle", "upstate-sc", "east-tennessee"]));
     expect(groupOf(getRegion("new-river-gorge")!).slug).toBe("mid-atlantic");
     expect(isLiveGroup("southeast")).toBe(true);
-    expect(isLiveGroup("midwest")).toBe(false);
+    expect(isLiveGroup("midwest")).toBe(true);
+    expect(isLiveGroup("plains")).toBe(false);
   });
 
   it("browse a whole big region from the address, centred on the remembered area if it is in it", () => {
@@ -186,8 +188,8 @@ describe("big regions over local areas (UC-40)", () => {
     expect(resolveRegionSlug({ param: "wasatch", cookie: "rockies" })).toEqual({ slug: "wasatch", all: false });
   });
 
-  it("skip a big region with no live area", () => {
-    expect(resolveRegionSlug({ param: "midwest", cookie: "triangle" })).toEqual({ slug: "triangle", all: false });
+  it("skip a name that is no live big region or area", () => {
+    expect(resolveRegionSlug({ param: "plains", cookie: "triangle" })).toEqual({ slug: "triangle", all: false });
   });
 });
 
