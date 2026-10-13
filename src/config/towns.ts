@@ -39,6 +39,19 @@ function inRegion(region: string | undefined, rows: Row[]): Town[] {
 
 export const towns: Town[] = [
   ...inRegion("western-nc", [
+    ["Maggie Valley", "NC", 35.52, -83.1],
+    ["Rosman", "NC", 35.14, -82.82],
+    ["Cullowhee", "NC", 35.31, -83.18],
+    ["Todd", "NC", 36.3, -81.6],
+    ["Linville", "NC", 36.07, -81.87],
+    ["Chimney Rock", "NC", 35.44, -82.25],
+    ["Beech Mountain", "NC", 36.21, -81.88],
+    ["Pisgah Forest", "NC", 35.27, -82.7],
+    ["Hot Springs", "NC", 35.89, -82.83],
+    ["Bristol", "VA", 36.6, -82.19],
+    ["Abingdon", "VA", 36.71, -81.98],
+    ["Damascus", "VA", 36.63, -81.79],
+    ["Augusta", "GA", 33.47, -81.97],
     ["Asheville", "NC", 35.5951, -82.5515, ["Buncombe County"]],
     ["West Asheville", "NC", 35.579, -82.596],
     ["Black Mountain", "NC", 35.6179, -82.3212],
@@ -72,6 +85,7 @@ export const towns: Town[] = [
     ["Elkin", "NC", 36.2443, -80.8484],
   ]),
   ...inRegion("charlotte", [
+    ["Columbia", "SC", 34, -81.03],
     ["Charlotte", "NC", 35.2271, -80.8431, ["Mecklenburg County"]],
     ["Mooresville", "NC", 35.5849, -80.8101],
     ["Huntersville", "NC", 35.41, -80.84, ["Lake Norman"]],
@@ -94,6 +108,11 @@ export const towns: Town[] = [
     ["Lancaster", "SC", 34.72, -80.77],
   ]),
   ...inRegion("front-range", [
+    ["Winter Park", "CO", 39.89, -105.76],
+    ["Eagle", "CO", 39.66, -106.83],
+    ["Avon", "CO", 39.63, -106.52],
+    ["Frisco", "CO", 39.57, -106.1],
+    ["Pine", "CO", 39.45, -105.38],
     ["Denver", "CO", 39.74, -104.99],
     ["Boulder", "CO", 40.01, -105.27],
     ["Golden", "CO", 39.76, -105.22],
@@ -125,6 +144,13 @@ export const towns: Town[] = [
     ["Fort Collins", "CO", 40.59, -105.08],
   ]),
   ...inRegion("triangle", [
+    ["Troy", "NC", 35.36, -79.89],
+    ["Ellerbe", "NC", 35.07, -79.76],
+    ["Ophir", "NC", 35.38, -79.98],
+    ["Kinston", "NC", 35.26, -77.58],
+    ["Lillington", "NC", 35.4, -78.82],
+    ["Asheboro", "NC", 35.71, -79.81],
+    ["Danville", "VA", 36.59, -79.4],
     ["Raleigh", "NC", 35.7796, -78.6382, ["Wake County"]],
     ["Durham", "NC", 35.994, -78.8986],
     ["Chapel Hill", "NC", 35.91, -79.06],
@@ -164,6 +190,7 @@ export const towns: Town[] = [
     ["Sea Breeze", "NC", 34.0582, -77.8946],
   ]),
   ...inRegion("puget-sound", [
+    ["Winthrop", "WA", 48.48, -120.19, ["Mazama/Winthrop"]],
     ["Seattle", "WA", 47.61, -122.33, ["King County"]],
     ["Bellingham", "WA", 48.75, -122.48, ["Whatcom County"]],
     ["Bellevue", "WA", 47.61, -122.2],
@@ -195,6 +222,7 @@ export const towns: Town[] = [
     ["Glacier", "WA", 48.89, -121.94, ["Mount Baker"]],
   ]),
   ...inRegion("new-river-gorge", [
+    ["Snowshoe", "WV", 38.41, -79.99],
     ["Fayetteville", "WV", 38.05, -81.1, ["New River Gorge"]],
     ["Lansing", "WV", 38.1, -81.05],
     ["Ansted", "WV", 38.14, -81.1],
@@ -218,6 +246,8 @@ export const towns: Town[] = [
     ["Rainelle", "WV", 37.97, -80.77],
   ]),
   ...inRegion("east-tennessee", [
+    ["Cleveland", "TN", 35.16, -84.88],
+    ["Benton", "TN", 35.17, -84.65],
     ["Knoxville", "TN", 35.96, -83.92, ["Knox County"]],
     ["Farragut", "TN", 35.88, -84.15],
     ["Alcoa", "TN", 35.79, -83.97],
@@ -246,6 +276,7 @@ export const towns: Town[] = [
     ["Chattanooga", "TN", 35.05, -85.31],
   ]),
   ...inRegion("wasatch", [
+    ["Snowbird", "UT", 40.58, -111.66],
     ["Salt Lake City", "UT", 40.76, -111.89, ["Salt Lake County", "SLC"]],
     ["Millcreek", "UT", 40.69, -111.88],
     ["Murray", "UT", 40.67, -111.89],
@@ -375,6 +406,8 @@ export const towns: Town[] = [
   // listed there keep a distance.
   ...inRegion(undefined, [["Red River Gorge", "KY", 37.826, -83.61, ["Red River Gorge, Kentucky"]]]),
   ...inRegion("northern-vermont", [
+    ["Woodstock", "VT", 43.62, -72.52],
+    ["Lake George", "NY", 43.43, -73.71],
     ["Burlington", "VT", 44.48, -73.21, ["Lake Champlain", "Champlain Valley", "Chittenden County"]],
     ["South Burlington", "VT", 44.47, -73.17],
     ["Winooski", "VT", 44.49, -73.19],
@@ -399,6 +432,7 @@ export const towns: Town[] = [
     ["Hinesburg", "VT", 44.33, -73.11],
   ]),
   ...inRegion("greater-boston", [
+    ["Everett", "MA", 42.41, -71.05],
     ["Boston", "MA", 42.36, -71.06],
     ["Cambridge", "MA", 42.37, -71.11],
     ["Somerville", "MA", 42.39, -71.1],
@@ -469,6 +503,7 @@ export const towns: Town[] = [
     ["Chemult", "OR", 43.22, -121.78],
   ]),
   ...inRegion("bay-area", [
+    ["Hayward", "CA", 37.67, -122.08],
     ["San Francisco", "CA", 37.77, -122.42],
     ["Oakland", "CA", 37.8, -122.27, ["East Bay"]],
     ["Berkeley", "CA", 37.87, -122.27],
@@ -587,6 +622,13 @@ export const towns: Town[] = [
     ["Sperryville", "VA", 38.66, -78.23, ["Old Rag"]],
   ]),
   ...inRegion("white-mountains", [
+    ["Lovell", "ME", 44.13, -70.89],
+    ["Albany", "NH", 43.96, -71.18],
+    ["Concord", "NH", 43.21, -71.54],
+    ["Alexandria", "NH", 43.61, -71.79],
+    ["Center Harbor", "NH", 43.71, -71.46],
+    ["Moultonborough", "NH", 43.75, -71.4],
+    ["Newry", "ME", 44.49, -70.79],
     ["North Conway", "NH", 44.05, -71.13, ["Mount Washington Valley", "Cathedral Ledge"]],
     ["Conway", "NH", 43.98, -71.12],
     ["Intervale", "NH", 44.09, -71.14],

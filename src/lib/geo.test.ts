@@ -75,3 +75,22 @@ describe("zip codes (FR-BR-12)", () => {
     expect(resolveLocation("", "abc")).toEqual({ town: undefined, unknownZip: "abc" });
   });
 });
+
+describe("an area's state and region choose its town", () => {
+  it("never takes a same-named town in another state", () => {
+    expect(townForArea("Augusta, GA")?.state).toBe("GA");
+    expect(townForArea("Augusta, Maine")?.state).toBe("ME");
+    expect(townForArea("Atlanta GA")?.state).toBe("GA");
+    expect(townForArea("Red River Gorge, Kentucky")?.state).toBe("KY");
+  });
+
+  it("prefers the town in the listing's own region, and drops one far from it", () => {
+    expect(townForArea("Portland", "white-mountains")?.state).toBe("ME");
+    expect(townForArea("Portland", "portland-gorge")?.state).toBe("OR");
+    expect(townForArea("Lexington", "triangle")?.state).toBe("NC");
+    expect(townForArea("Lexington", "greater-boston")?.state).toBe("MA");
+    expect(townForArea("Portland", "triangle")).toBeUndefined();
+    expect(townForArea("Lexington", "bluegrass")?.state).toBe("KY");
+  });
+});
+

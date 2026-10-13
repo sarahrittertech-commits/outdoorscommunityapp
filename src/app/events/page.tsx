@@ -8,7 +8,7 @@ import { LocationFilter, UnknownZip } from "@/components/LocationFilter";
 import { Notice } from "@/components/Notice";
 import { RegionScope } from "@/components/RegionScope";
 import { distances } from "@/config/towns";
-import { getCurrentRegion, regionFilterIds, scopeName } from "@/lib/currentRegion";
+import { getCurrentRegion, regionFilterIds, regionSlugsById, scopeName } from "@/lib/currentRegion";
 import { milesBetween, resolveLocation, townForArea, townKey } from "@/lib/geo";
 import { regionForTown } from "@/lib/regions";
 import { GROUP_TYPES, isGroupType } from "@/lib/groupTypes";
@@ -60,7 +60,7 @@ export default async function EventsPage({ searchParams }: Props) {
   // event_listings doesn't carry the group's type or town, so both come from
   // the groups themselves. The type filter goes to the database as a list of
   // group slugs, so it holds past the 300-row page like the activity filter.
-  const { data: groupRows } = await supabase.from("groups").select("slug, area, group_type");
+  const { data: groupRows } = await supabase.from("groups").select("slug, area, group_type, region_id");
   const typeOf = new Map((groupRows ?? []).map((g) => [g.slug, g.group_type]));
   const ofType = (groupSlug: string | null) => !type || typeOf.get(groupSlug ?? "") === type;
   const now = new Date();
@@ -74,7 +74,7 @@ export default async function EventsPage({ searchParams }: Props) {
   let listing = supabase
     .from("event_listings")
     .select(
-      "id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text",
+      "id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, status, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text, region_id",
     )
     .eq("status", "scheduled")
     .gt("starts_at", startsInWindow.from)
@@ -86,7 +86,7 @@ export default async function EventsPage({ searchParams }: Props) {
 
   let countQuery = supabase
     .from("event_listings")
-    .select("category_slug, group_slug, host_kind, host_area")
+    .select("category_slug, group_slug, host_kind, host_area, region_id")
     .eq("status", "scheduled")
     .gt("starts_at", startsInWindow.from)
     .lt("starts_at", startsInWindow.to);
@@ -99,20 +99,21 @@ export default async function EventsPage({ searchParams }: Props) {
     countQuery,
   ]);
 
+  const slugOf = await regionSlugsById();
   // Distance from the chosen town to each event's group town.
   const milesOf = new Map<string, number>();
   if (near) {
     for (const g of groupRows ?? []) {
-      const t = townForArea(g.area);
+      const t = townForArea(g.area, slugOf.get(g.region_id));
       if (t) milesOf.set(g.slug, milesBetween(near, t));
     }
   }
   // UC-37: a guide's, shop's or venue's event is measured from the host's town.
-  type Placed = { group_slug: string | null; host_area: string | null };
+  type Placed = { group_slug: string | null; host_area: string | null; region_id?: string | null };
   const milesFor = (r: Placed): number | undefined => {
     if (!near) return undefined;
     if (r.group_slug) return milesOf.get(r.group_slug);
-    const t = townForArea(r.host_area);
+    const t = townForArea(r.host_area, r.region_id ? slugOf.get(r.region_id) : undefined);
     return t ? milesBetween(near, t) : undefined;
   };
   const inRange = (r: Placed) => !near || (milesFor(r) ?? Infinity) <= within;

@@ -52,7 +52,7 @@ export default async function Home({ searchParams }: Props) {
   const upcoming = (regionSlugs: string[] | null) => {
     let query = supabase
       .from("event_listings")
-      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text")
+      .select("id, title, starts_at, timezone, group_name, group_slug, category_slug, location_name, going_count, is_unclaimed, is_paid, takes_rsvps, host_kind, business_slug, business_name, host_area, price_text, region_id")
       .eq("status", "scheduled")
       .gt("starts_at", new Date().toISOString());
     if (regionSlugs) query = query.in("region_id", regionSlugs.map((slug) => ids.get(slug) ?? "00000000-0000-0000-0000-000000000000"));
@@ -65,14 +65,20 @@ export default async function Home({ searchParams }: Props) {
     upcoming(shownRegions),
     // Only a second query when Near you is in another region than the page.
     shownRegions && !shownRegions.includes(nearRegion.slug) ? upcoming([nearRegion.slug]) : Promise.resolve({ data: null }),
-    supabase.from("groups").select("slug, area").eq("status", "active").eq("review_status", "approved"),
+    supabase.from("groups").select("slug, area, region_id").eq("status", "active").eq("review_status", "approved"),
   ]);
 
   // Each event is placed at its group's town (UC-14).
-  const townOfGroup = new Map<string, Town | undefined>((groups ?? []).map((g) => [g.slug, townForArea(g.area)]));
+  // A town is read in the listing's own region, so "Augusta, GA" is never
+  // Maine and a plain "Lexington" in the Triangle is the one in North Carolina.
+  const slugOf = new Map([...ids].map(([slug, id]) => [id, slug]));
+  const townOfGroup = new Map<string, Town | undefined>((groups ?? []).map((g) => [g.slug, townForArea(g.area, slugOf.get(g.region_id))]));
   // UC-37: a guide's, shop's or venue's event is placed at the host's town.
-  const place = <E extends { group_slug: string | null; host_area: string | null }>(list: E[] | null) =>
-    (list ?? []).map((e) => ({ ...e, town: e.group_slug ? townOfGroup.get(e.group_slug) : townForArea(e.host_area) }));
+  const place = <E extends { group_slug: string | null; host_area: string | null; region_id: string | null }>(list: E[] | null) =>
+    (list ?? []).map((e) => ({
+      ...e,
+      town: e.group_slug ? townOfGroup.get(e.group_slug) : townForArea(e.host_area, e.region_id ? slugOf.get(e.region_id) : undefined),
+    }));
   const placed = place(events);
 
   const nearby = (nearEvents ? place(nearEvents) : placed)

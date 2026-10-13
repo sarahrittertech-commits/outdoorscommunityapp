@@ -66,6 +66,11 @@ export const regionIds = cache(async (): Promise<Map<string, string>> => {
   return new Map((data ?? []).map((r) => [r.slug, r.id]));
 });
 
+/** Region slugs by database id, to place a listing's town in its own region (townForArea). */
+export async function regionSlugsById(): Promise<Map<string, string>> {
+  return new Map([...(await regionIds())].map(([slug, id]) => [id, slug]));
+}
+
 /**
  * The database ids of the areas to filter listings by: one area, every area
  * of a big region (UC-40), or null for every region (`?region=all`). An area
