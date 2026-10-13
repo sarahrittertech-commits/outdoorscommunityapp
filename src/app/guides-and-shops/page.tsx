@@ -51,7 +51,7 @@ export default async function GuidesAndShopsPage({ searchParams }: Props) {
   const supabase = await createClient();
   let query = supabase
     .from("business_listings")
-    .select("slug, name, kind, description, area, affinity_tags, category_slug, subcategory_name")
+    .select("slug, name, kind, description, area, affinity_tags, category_slug, subcategory_name, region_id")
     .order("name")
     .limit(500);
   if (category) query = query.eq("category_slug", category);
@@ -88,6 +88,7 @@ export default async function GuidesAndShopsPage({ searchParams }: Props) {
                 <span className="ml-2 inline-flex items-center gap-1 text-sm text-muted">
                   {b.category_slug && <ActivityIcon slug={b.category_slug} className="h-4 w-4" />}
                   {BUSINESS_KIND_LABEL[b.kind ?? ""] ?? "listing"} · {b.subcategory_name} · {b.area}
+                  {!b.region_id && " · not in an area yet"}
                 </span>
                 <AffinityTags tags={b.affinity_tags} className="ml-2 align-middle" />
                 {b.description && <p className="m-0 mt-1 line-clamp-2 max-w-prose text-sm text-muted">{b.description}</p>}

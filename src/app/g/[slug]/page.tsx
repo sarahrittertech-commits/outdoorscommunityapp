@@ -51,7 +51,8 @@ export default async function GroupPage({ params, searchParams }: Props) {
   const now = new Date().toISOString();
   const query = await searchParams;
   // The breadcrumb stays in the group's own region, whatever the visitor last browsed.
-  const inRegion = `?region=${(await regionOfGroup(group.region_id)).slug}`;
+  // UC-41: a group in no area yet keeps its breadcrumb on every region.
+  const inRegion = group.region_id ? `?region=${(await regionOfGroup(group.region_id)).slug}` : "?region=all";
 
   const [{ data: listing }, { data: organizers }, { data: upcoming }, { count: pastCount }, { count: pendingCount }, { data: myClaim }] =
     await Promise.all([
@@ -133,6 +134,7 @@ export default async function GroupPage({ params, searchParams }: Props) {
       <AffinityTags tags={group.affinity_tags} />
       <p className="text-sm text-muted">
         {group.area} ·{" "}
+        {!group.region_id && <>not in an area yet · </>}
         {group.is_unclaimed ? (
           <>unclaimed listing</>
         ) : !isListed ? (

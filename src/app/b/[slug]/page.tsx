@@ -60,7 +60,7 @@ export default async function BusinessPage({ params }: Props) {
       <h1>{b.name}</h1>
       <AffinityTags tags={b.affinity_tags} />
       <p className="text-sm text-muted">
-        {(BUSINESS_KIND_LABEL[b.kind ?? ""] ?? "listing").replace(/^./, (c) => c.toUpperCase())} · {b.subcategory_name} · {b.area} · {b.region_name}
+        {(BUSINESS_KIND_LABEL[b.kind ?? ""] ?? "listing").replace(/^./, (c) => c.toUpperCase())} · {b.subcategory_name} · {b.area} · {b.region_name ?? "not in an area yet"}
       </p>
       <p>{b.description}</p>
       {b.website && (

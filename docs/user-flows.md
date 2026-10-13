@@ -696,3 +696,19 @@ flowchart TD
   area -->|change| change
   change -->|big region with no area yet| soon["Coming soon<br/>(suggest a town, UC-32)"]
 ```
+
+## UC-41 — Find a community that isn't in any area yet
+
+*Approved and built 13 October 2026.*
+
+```mermaid
+flowchart TD
+  comm["Communities page"] -->|zip code or town + distance| near["Every verified community within the distance<br/>nearest first, in an area or not"]
+  near --> mark["Ungrouped ones marked<br/>'Not in an area yet'"]
+  mark --> group["Group page as usual<br/>join · claim · events"]
+  comm -->|no zip, an area or big region| area["That area's communities only, as today"]
+  comm -->|every region| all["Every community, ungrouped included"]
+  admin["Site admin: Ungrouped"] --> list["Towns and communities with no area<br/>by state and nearest open area"]
+  list -->|assign| assign["Move to an area"]
+  list -->|enough here| open["Open a new area (UC-35)"]
+```

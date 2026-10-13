@@ -72,6 +72,7 @@ export const notices = {
   candidate_listed: "Listed. It's on the board as an unclaimed listing.",
   candidate_skipped: "Skipped. It won't be suggested again.",
   source_added: "Source added. The weekly reader reads it from now on.",
+  area_assigned: "Moved into the area. It now shows there, and the weekly reader reads its events.",
   source_retired: "Source retired. The reader won't read it again.",
   source_restored: "Source active again. The reader reads it next week.",
   business_listed: "Listed. It's in Guides, shops and venues as an unclaimed listing, with its upcoming events.",

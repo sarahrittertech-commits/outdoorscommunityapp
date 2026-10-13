@@ -231,6 +231,8 @@ insert into definer_allowed values
   ('join_answers(uuid)'),
   ('join_by_invite(text)'),
   ('list_business_candidate(uuid, uuid)'),
+  ('list_ungrouped_candidate(uuid)'),
+  ('assign_area(text, text, text)'),
   ('list_candidate(uuid, uuid)'),
   ('move_from_waitlist(uuid, uuid)'),
   ('member_list_visible(uuid)'),

@@ -72,7 +72,7 @@ export default async function Home({ searchParams }: Props) {
   // A town is read in the listing's own region, so "Augusta, GA" is never
   // Maine and a plain "Lexington" in the Triangle is the one in North Carolina.
   const slugOf = new Map([...ids].map(([slug, id]) => [id, slug]));
-  const townOfGroup = new Map<string, Town | undefined>((groups ?? []).map((g) => [g.slug, townForArea(g.area, slugOf.get(g.region_id))]));
+  const townOfGroup = new Map<string, Town | undefined>((groups ?? []).map((g) => [g.slug, townForArea(g.area, g.region_id ? slugOf.get(g.region_id) : undefined)]));
   // UC-37: a guide's, shop's or venue's event is placed at the host's town.
   const place = <E extends { group_slug: string | null; host_area: string | null; region_id: string | null }>(list: E[] | null) =>
     (list ?? []).map((e) => ({

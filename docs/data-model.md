@@ -757,6 +757,13 @@ display order.
 *Families & Kids* was left out: it sits awkwardly with "no users under 18".
 Family outings are covered by *Family & casual rides* and *Family camping*.
 
+### Listings with no area
+
+`groups.region_id` and `businesses.region_id` may be empty (UC-41, FR-RG-14):
+a verified listing whose town isn't in an open area yet. `list_ungrouped_candidate`
+lists one and `assign_area` moves it into a live area; both are the site
+admin's only, and a trigger stops anyone else leaving a group with no area.
+
 ### search_terms
 
 Keywords and names that mean an area, or the whole board when `region_id`
