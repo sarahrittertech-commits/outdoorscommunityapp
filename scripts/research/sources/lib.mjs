@@ -278,3 +278,19 @@ export function decodeEntities(text) {
     .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
     .replace(/&([a-z]+);/gi, (m, name) => NAMED[name.toLowerCase()] ?? m);
 }
+
+const STATE_CODES = new Set(Object.values(STATE_NAMES));
+
+/**
+ * Why an event is outside its host's region when only its title or place
+ * names the state ("Butte Gateway Meetup I Butte, MT"), or null. Pages for
+ * organizations that span several states often give no address data.
+ */
+export function textStateReason(event, region) {
+  if (!region) return null;
+  const allowed = NEARBY_STATES[region.slug] ?? [region.state];
+  for (const m of `${event.title ?? ""} | ${event.location_name ?? ""}`.matchAll(/,\s*([A-Z]{2})(?=\s*(?:\d{5}|$|[|),;–-]))/g)) {
+    if (STATE_CODES.has(m[1]) && !allowed.includes(m[1])) return `Out of the region (${m[1]}, named in the title or place)`;
+  }
+  return null;
+}

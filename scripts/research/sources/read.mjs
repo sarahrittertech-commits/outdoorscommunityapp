@@ -21,7 +21,7 @@ import { appendFile, readFile } from "node:fs/promises";
 import { regions } from "../../../src/config/regions.ts";
 import { towns } from "../../../src/config/towns.ts";
 import { htmlText, jsonLdEvents } from "../gemini/lib.mjs";
-import { decodeEntities, eventPageLinks, eventsFromIcs, meetupFeed, readJsonLd, readTribe, robotsAllows, statewideReason } from "./lib.mjs";
+import { decodeEntities, eventPageLinks, eventsFromIcs, meetupFeed, readJsonLd, readTribe, robotsAllows, statewideReason, textStateReason } from "./lib.mjs";
 
 const { sites: statewide } = JSON.parse(await readFile(new URL("./statewide.json", import.meta.url), "utf8"));
 
@@ -94,10 +94,9 @@ async function readSource(source) {
     events: raw.events.map((e) => ({ ...e, title: decodeEntities(e.title), location_name: decodeEntities(e.location_name) })),
   };
   const site = statewide[new URL(source.url).hostname.replace(/^www\./, "")];
-  if (!site) return read;
   const region = regions.find((r) => r.slug === source.region);
   const events = read.events.map((e) => {
-    const far = e.far ?? statewideReason(e, site, region, towns);
+    const far = e.far ?? textStateReason(e, region) ?? (site ? statewideReason(e, site, region, towns) : null);
     return far ? { ...e, far } : e;
   });
   return { ...read, events };
