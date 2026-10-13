@@ -22,8 +22,7 @@
       "Maggie Valley, NC",
       "Chimney Rock, NC",
       "Linville, NC",
-      "Todd, NC",
-      "Hiddenite, NC"
+      "Todd, NC"
     ],
     "triangle": [
       "Raleigh, NC",
@@ -91,7 +90,8 @@
       "Seattle, WA",
       "Bellingham, WA",
       "Mazama, WA",
-      "Olympia, WA"
+      "Olympia, WA",
+      "Winthrop, WA"
     ],
     "reno-tahoe": [
       "Reno, NV",
@@ -111,7 +111,8 @@
       "Winston-Salem, NC",
       "Elkin, NC",
       "Columbia, SC",
-      "Chester, SC"
+      "Chester, SC",
+      "Hiddenite, NC"
     ],
     "northern-vermont": [
       "Burlington, VT",
@@ -145,8 +146,7 @@
       "Sisters, OR",
       "Redmond, OR",
       "Terrebonne, OR",
-      "Eugene, OR",
-      "Klamath Falls, OR"
+      "Eugene, OR"
     ],
     "bay-area": [
       "San Francisco, CA",
@@ -187,7 +187,8 @@
       "Bedford, VA",
       "Lexington, VA",
       "Clifton Forge, VA",
-      "Hot Springs, VA"
+      "Hot Springs, VA",
+      "Lynchburg, VA"
     ],
     "shenandoah": [
       "Harrisonburg, VA",
@@ -228,9 +229,6 @@
     ]
   },
   "next": {
-    "Oregon": [
-      "Ashland, OR"
-    ],
     "Idaho": [
       "Boise, ID",
       "McCall, ID",
@@ -246,12 +244,15 @@
     "Colorado mountains": [
       "Aspen, CO",
       "Carbondale, CO",
-      "Basalt, CO"
+      "Basalt, CO",
+      "Glenwood Springs, CO"
     ],
     "Utah and Arizona canyon country": [
       "Moab, UT",
       "Kanab, UT",
-      "Page, AZ"
+      "Page, AZ",
+      "St. George, UT",
+      "Springdale, UT"
     ],
     "Southern Arizona": [
       "Tucson, AZ",
@@ -259,19 +260,22 @@
     ],
     "New Mexico": [
       "Albuquerque, NM",
-      "Taos, NM"
+      "Taos, NM",
+      "Santa Fe, NM"
     ],
     "Nevada": [
       "Las Vegas, NV"
     ],
     "Eastern Sierra": [
       "Mammoth Lakes, CA",
-      "Bishop, CA"
+      "Bishop, CA",
+      "June Lake, CA",
+      "Lone Pine, CA"
     ],
     "Eastern Washington": [
       "Spokane, WA",
-      "Winthrop, WA",
-      "Leavenworth, WA"
+      "Leavenworth, WA",
+      "Wenatchee, WA"
     ],
     "Upstate New York and Pennsylvania": [
       "Ithaca, NY",
@@ -292,7 +296,8 @@
       "Frederick, MD",
       "Alexandria, VA",
       "Annapolis, MD",
-      "Fredericksburg, VA"
+      "Fredericksburg, VA",
+      "Washington, DC"
     ],
     "Kentucky": [
       "Lexington, KY",
@@ -301,7 +306,8 @@
       "Frankfort, KY",
       "Whitesburg, KY",
       "Shepherdsville, KY",
-      "Bowling Green, KY"
+      "Bowling Green, KY",
+      "Louisville, KY"
     ],
     "Atlanta and North Georgia": [
       "Atlanta, GA",
@@ -314,20 +320,25 @@
       "Wilmington, NC",
       "Charleston, SC",
       "Hilton Head, SC",
-      "Edenton, NC"
+      "Edenton, NC",
+      "Nags Head, NC"
     ],
     "Nashville and Middle Tennessee": [
+      "Nashville, TN",
       "Clarksville, TN"
     ],
     "Philadelphia": [
       "Philadelphia, PA"
     ],
     "Alabama": [
-      "Mentone, AL"
+      "Mentone, AL",
+      "Birmingham, AL",
+      "Huntsville, AL"
     ],
     "Ozarks": [
       "Bentonville, AR",
-      "Eureka Springs, AR"
+      "Eureka Springs, AR",
+      "Fayetteville, AR"
     ],
     "Lake Superior and the Northwoods": [
       "Duluth, MN",
@@ -350,7 +361,9 @@
       "Lanesboro, MN"
     ],
     "Northeast Ohio": [
-      "Peninsula, OH"
+      "Peninsula, OH",
+      "Cleveland, OH",
+      "Akron, OH"
     ],
     "Texas and the Plains": [
       "Austin, TX",
@@ -361,23 +374,30 @@
       "Orlando, FL"
     ],
     "Black Hills": [
-      "Custer, SD"
+      "Custer, SD",
+      "Rapid City, SD"
     ],
     "Alaska": [
       "Juneau, AK",
       "Homer, AK",
-      "Valdez, AK"
+      "Valdez, AK",
+      "Anchorage, AK"
     ],
     "Central and Coastal Virginia": [
       "Richmond, VA",
-      "Lynchburg, VA",
       "Virginia Beach, VA",
       "Chesapeake, VA",
       "Hampton, VA",
       "Cape Charles, VA"
     ],
     "Coastal Maine": [
-      "Bar Harbor, ME"
+      "Bar Harbor, ME",
+      "Camden, ME"
+    ],
+    "Southern Oregon": [
+      "Ashland, OR",
+      "Klamath Falls, OR",
+      "Medford, OR"
     ]
   },
   "states": {
@@ -423,5 +443,37 @@
       "KS",
       "FL"
     ]
-  }
+  },
+  "next_regions": {
+    "Southern Oregon": "pacific-northwest",
+    "Eastern Washington": "pacific-northwest",
+    "Eastern Sierra": "far-west",
+    "Idaho": "rockies",
+    "Montana and Wyoming": "rockies",
+    "Colorado mountains": "rockies",
+    "Black Hills": "rockies",
+    "Utah and Arizona canyon country": "southwest",
+    "Southern Arizona": "southwest",
+    "New Mexico": "southwest",
+    "Nevada": "southwest",
+    "Potomac and Laurel Highlands": "mid-atlantic",
+    "Washington and Harpers Ferry": "mid-atlantic",
+    "Philadelphia": "mid-atlantic",
+    "Central and Coastal Virginia": "mid-atlantic",
+    "Kentucky": "southeast",
+    "Atlanta and North Georgia": "southeast",
+    "Nashville and Middle Tennessee": "southeast",
+    "Alabama": "southeast",
+    "Coastal Carolinas": "southeast",
+    "Florida": "southeast",
+    "Ozarks": "southeast",
+    "Lake Superior and the Northwoods": "midwest",
+    "Driftless and Great Lakes": "midwest",
+    "Northeast Ohio": "midwest",
+    "Upstate New York and Pennsylvania": "northeast",
+    "Coastal Maine": "northeast",
+    "Texas and the Plains": null,
+    "Alaska": null
+  },
+  "_note_regions": "next_regions is a soft mapping (13 October 2026, for Sarah's review): the big region each future area would open under. null = no big region yet (Plains, Alaska). States may become a level between big region and area; each town carries its state."
 }
