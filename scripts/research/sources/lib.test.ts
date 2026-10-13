@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason, wallClockIfUtc } from "./lib.mjs";
+import { decodeEntities, eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason, wallClockIfUtc } from "./lib.mjs";
 
 const asheville = { slug: "western-nc", state: "NC", center: { lat: 35.6, lng: -82.55 }, radiusMiles: 100 };
 const now = new Date("2026-10-12T00:00:00Z");
@@ -127,5 +127,9 @@ describe("weekly source reader", () => {
       { timezone: "America/Denver", region: null, now },
     );
     expect(e).toMatchObject({ starts_at: "2026-11-02T09:00:00", timezone: "America/Denver" });
+  });
+
+  it("turns character codes in titles back into characters", () => {
+    expect(decodeEntities("5th Annual &#8211; Boo! &amp; &#x201C;Turkey&#x201D; &rsquo;")).toBe("5th Annual – Boo! & “Turkey” ’");
   });
 });
