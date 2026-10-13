@@ -15,7 +15,7 @@ export type Region = {
   slug: string;
   /** The big region the area belongs to (config/regionGroups.ts, UC-40). */
   group: string;
-  /** Full name: "Western North Carolina". */
+  /** Full name: "Western Carolinas". */
   name: string;
   /** Header and tight spaces: "Western NC". */
   shortName: string;
@@ -44,20 +44,20 @@ export const regions: Region[] = [
   {
     slug: "western-nc",
     group: "southeast",
-    name: "Western North Carolina",
-    shortName: "Western NC",
+    name: "Western Carolinas",
+    shortName: "Western Carolinas",
     state: "NC",
     timezone: "America/New_York",
-    hubs: ["Asheville"],
-    center: { lat: 35.6, lng: -82.55 },
+    hubs: ["Asheville", "Greenville"],
+    center: { lat: 35.2, lng: -82.45 },
     zoom: 8,
-    radiusMiles: 100,
+    radiusMiles: 130,
     status: "live",
     exampleTown: "Brevard",
     exampleMeetingPlace: "Hooker Falls parking area",
     exampleZip: "28712",
     heroIntro:
-      "Groups, meetups and events for getting outside in Western North Carolina. Join a group, show up, try something new.",
+      "Groups, meetups and events for getting outside in the Western Carolinas, from Asheville and the Blue Ridge to Greenville and the Upstate. Join a group, show up, try something new.",
   },
   {
     slug: "front-range",
@@ -202,24 +202,6 @@ export const regions: Region[] = [
     exampleZip: "86336",
     heroIntro:
       "Groups, meetups and events for getting outside in Sedona, Flagstaff and the Verde Valley. Join a group, show up, try something new.",
-  },
-  {
-    slug: "upstate-sc",
-    group: "southeast",
-    name: "Greenville and the Upstate",
-    shortName: "Greenville–Upstate",
-    state: "SC",
-    timezone: "America/New_York",
-    hubs: ["Greenville"],
-    center: { lat: 34.85, lng: -82.4 },
-    zoom: 8,
-    radiusMiles: 100,
-    status: "live",
-    exampleTown: "Travelers Rest",
-    exampleMeetingPlace: "Swamp Rabbit Trail at Trailblazer Park",
-    exampleZip: "29690",
-    heroIntro:
-      "Groups, meetups and events for getting outside in Greenville and Upstate South Carolina. Join a group, show up, try something new.",
   },
   {
     slug: "durango-san-juans",
@@ -510,58 +492,40 @@ export const regions: Region[] = [
       "Groups, meetups and events for getting outside in Boise, McCall and Sun Valley, from the Foothills to the Sawtooths. Join a group, show up, try something new.",
   },
   {
-    slug: "lowcountry",
+    slug: "coastal-carolinas",
     group: "southeast",
-    name: "Charleston and the Lowcountry",
-    shortName: "Lowcountry",
+    name: "Coastal Carolinas",
+    shortName: "Coastal Carolinas",
     state: "SC",
     timezone: "America/New_York",
-    hubs: ["Charleston, SC", "Hilton Head"],
-    center: { lat: 32.5, lng: -80.5 },
-    zoom: 8,
-    radiusMiles: 100,
+    hubs: ["Charleston, SC", "Wilmington", "Nags Head"],
+    center: { lat: 34.2, lng: -78.2 },
+    zoom: 7,
+    radiusMiles: 250,
     status: "live",
     exampleTown: "Beaufort",
     exampleMeetingPlace: "James Island County Park",
     exampleZip: "29401",
     heroIntro:
-      "Groups, meetups and events for getting outside in Charleston, Beaufort, Hilton Head and Savannah, on the marshes, rivers and sea islands. Join a group, show up, try something new.",
-  },
-  {
-    slug: "cape-fear",
-    group: "southeast",
-    name: "Wilmington and the Cape Fear Coast",
-    shortName: "Cape Fear",
-    state: "NC",
-    timezone: "America/New_York",
-    hubs: ["Wilmington"],
-    center: { lat: 34.0, lng: -78.2 },
-    zoom: 8,
-    radiusMiles: 100,
-    status: "live",
-    exampleTown: "Southport",
-    exampleMeetingPlace: "Carolina Beach State Park",
-    exampleZip: "28401",
-    heroIntro:
-      "Groups, meetups and events for getting outside in Wilmington, the Cape Fear River and the beaches from Topsail to Myrtle Beach. Join a group, show up, try something new.",
+      "Groups, meetups and events for getting outside on the Carolina coast, from the Outer Banks and Wilmington to Charleston, Hilton Head and Savannah. Join a group, show up, try something new.",
   },
   {
     slug: "hampton-roads",
     group: "mid-atlantic",
-    name: "Hampton Roads and the Outer Banks",
+    name: "Hampton Roads and the Eastern Shore",
     shortName: "Hampton Roads",
     state: "VA",
     timezone: "America/New_York",
-    hubs: ["Norfolk", "Nags Head"],
-    center: { lat: 36.5, lng: -76.2 },
+    hubs: ["Norfolk"],
+    center: { lat: 37.0, lng: -76.3 },
     zoom: 8,
     radiusMiles: 100,
     status: "live",
-    exampleTown: "Kill Devil Hills",
+    exampleTown: "Williamsburg",
     exampleMeetingPlace: "First Landing State Park",
     exampleZip: "23510",
     heroIntro:
-      "Groups, meetups and events for getting outside in Norfolk, Virginia Beach, Williamsburg and the Outer Banks, on the bay, the sounds and the ocean. Join a group, show up, try something new.",
+      "Groups, meetups and events for getting outside in Norfolk, Virginia Beach, Williamsburg and the Eastern Shore, on the bay, the rivers and the ocean. Join a group, show up, try something new.",
   },
   {
     slug: "bluegrass",

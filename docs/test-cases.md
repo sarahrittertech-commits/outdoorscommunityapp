@@ -256,6 +256,8 @@ web app is not the thing enforcing the rule.
 | PT-252 | The site admin sees coverage per region and retires a source | The admin can't see or fix gaps |
 | PT-253 | Visitors read the eight big regions; nobody adds or renames one outside a migration | Big regions changed from the app |
 | PT-254 | Every live area belongs to a big region | An area missing from every big region's view |
+| PT-255 | Visitors read search terms (Western North Carolina means the Western Carolinas) but cannot add one | Old names stop finding their area, or anyone edits the keyword list |
+| PT-256 | Only the site admin adds, changes or removes a search term; a term is unique per area | Members edit keywords, or duplicates pile up |
 
 ## Automated — unit
 
