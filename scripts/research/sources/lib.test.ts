@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { decodeEntities, eventPageLinks, rollingWindow, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason, textStateReason, wallClockIfUtc } from "./lib.mjs";
+import { decodeEntities, eventPageLinks, midnightIsDateOnly, rollingWindow, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason, textStateReason, wallClockIfUtc } from "./lib.mjs";
 
 const asheville = { slug: "western-nc", state: "NC", center: { lat: 35.6, lng: -82.55 }, radiusMiles: 100 };
 const now = new Date("2026-10-12T00:00:00Z");
@@ -149,5 +149,11 @@ describe("weekly source reader", () => {
     const rows = out as Out[];
     expect(rows.filter((e) => !e.far)).toHaveLength(7);
     expect(rows.filter((e) => e.far && e.title === "Monday Ride").map((e) => e.starts_at.slice(0, 10)).sort()[0]).toBe("2026-11-08");
+  });
+
+  it("treats a midnight start as an all-day listing", () => {
+    expect(midnightIsDateOnly({ title: "Cyclocross", starts_at: "2026-10-17T06:00:00Z", timezone: "America/Denver" })).toMatchObject({ date_only: true, verification: "unverified" });
+    expect(midnightIsDateOnly({ title: "Fest", starts_at: "2026-10-16T00:00:00", timezone: "America/New_York" })).toMatchObject({ date_only: true });
+    expect(midnightIsDateOnly({ title: "Ride", starts_at: "2026-10-19T21:30:00Z", timezone: "America/New_York" })).not.toHaveProperty("date_only");
   });
 });
