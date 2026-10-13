@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { decodeEntities, eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason, wallClockIfUtc } from "./lib.mjs";
+import { decodeEntities, eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason, textStateReason, wallClockIfUtc } from "./lib.mjs";
 
 const asheville = { slug: "western-nc", state: "NC", center: { lat: 35.6, lng: -82.55 }, radiusMiles: 100 };
 const now = new Date("2026-10-12T00:00:00Z");
@@ -131,5 +131,14 @@ describe("weekly source reader", () => {
 
   it("turns character codes in titles back into characters", () => {
     expect(decodeEntities("5th Annual &#8211; Boo! &amp; &#x201C;Turkey&#x201D; &rsquo;")).toBe("5th Annual – Boo! & “Turkey” ’");
+  });
+
+  it("marks events whose title or place names another state", () => {
+    const frontRange = { slug: "front-range", state: "CO", center: { lat: 39.87, lng: -105.13 }, radiusMiles: 100 };
+    expect(textStateReason({ title: "Butte Gateway Community Meetup I Butte, MT", location_name: "Butte Brewing" }, frontRange)).toMatch(/MT/);
+    expect(textStateReason({ title: "Trail day", location_name: "Golden, CO" }, frontRange)).toBeNull();
+    expect(textStateReason({ title: "Ride, OK pace", location_name: "Park" }, frontRange)).toBeNull();
+    expect(textStateReason({ title: "Moab trip", location_name: "Slickrock, Moab, UT 84532" }, frontRange)).toMatch(/UT/);
+    expect(textStateReason({ title: "Hike, AND picnic", location_name: "Park" }, frontRange)).toBeNull();
   });
 });
