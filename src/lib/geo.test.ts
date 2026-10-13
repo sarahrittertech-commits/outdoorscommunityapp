@@ -60,7 +60,7 @@ describe("zip codes (FR-BR-12)", () => {
   it("looks up a zip's town, and nothing for unknown ones", () => {
     expect(townForZip("28712")?.name).toBe("Brevard");
     expect(townForZip("28768")?.name).toBe("Brevard");
-    expect(townForZip("90210")).toBeUndefined();
+    expect(townForZip("59601")).toBeUndefined();
     expect(townForZip("toString")).toBeUndefined();
   });
 
@@ -71,7 +71,7 @@ describe("zip codes (FR-BR-12)", () => {
   });
 
   it("reports an unknown or malformed zip and falls back to the town", () => {
-    expect(resolveLocation("Asheville", "90210")).toEqual({ town: findTown("Asheville"), unknownZip: "90210" });
+    expect(resolveLocation("Asheville", "59601")).toEqual({ town: findTown("Asheville"), unknownZip: "59601" });
     expect(resolveLocation("", "abc")).toEqual({ town: undefined, unknownZip: "abc" });
   });
 });

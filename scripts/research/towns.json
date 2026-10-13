@@ -135,15 +135,54 @@
       "Concord, MA",
       "Quincy, MA",
       "Providence, RI"
+    ],
+    "portland-gorge": [
+      "Portland, OR",
+      "Hood River, OR",
+      "Vancouver, WA",
+      "Salem, OR",
+      "Corvallis, OR",
+      "Astoria, OR"
+    ],
+    "central-oregon": [
+      "Bend, OR",
+      "Sisters, OR",
+      "Redmond, OR",
+      "Terrebonne, OR",
+      "Eugene, OR",
+      "Klamath Falls, OR"
+    ],
+    "bay-area": [
+      "San Francisco, CA",
+      "Oakland, CA",
+      "Berkeley, CA",
+      "San Jose, CA",
+      "Mill Valley, CA",
+      "Santa Cruz, CA",
+      "Santa Rosa, CA"
+    ],
+    "los-angeles": [
+      "Los Angeles, CA",
+      "Pasadena, CA",
+      "Santa Monica, CA",
+      "Malibu, CA",
+      "Ventura, CA",
+      "Santa Barbara, CA",
+      "Big Bear Lake, CA",
+      "Irvine, CA"
+    ],
+    "san-diego": [
+      "San Diego, CA",
+      "Encinitas, CA",
+      "Oceanside, CA",
+      "Julian, CA",
+      "Borrego Springs, CA",
+      "Temecula, CA"
     ]
   },
   "next": {
     "Oregon": [
-      "Portland, OR",
-      "Bend, OR",
-      "Ashland, OR",
-      "Hood River, OR",
-      "Joseph, OR"
+      "Ashland, OR"
     ],
     "Idaho": [
       "Boise, ID",
@@ -177,13 +216,6 @@
     ],
     "Nevada": [
       "Las Vegas, NV"
-    ],
-    "California coast": [
-      "San Francisco, CA",
-      "Los Angeles, CA",
-      "San Diego, CA",
-      "Santa Barbara, CA",
-      "Big Bear Lake, CA"
     ],
     "Eastern Sierra": [
       "Mammoth Lakes, CA",
