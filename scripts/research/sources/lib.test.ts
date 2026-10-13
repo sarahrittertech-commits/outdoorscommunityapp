@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode } from "./lib.mjs";
+import { eventPageLinks, eventsFromIcs, farReason, meetupFeed, readJsonLd, readTribe, robotsAllows, stateCode, statewideReason } from "./lib.mjs";
 
 const asheville = { slug: "western-nc", state: "NC", center: { lat: 35.6, lng: -82.55 }, radiusMiles: 100 };
 const now = new Date("2026-10-12T00:00:00Z");
@@ -104,5 +104,15 @@ describe("weekly source reader", () => {
     );
     expect(events[0].far).toBeUndefined();
     expect(events[1].far).toMatch(/miles away/);
+  });
+
+  it("places statewide calendar events by listed park or nearby town", () => {
+    const site = { places: ["Pipestem"] };
+    const towns = [{ name: "Hinton", lat: 37.67, lng: -80.89 }, { name: "Wheeling", lat: 40.06, lng: -80.72 }];
+    const nrg = { slug: "new-river-gorge", state: "WV", center: { lat: 38.05, lng: -81.1 }, radiusMiles: 100 };
+    expect(statewideReason({ title: "Oktoberfest – Pipestem Resort State Park", location_name: "See the event page" }, site, nrg, towns)).toBeNull();
+    expect(statewideReason({ title: "River walk", location_name: "Downtown Hinton" }, site, nrg, towns)).toBeNull();
+    expect(statewideReason({ title: "Hike", location_name: "Oglebay, Wheeling" }, site, nrg, towns)).toMatch(/Statewide/);
+    expect(statewideReason({ title: "WonderFall Hike: North Bend State Park", location_name: "North Bend State Park" }, site, nrg, towns)).toMatch(/Statewide/);
   });
 });

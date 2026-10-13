@@ -16,11 +16,14 @@
 //
 //   node scripts/research/sources/read.mjs [--dry] [--limit 50]
 
-import { appendFile } from "node:fs/promises";
+import { appendFile, readFile } from "node:fs/promises";
 
 import { regions } from "../../../src/config/regions.ts";
+import { towns } from "../../../src/config/towns.ts";
 import { htmlText, jsonLdEvents } from "../gemini/lib.mjs";
-import { eventPageLinks, eventsFromIcs, meetupFeed, readJsonLd, readTribe, robotsAllows } from "./lib.mjs";
+import { eventPageLinks, eventsFromIcs, meetupFeed, readJsonLd, readTribe, robotsAllows, statewideReason } from "./lib.mjs";
+
+const { sites: statewide } = JSON.parse(await readFile(new URL("./statewide.json", import.meta.url), "utf8"));
 
 const INTAKE = "https://rxszqxwpgbrdytbkyxwp.supabase.co/functions/v1/research-intake";
 const UA = "BranchOutdoorsResearch/1.2 (+public community board; reads public event pages weekly)";
@@ -81,8 +84,21 @@ async function fetchText(url, accept) {
   }
 }
 
-/** One source: its events, how they were read, and pages worth reading next. */
+/** One source, with statewide calendars' far-away events marked (statewide.json). */
 async function readSource(source) {
+  const read = await readSourceRaw(source);
+  const site = statewide[new URL(source.url).hostname.replace(/^www\./, "")];
+  if (!site) return read;
+  const region = regions.find((r) => r.slug === source.region);
+  const events = read.events.map((e) => {
+    const far = e.far ?? statewideReason(e, site, region, towns);
+    return far ? { ...e, far } : e;
+  });
+  return { ...read, events };
+}
+
+/** One source: its events, how they were read, and pages worth reading next. */
+async function readSourceRaw(source) {
   const region = regions.find((r) => r.slug === source.region);
   const timezone = source.timezone ?? region?.timezone ?? "America/New_York";
   // Calendar feeds first: a Meetup group's public iCal feed (its terms allow

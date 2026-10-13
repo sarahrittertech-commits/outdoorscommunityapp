@@ -232,3 +232,19 @@ export function readTribe(json, { timezone, region, now = new Date() }) {
   }
   return out;
 }
+
+/**
+ * For a statewide calendar (statewide.json): why an event can't be placed
+ * near the region, or null when its place or title names a listed park or
+ * a town from the board's town list inside the region's radius.
+ */
+export function statewideReason(event, site, region, towns) {
+  if (!site || !region) return null;
+  const text = `${event.location_name ?? ""} ${event.title ?? ""}`.toLowerCase();
+  if (site.places.some((p) => text.includes(p.toLowerCase()))) return null;
+  for (const t of towns) {
+    if (!new RegExp(`\\b${t.name.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(text)) continue;
+    if (miles(region.center.lat, region.center.lng, t.lat, t.lng) <= region.radiusMiles) return null;
+  }
+  return "Statewide calendar: the place isn't one near the region";
+}
