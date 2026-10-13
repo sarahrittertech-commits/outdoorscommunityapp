@@ -75,7 +75,11 @@ export function readJsonLd(nodes, { pageUrl, timezone, region, now = new Date() 
   return out;
 }
 
-const EVENTS_PATH = /(^|[/_-])(events?|calendar|schedule|rides|runs|races|trips|outings|hikes|programs|clinics|classes|workshops|meetups?|happenings)([/_.-]|$)/i;
+// A list page's last path part: "events", "calendar", "group-rides",
+// "upcoming-events". Single event pages (/event-6810339,
+// /calendar/2026/October/17/notch-peak-day-hike) are not sources.
+const LIST_PAGE = /^([a-z]+-)?(events?|calendar|schedule|rides|runs|races|trips|outings|hikes|programs|clinics|classes|workshops|meetups|happenings)(-[a-z]+)?$/i;
+const MEETUP_PAGES = new Set(["find", "topics", "cities", "lp", "apps", "about", "help", "pro", "blog", "start", "login", "register", "sitemap", "terms", "privacy", "media", "careers", "cookie_policy", "meetup_api", "account", "messages", "notifications", "your-events", "home"]);
 
 /**
  * Pages worth reading next, linked from a host's page: its events or
@@ -83,6 +87,7 @@ const EVENTS_PATH = /(^|[/_-])(events?|calendar|schedule|rides|runs|races|trips|
  */
 export function eventPageLinks(html, pageUrl) {
   const site = domainOf(pageUrl);
+  if (site === "meetup.com") return [];
   const found = new Map();
   for (const m of html.matchAll(/<a\b[^>]*href=["']([^"'#]+)["']/gi)) {
     let url;
@@ -93,12 +98,13 @@ export function eventPageLinks(html, pageUrl) {
     }
     if (!/^https?:$/.test(url.protocol)) continue;
     const meetup = url.hostname.replace(/^www\./, "") === "meetup.com" && url.pathname.match(/^\/([^/]+)\/?/);
-    if (meetup && !["find", "topics", "cities", "lp", "apps", "about", "help", "pro", "blog"].includes(meetup[1])) {
+    if (meetup && !MEETUP_PAGES.has(meetup[1].toLowerCase())) {
       found.set(`meetup:${meetup[1].toLowerCase()}`, { url: `https://www.meetup.com/${meetup[1]}/events/`, kind: "meetup" });
       continue;
     }
-    if (domainOf(url.href) !== site || !EVENTS_PATH.test(url.pathname)) continue;
-    if (/\/(\d{4}\/\d{2}|tag|category|feed|wp-json)\//i.test(url.pathname) || /\.(jpg|png|pdf|ics)$/i.test(url.pathname)) continue;
+    if (domainOf(url.href) !== site) continue;
+    const parts = url.pathname.split("/").filter(Boolean);
+    if (!parts.length || parts.length > 2 || !LIST_PAGE.test(parts[parts.length - 1])) continue;
     url.search = "";
     url.hash = "";
     const key = url.href.replace(/\/$/, "").toLowerCase();
@@ -135,4 +141,69 @@ export function robotsAllows(robotsTxt, path, agent = "BranchOutdoorsResearch") 
     if (pattern.test(path) && (!best || r.path.length > best.path.length || (r.path.length === best.path.length && r.allow))) best = r;
   }
   return !best || best.allow;
+}
+
+/** A Meetup group's public calendar feed, from its page address. */
+export function meetupFeed(url) {
+  const m = url.match(/^https?:\/\/(www\.)?meetup\.com\/([^/?#]+)/i);
+  return m && !MEETUP_PAGES.has(m[2].toLowerCase()) ? `https://www.meetup.com/${m[2]}/events/ical/` : null;
+}
+
+const unescapeIcs = (v) => v.replace(/\\n/gi, " ").replace(/\\([,;\\])/g, "$1").trim();
+
+/** "20261013T163000" or "20261013T223000Z" as ISO, with Z kept; dates alone as date_only. */
+function icsTime(value) {
+  const m = value.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})?(Z)?)?$/);
+  if (!m) return null;
+  const [, y, mo, d, h, mi, sec, z] = m;
+  return h ? { iso: `${y}-${mo}-${d}T${h}:${mi}:${sec ?? "00"}${z ? "Z" : ""}`, timed: true } : { iso: `${y}-${mo}-${d}`, timed: false };
+}
+
+/**
+ * Board-shaped events from an iCal feed (Meetup groups, club calendars).
+ * A time with a TZID is sent as wall-clock time with that zone; the
+ * database reads it there. All-day entries are date_only.
+ */
+export function eventsFromIcs(text, { pageUrl, timezone, region, now = new Date() }) {
+  const lines = text.replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
+  const out = [];
+  let ev = null;
+  for (const line of lines) {
+    if (line === "BEGIN:VEVENT") ev = {};
+    else if (line === "END:VEVENT" && ev) {
+      const start = ev.DTSTART && icsTime(ev.DTSTART.value);
+      const title = unescapeIcs(ev.SUMMARY?.value ?? "");
+      if (start && title.length >= 3) {
+        const zone = ev.DTSTART.params.TZID ?? timezone;
+        const end = ev.DTEND && icsTime(ev.DTEND.value);
+        const when = new Date(start.timed && start.iso.endsWith("Z") ? start.iso : `${start.iso.slice(0, 10)}T23:59:59Z`);
+        if (when > now) {
+          const place = unescapeIcs(ev.LOCATION?.value ?? "");
+          const url = (ev.URL?.value ?? "").trim();
+          const [lat, lng] = (ev.GEO?.value ?? "").split(";").map(Number);
+          const far = ev.GEO ? farReason({ location: { geo: { latitude: lat, longitude: lng } } }, region) : null;
+          out.push({
+            title: title.slice(0, 120),
+            starts_at: start.iso,
+            ...(start.timed && end?.timed ? { ends_at: end.iso } : {}),
+            timezone: zone,
+            location_name: (place.length >= 2 ? place : "See the event page").slice(0, 200),
+            source_url: /^https?:\/\/\S+$/.test(url) && url.length <= 500 ? url : pageUrl,
+            verification: start.timed ? "verified" : "unverified",
+            ...(start.timed ? {} : { date_only: true, note: "All-day calendar entry, no start time" }),
+            ...(/CANCELLED/i.test(ev.STATUS?.value ?? "") ? { cancelled: true } : {}),
+            ...(far ? { far } : {}),
+          });
+        }
+      }
+      ev = null;
+    } else if (ev) {
+      const m = line.match(/^([A-Z-]+)((?:;[^:]+)*):(.*)$/);
+      if (m) {
+        const params = Object.fromEntries(m[2].split(";").filter(Boolean).map((p) => p.split("=")));
+        ev[m[1]] = { value: m[3], params };
+      }
+    }
+  }
+  return out;
 }

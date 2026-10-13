@@ -169,10 +169,11 @@ venue once. Run by hand: Actions → *Feed reader* → *Run workflow* (tick
 every Monday after the feed reader, with no AI and no cost (UC-39,
 FR-ES-3). It reads every active source in `research.event_sources`: each
 listed host's website, the events pages research recorded, and pages the
-reader noticed itself (an *Events* or *Calendar* link on a homepage, the
-host's Meetup group), which it adds as sources and reads in the same run.
-On each page it takes schema.org event data, or on a WordPress site The
-Events Calendar's public listing, and sends what it found to the research
+reader noticed itself (an *Events* or *Calendar* list page linked from a
+homepage, the host's Meetup group; never single event pages), which it adds as sources and reads in the same run.
+It reads calendar feeds first (a Meetup group's public iCal feed, which
+Meetup allows, or any `.ics` address); on other pages it takes schema.org
+event data, or on a WordPress site The Events Calendar's public listing, and sends what it found to the research
 intake. `research.record_source_read` then:
 
 - publishes new, timed, verified events whose link is on the host's own

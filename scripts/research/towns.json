@@ -1,0 +1,41 @@
+{
+  "_note": "The towns and states research cycles through (Sarah, 12 October 2026), from her outdoor-town lists (Reddit threads, small adventure towns, top mountain towns) and four articles (Sea to Summit's 23 cities, Day Trip Nomad's best outdoor towns, Yahoo's 13 small towns; Outside's list needs a sign-in and wasn't read). 'live' towns are inside a live region, so what research finds there can reach the board. 'next' towns are outside every live region: finds are kept as out of region (FR-RS-13) until a region opens there, grouped by the region they would belong to. For each town, search its parks and recreation calendar, its visitor bureau or tourism events calendar, and its economic development office's outdoor recreation page; for each state, its state parks events calendar and its outdoor recreation office, if it has one.",
+  "live": {
+    "western-nc": ["Asheville, NC", "Brevard, NC", "Boone, NC", "Highlands, NC"],
+    "triangle": ["Raleigh, NC", "Durham, NC", "Chapel Hill, NC"],
+    "upstate-sc": ["Greenville, SC", "Walhalla, SC", "Highlands, NC"],
+    "east-tennessee": ["Knoxville, TN", "Chattanooga, TN"],
+    "new-river-gorge": ["Fayetteville, WV", "Pearisburg, VA"],
+    "front-range": ["Denver, CO", "Boulder, CO", "Fort Collins, CO", "Golden, CO"],
+    "durango-san-juans": ["Durango, CO", "Silverton, CO", "Telluride, CO"],
+    "wasatch": ["Salt Lake City, UT", "Park City, UT", "Ogden, UT"],
+    "puget-sound": ["Seattle, WA", "Bellingham, WA", "Mazama, WA"],
+    "reno-tahoe": ["Reno, NV", "Truckee, CA", "South Lake Tahoe, CA"],
+    "sedona-flagstaff": ["Flagstaff, AZ", "Sedona, AZ"]
+  },
+  "next": {
+    "Oregon": ["Portland, OR", "Bend, OR", "Ashland, OR"],
+    "Idaho": ["Boise, ID", "McCall, ID"],
+    "Montana and Wyoming": ["Missoula, MT", "Bozeman, MT", "Jackson, WY", "Cody, WY"],
+    "Colorado mountains": ["Aspen, CO", "Carbondale, CO"],
+    "Utah and Arizona canyon country": ["Moab, UT", "Kanab, UT", "Page, AZ"],
+    "Southern Arizona": ["Tucson, AZ", "Patagonia, AZ"],
+    "New Mexico": ["Albuquerque, NM"],
+    "Nevada": ["Las Vegas, NV"],
+    "California": ["San Francisco, CA", "Los Angeles, CA", "San Diego, CA", "Santa Barbara, CA", "Mammoth Lakes, CA"],
+    "Eastern Washington": ["Spokane, WA", "Winthrop, WA"],
+    "Vermont": ["Burlington, VT", "Stowe, VT", "Waitsfield, VT"],
+    "Maine": ["Portland, ME", "Bethel, ME"],
+    "Upstate New York and Pennsylvania": ["Ithaca, NY", "Wellsboro, PA"],
+    "Kentucky": ["Stanton, KY"],
+    "Coastal South Carolina": ["Charleston, SC", "Hilton Head, SC"],
+    "Alabama": ["Mentone, AL"],
+    "Great Lakes and Midwest": ["Chicago, IL", "Utica, IL", "Madison, WI", "Sturgeon Bay, WI", "Grand Rapids, MI", "Minneapolis, MN", "Ely, MN", "Nashville, IN"],
+    "Texas and the Plains": ["Austin, TX", "Tyler, TX", "Scott City, KS"],
+    "Florida": ["Orlando, FL"]
+  },
+  "states": {
+    "live": ["NC", "SC", "TN", "WV", "VA", "CO", "UT", "WA", "NV", "CA", "AZ"],
+    "next": ["OR", "ID", "MT", "WY", "NM", "VT", "ME", "NY", "PA", "KY", "AL", "IL", "WI", "MI", "MN", "IN", "TX", "KS", "FL"]
+  }
+}
