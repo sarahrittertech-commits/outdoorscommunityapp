@@ -194,6 +194,15 @@ a claim approved.
 | Skip a candidate | ❌ | ❌ | ✅ |
 | Add a candidate | ❌ | ❌ | ❌ research agent only |
 
+### Event sources (UC-39, FR-ES-1)
+
+| Action | Visitor | User | Site admin |
+| --- | --- | --- | --- |
+| See sources, coverage and the change log | ❌ | ❌ | ✅ |
+| Add a source, retire one or make it active again | ❌ | ❌ | ✅ |
+| Read sources and record what they show | ❌ | ❌ | ❌ weekly reader and research agent only, through the research intake |
+| Change a claimed group's events | ❌ | ❌ | ❌ never by the reader (FR-ES-10) |
+
 ### Guides and shops (UC-12, first part)
 
 | Action | Visitor | User | Site admin |

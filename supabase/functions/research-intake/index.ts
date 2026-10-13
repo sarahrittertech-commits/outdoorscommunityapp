@@ -12,7 +12,7 @@ declare const Deno: {
 };
 
 // SUPABASE_DB_URL is provided to every Edge Function by Supabase. Only the
-// two fixed, parameterized queries below ever run on this connection.
+// four fixed, parameterized queries below ever run on this connection.
 const sql = postgres(Deno.env.get("SUPABASE_DB_URL")!, { max: 1, prepare: false });
 
 const db: Database = {
@@ -31,6 +31,16 @@ const db: Database = {
   async addCandidate(candidate) {
     const [row] = await sql<{ result: unknown }[]>`
       select research.add_candidate(${sql.json(candidate as Parameters<typeof sql.json>[0])}) as result`;
+    return row.result;
+  },
+  async sources(onlyUnstructured) {
+    const [row] = await sql<{ result: unknown }[]>`
+      select research.sources_to_read(${onlyUnstructured}) as result`;
+    return row.result;
+  },
+  async recordRead(read) {
+    const [row] = await sql<{ result: unknown }[]>`
+      select research.record_source_read(${sql.json(read as Parameters<typeof sql.json>[0])}) as result`;
     return row.result;
   },
 };

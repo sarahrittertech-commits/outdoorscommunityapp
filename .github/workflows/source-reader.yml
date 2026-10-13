@@ -1,0 +1,43 @@
+name: Source reader (listed hosts' event pages)
+
+# Weekly read of every listed host's event sources (UC-39, FR-ES-3):
+# scripts/research/sources/read.mjs reads each page's schema.org event data
+# or WordPress events calendar, with no AI, and sends each read to the
+# research intake. The database decides what reaches the board and logs
+# every change. Free to run. Mondays, after the feed reader.
+on:
+  schedule:
+    - cron: "47 11 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry:
+        description: "Dry run: read the pages but send nothing"
+        type: boolean
+        default: false
+      limit:
+        description: "Read at most this many sources (blank for all)"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-reader
+  cancel-in-progress: false
+
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Read sources
+        env:
+          RESEARCH_AGENT_TOKEN: ${{ secrets.RESEARCH_AGENT_TOKEN }}
+          DRY: ${{ inputs.dry }}
+          LIMIT: ${{ inputs.limit }}
+        run: node scripts/research/sources/read.mjs $([ "$DRY" = "true" ] && echo --dry) $([ -n "$LIMIT" ] && echo --limit "$LIMIT")

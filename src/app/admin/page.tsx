@@ -115,6 +115,9 @@ export default async function AdminPage({ searchParams }: Props) {
     <>
       <h1>Site admin</h1>
       <Notice params={params} />
+      <p className="mt-1 text-sm">
+        <Link href="/admin/sources">Event sources</Link>: where each region&apos;s hosts post dates, and what the weekly reader changed.
+      </p>
 
       <h2>Open reports ({reports?.length ?? 0})</h2>
       <p className="mt-1 text-sm text-muted">Oldest first. Group organizers see the ones about their own groups too.</p>
