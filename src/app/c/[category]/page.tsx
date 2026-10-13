@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { EventList, GroupList } from "@/components/Listings";
 import { pageFrom, Pagination } from "@/components/Pagination";
 import { RegionScope } from "@/components/RegionScope";
-import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
+import { getCurrentRegion, regionFilterIds } from "@/lib/currentRegion";
 import { createClient } from "@/lib/supabase/server";
 
 const PAGE_SIZE = 50;
@@ -37,7 +37,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const asked = pageFrom(pageParam);
   // Regions: the region being browsed, or every region with ?region=all.
   const current = await getCurrentRegion(query.region);
-  const regionId = await regionFilterId(current);
+  const areaIds = await regionFilterIds(current);
   // Links keep the region asked for (?region=<slug> or all), not just "all".
   const scoped = (path: string) => (current.param ? `${path}?region=${current.param}` : path);
   const eventsLink = `/events?category=${category.slug}${current.param ? `&region=${current.param}` : ""}`;
@@ -47,7 +47,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       .select("slug, name, area, member_count, next_event_at, join_policy, is_unclaimed, affinity_tags", { count: "exact" })
       .eq("category_id", category.id)
       .eq("status", "active");
-    if (regionId) list = list.eq("region_id", regionId);
+    if (areaIds) list = list.in("region_id", areaIds);
     return list.order("name").range((n - 1) * PAGE_SIZE, n * PAGE_SIZE - 1);
   };
 
@@ -62,7 +62,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     .eq("status", "scheduled")
     .eq("category_slug", category.slug)
     .gt("starts_at", new Date().toISOString());
-  if (regionId) upcoming = upcoming.eq("region_id", regionId);
+  if (areaIds) upcoming = upcoming.in("region_id", areaIds);
 
   const [{ data: subcategories }, first, { data: events, count: eventCount }] = await Promise.all([
     supabase.from("subcategories").select("slug, name").eq("category_id", category.id).order("sort_order"),

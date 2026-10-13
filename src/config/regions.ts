@@ -13,6 +13,8 @@ export type RegionStatus = "live" | "coming_soon";
 
 export type Region = {
   slug: string;
+  /** The big region the area belongs to (config/regionGroups.ts, UC-40). */
+  group: string;
   /** Full name: "Western North Carolina". */
   name: string;
   /** Header and tight spaces: "Western NC". */
@@ -41,6 +43,7 @@ export type Region = {
 export const regions: Region[] = [
   {
     slug: "western-nc",
+    group: "southeast",
     name: "Western North Carolina",
     shortName: "Western NC",
     state: "NC",
@@ -58,6 +61,7 @@ export const regions: Region[] = [
   },
   {
     slug: "front-range",
+    group: "rockies",
     name: "Colorado Front Range",
     shortName: "Front Range",
     state: "CO",
@@ -75,6 +79,7 @@ export const regions: Region[] = [
   },
   {
     slug: "triangle",
+    group: "southeast",
     name: "Raleigh and the Triangle",
     shortName: "Triangle",
     state: "NC",
@@ -92,6 +97,7 @@ export const regions: Region[] = [
   },
   {
     slug: "puget-sound",
+    group: "pacific-northwest",
     name: "Seattle and Bellingham",
     shortName: "Seattle–Bellingham",
     state: "WA",
@@ -109,6 +115,7 @@ export const regions: Region[] = [
   },
   {
     slug: "new-river-gorge",
+    group: "mid-atlantic",
     name: "New River Gorge",
     shortName: "New River Gorge",
     state: "WV",
@@ -126,6 +133,7 @@ export const regions: Region[] = [
   },
   {
     slug: "east-tennessee",
+    group: "southeast",
     name: "Knoxville and East Tennessee",
     shortName: "East Tennessee",
     state: "TN",
@@ -143,6 +151,7 @@ export const regions: Region[] = [
   },
   {
     slug: "wasatch",
+    group: "rockies",
     name: "Salt Lake City and the Wasatch",
     shortName: "Salt Lake–Wasatch",
     state: "UT",
@@ -160,6 +169,7 @@ export const regions: Region[] = [
   },
   {
     slug: "reno-tahoe",
+    group: "far-west",
     name: "Reno and Lake Tahoe",
     shortName: "Reno–Tahoe",
     state: "NV",
@@ -177,6 +187,7 @@ export const regions: Region[] = [
   },
   {
     slug: "sedona-flagstaff",
+    group: "southwest",
     name: "Sedona and Flagstaff",
     shortName: "Sedona–Flagstaff",
     state: "AZ",
@@ -194,6 +205,7 @@ export const regions: Region[] = [
   },
   {
     slug: "upstate-sc",
+    group: "southeast",
     name: "Greenville and the Upstate",
     shortName: "Greenville–Upstate",
     state: "SC",
@@ -211,6 +223,7 @@ export const regions: Region[] = [
   },
   {
     slug: "durango-san-juans",
+    group: "rockies",
     name: "Durango and the San Juans",
     shortName: "Durango–San Juans",
     state: "CO",
@@ -228,6 +241,7 @@ export const regions: Region[] = [
   },
   {
     slug: "charlotte",
+    group: "southeast",
     name: "Charlotte and Lake Norman",
     shortName: "Charlotte",
     state: "NC",
@@ -245,6 +259,7 @@ export const regions: Region[] = [
   },
   {
     slug: "northern-vermont",
+    group: "northeast",
     name: "Burlington and Northern Vermont",
     shortName: "Burlington–Vermont",
     state: "VT",
@@ -262,6 +277,7 @@ export const regions: Region[] = [
   },
   {
     slug: "greater-boston",
+    group: "northeast",
     name: "Greater Boston",
     shortName: "Boston",
     state: "MA",

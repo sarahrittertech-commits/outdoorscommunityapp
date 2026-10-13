@@ -5,7 +5,7 @@ title: ADR-0012 Big regions over local areas
 
 # ADR-0012 — Big regions over local areas
 
-**Status:** Proposed · **Date:** 13 October 2026 · goes with UC-40
+**Status:** Accepted · **Date:** 13 October 2026 (Sarah approved the eight-region grouping) · goes with UC-40
 
 ## Context
 
@@ -70,22 +70,20 @@ Alaska and the Plains wait until there is research for them.
 - Opening an area (UC-35) now also names its big region.
 - The women's clone (cloning.md) keeps the same two levels.
 
-## Open questions for Sarah
+## As decided (13 October 2026)
 
-1. Which grouping? Three on the table:
-   - **Eight, as above** (blending the two lists below; covers the East,
-     where most areas are today).
-   - **Indy Pass five** (East, Mid-Atlantic, Midwest, Rockies, West): puts
-     the Southeast inside East or Mid-Atlantic and joins the Southwest,
-     Sierra and Pacific Northwest as West.
-   - **MT Sobek's six adventure regions** (Sierra Nevada, Rockies from New
-     Mexico to Montana, Alaska, Southwest as Arizona and Utah, Pacific
-     Northwest, Appalachia as North Carolina and Tennessee): close to the
-     eight, but names the Southeast *Appalachia*, puts Utah (so the
-     Wasatch) in the Southwest, and has no place for the Northeast,
-     Mid-Atlantic, Midwest or the Piedmont cities (Charlotte, the
-     Triangle), which the board would have to add.
-2. New River Gorge: Mid-Atlantic (Indy Pass, the Virginias) or Southeast
-   (Southern Appalachians)?
-3. Words on the site: *region* and *area*, or keep *region* for today's
-   level and call the big ones something else?
+- **Eight big regions**, as in the table above. The Indy Pass five and MT
+  Sobek's six were weighed; the eight cover the East, where most areas are.
+- **New River Gorge is in the Mid-Atlantic**, with the Virginias.
+- **Words:** *region* for the big level, *area* for today's level, in new
+  and changed text. The address keeps `?region=` for both, and the table is
+  still `regions`; renaming existing text across the site is left for a
+  separate pass.
+
+## Built (13 October 2026)
+
+`public.region_groups` and `regions.group_id` (migration
+20261013000001), `src/config/regionGroups.ts` and each area's `group`;
+`?region=<big region>` filters every list by that region's areas; the
+header, the scope line on each list and the Regions page show both levels.
+Tests PT-253 and PT-254, and resolver unit tests.

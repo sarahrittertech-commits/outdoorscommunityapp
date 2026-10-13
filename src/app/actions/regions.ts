@@ -4,10 +4,11 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-import { isLiveRegion, REGION_COOKIE, REGION_COOKIE_MAX_AGE, regionReturnPath } from "@/lib/regions";
+import { isLiveGroup, isLiveRegion, REGION_COOKIE, REGION_COOKIE_MAX_AGE, regionReturnPath } from "@/lib/regions";
 
 const chooseSchema = z.object({
-  region: z.string().refine(isLiveRegion),
+  // A local area, or a big region with at least one live area (UC-40).
+  region: z.string().refine((v) => isLiveRegion(v) || isLiveGroup(v)),
   next: z.string().max(500).optional(),
 });
 

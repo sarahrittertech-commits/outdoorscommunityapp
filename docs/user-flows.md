@@ -685,7 +685,7 @@ flowchart TD
 
 ## UC-40 — Browse by big region, then local area
 
-*Draft, awaiting review (13 October 2026).*
+*Approved and built 13 October 2026.*
 
 ```mermaid
 flowchart TD

@@ -5,7 +5,7 @@ import { ActivityIcon } from "@/brand/ActivityIcon";
 import { AffinityTags } from "@/components/AffinityTags";
 import { Notice } from "@/components/Notice";
 import { RegionScope } from "@/components/RegionScope";
-import { getCurrentRegion, regionFilterId } from "@/lib/currentRegion";
+import { getCurrentRegion, regionFilterIds, scopeName } from "@/lib/currentRegion";
 import { BUSINESS_KIND_LABEL } from "@/lib/hosts";
 import { createClient } from "@/lib/supabase/server";
 
@@ -45,7 +45,7 @@ export default async function GuidesAndShopsPage({ searchParams }: Props) {
   const category = typeof params.category === "string" ? params.category : undefined;
   const kind = isKind(params.kind) ? params.kind : undefined;
   const browsing = await getCurrentRegion(params.region);
-  const regionId = await regionFilterId(browsing);
+  const areaIds = await regionFilterIds(browsing);
   const kept: Filters = { category, kind, region: browsing.param };
 
   const supabase = await createClient();
@@ -56,7 +56,7 @@ export default async function GuidesAndShopsPage({ searchParams }: Props) {
     .limit(500);
   if (category) query = query.eq("category_slug", category);
   if (kind) query = query.eq("kind", kind);
-  if (regionId) query = query.eq("region_id", regionId);
+  if (areaIds) query = query.in("region_id", areaIds);
   const [{ data: listings }, { data: categories }] = await Promise.all([
     query,
     supabase.from("categories").select("slug, name").order("sort_order"),
@@ -72,7 +72,7 @@ export default async function GuidesAndShopsPage({ searchParams }: Props) {
           {current ? `${current.name}: guides, shops and venues` : "Guides, shops and venues"}
         </h1>
         <p className="mt-2 border-b border-rule pb-3 text-subtle">
-          Guide services, gear shops and venues {browsing.all ? "in every region" : `in ${browsing.region.name}`}, A to Z. Listed
+          Guide services, gear shops and venues in {scopeName(browsing)}, A to Z. Listed
           from their public websites; they don&apos;t pay to be here and are never mixed into the{" "}
           <Link href="/communities">communities</Link>.
         </p>

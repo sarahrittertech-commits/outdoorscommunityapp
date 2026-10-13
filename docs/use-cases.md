@@ -1356,8 +1356,8 @@ Launch data should let a reviewer walk every use case above on the live site:
 
 ## UC-40 — Browse by big region, then local area
 
-> **Draft, awaiting review (13 October 2026).** Requested by Sarah the same
-> day: Western North Carolina and Charlotte together cover about as much
+> **Approved 13 October 2026** (Sarah: "the grouping you have above is
+> good") **and built the same day.** Requested by Sarah that day: Western North Carolina and Charlotte together cover about as much
 > ground as one Colorado region, and the board now has fourteen areas
 > across the country. Big regions group them the way skiers and travelers
 > already think (Indy Pass: East, Mid-Atlantic, Midwest, Rockies, West;
