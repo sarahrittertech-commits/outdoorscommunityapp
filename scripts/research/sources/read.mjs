@@ -86,8 +86,9 @@ async function readSource(source) {
   const region = regions.find((r) => r.slug === source.region);
   const timezone = source.timezone ?? region?.timezone ?? "America/New_York";
   // Calendar feeds first: a Meetup group's public iCal feed (its terms allow
-  // it, ADR-0011), or any .ics address.
-  const feed = meetupFeed(source.url) ?? (/\.ics([?#]|$)/i.test(source.url) ? source.url : null);
+  // it, ADR-0011), a source the site admin marked as a calendar feed, or any
+  // .ics address.
+  const feed = meetupFeed(source.url) ?? (source.kind === "calendar_feed" || /\.ics([?#]|$)/i.test(source.url) ? source.url : null);
   if (feed) {
     if (!(await allowed(feed))) return { ok: false, result: "blocked by robots.txt", events: [], discovered: [] };
     const res = await fetchText(feed, "text/calendar");
