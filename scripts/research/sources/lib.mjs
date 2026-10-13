@@ -267,3 +267,14 @@ export function wallClockIfUtc(event) {
   if (!/(Z|[+-]00:?00)$/i.test(event.starts_at ?? "") || /^(UTC|Etc\/UTC)$/i.test(event.timezone ?? "")) return event;
   return { ...event, starts_at: strip(event.starts_at), ...(event.ends_at ? { ends_at: strip(event.ends_at) } : {}) };
 }
+
+const NAMED = { amp: "&", quot: '"', apos: "'", lt: "<", gt: ">", nbsp: " ", rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", ndash: "–", mdash: "—", hellip: "…" };
+
+/** Text from a web page with its character codes turned back into characters ("&#8211;" → "–"). */
+export function decodeEntities(text) {
+  if (typeof text !== "string") return text;
+  return text
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&([a-z]+);/gi, (m, name) => NAMED[name.toLowerCase()] ?? m);
+}
