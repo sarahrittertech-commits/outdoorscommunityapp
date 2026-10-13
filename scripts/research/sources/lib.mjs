@@ -70,7 +70,7 @@ export function readJsonLd(nodes, { pageUrl, timezone, region, now = new Date() 
     const [event] = eventsFromJsonLd([cancelled ? { ...node, eventStatus: undefined } : node], { pageUrl, timezone, now });
     if (!event) continue;
     const far = farReason(node, region);
-    out.push({ ...event, ...(cancelled ? { cancelled: true } : {}), ...(far ? { far } : {}) });
+    out.push({ ...wallClockIfUtc(event), ...(cancelled ? { cancelled: true } : {}), ...(far ? { far } : {}) });
   }
   return out;
 }
@@ -216,8 +216,15 @@ export function eventsFromIcs(text, { pageUrl, timezone, region, now = new Date(
 export function readTribe(json, { timezone, region, now = new Date() }) {
   const out = [];
   for (const e of Array.isArray(json?.events) ? json.events : []) {
-    const [event] = eventsFromTribe({ events: [e] }, { timezone, now });
+    let [event] = eventsFromTribe({ events: [e] }, { timezone, now });
     if (!event) continue;
+    // A WordPress site left on UTC gives local times as UTC: its "UTC" and
+    // local start are the same. Read the local start in the region's zone.
+    if ((e.timezone === "UTC" || e.start_date === e.utc_start_date) && typeof e.start_date === "string") {
+      const local = (v) => (typeof v === "string" ? v.replace(" ", "T") : null);
+      event = { ...event, starts_at: local(e.start_date), timezone };
+      if (event.ends_at) event.ends_at = local(e.end_date) ?? undefined;
+    }
     const v = e.venue && typeof e.venue === "object" ? e.venue : {};
     const lat = Number(v.geo_lat);
     const lng = Number(v.geo_lng);
@@ -247,4 +254,16 @@ export function statewideReason(event, site, region, towns) {
     if (miles(region.center.lat, region.center.lng, t.lat, t.lng) <= region.radiusMiles) return null;
   }
   return "Statewide calendar: the place isn't one near the region";
+}
+
+/**
+ * Event pages often stamp local times with a zero offset ("17:30:00+00:00"
+ * for a 5:30 pm ride in Virginia). No outdoor event in a US region is
+ * posted in UTC, so a zero offset is read as wall-clock time in the event's
+ * time zone.
+ */
+export function wallClockIfUtc(event) {
+  const strip = (v) => (typeof v === "string" ? v.replace(/(Z|[+-]00:?00)$/i, "") : v);
+  if (!/(Z|[+-]00:?00)$/i.test(event.starts_at ?? "") || /^(UTC|Etc\/UTC)$/i.test(event.timezone ?? "")) return event;
+  return { ...event, starts_at: strip(event.starts_at), ...(event.ends_at ? { ends_at: strip(event.ends_at) } : {}) };
 }
