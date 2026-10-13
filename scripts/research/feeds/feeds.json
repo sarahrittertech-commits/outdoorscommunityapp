@@ -5,20 +5,26 @@
       "kind": "localist",
       "api": "https://events.dncr.nc.gov/api/2/events",
       "department": "North Carolina State Parks",
-      "days": 60,
+      "days": 120,
       "calendar_url": "https://events.dncr.nc.gov/department/north-carolina-state-parks-and-recreation/calendar",
       "timezone": "America/New_York",
       "hosts": [
         {
           "region": "western-nc",
-          "center": [35.6, -82.55],
+          "center": [
+            35.6,
+            -82.55
+          ],
           "name": "North Carolina State Parks: Western NC",
           "area": "Western North Carolina",
           "description": "Ranger-led hikes, nature programs and volunteer days at North Carolina state parks in the western mountains and foothills."
         },
         {
           "region": "triangle",
-          "center": [35.85, -78.8],
+          "center": [
+            35.85,
+            -78.8
+          ],
           "name": "North Carolina State Parks: Triangle and Piedmont",
           "area": "Raleigh and the Piedmont",
           "description": "Ranger-led hikes, nature programs and volunteer days at North Carolina state parks around the Triangle and Piedmont."
