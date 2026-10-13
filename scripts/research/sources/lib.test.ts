@@ -145,7 +145,9 @@ describe("weekly source reader", () => {
   it("keeps only the next six dates of a repeating event", () => {
     const weekly = Array.from({ length: 10 }, (_, i) => ({ title: "Monday Ride", starts_at: `2026-11-${String(2 + i).padStart(2, "0")}T17:30:00` }));
     const out = rollingWindow([...weekly.reverse(), { title: "Trail Day", starts_at: "2026-12-01T09:00:00" }]);
-    expect(out.filter((e) => !e.far)).toHaveLength(7);
-    expect(out.filter((e) => e.far && e.title === "Monday Ride").map((e) => e.starts_at.slice(0, 10)).sort()[0]).toBe("2026-11-08");
+    type Out = { title: string; starts_at: string; far?: string };
+    const rows = out as Out[];
+    expect(rows.filter((e) => !e.far)).toHaveLength(7);
+    expect(rows.filter((e) => e.far && e.title === "Monday Ride").map((e) => e.starts_at.slice(0, 10)).sort()[0]).toBe("2026-11-08");
   });
 });
