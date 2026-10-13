@@ -17,7 +17,7 @@ values ('test-soon', 'Coming Soon Test', 'America/Chicago', 41.88, -87.63, 'IL',
 select tests.as_anon();
 select is(
   array(select slug from public.regions where status = 'live' order by sort_order),
-  array['western-nc', 'front-range', 'triangle', 'puget-sound', 'new-river-gorge', 'east-tennessee', 'wasatch', 'reno-tahoe', 'sedona-flagstaff', 'durango-san-juans', 'charlotte', 'northern-vermont', 'greater-boston', 'portland-gorge', 'central-oregon', 'bay-area', 'los-angeles', 'san-diego', 'roanoke-nrv', 'shenandoah', 'white-mountains', 'missoula', 'bozeman', 'jackson-hole', 'boise-sun-valley', 'coastal-carolinas', 'hampton-roads', 'bluegrass', 'washington-dc', 'laurel-highlands', 'duluth', 'marquette', 'chicago', 'twin-cities', 'madison-driftless', 'moab-grand-junction', 'zion-kanab'],
+  array['western-nc', 'front-range', 'triangle', 'puget-sound', 'new-river-gorge', 'east-tennessee', 'wasatch', 'reno-tahoe', 'sedona-flagstaff', 'durango-san-juans', 'charlotte', 'northern-vermont', 'greater-boston', 'portland-gorge', 'central-oregon', 'bay-area', 'los-angeles', 'san-diego', 'roanoke-nrv', 'shenandoah', 'white-mountains', 'missoula', 'bozeman', 'jackson-hole', 'boise-sun-valley', 'coastal-carolinas', 'hampton-roads', 'bluegrass', 'washington-dc', 'laurel-highlands', 'duluth', 'marquette', 'chicago', 'twin-cities', 'madison-driftless', 'moab-grand-junction', 'zion-kanab', 'atlanta', 'north-alabama', 'florida', 'cleveland-akron', 'coastal-maine', 'pa-wilds-poconos', 'philadelphia', 'nashville'],
   'PT-210 visitors read the live regions, in order'
 );
 select is(
@@ -63,13 +63,15 @@ select is(
 );
 select is(
   array(select slug || ':' || timezone from public.regions where slug <> 'test-soon' order by slug),
-  array['bay-area:America/Los_Angeles', 'bluegrass:America/New_York', 'boise-sun-valley:America/Boise', 'bozeman:America/Denver', 'central-oregon:America/Los_Angeles', 'charlotte:America/New_York',
-        'chicago:America/Chicago', 'coastal-carolinas:America/New_York', 'duluth:America/Chicago', 'durango-san-juans:America/Denver', 'east-tennessee:America/New_York', 'front-range:America/Denver',
-        'greater-boston:America/New_York', 'hampton-roads:America/New_York', 'jackson-hole:America/Denver', 'laurel-highlands:America/New_York', 'los-angeles:America/Los_Angeles',
-        'madison-driftless:America/Chicago', 'marquette:America/Detroit', 'missoula:America/Denver', 'moab-grand-junction:America/Denver', 'new-river-gorge:America/New_York',
-        'northern-vermont:America/New_York', 'portland-gorge:America/Los_Angeles', 'puget-sound:America/Los_Angeles', 'reno-tahoe:America/Los_Angeles', 'roanoke-nrv:America/New_York',
-        'san-diego:America/Los_Angeles', 'sedona-flagstaff:America/Phoenix', 'shenandoah:America/New_York', 'triangle:America/New_York', 'twin-cities:America/Chicago', 'wasatch:America/Denver',
-        'washington-dc:America/New_York', 'western-nc:America/New_York', 'white-mountains:America/New_York', 'zion-kanab:America/Denver'],
+  array['atlanta:America/New_York', 'bay-area:America/Los_Angeles', 'bluegrass:America/New_York', 'boise-sun-valley:America/Boise', 'bozeman:America/Denver', 'central-oregon:America/Los_Angeles',
+        'charlotte:America/New_York', 'chicago:America/Chicago', 'cleveland-akron:America/New_York', 'coastal-carolinas:America/New_York', 'coastal-maine:America/New_York', 'duluth:America/Chicago',
+        'durango-san-juans:America/Denver', 'east-tennessee:America/New_York', 'florida:America/New_York', 'front-range:America/Denver', 'greater-boston:America/New_York',
+        'hampton-roads:America/New_York', 'jackson-hole:America/Denver', 'laurel-highlands:America/New_York', 'los-angeles:America/Los_Angeles', 'madison-driftless:America/Chicago',
+        'marquette:America/Detroit', 'missoula:America/Denver', 'moab-grand-junction:America/Denver', 'nashville:America/Chicago', 'new-river-gorge:America/New_York', 'north-alabama:America/Chicago',
+        'northern-vermont:America/New_York', 'pa-wilds-poconos:America/New_York', 'philadelphia:America/New_York', 'portland-gorge:America/Los_Angeles', 'puget-sound:America/Los_Angeles',
+        'reno-tahoe:America/Los_Angeles', 'roanoke-nrv:America/New_York', 'san-diego:America/Los_Angeles', 'sedona-flagstaff:America/Phoenix', 'shenandoah:America/New_York',
+        'triangle:America/New_York', 'twin-cities:America/Chicago', 'wasatch:America/Denver', 'washington-dc:America/New_York', 'western-nc:America/New_York', 'white-mountains:America/New_York',
+        'zion-kanab:America/Denver'],
   'PT-212 the five new regions carry their time zones'
 );
 select is((select hub_towns from public.regions where slug = 'new-river-gorge'), '{"Fayetteville, WV"}'::text[],
