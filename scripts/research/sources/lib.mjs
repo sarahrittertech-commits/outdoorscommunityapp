@@ -311,3 +311,23 @@ export function rollingWindow(events, max = MAX_DATES_PER_TITLE) {
   }
   return events.map((e, i) => (marked.has(i) && !e.far ? { ...e, far: "Beyond the next six dates of a repeating event" } : e));
 }
+
+/** The local clock time of an event's start in its own zone ("17:30"), or null. */
+export function localTime(event) {
+  const iso = event.starts_at ?? "";
+  if (!/(Z|[+-]\d{2}:?\d{2})$/i.test(iso)) return iso.match(/T(\d{2}:\d{2})/)?.[1] ?? null;
+  const when = new Date(iso);
+  if (Number.isNaN(when.getTime())) return null;
+  try {
+    return new Intl.DateTimeFormat("en-GB", { timeZone: event.timezone, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(when);
+  } catch {
+    return null;
+  }
+}
+
+/** A midnight start is an all-day listing with no published time: kept as date-only, never published. */
+export function midnightIsDateOnly(event) {
+  return localTime(event) === "00:00" && !event.date_only
+    ? { ...event, date_only: true, verification: "unverified", note: "Listed as all day (midnight start), no start time" }
+    : event;
+}
