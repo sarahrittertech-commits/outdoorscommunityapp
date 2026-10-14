@@ -1,0 +1,830 @@
+<title>Branch Outdoors Mobile Wireframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Young+Serif&display=swap">
+<style>
+/* Layout: a review page — notes column beside one phone frame; the frame fills the screen on a phone.
+   Single light look on purpose: the board has no dark mode (docs/brand.md). Colors are the brand slots. */
+:root {
+  --plum: #39204d; --plum-ui: #382a63; --current: #6a4c93; --ember: #dd7242; --marigold: #e7a855;
+  --rust: #b43c34; --lake: #50759f; --paper: #ffffff; --ink: #262320; --muted: #6b645d;
+  --rule: #e4dacb; --panel: #faf6ef; --band: #efedf7; --notice: #e1e9f2; --tag-new: #f6e3c2;
+  --desk: #ece6dc; --scrim: rgb(38 35 32 / 0.4);
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Young Serif", Georgia, serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--desk); color: var(--ink); font-family: var(--sans); font-size: 15px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--lake); outline-offset: 2px; }
+
+.page { display: grid; grid-template-columns: minmax(0, 340px) auto; gap: 40px; justify-content: center; align-items: start; padding-block: 32px; padding-inline: 24px; min-height: 100%; }
+.notes { min-width: 0; position: sticky; top: 24px; }
+.notes h1 { font-family: var(--serif); font-weight: 400; font-size: 26px; color: var(--plum); margin: 0 0 4px; }
+.notes .sub { color: var(--muted); margin: 0 0 20px; line-height: 1.45; }
+.role { display: grid; grid-template-columns: 1fr 1fr; background: var(--paper); border: 1px solid var(--rule); border-radius: 999px; padding: 4px; margin-bottom: 20px; }
+.role button { border: 0; background: none; padding: 8px 10px; border-radius: 999px; cursor: pointer; font-weight: 700; color: var(--muted); }
+.role button[aria-pressed="true"] { background: var(--plum-ui); color: #fff; }
+.notes h2 { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; }
+.jump { display: flex; flex-direction: column; gap: 2px; }
+.jump button { text-align: left; border: 0; background: none; padding: 6px 8px; border-radius: 8px; cursor: pointer; color: var(--plum-ui); text-decoration: underline; text-underline-offset: 3px; }
+.jump button:hover { background: var(--paper); }
+.jump .muc { color: var(--muted); font-size: 12px; text-decoration: none; margin-left: 6px; }
+.note { background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; line-height: 1.45; margin-top: 18px; }
+.note b { color: var(--plum-ui); }
+
+/* Phone */
+.phone { width: 390px; height: 820px; background: var(--panel); border: 10px solid #1d1b19; border-radius: 46px; overflow: hidden; position: relative; display: flex; flex-direction: column; box-shadow: 0 24px 60px rgb(0 0 0 / 0.18); }
+.status { height: 34px; flex: none; display: flex; justify-content: space-between; align-items: center; padding: 0 26px; font-size: 13px; font-weight: 700; background: var(--paper); }
+.screen { flex: 1; min-height: 0; display: flex; flex-direction: column; position: relative; }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+
+.topbar { background: var(--paper); border-bottom: 1px solid var(--rule); padding: 8px 16px 10px; flex: none; }
+.toprow { display: flex; align-items: center; gap: 8px; }
+.areabtn { border: 0; background: none; padding: 4px 0; cursor: pointer; text-align: left; min-width: 0; flex: 1; }
+.areabtn .town { font-weight: 700; font-size: 16px; }
+.areabtn .area { color: var(--muted); font-size: 13px; }
+.iconbtn { width: 40px; height: 40px; border: 1px solid var(--rule); background: var(--paper); border-radius: 999px; display: grid; place-items: center; cursor: pointer; flex: none; }
+.titlebar { display: flex; align-items: center; gap: 6px; background: var(--paper); border-bottom: 1px solid var(--rule); padding: 6px 10px; flex: none; min-height: 52px; }
+.titlebar h2 { font-size: 17px; margin: 0; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.back { border: 0; background: none; color: var(--plum-ui); font-weight: 700; cursor: pointer; padding: 8px; display: flex; align-items: center; gap: 2px; }
+
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 3px; margin-top: 8px; }
+.seg button { border: 0; background: none; padding: 7px 4px; border-radius: 7px; font-weight: 700; font-size: 14px; cursor: pointer; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 10px 16px 2px; margin: 0 -16px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--rule); background: var(--paper); border-radius: 999px; padding: 7px 12px; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.chip[aria-pressed="true"] { background: var(--plum-ui); border-color: var(--plum-ui); color: #fff; font-weight: 700; }
+.chip.sm { padding: 5px 10px; font-size: 13px; }
+.chip svg { width: 18px; height: 18px; }
+.sumrow { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.summary { color: var(--muted); font-size: 13px; flex: 1; min-width: 0; line-height: 1.35; }
+.pillbtn { border: 1px solid var(--plum-ui); color: var(--plum-ui); background: var(--paper); border-radius: 999px; padding: 6px 12px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; flex: none; }
+.pillbtn .n { background: var(--plum-ui); color: #fff; border-radius: 999px; min-width: 18px; height: 18px; font-size: 11px; display: grid; place-items: center; padding: 0 5px; }
+.active { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.active .chip { background: var(--band); border-color: transparent; }
+
+.day { position: sticky; top: 0; z-index: 2; width: 100%; border: 0; border-bottom: 1px solid var(--rule); background: var(--band); padding: 8px 16px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; }
+.day .chev { transition: transform 0.2s ease-out; }
+.day[aria-expanded="false"] .chev { transform: rotate(-90deg); }
+.list { display: flex; flex-direction: column; gap: 10px; padding: 10px 12px 14px; }
+.card { background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; display: grid; gap: 4px; text-align: left; width: 100%; cursor: pointer; position: relative; }
+.card:hover { border-color: #cdbfa9; }
+.card .time { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; padding-right: 64px; }
+.card .ttl { font-size: 17px; font-weight: 700; line-height: 1.3; padding-right: 30px; }
+.card .meta { font-size: 14px; color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.card .meta svg { width: 16px; height: 16px; color: var(--ink); }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+.tag { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--notice); }
+.tag.intro { background: var(--tag-new); }
+.tag.lvl { background: var(--panel); border: 1px solid var(--rule); }
+.tag.full { background: #f3dcd9; color: var(--rust); }
+.tag.mine { background: var(--plum-ui); color: #fff; }
+.tag.host { background: var(--panel); border: 1px dashed var(--muted); }
+.savebtn { position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border: 0; background: none; border-radius: 999px; display: grid; place-items: center; cursor: pointer; color: var(--plum-ui); }
+.savebtn svg { width: 22px; height: 22px; }
+.savebtn[aria-pressed="true"] svg { fill: var(--plum-ui); }
+.more { margin: 4px 12px 16px; border: 1px dashed var(--rule); border-radius: 12px; padding: 12px; text-align: center; color: var(--muted); font-size: 14px; }
+.empty { padding: 28px 20px; text-align: center; display: grid; gap: 12px; justify-items: center; color: var(--muted); }
+.empty b { color: var(--ink); font-size: 17px; }
+
+.tabbar { flex: none; display: grid; grid-template-columns: repeat(5, 1fr); background: var(--paper); border-top: 1px solid var(--rule); padding: 6px 4px 18px; }
+.tabbar button { border: 0; background: none; display: grid; justify-items: center; gap: 2px; padding: 4px 0; cursor: pointer; font-size: 11px; color: var(--muted); position: relative; }
+.tabbar svg { width: 24px; height: 24px; }
+.tabbar button[aria-current="page"] { color: var(--current); font-weight: 700; }
+.tabbar button[aria-current="page"] svg { stroke-width: 2.3; }
+.tabbar button[aria-current="page"]::before { content: ""; position: absolute; top: -7px; width: 28px; height: 3px; border-radius: 3px; background: var(--current); }
+.count { position: absolute; top: 0; left: calc(50% + 8px); background: var(--ink); color: #fff; font-size: 11px; font-weight: 700; border-radius: 999px; min-width: 18px; height: 18px; display: grid; place-items: center; padding: 0 5px; }
+
+/* Trays */
+.scrim { position: absolute; inset: 0; background: var(--scrim); z-index: 20; opacity: 0; transition: opacity 0.2s ease-out; }
+.scrim.on { opacity: 1; }
+.tray { position: absolute; left: 0; right: 0; bottom: 0; z-index: 21; background: var(--paper); border-radius: 16px 16px 0 0; display: flex; flex-direction: column; max-height: 88%; transform: translateY(100%); transition: transform 0.22s ease-out; box-shadow: 0 -8px 30px rgb(0 0 0 / 0.15); }
+.tray.on { transform: none; }
+.tray.tall { height: 82%; }
+.handle { padding: 8px 0 0; display: grid; place-items: center; cursor: grab; touch-action: none; }
+.handle span { width: 40px; height: 5px; border-radius: 9px; background: var(--rule); }
+.trayhead { display: flex; justify-content: space-between; align-items: center; padding: 4px 16px 10px; border-bottom: 1px solid var(--rule); }
+.trayhead h3 { margin: 0; font-size: 18px; }
+.textbtn { border: 0; background: none; color: var(--plum-ui); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 8px; }
+.traybody { overflow-y: auto; padding: 6px 16px 16px; flex: 1; }
+.trayfoot { display: flex; gap: 12px; align-items: center; padding: 10px 16px 22px; border-top: 1px solid var(--rule); }
+.primary { flex: 1; border: 0; background: var(--plum-ui); color: #fff; font-weight: 700; padding: 13px 16px; border-radius: 12px; cursor: pointer; font-size: 16px; }
+.primary:disabled { opacity: 0.5; }
+.secondary { border: 1px solid var(--plum-ui); background: var(--paper); color: var(--plum-ui); font-weight: 700; padding: 12px 16px; border-radius: 12px; cursor: pointer; font-size: 16px; }
+.danger { border: 1px solid var(--rust); background: var(--paper); color: var(--rust); font-weight: 700; padding: 12px 16px; border-radius: 12px; cursor: pointer; }
+fieldset { border: 0; padding: 0; margin: 14px 0 0; }
+legend { font-weight: 700; font-size: 15px; margin-bottom: 8px; padding: 0; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.radio { display: flex; align-items: center; justify-content: space-between; padding: 12px 2px; border-bottom: 1px solid var(--rule); cursor: pointer; gap: 12px; }
+.radio input { width: 20px; height: 20px; accent-color: var(--plum-ui); }
+
+/* Content screens */
+.pad { padding: 16px; display: grid; gap: 14px; }
+.h1 { font-size: 24px; font-weight: 700; line-height: 1.2; margin: 0; text-wrap: balance; }
+.facts { display: grid; gap: 10px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 14px; }
+.fact { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; line-height: 1.4; }
+.fact svg { width: 20px; height: 20px; color: var(--muted); margin-top: 1px; }
+.fact small { color: var(--muted); display: block; }
+.prose { line-height: 1.55; font-size: 16px; }
+.prose h4 { margin: 0 0 4px; font-size: 16px; }
+.actionbar { flex: none; display: flex; gap: 10px; padding: 10px 16px 22px; background: var(--paper); border-top: 1px solid var(--rule); }
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 700; }
+.input { border: 1px solid #cdbfa9; border-radius: 10px; padding: 12px; font: inherit; font-size: 17px; background: var(--paper); width: 100%; }
+.hint { color: var(--muted); font-size: 13px; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--paper); border-bottom: 1px solid var(--rule); cursor: pointer; text-align: left; width: 100%; border-left: 0; border-right: 0; border-top: 0; }
+.row .grow { flex: 1; min-width: 0; }
+.row .t { font-weight: 700; }
+.row .s { color: var(--muted); font-size: 14px; }
+.section { padding: 16px 16px 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
+.avatar { width: 40px; height: 40px; border-radius: 999px; background: var(--band); display: grid; place-items: center; font-weight: 700; color: var(--plum-ui); flex: none; }
+.unread .t { color: var(--ink); }
+.unread .s { color: var(--ink); font-weight: 700; }
+.letters { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); display: grid; gap: 1px; z-index: 3; }
+.letters button { border: 0; background: none; font-size: 11px; font-weight: 700; color: var(--plum-ui); padding: 1px 6px; cursor: pointer; }
+.letterhead { padding: 6px 16px; background: var(--band); font-weight: 700; font-size: 13px; position: sticky; top: 0; z-index: 1; }
+.weekstrip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; padding: 10px 12px; background: var(--paper); border-bottom: 1px solid var(--rule); }
+.wday { border: 0; background: none; border-radius: 10px; padding: 6px 0; display: grid; justify-items: center; gap: 2px; cursor: pointer; }
+.wday .d { font-size: 11px; color: var(--muted); text-transform: uppercase; }
+.wday .n { font-weight: 700; font-size: 17px; }
+.wday.today .n { color: var(--plum-ui); text-decoration: underline; text-underline-offset: 3px; }
+.wday[aria-pressed="true"] { background: var(--plum-ui); }
+.wday[aria-pressed="true"] .d, .wday[aria-pressed="true"] .n { color: #fff; }
+.dots { display: flex; gap: 3px; height: 6px; }
+.dots i { width: 6px; height: 6px; border-radius: 9px; background: var(--current); }
+.dots i.saved { background: transparent; border: 1.5px solid var(--current); }
+.wday[aria-pressed="true"] .dots i { background: #fff; border-color: #fff; }
+.weeknav { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px 0; background: var(--paper); }
+.weeknav b { font-size: 15px; }
+.tabs { display: flex; border-bottom: 1px solid var(--rule); background: var(--paper); overflow-x: auto; flex: none; }
+.tabs button { border: 0; background: none; padding: 12px 14px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--current); }
+.msg { max-width: 80%; padding: 10px 12px; border-radius: 14px; line-height: 1.4; font-size: 15px; }
+.msg.them { background: var(--paper); border: 1px solid var(--rule); justify-self: start; }
+.msg.me { background: var(--plum-ui); color: #fff; justify-self: end; }
+.msg small { display: block; font-size: 11px; opacity: 0.75; margin-top: 4px; }
+.composer { flex: none; display: flex; gap: 8px; padding: 10px 12px 22px; background: var(--paper); border-top: 1px solid var(--rule); }
+.composer .input { padding: 10px 12px; font-size: 16px; }
+.post { background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px; }
+.post .who { font-size: 14px; color: var(--muted); }
+.post .who b { color: var(--ink); }
+.reply { margin-left: 18px; border-left: 3px solid var(--band); }
+.role-label { font-size: 11px; font-weight: 700; background: var(--band); color: var(--plum-ui); padding: 1px 6px; border-radius: 4px; margin-left: 4px; }
+.swipewrap { position: relative; border-radius: 12px; overflow: hidden; }
+.swipebg { position: absolute; inset: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 18px; font-weight: 700; color: #fff; background: linear-gradient(90deg, #3e6b4a 50%, var(--rust) 50%); }
+.req { position: relative; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; touch-action: pan-y; transition: transform 0.2s ease-out; }
+.req.dragging { transition: none; }
+.req .btns { display: flex; gap: 8px; }
+.req .btns button { flex: 1; padding: 9px; }
+.answer { background: var(--panel); border-radius: 8px; padding: 8px 10px; font-size: 14px; line-height: 1.4; }
+.toast { position: absolute; left: 12px; right: 12px; bottom: 90px; z-index: 30; background: var(--ink); color: #fff; border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; transform: translateY(20px); opacity: 0; transition: all 0.2s ease-out; pointer-events: none; }
+.toast.on { transform: none; opacity: 1; pointer-events: auto; }
+.toast button { border: 0; background: none; color: var(--marigold); font-weight: 700; cursor: pointer; text-decoration: underline; }
+.stat { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat div { background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px; }
+.stat b { font-size: 22px; display: block; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 13px; }
+.fsec { background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+.fsec > button { width: 100%; border: 0; background: none; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; cursor: pointer; text-align: left; }
+.fsec > button b { display: block; }
+.fsec > button span { color: var(--muted); font-size: 14px; }
+.fsec .body { padding: 0 14px 14px; display: grid; gap: 12px; }
+.actrow { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: center; padding: 12px 2px; border-bottom: 1px solid var(--rule); cursor: pointer; background: none; border-left: 0; border-right: 0; border-top: 0; width: 100%; text-align: left; }
+.actrow svg { width: 26px; height: 26px; }
+.actrow .st { font-size: 13px; color: var(--muted); }
+.actrow .st.do { color: var(--plum-ui); font-weight: 700; }
+.actrow .st.try { color: #8a4a1d; font-weight: 700; }
+.areaopt { display: grid; gap: 2px; padding: 14px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); cursor: pointer; text-align: left; width: 100%; }
+.areaopt[aria-pressed="true"] { border: 2px solid var(--plum-ui); padding: 13px; }
+.areaopt .t { font-weight: 700; font-size: 16px; }
+.areaopt .s { color: var(--muted); font-size: 14px; }
+.wordmark { font-family: var(--serif); color: var(--plum); font-size: 22px; }
+
+@media (max-width: 820px) {
+  .page { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-inline: 16px; }
+  .notes { position: static; }
+  .phone { width: 100%; max-width: 430px; justify-self: center; }
+}
+@media (max-width: 480px) {
+  .page { padding-block: 16px; }
+  .phone { border-width: 0; border-radius: 16px; height: 86dvh; min-height: 620px; }
+  .status { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="page">
+  <aside class="notes" aria-label="About these wireframes">
+    <h1>branch outdoors · mobile</h1>
+    <p class="sub">Clickable wireframes for the draft mobile use cases (MUC-1 to MUC-8). Everything works: filters, trays, folding days, swipe cards. Sample data, Western Carolinas; "today" is Thursday 15 October 2026.</p>
+    <div class="role" role="group" aria-label="View as">
+      <button type="button" id="role-member" aria-pressed="true">Member</button>
+      <button type="button" id="role-admin" aria-pressed="false">Page admin</button>
+    </div>
+    <h2>Jump to a screen</h2>
+    <div class="jump" id="jump"></div>
+    <div class="note"><b>Draft for review.</b> Nothing here is built. The decisions it assumes (installable web app, no push, suggestions as stated filters, an event level) are D1–D5 in <code>docs/mobile/index.md</code>.</div>
+  </aside>
+
+  <div class="phone" id="phone">
+    <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+    <div class="screen" id="screen"></div>
+    <nav class="tabbar" id="tabbar" aria-label="Main"></nav>
+    <div class="scrim" id="scrim" hidden></div>
+    <div class="tray" id="tray" role="dialog" aria-modal="true" aria-labelledby="tray-title" hidden></div>
+    <div class="toast" id="toast" role="status"><span id="toast-text"></span><button type="button" id="toast-undo">Undo</button></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ---------- icons (line drawings, 24px grid, 1.5 stroke) ----------
+  const P = {
+    hiking: '<path d="M13 4a1.5 1.5 0 1 0 0 .01M10 21l2-6 3 3v3M9 11l3-3 3 2 2 3M12 8l-1 5M6 21l3-7"/>',
+    cycling: '<circle cx="6" cy="16" r="3.5"/><circle cx="18" cy="16" r="3.5"/><path d="M6 16l4-7h5l3 7M10 9l2 7h-6M14 6h3"/>',
+    paddling: '<path d="M3 17c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0M5 13h14l-2 2H7zM16 4l-8 12"/>',
+    climbing: '<path d="M4 21l5-9 4 3 3-7 4 13M14 4a1.5 1.5 0 1 0 0 .01"/>',
+    running: '<path d="M14 4a1.5 1.5 0 1 0 0 .01M8 21l3-5 3 2 1 3M7 12l3-3h4l2 3 3 1M11 9l-1 5"/>',
+    camping: '<path d="M3 20h18M12 4l-8 16M12 4l8 16M12 13l-3 7M12 13l3 7"/>',
+    stewardship: '<path d="M7 21l4-12M11 9l3-5 3 2-3 5zM4 21h10"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+    people: '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M16 5a3 3 0 0 1 0 6M18 15c2 .5 3 2 3 5"/>',
+    inbox: '<path d="M3 13l3-8h12l3 8v6H3zM3 13h5l1 2h6l1-2h5"/>',
+    person: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+    search: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/>',
+    star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+    pin: '<path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>',
+    clock: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+    tag: '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8" r="1"/>',
+    chevL: '<path d="M15 5l-7 7 7 7"/>',
+    chevD: '<path d="M6 9l6 6 6-6"/>',
+    chevR: '<path d="M9 5l7 7-7 7"/>',
+    sliders: '<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',
+    sort: '<path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/>',
+    share: '<path d="M12 3v12M7 8l5-5 5 5M5 13v7h14v-7"/>',
+    level: '<path d="M4 20V14M10 20V9M16 20V4"/>',
+  };
+  const icon = (k, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${P[k] || ''}</svg>`;
+
+  // ---------- sample data ----------
+  const ACTS = [
+    { k: 'hiking', n: 'Hiking' }, { k: 'cycling', n: 'Cycling' }, { k: 'paddling', n: 'Paddling' },
+    { k: 'climbing', n: 'Climbing' }, { k: 'running', n: 'Running' }, { k: 'camping', n: 'Camping' },
+    { k: 'stewardship', n: 'Stewardship' },
+  ];
+  const actName = k => ACTS.find(a => a.k === k).n;
+  const LEVELS = { intro: 'Intro: first-timers welcome', all: 'All levels', some: 'Some experience', exp: 'Experienced' };
+  const LEVEL_SHORT = { intro: 'Intro', all: 'All levels', some: 'Some experience', exp: 'Experienced' };
+  // day offsets from Thu 15 Oct 2026
+  const DAYS = ['Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday'];
+  const dateOf = off => { const d = new Date(2026, 9, 15 + off); return d; };
+  const dayLabel = off => { const d = dateOf(off); return `${DAYS[(off % 7 + 7) % 7]} ${d.getDate()} ${d.toLocaleString('en', { month: 'short' })}`; };
+  const EVENTS = [
+    { id: 1, off: 0, t: '5:30 – 7:30 pm', title: 'Thursday sunset ride', host: 'Blue Ridge Dirt Skrrts', act: 'cycling', place: 'Bent Creek, Hard Times lot', mi: 12, lvl: 'some', cost: 'Free', spots: 4, hosted: true },
+    { id: 2, off: 1, t: '7:00 – 9:30 pm', title: 'Full-moon paddle on Lake Julian', host: 'Asheville Paddlers', act: 'paddling', place: 'Lake Julian Park', mi: 20, lvl: 'all', cost: '$15', spots: 8 },
+    { id: 3, off: 2, t: '8:00 am – 1:00 pm', title: 'Waterfall loop at Graveyard Fields', host: 'Blue Ridge Hiking Club', act: 'hiking', place: 'Graveyard Fields overlook', mi: 18, lvl: 'all', cost: 'Free', spots: 6 },
+    { id: 4, off: 2, t: '9:00 am – 3:00 pm', title: 'Intro to outdoor climbing', host: 'NC BIPOC Climbers', act: 'climbing', place: 'Looking Glass Rock, Sun Wall', mi: 22, lvl: 'intro', cost: 'Free', spots: 3 },
+    { id: 5, off: 2, t: '9:00 am – 12:00 pm', title: 'Intro to mountain biking clinic', host: 'Pisgah Bike School', hostType: 'guide', act: 'cycling', place: 'Pisgah Bike School shop', mi: 15, lvl: 'intro', cost: '$45', spots: 2 },
+    { id: 6, off: 2, t: '10:00 am – 2:00 pm', title: 'Trail day on the Mountains-to-Sea Trail', host: 'Carolina Mountain Club', act: 'stewardship', place: 'Folk Art Center', mi: 30, lvl: 'all', cost: 'Free', spots: 12 },
+    { id: 7, off: 2, t: '1:00 – 4:00 pm', title: 'French Broad float for first-timers', host: 'River Friends WNC', act: 'paddling', place: 'Hominy Creek River Park', mi: 8, lvl: 'intro', cost: 'Free', spots: 0, waitlist: true },
+    { id: 8, off: 3, t: '7:00 – 9:30 am', title: 'Sunday long run, no-drop', host: 'Trail Dogs Running', act: 'running', place: 'Bent Creek, Rice Pinnacle lot', mi: 10, lvl: 'some', cost: 'Free', spots: null },
+    { id: 9, off: 3, t: 'Sun 10 am – Mon 11 am', title: 'First-timers car camping overnight', host: 'Mountain Women Outdoors', act: 'camping', place: 'Davidson River Campground', mi: 35, lvl: 'intro', cost: '$20', spots: 5 },
+    { id: 10, off: 3, t: '2:00 – 5:00 pm', title: 'Bouldering meetup at Rumbling Bald', host: 'Asheville Boulderers', act: 'climbing', place: 'Rumbling Bald, west parking', mi: 40, lvl: 'all', cost: 'Free', spots: null },
+    { id: 11, off: 5, t: '6:00 – 7:30 pm', title: 'Tuesday women’s trail run', host: 'Mountain Women Outdoors', act: 'running', place: 'Carrier Park', mi: 9, lvl: 'all', cost: 'Free', spots: null },
+    { id: 12, off: 6, t: '6:30 – 9:00 pm', title: 'Climbing gym night for beginners', host: 'Smoky Mountain Climbing Gym', hostType: 'venue', act: 'climbing', place: 'River Arts District', mi: 6, lvl: 'intro', cost: '$18', spots: 10 },
+    { id: 13, off: 9, t: '8:00 am – Sun 2 pm', title: 'Intro to backpacking: Art Loeb overnight', host: 'Blue Ridge Hiking Club', act: 'camping', place: 'Black Balsam trailhead', mi: 28, lvl: 'intro', cost: 'Free', spots: 4 },
+    { id: 14, off: 9, t: '9:00 am – 3:00 pm', title: 'Intro to outdoor climbing', host: 'NC BIPOC Climbers', act: 'climbing', place: 'Looking Glass Rock, Sun Wall', mi: 22, lvl: 'intro', cost: 'Free', spots: 6 },
+    { id: 15, off: 10, t: '8:00 am – 2:00 pm', title: 'Gravel 60: Pisgah forest roads', host: 'Blue Ridge Dirt Skrrts', act: 'cycling', place: 'Brevard, Oskar Blues', mi: 33, lvl: 'exp', cost: 'Free', spots: 15, hosted: true },
+    { id: 16, off: 16, t: '10:00 am – 1:00 pm', title: 'Leaf-peeper paddle, Lake Lure', host: 'Asheville Paddlers', act: 'paddling', place: 'Lake Lure beach', mi: 38, lvl: 'all', cost: '$15', spots: 9 },
+  ];
+  const GROUPS = ['Asheville Boulderers', 'Asheville Paddlers', 'Blue Ridge Dirt Skrrts', 'Blue Ridge Hiking Club', 'Carolina Mountain Club', 'Friends of the Smokies', 'Hendersonville Hikers', 'Land of Sky Runners', 'Mountain Women Outdoors', 'NC BIPOC Climbers', 'Outdoor Afro Asheville', 'Pisgah Area SORBA', 'Queer Outdoors WNC', 'River Friends WNC', 'Trail Dogs Running', 'Western NC Climbers Coalition', 'WNC Backpackers'];
+  const GROUP_ACT = { 'Asheville Boulderers': 'climbing', 'Asheville Paddlers': 'paddling', 'Blue Ridge Dirt Skrrts': 'cycling', 'Blue Ridge Hiking Club': 'hiking', 'Carolina Mountain Club': 'hiking', 'Friends of the Smokies': 'stewardship', 'Hendersonville Hikers': 'hiking', 'Land of Sky Runners': 'running', 'Mountain Women Outdoors': 'camping', 'NC BIPOC Climbers': 'climbing', 'Outdoor Afro Asheville': 'hiking', 'Pisgah Area SORBA': 'cycling', 'Queer Outdoors WNC': 'hiking', 'River Friends WNC': 'paddling', 'Trail Dogs Running': 'running', 'Western NC Climbers Coalition': 'climbing', 'WNC Backpackers': 'camping' };
+
+  // ---------- state ----------
+  const S = {
+    role: 'member',
+    onboarded: true,
+    town: 'Hendersonville', area: 'Western Carolinas',
+    when: 'weekend', chip: 'all', sort: 'soon',
+    f: { dist: 25, free: false, levels: [], hosts: false, room: false, tod: [] },
+    folded: {},
+    saved: new Set([14]), going: new Set([3]), asked: new Set([7]),
+    mine: { hiking: { st: 'do', lvl: 'Getting comfortable' }, camping: { st: 'do', lvl: 'New to it' }, climbing: { st: 'try' } },
+    stack: [], tab: 'events',
+    requests: [
+      { id: 'r1', name: 'Dana K.', group: 'Blue Ridge Dirt Skrrts', town: 'Asheville', does: 'Cycling (getting comfortable)', ans: 'Rode Bent Creek a few times on a rental. Looking for a no-drop group.' },
+      { id: 'r2', name: 'Priya S.', group: 'Blue Ridge Dirt Skrrts', town: 'Weaverville', does: 'Cycling (experienced), Climbing', ans: 'Moved from Durango last month, want to find local riders.' },
+    ],
+    rsvpReq: [{ id: 'q1', name: 'Marcus T.', event: 'Thursday sunset ride' }],
+    reports: [{ id: 'p1', what: 'Reply in "Gear swap"', why: 'Selling, not swapping' }],
+  };
+  const isAdmin = () => S.role === 'admin';
+  const needsCount = () => isAdmin() ? S.requests.length + S.rsvpReq.length + S.reports.length : 0;
+  const inboxCount = () => 2 + needsCount();
+
+  // ---------- event filtering ----------
+  function windowOf() {
+    if (S.chip === 'try' && S.when === 'coming') return [0, 30];
+    return { weekend: [1, 3], week: [0, 3], coming: [0, 30] }[S.when];
+  }
+  function filtered(opts = {}) {
+    const [a, b] = windowOf();
+    const dist = opts.dist ?? S.f.dist;
+    let ev = EVENTS.filter(e => e.off >= a && e.off <= b && e.mi <= dist);
+    if (S.when === 'weekend') ev = ev.filter(e => e.off > 1 || e.t.includes('pm'));
+    const doActs = Object.keys(S.mine).filter(k => S.mine[k].st === 'do');
+    const tryActs = Object.keys(S.mine).filter(k => S.mine[k].st === 'try');
+    if (S.chip === 'mine') ev = ev.filter(e => doActs.includes(e.act));
+    else if (S.chip === 'try') ev = ev.filter(e => tryActs.includes(e.act) && e.lvl === 'intro');
+    else if (S.chip !== 'all') ev = ev.filter(e => e.act === S.chip);
+    if (S.f.free) ev = ev.filter(e => e.cost === 'Free');
+    if (S.f.levels.length) ev = ev.filter(e => S.f.levels.includes(e.lvl));
+    if (S.f.hosts) ev = ev.filter(e => !e.hostType);
+    if (S.f.room) ev = ev.filter(e => e.spots !== 0);
+    ev.sort((x, y) => S.sort === 'near' ? x.mi - y.mi : (x.off - y.off) || x.id - y.id);
+    return ev;
+  }
+  const activeFilterCount = () => (S.f.dist !== 25 ? 1 : 0) + (S.f.free ? 1 : 0) + S.f.levels.length + (S.f.hosts ? 1 : 0) + (S.f.room ? 1 : 0);
+  function summary(n) {
+    const when = S.chip === 'try' && S.when !== 'coming' ? { weekend: 'this weekend', week: 'this week' }[S.when] : { weekend: 'this weekend', week: 'this week', coming: 'next 30 days' }[S.when];
+    let what = '';
+    if (S.chip === 'mine') what = ' · my activities';
+    else if (S.chip === 'try') what = ' · intro events · ' + Object.keys(S.mine).filter(k => S.mine[k].st === 'try').map(actName).join(', ');
+    else if (S.chip !== 'all') what = ' · ' + actName(S.chip);
+    return `${n} event${n === 1 ? '' : 's'} · ${when}${what} · within ${S.f.dist} mi of ${S.town} · ${S.sort === 'near' ? 'nearest first' : 'soonest first'}`;
+  }
+
+  // ---------- rendering helpers ----------
+  const $ = id => document.getElementById(id);
+  const screen = $('screen');
+  function eventCard(e, ctx = '') {
+    const status = S.going.has(e.id) ? '<span class="tag mine">✓ Going</span>' : S.asked.has(e.id) ? '<span class="tag mine">Asked to go</span>' : '';
+    const hosting = isAdmin() && e.hosted ? '<span class="tag mine">You’re hosting</span>' : '';
+    const spots = e.spots === 0 ? `<span class="tag full">Full · waitlist</span>` : e.spots ? `<span class="tag">${e.spots} spots left</span>` : '';
+    return `<div style="position:relative">
+      <button type="button" class="card" data-open-event="${e.id}">
+        <span class="time">${ctx}${e.t}</span>
+        <span class="ttl">${e.title}</span>
+        <span class="meta">${icon(e.act)} ${e.host}${e.hostType ? ` <span class="tag host">${e.hostType}</span>` : ''}</span>
+        <span class="meta">${e.place} · ${e.mi} mi</span>
+        <span class="tags"><span class="tag ${e.lvl === 'intro' ? 'intro' : 'lvl'}">${LEVEL_SHORT[e.lvl]}</span><span class="tag">${e.cost}</span>${spots}${status}${hosting}</span>
+      </button>
+      <button type="button" class="savebtn" data-save="${e.id}" aria-pressed="${S.saved.has(e.id)}" aria-label="${S.saved.has(e.id) ? 'Saved' : 'Save'}: ${e.title}">${icon('star')}</button>
+    </div>`;
+  }
+  function dayGroups(list, keyPrefix) {
+    const byDay = new Map();
+    list.forEach(e => { if (!byDay.has(e.off)) byDay.set(e.off, []); byDay.get(e.off).push(e); });
+    if (S.sort === 'near') return `<div class="list">${list.map(e => eventCard(e, dayLabel(e.off).replace(/^(\w{3})\w*/, '$1') + ' · ')).join('')}</div>`;
+    return [...byDay.entries()].map(([off, evs]) => {
+      const key = keyPrefix + off; const open = !S.folded[key];
+      return `<button type="button" class="day" data-fold="${key}" aria-expanded="${open}"><span>${dayLabel(off)}${off === 0 ? ' · today' : ''}</span><span>${evs.length} ${icon('chevD', 'class="chev" width="16" height="16"')}</span></button>
+        <div class="list" ${open ? '' : 'hidden'}>${evs.map(e => eventCard(e)).join('')}</div>`;
+    }).join('');
+  }
+  function titlebar(title, right = '') {
+    return `<div class="titlebar"><button type="button" class="back" data-back>${icon('chevL', 'width="20" height="20"')} Back</button><h2>${title}</h2>${right}</div>`;
+  }
+  function topbar(extra = '') {
+    return `<div class="topbar"><div class="toprow">
+      <button type="button" class="areabtn" data-tray="area" aria-label="Change town or area"><div class="town">${S.town} ${icon('chevD', 'width="14" height="14" style="vertical-align:-2px"')}</div><div class="area">${S.area}</div></button>
+      <button type="button" class="iconbtn" data-toast="Search: groups and events in ${S.area} by keyword" aria-label="Search">${icon('search', 'width="20" height="20"')}</button>
+    </div>${extra}</div>`;
+  }
+
+  // ---------- screens ----------
+  const SCREENS = {
+    where() {
+      return `<div class="scroll"><div class="pad" style="padding-top:40px">
+        <div class="wordmark">branch outdoors</div>
+        <h1 class="h1">Where do you live?</h1>
+        <p class="prose" style="margin:0;color:var(--muted)">We'll show groups and events you can get to. We never ask for your phone's location.</p>
+        <div class="field"><label for="zip">Zip code, or town and state</label><input class="input" id="zip" value="28739" autocomplete="postal-code" inputmode="text"><span class="hint">Kept on this phone until you sign in.</span></div>
+        <button type="button" class="primary" data-go="areas">Find my area</button>
+      </div></div>`;
+    },
+    areas() {
+      const opts = [
+        ['Western Carolinas', 'Asheville, Greenville · 4 mi from 28739', '64 groups · 212 upcoming events'],
+        ['Charlotte and Lake Norman', 'Charlotte · 98 mi', '31 groups · 88 upcoming events'],
+        ['Knoxville and East Tennessee', 'Knoxville · 99 mi', '27 groups · 70 upcoming events'],
+      ];
+      return `${titlebar('Pick your area')}<div class="scroll"><div class="pad">
+        <p style="margin:0;color:var(--muted)">Areas that cover <b style="color:var(--ink)">28739 · Hendersonville, NC</b>, nearest first.</p>
+        ${opts.map((o, i) => `<button type="button" class="areaopt" data-pick-area="${o[0]}" aria-pressed="${i === 0}"><span class="t">${o[0]}</span><span class="s">${o[1]}</span><span class="s">${o[2]}</span></button>`).join('')}
+        <button type="button" class="primary" data-go="what">Use Western Carolinas</button>
+      </div></div>`;
+    },
+    what(p = {}) {
+      return `${p.fromMe ? titlebar('What I do') : `<div class="titlebar"><h2 style="padding-left:8px">What do you do?</h2><button type="button" class="textbtn" data-finish-onboard>Skip</button></div>`}
+      <div class="scroll"><div class="pad" style="gap:4px">
+        <p style="margin:0 0 8px;color:var(--muted);line-height:1.45">Mark what you do and what you'd like to try. It sets two quick filters on Events, <b style="color:var(--ink)">My activities</b> and <b style="color:var(--ink)">Try something new</b>. Nothing is ranked.</p>
+        ${ACTS.map(a => { const m = S.mine[a.k]; return `<button type="button" class="actrow" data-tray="act" data-act="${a.k}">${icon(a.k)}<span><b>${a.n}</b><br><span class="st ${m ? m.st : ''}">${m ? (m.st === 'do' ? 'I do this · ' + m.lvl : 'I want to try this') : 'Not set'}</span></span>${icon('chevR', 'width="18" height="18"')}</button>`; }).join('')}
+      </div></div>
+      <div class="actionbar"><button type="button" class="primary" data-finish-onboard>Done</button></div>`;
+    },
+    events() {
+      const list = filtered();
+      const chips = [['all', 'Everything'], ['mine', 'My activities'], ['try', 'Try something new'], ...ACTS.map(a => [a.k, a.n])];
+      const active = [];
+      if (S.f.dist !== 25) active.push(['dist', `Within ${S.f.dist} mi`]);
+      if (S.f.free) active.push(['free', 'Free']);
+      S.f.levels.forEach(l => active.push(['lvl:' + l, LEVEL_SHORT[l]]));
+      if (S.f.hosts) active.push(['hosts', 'Community groups only']);
+      if (S.f.room) active.push(['room', 'Has room']);
+      const header = `
+        <div class="seg" role="group" aria-label="When">${[['weekend', 'This weekend'], ['week', 'This week'], ['coming', 'Coming up']].map(([k, n]) => `<button type="button" data-when="${k}" aria-pressed="${S.when === k}">${n}</button>`).join('')}</div>
+        <div class="chips" role="group" aria-label="Activity" id="chiprow">${chips.map(([k, n]) => `<button type="button" class="chip" data-chip="${k}" aria-pressed="${S.chip === k}">${ACTS.find(a => a.k === k) ? icon(k) : ''}${n}</button>`).join('')}</div>
+        <div class="sumrow"><div class="summary" aria-live="polite">${summary(list.length)}</div>
+          <button type="button" class="pillbtn" data-tray="filters">${icon('sliders', 'width="16" height="16"')}Filters${activeFilterCount() ? `<span class="n">${activeFilterCount()}</span>` : ''}</button>
+          <button type="button" class="pillbtn" data-tray="sort" aria-label="Sort">${icon('sort', 'width="16" height="16"')}</button></div>
+        ${active.length ? `<div class="active">${active.map(([k, n]) => `<button type="button" class="chip sm" data-unfilter="${k}" aria-label="Remove filter: ${n}">${n} ✕</button>`).join('')}${active.length > 1 ? '<button type="button" class="textbtn" data-clear>Clear all</button>' : ''}</div>` : ''}`;
+      let body;
+      if (!list.length) {
+        const wider = filtered({ dist: 50 }).length;
+        body = `<div class="empty"><b>Nothing ${S.when === 'weekend' ? 'this weekend' : S.when === 'week' ? 'this week' : 'in the next 30 days'} matches.</b>
+          <span>Try a wider search:</span>
+          <div class="opts" style="justify-content:center">${S.f.dist < 50 ? `<button type="button" class="secondary" data-widen="dist">Widen to 50 miles · ${wider}</button>` : ''}${S.when !== 'coming' ? `<button type="button" class="secondary" data-widen="when">Next 30 days</button>` : ''}</div></div>`;
+      } else {
+        body = dayGroups(list, 'ev') + `<div class="more">That's everything ${S.when === 'coming' ? 'in the next 30 days' : S.when === 'week' ? 'this week' : 'this weekend'}.</div>`;
+        if (S.chip === 'try') {
+          const tryActs = Object.keys(S.mine).filter(k => S.mine[k].st === 'try');
+          const gs = GROUPS.filter(g => tryActs.includes(GROUP_ACT[g]));
+          body += `<div class="section"><span>Groups that welcome beginners in ${tryActs.map(actName).join(', ')}</span></div>${gs.map(g => `<button type="button" class="row" data-open-group="${g}">${icon(GROUP_ACT[g], 'width="24" height="24"')}<span class="grow"><span class="t">${g}</span><br><span class="s">Next intro event: Sat 24 Oct</span></span>${icon('chevR', 'width="18" height="18"')}</button>`).join('')}<div style="height:16px"></div>`;
+        }
+      }
+      return `${topbar(header)}<div class="scroll" id="evscroll">${body}</div>`;
+    },
+    event(p) {
+      const e = EVENTS.find(x => x.id === p.id);
+      const going = S.going.has(e.id), asked = S.asked.has(e.id);
+      const primary = going ? `<button type="button" class="secondary" style="flex:1" data-rsvp="${e.id}">✓ Going · change</button>` : asked ? `<button type="button" class="secondary" style="flex:1" data-rsvp="${e.id}">Asked to go · cancel</button>` : e.spots === 0 ? `<button type="button" class="primary" data-rsvp="${e.id}">Join waitlist</button>` : `<button type="button" class="primary" data-rsvp="${e.id}">I'm going</button>`;
+      return `${titlebar('Event', `<button type="button" class="iconbtn" data-toast="Share: copies the event link" aria-label="Share">${icon('share', 'width="18" height="18"')}</button>`)}
+      <div class="scroll"><div class="pad">
+        <div class="tags"><span class="tag ${e.lvl === 'intro' ? 'intro' : 'lvl'}">${LEVELS[e.lvl]}</span>${isAdmin() && e.hosted ? '<span class="tag mine">You’re hosting</span>' : ''}</div>
+        <h1 class="h1">${e.title}</h1>
+        <div class="facts">
+          <div class="fact">${icon('clock')}<span>${dayLabel(e.off)}<small>${e.t} · Eastern time</small></span></div>
+          <div class="fact">${icon('pin')}<span>${e.place}<small>${e.mi} mi from ${S.town} · address shown to members</small></span></div>
+          <div class="fact">${icon(e.act)}<span>${e.host}${e.hostType ? ` (${e.hostType})` : ''}<small>${actName(e.act)}</small></span></div>
+          <div class="fact">${icon('tag')}<span>${e.cost}<small>${e.spots === 0 ? 'Full · waitlist open' : e.spots ? e.spots + ' spots left' : 'No limit'}</small></span></div>
+        </div>
+        ${isAdmin() && e.hosted ? `<button type="button" class="secondary" data-go="rsvps">Manage RSVPs · 14 going, 1 asked</button>` : ''}
+        <div class="prose"><h4>About</h4>${e.lvl === 'intro' ? 'Never done this before? This is for you. We go slow, show you the basics and nobody gets left behind.' : 'A regular outing for people who already get out now and then. We keep a pace everyone can hold.'}</div>
+        <div class="prose"><h4>What to bring</h4>Water, a snack, layers for the weather. ${e.act === 'climbing' ? 'Harnesses, shoes and helmets are provided.' : ''}</div>
+        <button type="button" class="secondary" data-toast="Added to your calendar (.ics)">Add to my calendar</button>
+        <button type="button" class="textbtn" style="justify-self:start" data-toast="Report this event: opens the report form">Report this event</button>
+      </div></div>
+      <div class="actionbar">${primary}<button type="button" class="secondary" data-save="${e.id}" aria-pressed="${S.saved.has(e.id)}">${S.saved.has(e.id) ? '★ Saved' : '☆ Save'}</button></div>`;
+    },
+    week() {
+      const start = S.weekStart || 0; const sel = S.weekSel ?? start;
+      const mineEv = EVENTS.filter(e => S.going.has(e.id) || S.saved.has(e.id) || S.asked.has(e.id) || (isAdmin() && e.hosted));
+      const days = [...Array(7)].map((_, i) => start + i);
+      const strip = days.map(off => {
+        const d = dateOf(off); const evs = mineEv.filter(e => e.off === off);
+        return `<button type="button" class="wday ${off === 0 ? 'today' : ''}" data-wsel="${off}" aria-pressed="${sel === off}" aria-label="${dayLabel(off)}, ${evs.length} plans"><span class="d">${DAYS[off % 7].slice(0, 3)}</span><span class="n">${d.getDate()}</span><span class="dots">${evs.slice(0, 3).map(e => `<i class="${S.saved.has(e.id) && !S.going.has(e.id) ? 'saved' : ''}"></i>`).join('')}</span></button>`;
+      }).join('');
+      const list = mineEv.filter(e => e.off >= start && e.off < start + 7).sort((a, b) => a.off - b.off);
+      const byDay = days.map(off => {
+        const evs = list.filter(e => e.off === off);
+        if (!evs.length) return off === sel ? `<div class="day" style="cursor:default" id="wd${off}"><span>${dayLabel(off)}</span><span>nothing planned</span></div>` : '';
+        return `<div class="day" style="cursor:default" id="wd${off}"><span>${dayLabel(off)}${off === 0 ? ' · today' : ''}</span><span>${evs.length}</span></div><div class="list">${evs.map(e => eventCard(e)).join('')}</div>`;
+      }).join('');
+      return `<div class="titlebar"><h2 style="padding-left:8px">My week</h2><button type="button" class="pillbtn" data-tray="weekfilter">${icon('sliders', 'width="16" height="16"')}Going and saved</button></div>
+        <div class="weeknav"><button type="button" class="textbtn" data-week="-7" ${start <= 0 ? 'disabled' : ''}>‹ Previous</button><b>${dayLabel(start).replace(/^\w+ /, '')} – ${dayLabel(start + 6).replace(/^\w+ /, '')}</b><button type="button" class="textbtn" data-week="7">Next ›</button></div>
+        <div class="weekstrip" role="group" aria-label="Days">${strip}</div>
+        <div class="scroll">${byDay || '<div class="empty"><b>Nothing planned this week.</b><button type="button" class="secondary" data-tab="events">Find something on Events</button></div>'}
+        ${start !== 0 ? '<div style="padding:12px;text-align:center"><button type="button" class="textbtn" data-week="today">Back to today</button></div>' : ''}</div>`;
+    },
+    groups() {
+      const mine = isAdmin() ? ['Blue Ridge Dirt Skrrts', 'Blue Ridge Hiking Club'] : ['Blue Ridge Hiking Club', 'NC BIPOC Climbers'];
+      const letters = [...new Set(GROUPS.map(g => g[0]))];
+      return `${topbar()}<div class="scroll" id="gscroll" style="position:relative">
+        <div class="section"><span>Mine</span></div>
+        ${mine.map(g => `<button type="button" class="row" data-open-group="${g}">${icon(GROUP_ACT[g], 'width="24" height="24"')}<span class="grow"><span class="t">${g}</span><br><span class="s">${g === 'Blue Ridge Dirt Skrrts' ? 'Next: Thu sunset ride · new thread “Carpool for Saturday”' : 'Next: Sat waterfall loop · 2 new threads'}</span></span>${isAdmin() && g === 'Blue Ridge Dirt Skrrts' ? '<span class="tag mine">You run it</span>' : ''}</button>`).join('')}
+        <div class="section"><span>In ${S.area}, A–Z</span><span style="text-transform:none;letter-spacing:0">${GROUPS.length} groups</span></div>
+        <nav class="letters" aria-label="Jump to letter">${letters.map(l => `<button type="button" data-letter="${l}">${l}</button>`).join('')}</nav>
+        ${letters.map(l => `<div class="letterhead" id="L${l}">${l}</div>${GROUPS.filter(g => g[0] === l).map(g => `<button type="button" class="row" data-open-group="${g}" style="padding-right:28px">${icon(GROUP_ACT[g], 'width="24" height="24"')}<span class="grow"><span class="t">${g}</span><br><span class="s">${actName(GROUP_ACT[g])} · Club</span></span></button>`).join('')}`).join('')}
+        <div class="more">Start a group or edit one on the web.</div>
+      </div>`;
+    },
+    group(p) {
+      const g = p.name; const runs = isAdmin() && g === 'Blue Ridge Dirt Skrrts';
+      const tab = p.tab || 'events';
+      const evs = EVENTS.filter(e => e.host === g);
+      let body = '';
+      if (tab === 'events') body = evs.length ? `<div class="list">${evs.map(e => eventCard(e, dayLabel(e.off).replace(/^(\w{3})\w*/, '$1') + ' · ')).join('')}</div>` : '<div class="empty">No upcoming events.</div>';
+      if (tab === 'talk') body = `<div class="list">${[['Carpool for Saturday', '6 replies · newest 20 min ago', true], ['Gear swap', '14 replies', false], ['Trail conditions after the rain', '3 replies', false]].map(([t, s, pin]) => `<button type="button" class="card" data-go="thread"><span class="ttl">${pin ? '📌 ' : ''}${t}</span><span class="meta">${s}</span></button>`).join('')}</div>`;
+      if (tab === 'about') body = `<div class="pad prose">A ${actName(GROUP_ACT[g]).toLowerCase()} group in ${S.area}. Everyone welcome; we ride and hike at the pace of the slowest person.</div>`;
+      return `${titlebar(g)}<div class="scroll">
+        <div class="pad" style="padding-bottom:6px"><div class="meta" style="color:var(--muted)">Club · ${actName(GROUP_ACT[g])} · Asheville · 214 members</div>
+        ${runs ? `<button type="button" class="primary" data-go="run">Run this group</button>` : `<button type="button" class="secondary" data-toast="You're a member">✓ Member</button>`}</div>
+        <div class="tabs" role="tablist">${[['events', 'Events'], ['talk', 'Discussions'], ['photos', 'Photos'], ['about', 'About']].map(([k, n]) => `<button type="button" role="tab" aria-selected="${tab === k}" data-gtab="${k}">${n}</button>`).join('')}</div>
+        ${tab === 'photos' ? '<div class="empty">Members-only photos from past trips.</div>' : body}
+      </div>`;
+    },
+    thread() {
+      return `${titlebar('Carpool for Saturday')}<div class="scroll"><div class="pad" style="gap:10px">
+        <div class="post"><div class="who"><b>Jess R.</b><span class="role-label">page admin</span> · Tue</div>Who's driving from Hendersonville on Saturday? We can fit 3 bikes on my rack.</div>
+        <div class="post reply"><div class="who"><b>Dana K.</b> · Tue</div>I'm in Fletcher, can meet at the Park and Ride.</div>
+        <div class="post reply"><div class="who"><b>Marcus T.</b> · 20 min ago</div>Same. Leaving at 7:15?</div>
+        <div class="post"><div class="who"><b>Priya S.</b> · 1 h ago</div>Anyone with a spare tube in 29 × 2.4?</div>
+      </div></div>
+      <div class="composer"><input class="input" id="reply-box" placeholder="Reply to the thread" aria-label="Reply"><button type="button" class="primary" style="flex:none" data-toast="Reply posted">Post</button></div>`;
+    },
+    inbox() {
+      const admin = isAdmin();
+      const needs = admin ? `<div class="section"><span>Needs you</span><span style="text-transform:none;letter-spacing:0">${needsCount()}</span></div>
+        <div class="pad" style="padding-top:4px;gap:10px">
+          ${S.requests.length ? `<div class="hint">Join requests · swipe right to approve, left to decline, or use the buttons.</div>` : ''}
+          ${S.requests.map(r => `<div class="swipewrap"><div class="swipebg" aria-hidden="true"><span>Approve</span><span>Decline</span></div>
+            <div class="req" data-req="${r.id}"><div style="display:flex;gap:10px;align-items:center"><span class="avatar">${r.name[0]}</span><span><b>${r.name}</b> wants to join<br><span class="hint">${r.group} · ${r.town} · ${r.does}</span></span></div>
+            <div class="answer"><b>Why do you want to join?</b><br>${r.ans}</div>
+            <div class="btns"><button type="button" class="primary" data-decide="${r.id}:approve">Approve</button><button type="button" class="secondary" data-decide="${r.id}:decline">Decline</button></div></div></div>`).join('')}
+          ${S.rsvpReq.map(q => `<div class="req"><div><b>${q.name}</b> asked to go to <b>${q.event}</b></div><div class="btns"><button type="button" class="primary" data-rsvpreq="${q.id}">Approve</button><button type="button" class="secondary" data-rsvpreq="${q.id}">Decline</button></div></div>`).join('')}
+          ${S.reports.map(p => `<div class="req"><div><b>Report:</b> ${p.what}<br><span class="hint">Reason given: ${p.why}</span></div><div class="btns"><button type="button" class="danger" data-report="${p.id}">Remove post</button><button type="button" class="secondary" data-report="${p.id}">Keep it</button></div></div>`).join('')}
+          ${needsCount() ? '' : '<div class="empty" style="padding:12px"><b>All clear.</b>Nothing needs you right now.</div>'}
+        </div>` : '';
+      return `<div class="titlebar"><h2 style="padding-left:8px">Inbox</h2></div><div class="scroll">${needs}
+        <div class="section"><span>Messages</span></div>
+        <button type="button" class="row unread" data-go="convo"><span class="avatar">J</span><span class="grow"><span class="t">Jess R.</span><br><span class="s">Are you still up for Saturday?</span></span><span class="hint">9:02</span></button>
+        <button type="button" class="row unread" data-go="convo"><span class="avatar">M</span><span class="grow"><span class="t">Mountain Women Outdoors</span><br><span class="s">Thanks for asking! Bags are provided.</span></span><span class="hint">Wed</span></button>
+        <button type="button" class="row" data-go="convo"><span class="avatar">T</span><span class="grow"><span class="t">Theo B.</span><br><span class="s">See you at the lot.</span></span><span class="hint">Mon</span></button>
+        <div class="section"><span>Requests</span></div>
+        <button type="button" class="row" data-tray="msgreq"><span class="avatar">A</span><span class="grow"><span class="t">Alex P. wants to message you</span><br><span class="s">Hi! Saw you're going to the climbing intro…</span></span>${icon('chevR', 'width="18" height="18"')}</button>
+      </div>`;
+    },
+    convo() {
+      return `${titlebar('Jess R.')}<div class="scroll"><div class="pad" style="gap:8px;display:grid">
+        <div class="msg them">Hey! Saw you RSVP'd to the waterfall loop.<small>Tue 6:10 pm</small></div>
+        <div class="msg me">Yes! First time with the club.<small>Tue 6:22 pm</small></div>
+        <div class="msg them">Are you still up for Saturday? We could carpool from Hendersonville.<small>9:02 am</small></div>
+      </div></div>
+      <div class="composer"><input class="input" placeholder="Message" aria-label="Message"><button type="button" class="primary" style="flex:none" data-toast="Sent">Send</button></div>`;
+    },
+    me() {
+      return `<div class="titlebar"><h2 style="padding-left:8px">Me</h2></div><div class="scroll">
+        <div class="pad" style="grid-template-columns:auto 1fr;align-items:center"><span class="avatar" style="width:56px;height:56px;font-size:20px">${isAdmin() ? 'J' : 'S'}</span><span><b style="font-size:18px">${isAdmin() ? 'Jess R.' : 'Sam W.'}</b><br><span class="hint">${S.town} · ${S.area}</span></span></div>
+        <button type="button" class="row" data-go="what" data-from-me><span class="grow"><span class="t">What I do</span><br><span class="s">${Object.entries(S.mine).map(([k, v]) => actName(k) + (v.st === 'try' ? ' (want to try)' : '')).join(', ') || 'Not set'}</span></span>${icon('chevR', 'width="18" height="18"')}</button>
+        <button type="button" class="row" data-tray="area"><span class="grow"><span class="t">Town and area</span><br><span class="s">${S.town} · ${S.area}</span></span>${icon('chevR', 'width="18" height="18"')}</button>
+        <button type="button" class="row" data-toast="Profile: photo, blurb, goals, Show/Hide per section"><span class="grow"><span class="t">Profile</span><br><span class="s">What others see</span></span>${icon('chevR', 'width="18" height="18"')}</button>
+        <button type="button" class="row" data-toast="${S.saved.size} saved events"><span class="grow"><span class="t">Saved events</span><br><span class="s">${S.saved.size} saved</span></span>${icon('chevR', 'width="18" height="18"')}</button>
+        ${isAdmin() ? `<button type="button" class="row" data-open-group="Blue Ridge Dirt Skrrts"><span class="grow"><span class="t">Groups I run</span><br><span class="s">Blue Ridge Dirt Skrrts</span></span>${icon('chevR', 'width="18" height="18"')}</button>` : ''}
+        <button type="button" class="row" data-toast="Settings: email, calendar feed, password"><span class="grow"><span class="t">Settings</span></span>${icon('chevR', 'width="18" height="18"')}</button>
+        <div class="pad"><button type="button" class="textbtn" style="justify-self:start" data-restart>Start over (first open)</button></div>
+      </div>`;
+    },
+    run() {
+      return `${titlebar('Run Blue Ridge Dirt Skrrts')}<div class="scroll"><div class="pad">
+        <div class="hint">Next event</div>
+        <button type="button" class="card" data-open-event="1"><span class="time">Today · 5:30 – 7:30 pm</span><span class="ttl">Thursday sunset ride</span><span class="meta">Bent Creek, Hard Times lot</span></button>
+        <div class="stat"><div><b>14</b><span>going</span></div><div><b>4</b><span>spots left · 1 asked</span></div></div>
+        <button type="button" class="primary" data-go="rsvps">Manage RSVPs</button>
+        <button type="button" class="secondary" data-tray="update">Post an update</button>
+        <button type="button" class="secondary" data-go="post">Post an event</button>
+        <button type="button" class="row" style="border:1px solid var(--rule);border-radius:12px" data-toast="Members: search, A–Z, roles"><span class="grow"><span class="t">Members</span><br><span class="s">214 · 2 page managers</span></span>${icon('chevR', 'width="18" height="18"')}</button>
+        <button type="button" class="row" style="border:1px solid var(--rule);border-radius:12px" data-toast="Invite link copied"><span class="grow"><span class="t">Invite link</span><br><span class="s">Works until 21 Oct</span></span>${icon('share', 'width="18" height="18"')}</button>
+        <div class="hint">Group settings, rules and join questions are edited on the web.</div>
+      </div></div>`;
+    },
+    rsvps(p = {}) {
+      const tab = p.tab || 'going';
+      const people = { going: ['Dana K.', 'Jess R.', 'Marcus T.', 'Priya S.', 'Rosa L.', 'Theo B.'], asked: S.rsvpReq.map(q => q.name), wait: ['Kai M.'], no: ['Ana G.'] };
+      return `${titlebar('Thursday sunset ride')}
+        <div class="tabs" role="tablist">${[['going', `Going 14`], ['asked', `Asked ${S.rsvpReq.length}`], ['wait', 'Waitlist 1'], ['no', 'Not going 1']].map(([k, n]) => `<button type="button" role="tab" aria-selected="${tab === k}" data-rtab="${k}">${n}</button>`).join('')}</div>
+        <div class="scroll">${people[tab].map(n => `<div class="row" style="cursor:default"><span class="avatar">${n[0]}</span><span class="grow"><span class="t">${n}</span>${n === 'Jess R.' ? '<span class="role-label">page admin</span>' : ''}</span>${tab === 'asked' ? `<button type="button" class="secondary" style="padding:8px 12px" data-rsvpreq="q1">Approve</button>` : tab === 'wait' ? `<button type="button" class="secondary" style="padding:8px 12px" data-toast="Moved to Going">Move to going</button>` : ''}</div>`).join('') || '<div class="empty">Nobody here.</div>'}
+        ${tab === 'going' ? '<div class="more">and 8 more · A–Z</div>' : ''}</div>`;
+    },
+    post(p = {}) {
+      if (!p.form) return `${titlebar('Post an event')}<div class="scroll"><div class="pad">
+        <b>Copy a past event</b>
+        ${['Thursday sunset ride · 8 Oct', 'Gravel 60 · 4 Oct', 'Skills night · 1 Oct'].map(t => `<button type="button" class="row" style="border:1px solid var(--rule);border-radius:12px" data-postform><span class="grow"><span class="t">${t.split(' · ')[0]}</span><br><span class="s">Last on ${t.split(' · ')[1]}</span></span>${icon('chevR', 'width="18" height="18"')}</button>`).join('')}
+        <button type="button" class="secondary" data-postform>Start blank</button></div></div>`;
+      const open = p.open || 'when';
+      const secs = [
+        ['what', 'What', 'Thursday sunset ride · Cycling · Some experience', `<div class="field"><label for="f-t">Title</label><input class="input" id="f-t" value="Thursday sunset ride"></div><div class="field"><label for="f-l">Level</label><select class="input" id="f-l">${Object.entries(LEVELS).map(([k, v]) => `<option ${k === 'some' ? 'selected' : ''}>${v}</option>`).join('')}</select></div>`],
+        ['when', 'When', 'Thu 22 Oct, 5:30 – 7:30 pm (Eastern)', `<div class="field"><label for="f-d">Date</label><input class="input" id="f-d" type="date" value="2026-10-22"></div><div class="field"><label for="f-s">Starts</label><input class="input" id="f-s" type="time" value="17:30"></div>`],
+        ['where', 'Where', 'Bent Creek, Hard Times lot · address: members only', `<div class="field"><label for="f-p">Place</label><input class="input" id="f-p" value="Bent Creek, Hard Times lot"></div>`],
+        ['who', 'Who can come', '18 places · approve RSVPs · waitlist on', `<div class="field"><label for="f-c">Places</label><input class="input" id="f-c" inputmode="numeric" value="18"></div>`],
+        ['cost', 'Cost', 'Free', `<label class="radio">Free<input type="radio" name="cost" checked></label><label class="radio">Paid<input type="radio" name="cost"></label>`],
+      ];
+      return `${titlebar('Post an event')}<div class="scroll"><div class="pad" style="gap:10px">
+        <div class="hint">Copied from 8 Oct. Change the date and check each section.</div>
+        ${secs.map(([k, n, sumy, body]) => `<div class="fsec"><button type="button" aria-expanded="${open === k}" data-fsec="${k}"><span><b>${n}</b><span>${sumy}</span></span>${icon(open === k ? 'chevD' : 'chevR', 'width="18" height="18"')}</button>${open === k ? `<div class="body">${body}</div>` : ''}</div>`).join('')}
+      </div></div><div class="actionbar"><button type="button" class="primary" data-posted>Post event</button></div>`;
+    },
+  };
+
+  // ---------- trays ----------
+  const tray = $('tray'), scrim = $('scrim');
+  let trayOpener = null;
+  function openTray(kind, data = {}) {
+    trayOpener = document.activeElement;
+    const T = TRAYS[kind](data);
+    tray.className = 'tray' + (T.tall ? ' tall' : '');
+    tray.innerHTML = `<div class="handle" id="handle"><span></span></div><div class="trayhead"><h3 id="tray-title">${T.title}</h3><button type="button" class="textbtn" data-close-tray>Close</button></div><div class="traybody">${T.body}</div>${T.foot ? `<div class="trayfoot">${T.foot}</div>` : ''}`;
+    tray.hidden = false; scrim.hidden = false;
+    tray.dataset.kind = kind; tray._data = data;
+    requestAnimationFrame(() => { tray.classList.add('on'); scrim.classList.add('on'); const f = tray.querySelector('input,button:not([data-close-tray]),select'); (f || tray.querySelector('[data-close-tray]')).focus({ preventScroll: true }); });
+    bindDrag();
+  }
+  function closeTray() {
+    tray.classList.remove('on'); scrim.classList.remove('on');
+    setTimeout(() => { tray.hidden = true; scrim.hidden = true; tray.innerHTML = ''; }, 220);
+    if (trayOpener && document.body.contains(trayOpener)) trayOpener.focus({ preventScroll: true });
+  }
+  function refreshTray() { if (!tray.hidden) { const k = tray.dataset.kind; const T = TRAYS[k](tray._data); tray.querySelector('.traybody').innerHTML = T.body; const ft = tray.querySelector('.trayfoot'); if (ft) ft.innerHTML = T.foot; } }
+  const TRAYS = {
+    filters() {
+      const n = filtered().length;
+      return { title: 'Filters', tall: true, body: `
+        <fieldset><legend>Distance from ${S.town}</legend><div class="opts">${[10, 25, 50, 100].map(d => `<button type="button" class="chip" data-f-dist="${d}" aria-pressed="${S.f.dist === d}">${d} mi</button>`).join('')}</div></fieldset>
+        <fieldset><legend>Level</legend><div class="opts">${Object.entries(LEVEL_SHORT).map(([k, v]) => `<button type="button" class="chip" data-f-lvl="${k}" aria-pressed="${S.f.levels.includes(k)}">${v}</button>`).join('')}</div></fieldset>
+        <fieldset><legend>Time of day</legend><div class="opts">${['Morning', 'Afternoon', 'Evening'].map(t => `<button type="button" class="chip" data-f-tod="${t}" aria-pressed="${S.f.tod.includes(t)}">${t}</button>`).join('')}</div><div class="hint" style="margin-top:6px">Wireframe: time of day is shown, not applied.</div></fieldset>
+        <fieldset><legend>More</legend>
+          <label class="radio">Free only<input type="checkbox" data-f-bool="free" ${S.f.free ? 'checked' : ''}></label>
+          <label class="radio">Has room (not full)<input type="checkbox" data-f-bool="room" ${S.f.room ? 'checked' : ''}></label>
+          <label class="radio">Community groups only<input type="checkbox" data-f-bool="hosts" ${S.f.hosts ? 'checked' : ''}></label></fieldset>
+        <fieldset><legend>Dates</legend><button type="button" class="secondary" data-toast="Pick dates: a date-range picker">Pick dates…</button></fieldset>`,
+        foot: `<button type="button" class="textbtn" data-clear>Clear all</button><button type="button" class="primary" data-close-tray ${n ? '' : 'disabled'}>${n ? `Show ${n} event${n === 1 ? '' : 's'}` : 'No events match'}</button>` };
+    },
+    sort() {
+      return { title: 'Sort', body: [['soon', 'Soonest first'], ['near', 'Nearest first']].map(([k, n]) => `<label class="radio">${n}<input type="radio" name="sort" data-sort="${k}" ${S.sort === k ? 'checked' : ''}></label>`).join('') + '<p class="hint">Lists are never sorted by popularity.</p>' };
+    },
+    area() {
+      return { title: 'Town and area', tall: true, body: `
+        <div class="field" style="margin-top:10px"><label for="tray-town">Your town or zip code</label><input class="input" id="tray-town" value="${S.town}"></div>
+        <div class="section" style="padding:16px 0 8px"><span>Your area</span></div>
+        <button type="button" class="areaopt" aria-pressed="true" data-close-tray><span class="t">${S.area}</span><span class="s">Asheville, Greenville</span></button>
+        <div class="section" style="padding:16px 0 8px"><span>Other areas, by big region</span></div>
+        ${[['Southeast', 'Atlanta · Charlotte · Knoxville · Coastal Carolinas · Nashville · …'], ['Mid-Atlantic', 'Washington, DC · Roanoke · Shenandoah · Philadelphia · …'], ['Rocky Mountains', 'Front Range · Wasatch · Bozeman · …'], ['Pacific', 'Seattle · Portland · Bay Area · …']].map(([r, s]) => `<details style="border-bottom:1px solid var(--rule);padding:12px 0"><summary style="font-weight:700;cursor:pointer">${r}</summary><p class="hint">${s}</p></details>`).join('')}`,
+        foot: `<button type="button" class="primary" data-close-tray>Done</button>` };
+    },
+    act({ act }) {
+      const m = S.mine[act] || {};
+      return { title: actName(act), body: `
+        <label class="radio">I do this<input type="radio" name="st" data-st="do" ${m.st === 'do' ? 'checked' : ''}></label>
+        <label class="radio">I want to try this<input type="radio" name="st" data-st="try" ${m.st === 'try' ? 'checked' : ''}></label>
+        <label class="radio">Neither<input type="radio" name="st" data-st="" ${!m.st ? 'checked' : ''}></label>
+        ${m.st === 'do' ? `<fieldset><legend>Your level</legend><div class="opts">${['New to it', 'Getting comfortable', 'Experienced'].map(l => `<button type="button" class="chip" data-lvl="${l}" aria-pressed="${m.lvl === l}">${l}</button>`).join('')}</div></fieldset>` : ''}
+        <p class="hint">Shown on your profile under its Show/Hide setting.</p>`,
+        foot: `<button type="button" class="primary" data-close-tray>Save</button>` };
+    },
+    weekfilter() {
+      return { title: 'Show', body: ['Going and saved', 'Going only', 'Saved only', 'Everything in my groups', 'One group…'].map((n, i) => `<label class="radio">${n}<input type="radio" name="wf" ${i === 0 ? 'checked' : ''}></label>`).join(''), foot: `<button type="button" class="primary" data-close-tray>Show</button>` };
+    },
+    msgreq() {
+      return { title: 'Message request', body: `<div class="pad" style="padding:12px 0"><div style="display:flex;gap:10px;align-items:center"><span class="avatar">A</span><span><b>Alex P.</b><br><span class="hint">Brevard · Climbing (getting comfortable) · member of NC BIPOC Climbers</span></span></div>
+        <div class="msg them" style="max-width:100%">Hi! Saw you're going to the climbing intro on the 24th. Want to carpool from Hendersonville?</div></div>`,
+        foot: `<button type="button" class="danger" data-close-tray data-toast-after="Blocked and reported">Block</button><button type="button" class="secondary" data-close-tray data-toast-after="Declined">Decline</button><button type="button" class="primary" data-close-tray data-go-after="convo">Accept</button>` };
+    },
+    update() {
+      return { title: 'Post an update', tall: true, body: `<div class="field" style="margin-top:12px"><label for="u-t">Title</label><input class="input" id="u-t" value="Tonight: meet at the upper lot"></div>
+        <div class="field" style="margin-top:12px"><label for="u-b">Message</label><textarea class="input" id="u-b" rows="4">We're at the upper Hard Times lot, not the lower one. Lights on by 7.</textarea></div>
+        <label class="radio">Pin to the top of Discussions<input type="checkbox" checked></label>`,
+        foot: `<button type="button" class="primary" data-close-tray data-toast-after="Update posted and pinned">Post update</button>` };
+    },
+    signin() {
+      return { title: 'Sign in to RSVP', body: `<p class="prose">Signing in lets you RSVP, save events and join groups. Browsing never needs an account.</p><div class="field"><label for="si-e">Email</label><input class="input" id="si-e" type="email"></div>`, foot: `<button type="button" class="secondary" data-close-tray>Create an account</button><button type="button" class="primary" data-close-tray>Sign in</button>` };
+    },
+  };
+  function bindDrag() {
+    const h = $('handle'); if (!h) return;
+    let y0 = null, dy = 0;
+    h.addEventListener('pointerdown', e => { y0 = e.clientY; tray.style.transition = 'none'; h.setPointerCapture(e.pointerId); });
+    h.addEventListener('pointermove', e => { if (y0 === null) return; dy = Math.max(0, e.clientY - y0); tray.style.transform = `translateY(${dy}px)`; });
+    h.addEventListener('pointerup', () => { tray.style.transition = ''; tray.style.transform = ''; if (dy > 90) closeTray(); y0 = null; dy = 0; });
+  }
+
+  // ---------- toast ----------
+  let toastTimer, undoFn = null;
+  function toast(text, undo) {
+    $('toast-text').textContent = text; undoFn = undo || null; $('toast-undo').hidden = !undo;
+    $('toast').classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('on'), undo ? 5000 : 2200);
+  }
+  $('toast-undo').addEventListener('click', () => { if (undoFn) undoFn(); $('toast').classList.remove('on'); });
+
+  // ---------- navigation ----------
+  const TABS = [['events', 'Events', 'list'], ['week', 'My week', 'calendar'], ['groups', 'Groups', 'people'], ['inbox', 'Inbox', 'inbox'], ['me', 'Me', 'person']];
+  const scrollMem = {};
+  function current() { return S.stack[S.stack.length - 1] || { name: S.tab }; }
+  function render(keepScroll = true) {
+    const cur = current();
+    const sc = screen.querySelector('.scroll');
+    const key = screenKey();
+    const prevTop = keepScroll && sc ? sc.scrollTop : 0;
+    screen.innerHTML = SCREENS[cur.name](cur.p || {});
+    const full = !S.onboarded || ['event', 'thread', 'convo', 'post', 'what'].includes(cur.name);
+    $('tabbar').hidden = full;
+    $('tabbar').innerHTML = TABS.map(([k, n, ic]) => `<button type="button" data-tab="${k}" ${S.tab === k ? 'aria-current="page"' : ''}>${icon(ic)}${n}${k === 'inbox' ? `<span class="count" aria-label="${inboxCount()} to look at">${inboxCount()}</span>` : ''}</button>`).join('');
+    const nsc = screen.querySelector('.scroll');
+    if (nsc) nsc.scrollTop = keepScroll === 'restore' ? (scrollMem[key] || 0) : (keepScroll ? prevTop : 0);
+    const chosen = screen.querySelector('.chip[aria-pressed="true"]'); if (chosen && chosen.parentElement.id === 'chiprow') chosen.parentElement.scrollLeft = Math.max(0, chosen.offsetLeft - 60);
+  }
+  function screenKey() { const c = current(); return c.name + JSON.stringify(c.p || {}); }
+  function rememberScroll() { const sc = screen.querySelector('.scroll'); if (sc) scrollMem[screenKey()] = sc.scrollTop; }
+  function push(name, p) { rememberScroll(); S.stack.push({ name, p }); render(false); }
+  function back() { S.stack.pop(); render('restore'); }
+  function goTab(t) { rememberScroll(); S.tab = t; S.stack = []; render('restore'); }
+
+  // ---------- events ----------
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button, [data-close-tray], label, summary'); if (!t) return;
+    const d = t.dataset;
+    if (t.id === 'role-member' || t.id === 'role-admin') { S.role = t.id === 'role-admin' ? 'admin' : 'member'; $('role-member').setAttribute('aria-pressed', S.role === 'member'); $('role-admin').setAttribute('aria-pressed', S.role === 'admin'); S.onboarded = true; S.stack = []; if (S.role === 'admin') S.tab = 'inbox'; render(false); return; }
+    if (d.jump) { closeTrayNow(); const [tab, name, p] = JUMPS.find(j => j.id === d.jump).go(); S.onboarded = name !== 'where' && name !== 'areas' && !(name === 'what' && !p?.fromMe) ? true : false; S.tab = tab; S.stack = name ? [{ name, p }] : []; render(false); return; }
+    if ('back' in d) return back();
+    if (d.tab) return goTab(d.tab);
+    if (d.go) { const p = 'fromMe' in d ? { fromMe: true } : undefined; if (d.go === 'what' && !p) {} return push(d.go, p); }
+    if (d.pickArea) { screen.querySelectorAll('[data-pick-area]').forEach(b => b.setAttribute('aria-pressed', b === t)); S.area = d.pickArea; const btn = screen.querySelector('[data-go="what"]'); if (btn) btn.textContent = 'Use ' + d.pickArea; return; }
+    if ('finishOnboard' in d) { S.onboarded = true; S.stack = []; S.tab = 'events'; S.chip = 'all'; render(false); return; }
+    if ('restart' in d) { S.onboarded = false; S.stack = [{ name: 'where' }]; render(false); return; }
+    if (d.openEvent) return push('event', { id: +d.openEvent });
+    if (d.openGroup) return push('group', { name: d.openGroup });
+    if (d.gtab) { current().p.tab = d.gtab; return render(true); }
+    if (d.rtab) { current().p = { ...(current().p || {}), tab: d.rtab }; return render(true); }
+    if (d.save) { const id = +d.save; S.saved.has(id) ? S.saved.delete(id) : S.saved.add(id); toast(S.saved.has(id) ? 'Saved · in My week' : 'Removed from saved'); return render(true); }
+    if (d.rsvp) { const id = +d.rsvp; const ev = EVENTS.find(x => x.id === id);
+      if (S.going.has(id)) { S.going.delete(id); toast('Not going · your place is freed'); }
+      else if (S.asked.has(id)) { S.asked.delete(id); toast('Request cancelled'); }
+      else if (ev.spots === 0) { S.asked.add(id); toast('On the waitlist'); }
+      else { S.going.add(id); toast('You’re going · added to My week'); }
+      return render(true); }
+    if (d.when) { S.when = d.when; return render(false); }
+    if (d.chip) { if ((d.chip === 'try' && !Object.values(S.mine).some(m => m.st === 'try')) || (d.chip === 'mine' && !Object.values(S.mine).some(m => m.st === 'do'))) { S.chip = d.chip; render(false); return push('what', { fromMe: true }); } S.chip = d.chip; if (d.chip === 'try' && S.when !== 'coming') S.when = 'coming'; return render(false); }
+    if (d.fold) { S.folded[d.fold] = !S.folded[d.fold]; return render(true); }
+    if (d.unfilter) { const k = d.unfilter; if (k === 'dist') S.f.dist = 25; else if (k.startsWith('lvl:')) S.f.levels = S.f.levels.filter(l => l !== k.slice(4)); else S.f[k] = false; return render(true); }
+    if ('clear' in d) { S.f = { dist: 25, free: false, levels: [], hosts: false, room: false, tod: [] }; refreshTray(); return render(true); }
+    if (d.widen) { if (d.widen === 'dist') S.f.dist = 50; else S.when = 'coming'; return render(false); }
+    if (d.fDist) { S.f.dist = +d.fDist; refreshTray(); return render(true); }
+    if (d.fLvl) { const l = d.fLvl; S.f.levels = S.f.levels.includes(l) ? S.f.levels.filter(x => x !== l) : [...S.f.levels, l]; refreshTray(); return render(true); }
+    if (d.fTod) { const l = d.fTod; S.f.tod = S.f.tod.includes(l) ? S.f.tod.filter(x => x !== l) : [...S.f.tod, l]; return refreshTray(); }
+    if (d.lvl) { const a = tray._data.act; S.mine[a] = { st: 'do', lvl: d.lvl }; refreshTray(); return render(true); }
+    if (d.letter) { const el = $('L' + d.letter); const sc = $('gscroll'); if (el && sc) sc.scrollTop = el.offsetTop - 2; return; }
+    if (d.week) { if (d.week === 'today') { S.weekStart = 0; S.weekSel = 0; } else { S.weekStart = Math.max(0, (S.weekStart || 0) + +d.week); S.weekSel = S.weekStart; } return render(false); }
+    if (d.wsel) { S.weekSel = +d.wsel; render(true); const el = $('wd' + d.wsel); const sc = screen.querySelector('.scroll'); if (el && sc) sc.scrollTop = el.offsetTop - sc.offsetTop; return; }
+    if (d.decide) { const [id, how] = d.decide.split(':'); decide(id, how); return; }
+    if (d.rsvpreq) { const q = S.rsvpReq.find(x => x.id === d.rsvpreq); S.rsvpReq = S.rsvpReq.filter(x => x.id !== d.rsvpreq); toast(`${q ? q.name : 'Request'} handled`, () => { if (q) S.rsvpReq.push(q); render(true); }); return render(true); }
+    if (d.report) { const p = S.reports.find(x => x.id === d.report); S.reports = []; toast(t.textContent === 'Keep it' ? 'Kept · logged' : 'Removed · logged in the moderation log', () => { S.reports.push(p); render(true); }); return render(true); }
+    if (d.fsec) { current().p.open = d.fsec; return render(true); }
+    if ('postform' in d) { current().p = { form: true }; return render(false); }
+    if ('posted' in d) { S.stack.pop(); toast('Event posted'); return render(false); }
+    if (d.tray) { if (d.tray === 'act') return openTray('act', { act: d.act }); return openTray(d.tray); }
+    if ('closeTray' in d) { const go = d.goAfter, msg = d.toastAfter; closeTray(); if (msg) toast(msg); if (go) push(go); return; }
+    if (d.toast) return toast(d.toast);
+  });
+  document.addEventListener('change', e => {
+    const t = e.target; const d = t.dataset;
+    if (d.fBool) { S.f[d.fBool] = t.checked; refreshTray(); render(true); }
+    if (d.sort) { S.sort = d.sort; render(false); setTimeout(closeTray, 150); }
+    if ('st' in d) { const a = tray._data.act; if (!d.st) delete S.mine[a]; else S.mine[a] = { st: d.st, lvl: d.st === 'do' ? (S.mine[a]?.lvl || 'New to it') : undefined }; refreshTray(); render(true); }
+  });
+  scrim.addEventListener('click', closeTray);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !tray.hidden) closeTray();
+    if (e.key === 'Tab' && !tray.hidden) { const f = [...tray.querySelectorAll('button:not([disabled]),input,select,textarea,summary')]; if (!f.length) return; const first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
+  });
+  function closeTrayNow() { tray.hidden = true; scrim.hidden = true; tray.classList.remove('on'); scrim.classList.remove('on'); }
+
+  function decide(id, how) {
+    const r = S.requests.find(x => x.id === id); if (!r) return;
+    S.requests = S.requests.filter(x => x.id !== id);
+    toast(`${r.name} ${how === 'approve' ? 'approved' : 'declined'}`, () => { S.requests.push(r); render(true); });
+    render(true);
+  }
+  // swipe on request cards
+  let sw = null;
+  document.addEventListener('pointerdown', e => { const c = e.target.closest('.req[data-req]'); if (!c || e.target.closest('button')) return; sw = { c, x0: e.clientX, dx: 0 }; c.classList.add('dragging'); });
+  document.addEventListener('pointermove', e => { if (!sw) return; sw.dx = e.clientX - sw.x0; sw.c.style.transform = `translateX(${sw.dx}px)`; });
+  document.addEventListener('pointerup', () => { if (!sw) return; const { c, dx } = sw; c.classList.remove('dragging'); sw = null;
+    if (Math.abs(dx) > 90) { c.style.transform = `translateX(${dx > 0 ? 420 : -420}px)`; setTimeout(() => decide(c.dataset.req, dx > 0 ? 'approve' : 'decline'), 180); } else c.style.transform = ''; });
+
+  // ---------- jump list ----------
+  const JUMPS = [
+    { id: 'where', n: 'First open: where do you live', m: 'MUC-1', go: () => ['events', 'where'] },
+    { id: 'areas', n: 'Pick your area', m: 'MUC-1', go: () => ['events', 'areas'] },
+    { id: 'what', n: 'What I do and want to try', m: 'MUC-2', go: () => ['events', 'what'] },
+    { id: 'events', n: 'Events: this weekend', m: 'MUC-3', go: () => { S.chip = 'all'; S.when = 'weekend'; return ['events', null]; } },
+    { id: 'try', n: 'Try something new', m: 'MUC-4', go: () => { S.chip = 'try'; S.when = 'coming'; return ['events', null]; } },
+    { id: 'event', n: 'Event page', m: 'MUC-3', go: () => ['events', 'event', { id: 4 }] },
+    { id: 'week', n: 'My week', m: 'MUC-5', go: () => ['week', null] },
+    { id: 'groups', n: 'Groups, A–Z with letter index', m: 'MUC-5', go: () => ['groups', null] },
+    { id: 'thread', n: 'Thread with reply box', m: 'MUC-5', go: () => ['groups', 'thread'] },
+    { id: 'inbox', n: 'Inbox (Needs you as page admin)', m: 'MUC-6, 7', go: () => ['inbox', null] },
+    { id: 'convo', n: 'Conversation', m: 'MUC-6', go: () => ['inbox', 'convo'] },
+    { id: 'run', n: 'Run this group', m: 'MUC-7', go: () => { setAdmin(); return ['groups', 'run']; } },
+    { id: 'rsvps', n: 'Manage RSVPs', m: 'MUC-7', go: () => { setAdmin(); return ['groups', 'rsvps', {}]; } },
+    { id: 'post', n: 'Post an event (copy a past one)', m: 'MUC-8', go: () => { setAdmin(); return ['groups', 'post', {}]; } },
+  ];
+  function setAdmin() { S.role = 'admin'; $('role-member').setAttribute('aria-pressed', 'false'); $('role-admin').setAttribute('aria-pressed', 'true'); }
+  $('jump').innerHTML = JUMPS.map(j => `<button type="button" data-jump="${j.id}">${j.n}<span class="muc">${j.m}</span></button>`).join('');
+
+  render(false);
+})();
+</script>
