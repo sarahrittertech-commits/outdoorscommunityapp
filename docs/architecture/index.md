@@ -33,6 +33,7 @@ Each record has a status:
 | [0009](./adr-0009-password-sign-in) | Email and password sign-in | Accepted |
 | [0010](./adr-0010-regions) | One board, many regions | Accepted |
 | [0011](./adr-0011-event-sources) | Event sources: read feeds first, AI only where there is none | Accepted |
+| [M01](../mobile/adr-m01-platform) | Mobile app: an installable phone-first web app, not a native app (kept with the [mobile docs](../mobile/)) | Proposed |
 
 :::note Accepted 25 September 2026
 Drafted as Proposed in the morning; accepted the same day when Sarah

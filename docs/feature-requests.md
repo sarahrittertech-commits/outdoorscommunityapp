@@ -61,6 +61,7 @@ Requests from the 8 October Magic Patterns design are summarized in the
 | 8 Oct | Magic Patterns design | My calendar on the signed-in home page: month or week, going and saved | Tool | UC-18, FR-AC-9 | Built (approved 9 Oct). No migration. |
 | 8 Oct | Magic Patterns design | Save an event for later | Tool | UC-22, FR-EV-18 | Built (approved 9 Oct). Migration to apply. |
 | 8 Oct | Magic Patterns design | Member list privacy per group | Tool | UC-16, FR-MB-10 | Built (approved 9 Oct). Migration to apply. |
+| 14 Oct | Sarah | A mobile app: easy navigation over long lists with cards, trays, filters and sorts; set up from a zip code or town and an area; a profile of what I do and want to try, with levels, to suggest intro events; my week, group threads and messages; group admin from the phone. Mobile requirements in their own folder, for the tool as a whole | Tool | [Mobile app](./mobile/): MUC-1 to MUC-8, FR-MO, TR-MO, ADR-M01 | Draft, awaiting review. Changes the PRD on native apps, P2 and P4 (decisions D1 to D5). |
 
 ## How a request becomes a feature
 
