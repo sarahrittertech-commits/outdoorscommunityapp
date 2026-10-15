@@ -8,7 +8,9 @@ title: Research playbook
 *Written 12 October 2026, after a full day of loading research (Raleigh,
 Greenville, Durango, North Carolina, Colorado, Virginia, West Virginia,
 Utah, Boston, Burlington, Montana, Arkansas, California). What worked, what
-didn't, and how to spend less of Sarah's time on it.*
+didn't, and how to spend less of Sarah's time on it. The expansion that
+followed (to 45 areas, 13 October) is in
+[research and areas — findings](./research-findings).*
 
 ## What the day added
 

@@ -443,6 +443,47 @@ Montrose and Farmington, NM; zip prefixes 813 and 874, with the towns in
 other prefixes (Pagosa, Silverton, Ouray, Telluride) listed by their own
 codes.
 
+### Opening areas in bulk (from 13 October 2026)
+
+Thirty-four areas opened on 13 October this way; the lessons are in
+[research and areas — findings](./research-findings).
+
+1. **Draw the area where verified groups cluster.** Split a list's
+   heading if its towns are more than about 100 miles apart (Missoula and
+   Bozeman are two areas). Pick the radius by FR-RG-13: about 100 miles
+   for a city, 150 for rural Western and North Woods areas, up to 250 for
+   a coast or a whole state.
+2. **Give it at least 20 towns** within its radius plus 50 miles, and zip
+   prefixes or codes. Check every name against the town list first: a
+   name already used in another state gets its state in hubs and zips
+   ("Lexington, KY", "Portland, ME"). `npm test` checks hubs, towns,
+   zips and distances.
+3. **One migration** inserts the row with its big region (`group_id`),
+   time zone, centre, radius and hub towns; update `030-regions.sql`'s two
+   lists, `docs/data-model.md`, ADR-0012's table and `CLAUDE.md`.
+4. **List the research finds** whose town is in the area, then add their
+   events pages and websites to `research.event_sources` so the weekly
+   reader picks them up.
+5. **Merging or renaming an area** keeps its slug when links depend on
+   it, moves listings by town and state, and records the old names in
+   `search_terms`.
+
+### Checking where listings sit
+
+After any batch load, list each area's listings by the state their area
+text names; a state that doesn't belong to the area is a misfiled
+listing:
+
+```sql
+select r.slug, substring(btrim(x.area) from ',?\s([A-Z]{2})$') as state, count(*)
+from (select region_id, area from public.groups union all select region_id, area from public.businesses) x
+join public.regions r on r.id = x.region_id
+group by 1, 2 order by 1, 3 desc;
+```
+
+Move a misfiled listing with `public.assign_area('group' | 'business', slug, area slug)`
+as the site admin, or from Admin › Ungrouped for one with no area.
+
 To check a region's reach before opening it:
 `select name, hub_towns, radius_miles, status from public.regions order by sort_order;`
 
