@@ -41,7 +41,7 @@ That framing drives the scope:
 
 | | |
 | --- | --- |
-| Phase | Built locally; next: design, then launch setup |
+| Phase | Live at branchoutapp-production.up.railway.app; 45 areas in 8 big regions; next: domain and email, then launch |
 | Target ship date | Not set |
 | Owner | Sarah Ritter |
 | Repository | [sarahrittertech-commits/outdoorscommunityapp](https://github.com/sarahrittertech-commits/outdoorscommunityapp) |
@@ -63,6 +63,8 @@ That framing drives the scope:
 | [Architecture decisions](./architecture/) | Why each part of the stack was chosen |
 | [Test cases](./test-cases) | What "working" means before launch |
 | [Runbook](./runbook) | Running locally, testing, deploying, operating |
+| [Research playbook](./research-playbook) | How research reaches the board, and what each source is worth |
+| [Research and areas — findings](./research-findings) | What 12 to 14 October taught: grouping the country into areas, research, the event reader |
 | [Cloning](./cloning) | Making the women's outdoor community app from this codebase |
 
 Still to come, at launch: release notes. Drafts of the privacy policy,

@@ -12,12 +12,19 @@ or by date, and they are the same for everyone.
 ## Status
 
 Live at https://branchoutapp-production.up.railway.app/ with every Must
-requirement, most Shoulds, 186 database permission tests and the unit
-tests passing. Since 11 October 2026 it covers several regions, each built
-around hub cities (Western North Carolina, the Colorado Front Range, the
-Triangle, Seattle and Bellingham, the New River Gorge, East Tennessee, Salt Lake City and the Wasatch, Reno and Lake Tahoe, Sedona and Flagstaff, Greenville and the Upstate, and Durango and the San Juans).
-Real groups are listed until their organizers claim them, and a weekly
-research agent suggests new ones.
+requirement, most Shoulds, about 1,000 database permission tests and 217
+unit tests passing. As of 15 October 2026 it covers **45 areas in 8 big
+regions** (Southeast, Mid-Atlantic, Northeast, Midwest, Rockies,
+Southwest, Far West, Pacific Northwest), from the Western Carolinas and
+the Coastal Carolinas to Missoula, Moab, Chicago and Acadia, with about
+1,100 communities, 900 guides, shops and venues, and 2,600 upcoming
+events. Communities in towns with no area yet are still listed and found
+by zip code.
+
+Real groups are listed until their organizers claim them. Research agents
+find new ones, and a weekly reader collects dates from 3,500 organizers'
+own event pages and calendar feeds. What that work has taught is in
+[research and areas — findings](docs/research-findings.md).
 
 ## Running it
 
@@ -55,4 +62,6 @@ Start with [`docs/index.md`](docs/index.md).
 | [Architecture decisions](docs/architecture/index.md) | Framework, database, hosting, jobs, discussions |
 | [Test cases](docs/test-cases.md) | What "working" means |
 | [Runbook](docs/runbook.md) | Running, testing, deploying |
+| [Research playbook](docs/research-playbook.md) | How research reaches the board |
+| [Research and areas — findings](docs/research-findings.md) | Grouping the country into areas, research and event-reader lessons |
 | [Cloning](docs/cloning.md) | Making another board (the women's app) from this one |
