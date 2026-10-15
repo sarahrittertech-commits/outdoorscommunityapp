@@ -139,7 +139,10 @@ here.
   (Direct messages that arrive as requests are in: [ADR-0006](./architecture/adr-0006-direct-messages).)
 - Push notifications to phones, and red-dot badges. (An in-app reminders
   list and an unread-message count are in.)
-- Native mobile apps (the web app is responsive)
+- Native mobile apps (the web app is responsive). *Under review since 14
+  October 2026:* Sarah asked for a mobile app; the drafts, and the PRD
+  decisions they would change (this line, P2, P4), are in
+  [Mobile app](./mobile/).
 - Image uploads in discussion posts, and photo walls on browse pages.
   (Event photos and members-only group galleries are in.)
 - AI features for users. (The weekly research agent, UC-9, is an operator
