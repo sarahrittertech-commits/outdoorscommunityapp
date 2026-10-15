@@ -48,6 +48,7 @@ asks where someone lives once, then shows that area.
 | [Design system](./design-system) | Navigation model, UX patterns (cards, trays, filters, sorts, long lists), tokens and components |
 | [Screens](./screens) | Every screen for a member and an organizer, with the clickable wireframe |
 | [ADR-M01 Platform](./adr-m01-platform) | Installable web app or native app, and what each costs |
+| [Session log](./session-log) | What was asked, what was found, and what is waiting on a decision, per working session |
 
 The clickable wireframe is `docs/mobile/wireframes.html`: one file, no
 build step, opened straight in a browser. The pull request links a hosted
