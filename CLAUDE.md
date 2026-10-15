@@ -43,6 +43,11 @@ Consequences that should shape every suggestion made in this repo:
   "no shared code with the outdoor community app" an explicit non-goal; that
   holds from this side too. Its documentation format is the standard this repo
   follows.
+- **Sage Women** (`sagewomen`) — the first clone of this board, a general
+  women's community built for Sarah's former mentor, live since 2 October
+  2026. It keeps this repo as `upstream` and merges from it; features it
+  needs are built here behind settings in `src/config/site.ts`. Its
+  decisions and setup lessons are in its `docs/project-log.md`.
 - **Executive AI Copilot** (`ExecDashCoPilot`) — source of lessons, not code.
   Same database vendor (Supabase) and host (Railway). Its lessons are written
   into the technical requirements (no anonymous write policies, validate every
